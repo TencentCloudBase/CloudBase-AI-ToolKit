@@ -287,6 +287,48 @@ AI 会自动：
 
 ---
 
+## 🛠️ 云开发 MCP 工具一览
+
+| 工具名称 | 功能简介 |
+|----------|----------|
+| logout | 登出当前云开发账户 |
+| listEnvs | 获取所有云开发环境信息 |
+| getEnvAuthDomains | 获取云开发环境的合法域名列表 |
+| createEnvDomain | 为云开发环境添加安全域名 |
+| deleteEnvDomain | 删除云开发环境的指定安全域名 |
+| getEnvInfo | 获取当前云开发环境信息 |
+| updateEnvInfo | 修改云开发环境别名 |
+| createCollection | 创建一个新的云开发数据库集合 |
+| checkCollectionExists | 检查云开发数据库集合是否存在 |
+| updateCollection | 更新云开发数据库集合配置（创建或删除索引） |
+| describeCollection | 获取云开发数据库集合的详细信息 |
+| listCollections | 获取云开发数据库集合列表 |
+| checkIndexExists | 检查索引是否存在 |
+| distribution | 查询数据库中集合的数据分布情况 |
+| insertDocuments | 向集合中插入文档 |
+| queryDocuments | 查询集合中的文档 |
+| updateDocuments | 更新集合中的文档 |
+| deleteDocuments | 删除集合中的文档 |
+| uploadFiles | 上传文件到静态网站托管 |
+| listFiles | 获取静态网站托管的文件列表 |
+| deleteFiles | 删除静态网站托管的文件或文件夹 |
+| findFiles | 搜索静态网站托管的文件 |
+| createHostingDomain | 绑定自定义域名 |
+| deleteHostingDomain | 解绑自定义域名 |
+| getWebsiteConfig | 获取静态网站配置 |
+| tcbCheckResource | 获取域名配置 |
+| tcbModifyAttribute | 修改域名配置 |
+| getFunctionList | 获取云函数列表 |
+| createFunction | 创建云函数 |
+| updateFunctionCode | 更新云函数代码 |
+| updateFunctionConfig | 更新云函数配置 |
+| getFunctionDetail | 获取云函数详情 |
+| invokeFunction | 调用云函数 |
+| getFunctionLogs | 获取云函数日志 |
+| createFunctionTriggers | 创建云函数触发器 |
+| deleteFunctionTrigger | 删除云函数触发器 |
+| downloadRemoteFile | 下载远程文件到本地临时文件 |
+| uploadFile | 上传文件到云存储（适合存储业务数据文件） |
 
 ## 🏗️ 架构原理
 
