@@ -1,0 +1,26 @@
+{
+  "types": [
+    {"type": "feat", "section": "✨ 新功能", "hidden": false},
+    {"type": "fix", "section": "🐛 修复", "hidden": false},
+    {"type": "docs", "section": "📝 文档", "hidden": false},
+    {"type": "style", "section": "💄 样式", "hidden": false},
+    {"type": "refactor", "section": "♻️ 重构", "hidden": false},
+    {"type": "perf", "section": "⚡ 性能", "hidden": false},
+    {"type": "test", "section": "✅ 测试", "hidden": false},
+    {"type": "chore", "section": "🔧 其他", "hidden": false}
+  ],
+  "commitUrlFormat": "https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/{{hash}}",
+  "compareUrlFormat": "https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/compare/{{previousTag}}...{{currentTag}}",
+  "issueUrlFormat": "https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues/{{id}}",
+  "releaseCommitMessageFormat": "chore(release): 🔖 {{currentTag}}",
+  "bumpFiles": [
+    {
+      "filename": "package.json",
+      "updater": "json"
+    },
+    {
+      "filename": "package-lock.json",
+      "updater": "json"
+    }
+  ]
+} 
