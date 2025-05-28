@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 1.1.0 (2025-05-28)
+## 1.3.0 (2025-05-28)
 
 
 ### 新功能
@@ -43,7 +43,7 @@ All notable changes to this project will be documented in this file. See [standa
 * update rules ([baf6e86](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/baf6e861edefd64263228579f0172ab9162cd78b))
 * update rules ([dd3e48d](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/dd3e48dfb4c68921b0bc2a5ffd39cd8728256918))
 
-##  (2025-05-28)
+## ## 1.2.1 (2025-05-28)
 
 * chore: 默认使用最新版本的 mcp ([43b3faf](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/43b3faf))
 * chore: add scripts ([f3e9686](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/f3e9686))
