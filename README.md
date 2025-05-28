@@ -32,6 +32,11 @@
 
 **Web应用**: 现代化前端 + 静态托管<br>**微信小程序**: 云开发小程序解决方案<br>**后端服务**: 云数据库 + 无服务器函数+云托管
 
+
+
+**完整视频演示**
+
+https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 </div> 
 
 ## ✨ 核心特性
@@ -163,7 +168,7 @@
 
 #### 步骤 2：配置 MCP 
 
-**配置云开发 MCP Server***
+**配置云开发 MCP Server**
 
 点击 CodeBuddy 右上角的 MCP 图标
 
