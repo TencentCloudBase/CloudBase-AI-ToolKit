@@ -9,7 +9,7 @@ export function registerEnvTools(server: McpServer) {
     "logout",
     "登出当前云开发账户",
     {
-      confirm: z.literal("yes").describe("确认操作")
+      confirm: z.literal("yes").describe("确认操作，默认传 yes")
     },
     async ({ confirm }) => {
       const result = await logout();
@@ -17,7 +17,7 @@ export function registerEnvTools(server: McpServer) {
         content: [
           {
             type: "text",
-            text: JSON.stringify(result, null, 2)
+            text: "success"
           }
         ]
       };
@@ -29,7 +29,7 @@ export function registerEnvTools(server: McpServer) {
     "listEnvs",
     "获取所有云开发环境信息",
     {
-      confirm: z.literal("yes").describe("确认操作")
+      confirm: z.literal("yes").describe("确认操作，默认传 yes")
     },
     async () => {
       const cloudbase = await getCloudBaseManager()
@@ -50,7 +50,7 @@ export function registerEnvTools(server: McpServer) {
     "getEnvAuthDomains",
     "获取云开发环境的合法域名列表",
     {
-      confirm: z.literal("yes").describe("确认操作")
+      confirm: z.literal("yes").describe("确认操作，默认传 yes")
     },
     async () => {
       const cloudbase = await getCloudBaseManager()
@@ -113,7 +113,7 @@ export function registerEnvTools(server: McpServer) {
     "getEnvInfo",
     "获取当前云开发环境信息",
     {
-      confirm: z.literal("yes").describe("确认操作")
+      confirm: z.literal("yes").describe("确认操作，默认传 yes")
     },
     async () => {
       const cloudbase = await getCloudBaseManager()

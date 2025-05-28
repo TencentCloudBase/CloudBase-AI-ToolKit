@@ -69,7 +69,7 @@ export function registerHostingTools(server: McpServer) {
     "listFiles",
     "获取静态网站托管的文件列表",
     {
-      confirm: z.literal("yes").describe("确认操作")
+      confirm: z.literal("yes").describe("确认操作，默认传 yes")
     },
     async () => {
       const cloudbase = await getCloudBaseManager()
@@ -222,7 +222,7 @@ export function registerHostingTools(server: McpServer) {
     "getWebsiteConfig",
     "获取静态网站配置",
     {
-      confirm: z.literal("yes").describe("确认操作")
+      confirm: z.literal("yes").describe("确认操作，默认传 yes")
     },
     async () => {
       const cloudbase = await getCloudBaseManager()
