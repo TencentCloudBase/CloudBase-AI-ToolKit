@@ -23,11 +23,6 @@
 当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
 
 
-**完整视频演示**
-
-https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
-
-
 
 
 ### 🚀 三大核心能力
@@ -162,12 +157,33 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 <details>
 <summary><strong>👥 CodeBuddy 配置</strong></summary>
 
-#### 配置说明
-CodeBuddy 需要手动添加规则文件：
+#### 步骤1：自动应用 AI 规则
 
-1. 使用模板中的 `.common_rules/` 目录
-2. 在对话时使用 `@` 选择相应的云开发规则
-3. MCP 配置同其他工具
+模板中已包含 `.rules/` 目录，CodeBuddy 会自动识别云开发最佳实践
+
+#### 步骤 2：配置 MCP 
+
+**配置云开发 MCP Server***
+
+点击 CodeBuddy 右上角的 MCP 图标
+
+点击进入之后，点击右侧的 + 号，在打开的文件中修改 MCP 配置
+
+其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp"],
+      "env": {
+        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
+      }
+    }
+  }
+}
+```
 
 </details>
 
