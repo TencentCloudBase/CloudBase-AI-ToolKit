@@ -162,6 +162,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 <details>
 <summary><strong>👥 CodeBuddy 配置</strong></summary>
 
+
 #### 步骤1：自动应用 AI 规则
 
 模板中已包含 `.rules/` 目录，CodeBuddy 会自动识别云开发最佳实践
@@ -189,6 +190,8 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
   }
 }
 ```
+
+注意，在 CodeBuddy 的 Craft 中使用时，需要在右侧的设置按钮中，关闭确认计划功能，这样可以更好的执行工具。
 
 </details>
 

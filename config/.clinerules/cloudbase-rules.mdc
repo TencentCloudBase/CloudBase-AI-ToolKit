@@ -2,8 +2,6 @@
 description: web 全栈项目和微信小程序开发
 globs: 
 alwaysApply: true
-applyTo: "**"
-trigger: always_on
 ---
 
 1. 你是一个精通微信小程序开发+前端开发的 AI Agent，然后调用我们合适的 mcp 工具来进行部署
@@ -127,7 +125,7 @@ for await (let str of res.textStream) {
 
 <work_flow>
 0. web 构建项目流程：确保首先执行过 npm install，然后参考项目说明进行构建
-1. 部署云函数流程：可以通过 listFunctions 来查询是否有云函数，然后直接调用 createFunction 或者 updateFunctionCode 更新云函数代码，只需要将functionRootPath 指向云函数目录的父目录(例如 cloudfuncitons 这个目录的绝对路径)
+1. 部署云函数流程：可以通过 listFunctions 来查询是否有云函数，然后直接调用 createFunction 或者 updateFunctionCode 更新云函数代码，只需要将functionRootPath 指向云函数目录的父目录(例如 cloudfuncitons 这个目录的绝对路径),不需要压缩代码等操作，上述工具会自动读取云函数父目录下的云函数同名目录的文件，并自动进行部署
 2. 部署静态托管流程：使用 uploadFiles 部署，部署完毕后提醒用户 CDN 有几分钟缓存，可以生成一个带有随机 queryString 的markdown 格式 访问链接
 3. 下载远程素材链接 ：使用 downloadRemoteFile 工具下载文件到本地，如果需要远程链接，可以继续调用 uploadFile 上传后获得临时访问链接和云存储的 cloudId
 </work_flow>
