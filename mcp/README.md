@@ -82,7 +82,7 @@
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp"],
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "CLOUDBASE_ENV_ID": "你的云开发环境ID"
       }
@@ -113,7 +113,7 @@
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp"],
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "CLOUDBASE_ENV_ID": "你的云开发环境ID"
       }
@@ -137,7 +137,7 @@
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx", 
-      "args": ["@cloudbase/cloudbase-mcp"],
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "TENCENTCLOUD_SECRETID": "你的腾讯云SecretId",
         "TENCENTCLOUD_SECRETKEY": "你的腾讯云SecretKey",
@@ -182,7 +182,7 @@ CodeBuddy 需要手动添加规则文件：
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp"], 
+      "args": ["@cloudbase/cloudbase-mcp@latest"], 
       "env": {
         "CLOUDBASE_ENV_ID": "你的云开发环境ID"  
       }

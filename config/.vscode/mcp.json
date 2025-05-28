@@ -3,7 +3,7 @@
         "cloudbase": {
             "command": "npx",
             "args": [
-                "@cloudbase/cloudbase-mcp"
+                "@cloudbase/cloudbase-mcp@latest"
             ],
             "env": {}
         }

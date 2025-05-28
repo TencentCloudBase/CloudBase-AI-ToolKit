@@ -89,7 +89,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp"],
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "CLOUDBASE_ENV_ID": "你的云开发环境ID"
       }
@@ -120,7 +120,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp"],
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "CLOUDBASE_ENV_ID": "你的云开发环境ID"
       }
@@ -144,7 +144,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx", 
-      "args": ["@cloudbase/cloudbase-mcp"],
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "TENCENTCLOUD_SECRETID": "你的腾讯云SecretId",
         "TENCENTCLOUD_SECRETKEY": "你的腾讯云SecretKey",
@@ -182,7 +182,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp"],
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "CLOUDBASE_ENV_ID": "你的云开发环境ID"
       }
@@ -213,7 +213,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp"], 
+      "args": ["@cloudbase/cloudbase-mcp@latest"], 
       "env": {
         "CLOUDBASE_ENV_ID": "你的云开发环境ID"  
       }

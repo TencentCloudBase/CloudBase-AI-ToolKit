@@ -1,5 +1,5 @@
 {
-  "name": "@cloudbase/cloudbase-mcp",
+  "name": "@cloudbase/cloudbase-mcp@latest",
   "version": "1.2.1",
   "description": "腾讯云开发 MCP Server，支持静态托管/环境查询/",
   "main": "index.js",
