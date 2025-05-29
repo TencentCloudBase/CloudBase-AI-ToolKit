@@ -4,7 +4,7 @@
 
 # 🌟 CloudBase AI ToolKit
 
-**AI-Powered Cloud Development: From Prompt to Production**
+**AI-Powered CloudBase: From Prompt to Production**
 
 **🌍 Languages:** [中文](README.md) | **English**
 
@@ -20,6 +20,8 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/graphs/contributors)
 
 Turn your ideas into deployable full-stack applications with just a prompt. Works seamlessly with **Cursor, VSCode GitHub Copilot, WindSurf, CodeBuddy** and other AI IDEs, automatically generating and deploying web apps, mini-programs, and backend services to Tencent CloudBase.
+
+<a href="https://www.producthunt.com/posts/cloudbase-ai-tookit?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-cloudbase&#0045;ai&#0045;tookit" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=971451&theme=light&t=1748519563832" alt="CloudBase&#0032;AI&#0032;Tookit - Prompt&#0032;to&#0032;Production&#0058;&#0032;Full&#0045;stack&#0044;&#0032;DB&#0032;&#0038;&#0032;functions—zero&#0032;setup&#0046; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
 ### 🚀 Three Core Capabilities
 
