@@ -7,7 +7,8 @@
     "release": "standard-version",
     "release:alpha": "standard-version --prerelease alpha",
     "release:beta": "standard-version --prerelease beta",
-    "release:rc": "standard-version --prerelease rc"
+    "release:rc": "standard-version --prerelease rc",
+    "check:readme-sync": "node scripts/check-readme-sync.js"
   },
   "devDependencies": {
     "conventional-changelog-cli": "^4.1.0",
