@@ -109,7 +109,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 </details>
 
 <details>
-<summary><strong>🌊 WindSurf 配置</strong></summary>
+<summary><strong>🌊 Codeium/WindSurf 配置</strong></summary>
 
 #### 步骤1：配置 MCP
 
@@ -132,30 +132,6 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 #### 步骤2：AI 规则配置
 
 模板中的 `.windsurf/` 目录包含专为 WindSurf 优化的配置。
-
-</details>
-
-<details>
-<summary><strong>🤖 CLINE 配置</strong></summary>
-
-#### MCP 配置
-```json
-{
-  "mcpServers": {
-    "cloudbase-mcp": {
-      "command": "npx", 
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "TENCENTCLOUD_SECRETID": "你的腾讯云SecretId",
-        "TENCENTCLOUD_SECRETKEY": "你的腾讯云SecretKey",
-        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-      }
-    }
-  }
-}
-```
-
-使用模板中的 `.clinerules/` 目录配置。
 
 </details>
 
@@ -199,6 +175,32 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 注意，在 CodeBuddy 的 Craft 中使用时，需要在右侧的设置按钮中，关闭确认计划功能，这样可以更好的执行工具。
 
 </details>
+
+
+<details>
+<summary><strong>🤖 CLINE 配置</strong></summary>
+
+#### MCP 配置
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx", 
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "TENCENTCLOUD_SECRETID": "你的腾讯云SecretId",
+        "TENCENTCLOUD_SECRETKEY": "你的腾讯云SecretKey",
+        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
+      }
+    }
+  }
+}
+```
+
+使用模板中的 `.clinerules/` 目录配置。
+
+</details>
+
 
 <details>
 <summary><strong>🐙 GitHub Copilot 配置</strong></summary>
