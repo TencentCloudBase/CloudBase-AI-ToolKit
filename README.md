@@ -80,7 +80,12 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 <details>
 <summary><strong>🔧 Cursor 配置</strong></summary>
 
-#### 步骤1：配置 MCP
+
+#### 步骤1：自动应用 AI 规则
+
+模板中已包含 `.cursor/rules/` 目录，AI 会自动识别云开发最佳实践。
+
+#### 步骤2：配置 MCP
 
 1. 请修改项目中的 `.cursor/mcp.json` ，填写你的云开发环境 ID
 
@@ -102,16 +107,20 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 点击 Cursor 客户端右上角的 ⚙️ 图标，点击进入之后，选择"MCP"，在 MCP Server 页面，找到 cloudbase 右边的开关按钮，点击启用
 
-#### 步骤2：添加 AI 规则
+#### 步骤3：切换到 Agent 模式
 
-模板中已包含 `.cursor/rules/` 目录，AI 会自动识别云开发最佳实践。
+在 对话窗口中使用 Agent 进行代码生成和自动化操作
 
 </details>
 
 <details>
 <summary><strong>🌊 Codeium/WindSurf 配置</strong></summary>
 
-#### 步骤1：配置 MCP
+#### 步骤1：自动应用 AI 规则
+
+模板中的 `.windsurf/` 目录包含专为 WindSurf 优化的配置。
+
+#### 步骤2：配置 MCP
 
 点击 windsurf 的 Plugins icon，点击"View raw config"，在其中加入 clodubase-mcp，同时设置环境 id
 
@@ -129,9 +138,10 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 }
 ```
 
-#### 步骤2：AI 规则配置
+#### 步骤3：切换到 Write 模式
 
-模板中的 `.windsurf/` 目录包含专为 WindSurf 优化的配置。
+在对话中切换到 Write 模式，这样可以智能进行生成
+
 
 </details>
 
@@ -180,24 +190,44 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 <details>
 <summary><strong>🤖 CLINE 配置</strong></summary>
 
-#### MCP 配置
+
+#### 步骤1：自动应用 AI 规则
+
+模板中已包含 `.clinerules/` 目录，AI 会自动识别云开发最佳实践
+
+#### 步骤 2：配置 MCP 
+
+**配置云开发 MCP Server**
+
+在 Cline 的面板中找到 MCP Server 图标，点击进入,点击 ⚙️ 设置图标，然后点击 Configure MCP Servers
+
+加入以下内容，其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+
 ```json
 {
   "mcpServers": {
-    "cloudbase-mcp": {
-      "command": "npx", 
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
+    "cloudbase": {
+      "autoApprove": [],
+      "timeout": 60,
+      "command": "npx",
+      "args": [
+        "@cloudbase/cloudbase-mcp@latest"
+      ],
       "env": {
-        "TENCENTCLOUD_SECRETID": "你的腾讯云SecretId",
-        "TENCENTCLOUD_SECRETKEY": "你的腾讯云SecretKey",
         "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-      }
+      },
+      "transportType": "stdio",
+      "disabled": false
     }
   }
 }
 ```
 
-使用模板中的 `.clinerules/` 目录配置。
+#### 步骤 3：使用 AI 对话
+
+回到对话界面，建议使用代码生成能力较好和支持 function call 的模型
+
+
 
 </details>
 
@@ -207,14 +237,54 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 #### GitHub Copilot Chat 配置
 
+#### 步骤1：自动应用 AI 规则
+
 模板中的 `.github/` 目录包含 Copilot 优化配置。
+
+#### 步骤2：启用云开发 MCP
+
+模板中的 `.vscode/mcp.json` 目录已经包含云开发 MCP 配置
+
+请修改其中的环境 Id 为你的云开发环境 Id
+
+```json
+{
+    "servers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ],
+            "env": {
+                "CLOUDBASE_ENV_ID": "你的云开发环境ID"
+            }
+        }
+    }
+}
+```
+
+#### 步骤 3：切换到 Agent 模式
+
+在对话窗口左下角切换到 Agent 模式，进行对话
+
 
 </details>
 
 <details>
 <summary><strong>🎯 Trae 配置</strong></summary>
 
-#### 配置步骤
+本操作指引支持 Trae 国际版和 Trae CN 版本，建议使用 Claude/DeepSeek V3 0324 等模型进行测试
+
+#### 步骤1：自动应用 AI 规则
+
+模板中的 `.trae/rules` 目录包含面向 Trae 的云开发规则配置，AI 会自动应用，无需修改。
+
+#### 步骤2：启用云开发 MCP
+
+在 Trae 右上角点击 ⚙️设置图标，点击进入 MCP，点击设置中的手动配置，粘贴如下配置
+
+其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+
 ```json
 {
   "mcpServers": {
@@ -228,8 +298,10 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
   }
 }
 ```
+#### 步骤3：使用 Builder with MCP 对话
 
-使用模板中的 `.trae/rules/` 配置。
+回到对话窗口，在智能体中选择使用 Builder with MCP 对话
+
 
 </details>
 

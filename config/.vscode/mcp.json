@@ -5,7 +5,9 @@
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
             ],
-            "env": {}
+            "env": {
+                "CLOUDBASE_ENV_ID": "你的云开发环境ID"
+            }
         }
     }
 }
