@@ -1,6 +1,6 @@
 <div align="center">
 
-![](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/cloudbase-ai-toolkit.png)
+![](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/banner-en%20(1).png)
 
 # 🌟 CloudBase AI ToolKit
 
