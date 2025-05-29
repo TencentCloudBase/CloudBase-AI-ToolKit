@@ -231,10 +231,10 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 </details>
 
-
+<details>
 <summary><strong>🧩 通义灵码 配置</strong></summary>
 
-<details>
+
 #### 步骤1：自动应用 AI 规则
 
 模板中已包含 `.lingma/` 通义灵码会自动识别云开发最佳实践
