@@ -8,6 +8,8 @@
 
 **通过AI提示词和MCP协议+云开发，让开发更智能、更高效**
 
+**🌍 Languages:** **中文** | [English](README-EN.md)
+
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm version](https://badge.fury.io/js/%40cloudbase%2Fcloudbase-mcp.svg)](https://badge.fury.io/js/%40cloudbase%2Fcloudbase-mcp)
@@ -22,6 +24,9 @@
 
 当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
 
+<a href="https://www.producthunt.com/posts/cloudbase-ai-tookit?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-cloudbase&#0045;ai&#0045;tookit" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=971451&theme=light&t=1748519563832" alt="CloudBase&#0032;AI&#0032;Tookit - Prompt&#0032;to&#0032;Production&#0058;&#0032;Full&#0045;stack&#0044;&#0032;DB&#0032;&#0038;&#0032;functions—zero&#0032;setup&#0046; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+
+
 
 ### 🚀 三大核心能力
 
@@ -30,6 +35,11 @@
 
 **Web应用**: 现代化前端 + 静态托管<br>**微信小程序**: 云开发小程序解决方案<br>**后端服务**: 云数据库 + 无服务器函数+云托管
 
+
+
+**完整视频演示**
+
+https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 </div> 
 
 ## ✨ 核心特性
@@ -48,13 +58,10 @@
 
 ### 0.前置条件
 
-#### 1. 安装 AI 开发工具
-例如：
-- [Cursor](https://www.cursor.com/) 
-- [WindSurf](https://windsurf.com/editor)  
-- [CodeBuddy](https://copilot.tencent.com/)
+#### 安装 AI 开发工具
+例如 [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) 等
 
-#### 2. 开通云开发环境
+#### 开通云开发环境并获取环境 ID
 1. 访问 [腾讯云开发控制台](https://tcb.cloud.tencent.com/dev)开通环境，新用户可以免费开通体验
 2. 在控制台「概览」页面右侧获取 **环境ID**  
    （后续部署需要此 ID）
@@ -65,15 +72,35 @@
 
 建议选择适合你的项目模板快速开始：
 
-- React Web应用+云开发模板：[下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
-- 小程序+云开发模板：[下载代码包](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
+- React Web应用+云开发模板：[下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
+- 小程序+云开发模板：[下载代码包](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
 
 ### 2. 配置你的 AI IDE
+
+以下工具均支持 CloudBase AI ToolKit，可根据你的开发环境选择合适的工具：
+
+| 工具 | 支持平台 |
+|------|----------|
+| [Cursor](https://cursor.com/) | 独立 IDE|
+| [WindSurf](https://windsurf.com/editor) | 独立 IDE,VSCode、JetBrains 插件 |
+| [CodeBuddy](https://copilot.tencent.com/) | VS Code, JetBrains、微信开发者工具插件 |
+| [CLINE](https://cline.so/) | VS Code 插件 |
+| [GitHub Copilot](https://github.com/features/copilot) | VS Code 插件 |
+| [Trae](https://www.trae.ai/) | 独立 IDE |
+| [通义灵码](https://tongyi.aliyun.com/lingma) | 独立 IDE，VS Code, JetBrains插件 |
+| [RooCode](https://roocode.com/) | VS Code插件 |
+
+选择工具后，请按照下方对应的配置说明进行设置。每个工具都需要配置云开发环境 ID 才能使用 MCP 功能。如果你还没有云开发环境，请先[开通云开发环境](#0前置条件)。
 
 <details>
 <summary><strong>🔧 Cursor 配置</strong></summary>
 
-#### 步骤1：配置 MCP
+
+#### 步骤1：自动应用 AI 规则
+
+模板中已包含 `.cursor/rules/` 目录，AI 会自动识别云开发最佳实践。
+
+#### 步骤2：配置 MCP
 
 1. 请修改项目中的 `.cursor/mcp.json` ，填写你的云开发环境 ID
 
@@ -95,16 +122,20 @@
 
 点击 Cursor 客户端右上角的 ⚙️ 图标，点击进入之后，选择"MCP"，在 MCP Server 页面，找到 cloudbase 右边的开关按钮，点击启用
 
-#### 步骤2：添加 AI 规则
+#### 步骤3：切换到 Agent 模式
 
-模板中已包含 `.cursor/rules/` 目录，AI 会自动识别云开发最佳实践。
+在 对话窗口中使用 Agent 进行代码生成和自动化操作
 
 </details>
 
 <details>
-<summary><strong>🌊 WindSurf 配置</strong></summary>
+<summary><strong>🌊 Codeium/WindSurf 配置</strong></summary>
 
-#### 步骤1：配置 MCP
+#### 步骤1：自动应用 AI 规则
+
+模板中的 `.windsurf/` 目录包含专为 WindSurf 优化的配置。
+
+#### 步骤2：配置 MCP
 
 点击 windsurf 的 Plugins icon，点击"View raw config"，在其中加入 clodubase-mcp，同时设置环境 id
 
@@ -122,25 +153,39 @@
 }
 ```
 
-#### 步骤2：AI 规则配置
+#### 步骤3：切换到 Write 模式
 
-模板中的 `.windsurf/` 目录包含专为 WindSurf 优化的配置。
+在对话中切换到 Write 模式，这样可以智能进行生成
+
 
 </details>
 
 <details>
-<summary><strong>🤖 CLINE 配置</strong></summary>
 
-#### MCP 配置
+<summary><strong>👥 CodeBuddy 配置</strong></summary>
+
+
+#### 步骤1：自动应用 AI 规则
+
+模板中已包含 `.rules/` 目录，CodeBuddy 会自动识别云开发最佳实践
+
+#### 步骤 2：配置 MCP 
+
+**配置云开发 MCP Server**
+
+点击 CodeBuddy 右上角的 MCP 图标
+
+点击进入之后，点击右侧的 + 号，在打开的文件中修改 MCP 配置
+
+其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+
 ```json
 {
   "mcpServers": {
     "cloudbase-mcp": {
-      "command": "npx", 
+      "command": "npx",
       "args": ["@cloudbase/cloudbase-mcp@latest"],
       "env": {
-        "TENCENTCLOUD_SECRETID": "你的腾讯云SecretId",
-        "TENCENTCLOUD_SECRETKEY": "你的腾讯云SecretKey",
         "CLOUDBASE_ENV_ID": "你的云开发环境ID"
       }
     }
@@ -148,35 +193,113 @@
 }
 ```
 
-使用模板中的 `.clinerules/` 目录配置。
+#### 步骤 3：切换到 Craft 智能体
+
+在对话窗口中切换到 Craft 模式，这样可以智能生成项目
+
+注意，在 CodeBuddy 的 Craft 中使用时，需要在右侧的设置按钮中，关闭确认计划功能，这样可以更好的执行工具。
 
 </details>
+
 
 <details>
-<summary><strong>👥 CodeBuddy 配置</strong></summary>
+<summary><strong>🤖 CLINE 配置</strong></summary>
 
-#### 配置说明
-CodeBuddy 需要手动添加规则文件：
 
-1. 使用模板中的 `.common_rules/` 目录
-2. 在对话时使用 `@` 选择相应的云开发规则
-3. MCP 配置同其他工具
+#### 步骤1：自动应用 AI 规则
+
+模板中已包含 `.clinerules/` 目录，AI 会自动识别云开发最佳实践
+
+#### 步骤 2：配置 MCP 
+
+**配置云开发 MCP Server**
+
+在 Cline 的面板中找到 MCP Server 图标，点击进入,点击 ⚙️ 设置图标，然后点击 Configure MCP Servers
+
+加入以下内容，其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+
+```json
+{
+  "mcpServers": {
+    "cloudbase": {
+      "autoApprove": [],
+      "timeout": 60,
+      "command": "npx",
+      "args": [
+        "@cloudbase/cloudbase-mcp@latest"
+      ],
+      "env": {
+        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
+      },
+      "transportType": "stdio",
+      "disabled": false
+    }
+  }
+}
+```
+
+#### 步骤 3：使用 AI 对话
+
+回到对话界面，建议使用代码生成能力较好和支持 function call 的模型
+
+
 
 </details>
+
 
 <details>
 <summary><strong>🐙 GitHub Copilot 配置</strong></summary>
 
 #### GitHub Copilot Chat 配置
 
+#### 步骤1：自动应用 AI 规则
+
 模板中的 `.github/` 目录包含 Copilot 优化配置。
+
+#### 步骤2：启用云开发 MCP
+
+模板中的 `.vscode/mcp.json` 目录已经包含云开发 MCP 配置
+
+请修改其中的环境 Id 为你的云开发环境 Id
+
+```json
+{
+    "servers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ],
+            "env": {
+                "CLOUDBASE_ENV_ID": "你的云开发环境ID"
+            }
+        }
+    }
+}
+```
+
+#### 步骤 3：切换到 Agent 模式
+
+在对话窗口左下角切换到 Agent 模式，进行对话
+
 
 </details>
 
 <details>
 <summary><strong>🎯 Trae 配置</strong></summary>
 
-#### 配置步骤
+本操作指引支持 Trae 国际版和 Trae CN 版本，建议使用 Claude/DeepSeek V3 0324 等模型进行测试
+
+#### 步骤1：自动应用 AI 规则
+
+模板中的 `.trae/rules` 目录包含面向 Trae 的云开发规则配置，AI 会自动应用，无需修改。
+
+#### 步骤2：启用云开发 MCP
+
+在 Trae 右上角点击 ⚙️设置图标，点击进入 MCP，点击设置中的手动配置，粘贴如下配置
+
+其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+
 ```json
 {
   "mcpServers": {
@@ -190,23 +313,125 @@ CodeBuddy 需要手动添加规则文件：
   }
 }
 ```
+#### 步骤3：使用 Builder with MCP 对话
 
-使用模板中的 `.trae/rules/` 配置。
+回到对话窗口，在智能体中选择使用 Builder with MCP 对话
+
+
+</details>
+
+<details>
+<summary><strong>🧩 通义灵码 配置</strong></summary>
+
+
+#### 步骤1：自动应用 AI 规则
+
+模板中已包含 `.lingma/` 通义灵码会自动识别云开发最佳实践
+
+#### 步骤 2：配置 MCP 
+
+**配置云开发 MCP Server**
+
+点击通义灵码右上角的昵称，然后选择个人设置，点击进入 MCP 设置
+
+
+
+点击进入之后，点击右侧的打开配置文件按钮，在打开的文件中修改 MCP 配置
+
+其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
+      }
+    }
+  }
+}
+```
+
+#### 步骤 3：切换到智能体模式
+
+在对话窗口左下角中切换到智能体模式，这样可以智能生成项目
+
+
+</details>
+
+<details>
+<summary><strong>🤖 RooCode 配置</strong></summary>
+
+#### 步骤1：自动应用 AI 规则
+
+模板中已包含 `.roo/rules` 目录，RooCode 会自动识别云开发最佳实践
+
+#### 步骤2：配置 MCP 
+
+**配置云开发 MCP Server**
+
+点击 RooCode 右上角的设置图标，选择 MCP 配置，在打开的文件中修改 MCP 配置
+
+其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+
+```json
+{
+    "mcpServers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ],
+            "env": {
+                "CLOUDBASE_ENV_ID": "你的云开发环境ID"
+            },
+            "disabled": false
+        }
+    }
+}
+```
+
+#### 步骤3：使用 AI 对话
+
+在对话窗口中使用 AI 进行代码生成和自动化操作
 
 </details>
 
 ### 3. 开始开发
 
-向 AI 描述你的需求：
+确认 AI 已经连接到云开发
 
 ```
-做一个双人在线对战五子棋网站，支持联机对战
+查询当前云开发环境信息
+```
+
+向 AI 描述你的需求,进行开发：
+
+```
+做一个双人在线对战五子棋网站，支持联机对战，最后进行部署
 ```
 
 AI 会自动：
 - 📝 生成前后端代码  
 - 🚀 部署到云开发
 - 🔗 返回在线访问链接
+
+开发过程中如果遇到报错，可以把错误信息发给 AI 来进行排障
+
+```
+报错了，错误是xxxx
+```
+
+
+也可以让 AI 结合云函数日志进行调试和修改代码
+
+```
+云函数代码运行不符合需求，需求是 xxx，请查看日志和数据进行调试，并进行修复
+```
+
+
 
 ## 🎯 使用案例
 
@@ -280,6 +505,49 @@ AI 会自动：
 
 ---
 
+## 🛠️ 云开发 MCP 工具一览
+
+| 工具名称 | 功能简介 |
+|----------|----------|
+| logout | 登出当前云开发账户 |
+| listEnvs | 获取所有云开发环境信息 |
+| getEnvAuthDomains | 获取云开发环境的合法域名列表 |
+| createEnvDomain | 为云开发环境添加安全域名 |
+| deleteEnvDomain | 删除云开发环境的指定安全域名 |
+| getEnvInfo | 获取当前云开发环境信息 |
+| updateEnvInfo | 修改云开发环境别名 |
+| createCollection | 创建一个新的云开发数据库集合 |
+| checkCollectionExists | 检查云开发数据库集合是否存在 |
+| updateCollection | 更新云开发数据库集合配置（创建或删除索引） |
+| describeCollection | 获取云开发数据库集合的详细信息 |
+| listCollections | 获取云开发数据库集合列表 |
+| checkIndexExists | 检查索引是否存在 |
+| distribution | 查询数据库中集合的数据分布情况 |
+| insertDocuments | 向集合中插入文档 |
+| queryDocuments | 查询集合中的文档 |
+| updateDocuments | 更新集合中的文档 |
+| deleteDocuments | 删除集合中的文档 |
+| uploadFiles | 上传文件到静态网站托管 |
+| listFiles | 获取静态网站托管的文件列表 |
+| deleteFiles | 删除静态网站托管的文件或文件夹 |
+| findFiles | 搜索静态网站托管的文件 |
+| createHostingDomain | 绑定自定义域名 |
+| deleteHostingDomain | 解绑自定义域名 |
+| getWebsiteConfig | 获取静态网站配置 |
+| tcbCheckResource | 获取域名配置 |
+| tcbModifyAttribute | 修改域名配置 |
+| getFunctionList | 获取云函数列表 |
+| createFunction | 创建云函数 |
+| updateFunctionCode | 更新云函数代码 |
+| updateFunctionConfig | 更新云函数配置 |
+| getFunctionDetail | 获取云函数详情 |
+| invokeFunction | 调用云函数 |
+| getFunctionLogs | 获取云函数日志 |
+| createFunctionTriggers | 创建云函数触发器 |
+| deleteFunctionTrigger | 删除云函数触发器 |
+| downloadRemoteFile | 下载远程文件到本地临时文件 |
+| uploadFile | 上传文件到云存储（适合存储业务数据文件） |
+| search_knowledge_base | 智能检索云开发知识库（支持云开发与云函数），通过向量搜索快速获取专业文档与答案。|
 
 ## 🏗️ 架构原理
 
@@ -337,17 +605,9 @@ graph TD
 - **问题答疑**：腾讯云开发团队成员在线答疑
 - **新功能预览**：第一时间体验最新功能
 
-> 💡 **提示**：加群时请备注 "CloudBase AI"，方便快速通过验证
-
 ## 🤝 贡献指南
 
-欢迎提交 Issue 和 Pull Request！
-
-1. Fork 本仓库
-2. 创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交你的改动 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 打开一个 Pull Request
+欢迎提交 Issue 和 Pull Request！请查看我们的[贡献指南](CONTRIBUTING.md)了解如何参与项目开发。
 
 ## 📄 开源协议
 
@@ -356,3 +616,7 @@ graph TD
 ---
 
 ⭐ 如果这个项目对你有帮助，请给我们一个 Star！ 
+
+## 📋 [常见问题 FAQ](./FAQ.md)
+
+如有迁移、集成等常见疑问，请查阅 [FAQ 常见问题](./FAQ.md)。 
