@@ -346,6 +346,44 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 </details>
 
+<details>
+<summary><strong>🤖 RooCode 配置</strong></summary>
+
+#### 步骤1：自动应用 AI 规则
+
+模板中已包含 `.roo/rules` 目录，RooCode 会自动识别云开发最佳实践
+
+#### 步骤2：配置 MCP 
+
+**配置云开发 MCP Server**
+
+点击 RooCode 右上角的设置图标，选择 MCP 配置，在打开的文件中修改 MCP 配置
+
+其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+
+```json
+{
+    "mcpServers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ],
+            "env": {
+                "CLOUDBASE_ENV_ID": "你的云开发环境ID"
+            },
+            "disabled": false
+        }
+    }
+}
+```
+
+#### 步骤3：使用 AI 对话
+
+在对话窗口中使用 AI 进行代码生成和自动化操作
+
+</details>
+
 ### 3. 开始开发
 
 确认 AI 已经连接到云开发
