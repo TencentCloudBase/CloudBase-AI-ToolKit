@@ -1,6 +1,6 @@
 {
   "name": "@cloudbase/cloudbase-mcp",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "腾讯云开发 MCP Server，支持静态托管/环境查询/",
   "main": "index.js",
   "type": "module",
