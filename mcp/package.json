@@ -1,11 +1,16 @@
 {
   "name": "@cloudbase/cloudbase-mcp",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "腾讯云开发 MCP Server，支持静态托管/环境查询/",
   "main": "index.js",
   "type": "module",
   "bin": {
     "cloudbase-mcp": "./dist/index.js"
+  },
+  "homepage": "https://github.com/TencentCloudBase/CloudBase-AI-ToolKit",
+  "bugs": {
+    "url": "https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues",
+    "email": "bookerzhao@tencent.com"
   },
   "scripts": {
     "clean": "rm -rf dist",
