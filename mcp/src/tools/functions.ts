@@ -39,7 +39,7 @@ export function registerFunctionTools(server: McpServer) {
           subnetId: z.string()
         }).optional().describe("私有网络配置"),
         runtime: z.string().optional().describe("运行时环境"),
-        installDependency: z.boolean().optional().describe("是否安装依赖"),
+        installDependency: z.boolean().optional().describe("是否安装依赖，建议传 true"),
         triggers: z.array(z.object({
           name: z.string(),
           type: z.string(),
@@ -54,18 +54,14 @@ export function registerFunctionTools(server: McpServer) {
         })).optional().describe("Layer配置")
       }).describe("函数配置"),
       functionRootPath: z.string().optional().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，指定之后可以自动上传这部分的文件作为代码"),
-      force: z.boolean().describe("是否覆盖"),
-      base64Code: z.string().optional().describe("base64编码的代码，一般不采用这种方式"),
-      codeSecret: z.string().optional().describe("代码保护密钥，一般无需配置")
+      force: z.boolean().describe("是否覆盖")
     },
-    async ({ func, functionRootPath, force, base64Code, codeSecret }) => {
+    async ({ func, functionRootPath, force }) => {
       const cloudbase = await getCloudBaseManager()
       const result = await cloudbase.functions.createFunction({
         func,
         functionRootPath,
-        force,
-        base64Code,
-        codeSecret
+        force
       });
       return {
         content: [
@@ -86,17 +82,16 @@ export function registerFunctionTools(server: McpServer) {
       func: z.object({
         name: z.string().describe("函数名称")
       }).describe("函数配置"),
-      functionRootPath: z.string().optional().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，指定之后可以自动上传这部分的文件作为代码"),
-      base64Code: z.string().optional().describe("base64编码的代码，这种方式也可以更新代码，不推荐使用"),
-      codeSecret: z.string().optional().describe("代码保护密钥，一般无需配置")
+      functionRootPath: z.string().optional().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，指定之后可以自动上传这部分的文件作为代码")
     },
-    async ({ func, functionRootPath, base64Code, codeSecret }) => {
+    async ({ func, functionRootPath }) => {
       const cloudbase = await getCloudBaseManager()
       const result = await cloudbase.functions.updateFunctionCode({
-        func,
+        func: {
+          ...func,
+          installDependency: true // 默认安装依赖
+        },
         functionRootPath,
-        base64Code,
-        codeSecret
       });
       return {
         content: [
