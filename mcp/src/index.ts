@@ -5,11 +5,12 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { registerEnvTools } from "./tools/env.js";
 import { registerFileTools } from "./tools/file.js";
-import { registerFunctionTools  } from "./tools/functions.js";
+import { registerFunctionTools } from "./tools/functions.js";
 import { registerDatabaseTools } from "./tools/database.js";
 import { registerHostingTools } from "./tools/hosting.js";
 import { registerDownloadTools } from "./tools/download.js";
 import { registerStorageTools } from "./tools/storage.js";
+import { registerRagTools } from './tools/rag.js'
 
 // Create server instance
 const server = new McpServer({
@@ -23,6 +24,9 @@ const server = new McpServer({
 
 // Register environment management tools
 registerEnvTools(server);
+
+// Register RAG  tools
+registerRagTools(server)
 
 // // Register file management tools
 // registerFileTools(server);
