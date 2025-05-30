@@ -77,6 +77,21 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 ### 2. 配置你的 AI IDE
 
+以下工具均支持 CloudBase AI ToolKit，可根据你的开发环境选择合适的工具：
+
+| 工具 | 支持平台 |
+|------|----------|
+| [Cursor](https://cursor.com/) | 独立 IDE|
+| [WindSurf](https://windsurf.com/editor) | 独立 IDE,VSCode、JetBrains 插件 |
+| [CodeBuddy](https://copilot.tencent.com/) | VS Code, JetBrains、微信开发者工具插件 |
+| [CLINE](https://cline.so/) | VS Code 插件 |
+| [GitHub Copilot](https://github.com/features/copilot) | VS Code 插件 |
+| [Trae](https://www.trae.ai/) | 独立 IDE |
+| [通义灵码](https://tongyi.aliyun.com/lingma) | 独立 IDE，VS Code, JetBrains插件 |
+| [RooCode](https://roocode.com/) | VS Code插件 |
+
+选择工具后，请按照下方对应的配置说明进行设置。每个工具都需要配置云开发环境 ID 才能使用 MCP 功能。如果你还没有云开发环境，请先[开通云开发环境](#0前置条件)。
+
 <details>
 <summary><strong>🔧 Cursor 配置</strong></summary>
 
