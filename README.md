@@ -410,9 +410,11 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 #### 步骤2：配置 MCP 
 
+模板中已包含 `.comate/mcp.json` 目录，文心快码会自动识别项目中的 MCP
+
 **配置云开发 MCP Server**
 
-点击文心快码右上角的设置图标，选择 MCP 配置，在打开的文件中修改 MCP 配置
+在文心快码的 Zulu 模式中，选择 MCP 配置-设置，在打开的文件中修改 MCP 配置
 
 其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
 
@@ -435,7 +437,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 #### 步骤3：使用 AI 对话
 
-在对话窗口中切换到 Zulu模式，然后使用 AI 进行代码生成和自动化操作
+在对话窗口中切换到 Zulu 模式，然后使用 AI 进行代码生成和自动化操作
 
 </details>
 
