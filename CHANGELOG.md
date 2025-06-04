@@ -14,7 +14,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### 新功能
 
-* **mcp:** support search_knowledge_base tool 智能检索云开发知识库（支持云开发与云函数），通过向量搜索快速获取专业文档与答案 ([cf69963](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/cf699637ad3a2135fbfe2edcbe410e3398672d51))
+* **mcp:** support searchKnowledgeBase tool 智能检索云开发知识库（支持云开发与云函数），通过向量搜索快速获取专业文档与答案 ([cf69963](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/cf699637ad3a2135fbfe2edcbe410e3398672d51))
 * support roocode ([f32ac6c](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/f32ac6c9f0a8ff47818e44d6d6538e6dc48c9117))
 * support RooCode ([2d1542d](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/2d1542d61cecee724f0588e805b9134932aba025))
 * support tongyi lingma ([b7d2de0](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/b7d2de0f819b69201fdbd0da9562a03420590c0b))

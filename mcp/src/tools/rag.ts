@@ -37,7 +37,7 @@ function safeStringify(obj: any) {
 export function registerRagTools(server: McpServer) {
     // 知识库检索
     server.tool(
-        'search_knowledge_base', 
+        'searchKnowledgeBase', 
         '云开发知识库智能检索工具，支持云开发与云函数知识的向量查询',
     {
         threshold: z.number().default(0.5).optional().describe("相似性检索阈值"),
