@@ -2,6 +2,17 @@ import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getCloudBaseManager } from '../cloudbase-manager.js'
 
+// 支持的 Node.js 运行时列表
+export const SUPPORTED_NODEJS_RUNTIMES = [
+  'Nodejs 18.15',
+  'Nodejs 16.13',
+  'Nodejs 14.18',
+  'Nodejs 12.16',
+  'Nodejs 10.15',
+  'Nodejs 8.9（即将下线）',
+];
+export const DEFAULT_NODEJS_RUNTIME = 'Nodejs 18.15';
+
 export function registerFunctionTools(server: McpServer) {
   // getFunctionList - 获取云函数列表(推荐)
   server.tool(
@@ -38,7 +49,7 @@ export function registerFunctionTools(server: McpServer) {
           vpcId: z.string(),
           subnetId: z.string()
         }).optional().describe("私有网络配置"),
-        runtime: z.string().optional().describe("运行时环境"),
+        runtime: z.string().optional().describe("运行时环境，可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，') + "，默认 Nodejs 18.15"),
         installDependency: z.boolean().optional().describe("是否安装依赖，建议传 true"),
         triggers: z.array(z.object({
           name: z.string(),
@@ -57,6 +68,10 @@ export function registerFunctionTools(server: McpServer) {
       force: z.boolean().describe("是否覆盖")
     },
     async ({ func, functionRootPath, force }) => {
+      // 自动填充默认 runtime
+      if (!func.runtime) {
+        func.runtime = DEFAULT_NODEJS_RUNTIME;
+      }
       const cloudbase = await getCloudBaseManager()
       const result = await cloudbase.functions.createFunction({
         func,
@@ -117,10 +132,14 @@ export function registerFunctionTools(server: McpServer) {
           vpcId: z.string(),
           subnetId: z.string()
         }).optional().describe("VPC配置"),
-        runtime: z.string().optional().describe("运行时")
+        runtime: z.string().optional().describe("运行时（可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，') + "，默认 Nodejs 18.15)")
       }).describe("函数配置")
     },
     async ({ funcParam }) => {
+      // 自动填充默认 runtime
+      if (!funcParam.runtime) {
+        funcParam.runtime = DEFAULT_NODEJS_RUNTIME;
+      }
       const cloudbase = await getCloudBaseManager()
       const result = await cloudbase.functions.updateFunctionConfig(funcParam);
       return {
