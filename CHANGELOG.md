@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/compare/v1.4.0...v1.5.0) (2025-06-04)
+
+
+### 修复
+
+* function install Deps ([fffd16a](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/fffd16a120642d35dd115539301c05b12ffdbf9e))
+
+
+### 新功能
+
+* 支持文心快码 Comate ([1df3806](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/1df38060221373fdd41f817c3bffe11412ac4ebd))
+
+
+### 其他
+
+* update doc ([62132cf](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/62132cff9f10f60a4cb664cd43ec220c2b8dcd3a))
+* update rules ([a4f9e92](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/a4f9e92b1d368e330a6df519a0246a4d600d4d0d))
+* update searchKnowledgeBase tools name ([80353a6](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/80353a63f44666ad869e73c3149e10751c54af8e))
+
 ## [1.4.0](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/compare/v1.1.0...v1.4.0) (2025-05-30)
 
 
