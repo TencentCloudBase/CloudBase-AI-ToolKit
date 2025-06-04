@@ -83,12 +83,14 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 |------|----------|
 | [Cursor](https://cursor.com/) | 独立 IDE|
 | [WindSurf](https://windsurf.com/editor) | 独立 IDE,VSCode、JetBrains 插件 |
-| [CodeBuddy](https://copilot.tencent.com/) | VS Code, JetBrains、微信开发者工具插件 |
+| [CodeBuddy](https://copilot.tencent.com/) | VS Code、JetBrains、微信开发者工具插件 |
 | [CLINE](https://cline.so/) | VS Code 插件 |
 | [GitHub Copilot](https://github.com/features/copilot) | VS Code 插件 |
 | [Trae](https://www.trae.ai/) | 独立 IDE |
-| [通义灵码](https://tongyi.aliyun.com/lingma) | 独立 IDE，VS Code, JetBrains插件 |
+| [通义灵码](https://tongyi.aliyun.com/lingma) | 独立 IDE，VS Code、 JetBrains插件 |
 | [RooCode](https://roocode.com/) | VS Code插件 |
+| [文心快码](https://comate.baidu.com/) | VS Code、JetBrains插件|
+
 
 选择工具后，请按照下方对应的配置说明进行设置。每个工具都需要配置云开发环境 ID 才能使用 MCP 功能。如果你还没有云开发环境，请先[开通云开发环境](#0前置条件)。
 
@@ -396,6 +398,44 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 #### 步骤3：使用 AI 对话
 
 在对话窗口中使用 AI 进行代码生成和自动化操作
+
+</details>
+
+<details>
+<summary><strong>🤖 文心快码(Baidu Comate) 配置</strong></summary>
+
+#### 步骤1：自动应用 AI 规则
+
+模板中已包含 `.comate/rules` 目录，文心快码会自动识别云开发最佳实践
+
+#### 步骤2：配置 MCP 
+
+**配置云开发 MCP Server**
+
+点击文心快码右上角的设置图标，选择 MCP 配置，在打开的文件中修改 MCP 配置
+
+其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+
+```json
+{
+    "mcpServers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ],
+            "env": {
+                "CLOUDBASE_ENV_ID": "你的云开发环境ID"
+            },
+            "disabled": false
+        }
+    }
+}
+```
+
+#### 步骤3：使用 AI 对话
+
+在对话窗口中切换到 Zulu模式，然后使用 AI 进行代码生成和自动化操作
 
 </details>
 
