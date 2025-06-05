@@ -84,7 +84,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 | [Cursor](https://cursor.com/) | 独立 IDE|
 | [WindSurf](https://windsurf.com/editor) | 独立 IDE,VSCode、JetBrains 插件 |
 | [CodeBuddy](https://copilot.tencent.com/) | VS Code, JetBrains、微信开发者工具插件 |
-| [CLINE](https://cline.so/) | VS Code 插件 |
+| [CLINE](https://cline.bot/) | VS Code 插件 |
 | [GitHub Copilot](https://github.com/features/copilot) | VS Code 插件 |
 | [Trae](https://www.trae.ai/) | 独立 IDE |
 | [通义灵码](https://tongyi.aliyun.com/lingma) | 独立 IDE，VS Code, JetBrains插件 |

@@ -2,11 +2,12 @@ import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 // 1. 枚举定义
-const KnowledgeBaseEnum = z.enum(["cloudbase", "scf"]);
+const KnowledgeBaseEnum = z.enum(["cloudbase", "scf", "miniprogram"]);
 // 2. 枚举到后端 id 的映射
 const KnowledgeBaseIdMap: Record<z.infer<typeof KnowledgeBaseEnum>, string> = {
   cloudbase: "ykfzskv4_ad28",
   scf: "scfsczskzyws_4bdc",
+  miniprogram: "xcxzskws_25d8",
 };
 
 // 安全 JSON.parse
@@ -41,7 +42,7 @@ export function registerRagTools(server: McpServer) {
         '云开发知识库智能检索工具，支持云开发与云函数知识的向量查询',
     {
         threshold: z.number().default(0.5).optional().describe("相似性检索阈值"),
-        id: KnowledgeBaseEnum.describe("知识库范围，cloudbase=云开发全量知识，scf=云开发的云函数知识"),
+        id: KnowledgeBaseEnum.describe("知识库范围，cloudbase=云开发全量知识，scf=云开发的云函数知识, miniprogram=小程序知识（不包含云开发与云函数知识）"),
         content: z.string().describe("检索内容"),
         options: z.object({
             chunkExpand: z.array(z.number()).min(2).max(2).default([3, 3]).describe("指定返回的文档内容的展开长度,例如 [3,3]代表前后展开长度"),
