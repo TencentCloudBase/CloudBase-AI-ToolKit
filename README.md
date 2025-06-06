@@ -56,12 +56,13 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 | **📱 全栈应用支持** | Web + 小程序 + 数据库 + 后端一体化 | 支持小程序/web 等多种应用形式,提供后端托管和数据库 |
 | **🔧 智能修复** | AI 自动查看日志并修复问题 | 降低运维成本 |
 | **⚡ 极速体验** | 国内 CDN 加速 | 比海外平台访问速度更快 |
+| **📚 智能知识库检索** | 内置支持云开发、微信小程序等专业知识库的智能向量检索 |
 
 
 ## 🚀 快速开始
 
 
-### 0.前置条件
+### 0. 前置条件
 
 #### 安装 AI 开发工具
 例如 [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) 等
@@ -71,14 +72,24 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 2. 在控制台「概览」页面右侧获取 **环境ID**  
    （后续部署需要此 ID）
 
-### 1. 使用模板创建项目
+### 1. 快速初始化或增强你的项目
 
-以下模板已经内置了云开发面向 AI IDE 的规则配置
+我们为你准备了内置云开发最佳实践和 AI IDE 规则的项目模板，推荐如下两种方式：
 
-建议选择适合你的项目模板快速开始：
+#### 🚀 新项目推荐
 
-- React Web应用+云开发模板：[下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
-- 小程序+云开发模板：[下载代码包](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
+选择适合你的模板，一键初始化：
+
+- **React Web 应用 + 云开发模板**  
+  [下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
+
+- **微信小程序 + 云开发模板**  
+  [下载代码包](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
+
+#### 🛠️ 已有项目增强
+
+如果你已经有自己的项目，只需在配置好 MCP 后，让 AI 调用 `downloadTemplate` 工具，选择 `rules` 模板，即可一键下载并补全 AI 编辑器规则配置到当前项目目录，无需手动操作。
+
 
 ### 2. 配置你的 AI IDE
 
@@ -610,6 +621,7 @@ AI 会自动：
 | 工具名称 | 功能简介 |
 |----------|----------|
 | logout | 登出当前云开发账户 |
+| downloadTemplate | 下载CloudBase项目模板（React、小程序、AI编辑器配置等） |
 | listEnvs | 获取所有云开发环境信息 |
 | getEnvAuthDomains | 获取云开发环境的合法域名列表 |
 | createEnvDomain | 为云开发环境添加安全域名 |

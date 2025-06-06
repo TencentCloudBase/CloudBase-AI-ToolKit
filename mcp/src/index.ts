@@ -9,7 +9,8 @@ import { registerDatabaseTools } from "./tools/database.js";
 import { registerHostingTools } from "./tools/hosting.js";
 import { registerDownloadTools } from "./tools/download.js";
 import { registerStorageTools } from "./tools/storage.js";
-import { registerRagTools } from './tools/rag.js'
+import { registerRagTools } from './tools/rag.js';
+import { registerSetupTools } from "./tools/setup.js";
 
 // Create server instance
 const server = new McpServer({
@@ -44,6 +45,9 @@ registerDownloadTools(server);
 
 // Register storage tools
 registerStorageTools(server);
+
+// Register setup tools
+registerSetupTools(server);
 
 async function main() {
   const transport = new StdioServerTransport();

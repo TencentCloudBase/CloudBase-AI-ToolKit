@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "templates": [
     "web/cloudbase-react-template",
+    "web/cloudbase-project",
     "miniprogram/cloudbase-miniprogram-template"
   ],
   "excludePatterns": [
