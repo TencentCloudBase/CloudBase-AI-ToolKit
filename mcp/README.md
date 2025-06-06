@@ -22,9 +22,14 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commits)
 [![GitHub contributors](https://img.shields.io/github/contributors/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/graphs/contributors)
 
+
+[![CNB 镜像](https://img.shields.io/badge/CNB-CloudBase--AI--ToolKit-blue?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHJ4PSIyIiBmaWxsPSIjM0I4MkY2Ii8+PHBhdGggZD0iTTUgM0g3VjVINSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNNSA3SDdWOUg1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==)](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit)
+
 当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
 
 <a href="https://www.producthunt.com/posts/cloudbase-ai-tookit?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-cloudbase&#0045;ai&#0045;tookit" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=971451&theme=light&t=1748519563832" alt="CloudBase&#0032;AI&#0032;Tookit - Prompt&#0032;to&#0032;Production&#0058;&#0032;Full&#0045;stack&#0044;&#0032;DB&#0032;&#0038;&#0032;functions—zero&#0032;setup&#0046; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=CloudBase&config=eyJjb21tYW5kIjoibnB4IEBjbG91ZGJhc2UvY2xvdWRiYXNlLW1jcEBsYXRlc3QiLCJlbnYiOnsiQ0xPVURCQVNFX0VOVl9JRCI6IllPVVJfRU5WX0lEIn0sImRpc2FibGVkIjpmYWxzZX0%3D)
 
 
 
@@ -51,12 +56,13 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 | **📱 全栈应用支持** | Web + 小程序 + 数据库 + 后端一体化 | 支持小程序/web 等多种应用形式,提供后端托管和数据库 |
 | **🔧 智能修复** | AI 自动查看日志并修复问题 | 降低运维成本 |
 | **⚡ 极速体验** | 国内 CDN 加速 | 比海外平台访问速度更快 |
+| **📚 智能知识库检索** | 内置支持云开发、微信小程序等专业知识库的智能向量检索 |
 
 
 ## 🚀 快速开始
 
 
-### 0.前置条件
+### 0. 前置条件
 
 #### 安装 AI 开发工具
 例如 [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) 等
@@ -66,16 +72,33 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 2. 在控制台「概览」页面右侧获取 **环境ID**  
    （后续部署需要此 ID）
 
-### 1. 使用模板创建项目
+### 1. 快速初始化或增强你的项目
 
-以下模板已经内置了云开发面向 AI IDE 的规则配置
+我们为你准备了内置云开发最佳实践和 AI IDE 规则的项目模板，推荐如下两种方式：
 
-建议选择适合你的项目模板快速开始：
+#### 🚀 新项目推荐
 
-- React Web应用+云开发模板：[下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
-- 小程序+云开发模板：[下载代码包](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
+选择适合你的模板，一键初始化：
+
+- **React Web 应用 + 云开发模板**  
+  [下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
+
+- **微信小程序 + 云开发模板**  
+  [下载代码包](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
+
+- **通用云开发模板**  
+  [下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-project.zip) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-project)
+
+#### 🛠️ 已有项目增强
+
+如果你已经有自己的项目，只需在配置好 MCP 后，让 AI 调用 `downloadTemplate` 工具，选择 `rules` 模板，即可一键下载并补全 AI 编辑器规则配置到当前项目目录，无需手动操作。
+
 
 ### 2. 配置你的 AI IDE
+
+> 💡 **使用提示**：如果你在 Cursor 等工具中开启了自动执行(auto-run)模式，建议在"Command denylist"中添加敏感命令，避免自动运行如删除数据等敏感的操作
+> 
+> 默认模式下需要手动确认执行，较为安全。
 
 以下工具均支持 CloudBase AI ToolKit，可根据你的开发环境选择合适的工具：
 
@@ -83,12 +106,14 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 |------|----------|
 | [Cursor](https://cursor.com/) | 独立 IDE|
 | [WindSurf](https://windsurf.com/editor) | 独立 IDE,VSCode、JetBrains 插件 |
-| [CodeBuddy](https://copilot.tencent.com/) | VS Code, JetBrains、微信开发者工具插件 |
-| [CLINE](https://cline.bot/) | VS Code 插件 |
+| [CodeBuddy](https://copilot.tencent.com/) | VS Code、JetBrains、微信开发者工具插件 |
+| [CLINE](https://cline.so/) | VS Code 插件 |
 | [GitHub Copilot](https://github.com/features/copilot) | VS Code 插件 |
 | [Trae](https://www.trae.ai/) | 独立 IDE |
-| [通义灵码](https://tongyi.aliyun.com/lingma) | 独立 IDE，VS Code, JetBrains插件 |
+| [通义灵码](https://tongyi.aliyun.com/lingma) | 独立 IDE，VS Code、 JetBrains插件 |
 | [RooCode](https://roocode.com/) | VS Code插件 |
+| [文心快码](https://comate.baidu.com/) | VS Code、JetBrains插件|
+
 
 选择工具后，请按照下方对应的配置说明进行设置。每个工具都需要配置云开发环境 ID 才能使用 MCP 功能。如果你还没有云开发环境，请先[开通云开发环境](#0前置条件)。
 
@@ -101,6 +126,10 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 模板中已包含 `.cursor/rules/` 目录，AI 会自动识别云开发最佳实践。
 
 #### 步骤2：配置 MCP
+
+模板中已经包含 mcp 配置，如果不是从模板开始，可以点击下方按钮安装到 Cursor 中
+
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=CloudBase&config=eyJjb21tYW5kIjoibnB4IEBjbG91ZGJhc2UvY2xvdWRiYXNlLW1jcEBsYXRlc3QiLCJlbnYiOnsiQ0xPVURCQVNFX0VOVl9JRCI6IllPVVJfRU5WX0lEIn0sImRpc2FibGVkIjpmYWxzZX0%3D)
 
 1. 请修改项目中的 `.cursor/mcp.json` ，填写你的云开发环境 ID
 
@@ -399,6 +428,46 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 </details>
 
+<details>
+<summary><strong>🤖 文心快码(Baidu Comate) 配置</strong></summary>
+
+#### 步骤1：自动应用 AI 规则
+
+模板中已包含 `.comate/rules` 目录，文心快码会自动识别云开发最佳实践
+
+#### 步骤2：配置 MCP 
+
+模板中已包含 `.comate/mcp.json` 目录，文心快码会自动识别项目中的 MCP
+
+**配置云开发 MCP Server**
+
+在文心快码的 Zulu 模式中，选择 MCP 配置-设置，在打开的文件中修改 MCP 配置
+
+其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+
+```json
+{
+    "mcpServers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ],
+            "env": {
+                "CLOUDBASE_ENV_ID": "你的云开发环境ID"
+            },
+            "disabled": false
+        }
+    }
+}
+```
+
+#### 步骤3：使用 AI 对话
+
+在对话窗口中切换到 Zulu 模式，然后使用 AI 进行代码生成和自动化操作
+
+</details>
+
 ### 3. 开始开发
 
 确认 AI 已经连接到云开发
@@ -505,11 +574,57 @@ AI 会自动：
 
 ---
 
+## 🌟 为什么选择 CloudBase？
+
+- **⚡ 极速部署**：国内节点,访问速度比海外更快
+- **🛡️ 稳定可靠**：330 万开发者选择的 Serverless 平台
+- **🔧 开发友好**：专为AI时代设计的全栈平台
+- **💰 成本优化**：Serverless 架构更具弹性，新用户开发期间可以免费体验
+
+
+## 📋 常见问题 FAQ
+
+如有迁移、集成等常见疑问，请查阅 [FAQ 常见问题](./FAQ.md)。 
+
+## 💬 技术交流群
+
+遇到问题或想要交流经验？加入我们的技术社区！
+
+### 🔥 微信交流群
+
+<div align="center">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/toolkit-qrcode.png" width="200" alt="微信群二维码">
+<br>
+<i>扫码加入微信技术交流群</i>
+</div>
+
+**群内你可以：**
+- 💡 分享你的 AI + 云开发项目
+- 🤝 技术交流和开发问题沟通
+- 📢 获取最新功能更新和最佳实践
+- 🎯 参与产品功能讨论和建议
+
+### 📱 其他交流方式
+
+| 平台 | 链接 | 说明 |
+|------|------|------|
+| **官方文档** | [📖 查看文档](https://docs.cloudbase.net/) | 完整的云开发文档 |
+| **Issue 反馈** | [🐛 提交问题](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues) | Bug 反馈和功能请求 |
+
+### 🎉 社区活动
+
+- **每周技术分享**：群内定期分享 AI + 云开发最佳实践
+- **项目展示**：展示你用 AI 开发的精彩项目
+- **问题答疑**：腾讯云开发团队成员在线答疑
+- **新功能预览**：第一时间体验最新功能
+
+
 ## 🛠️ 云开发 MCP 工具一览
 
 | 工具名称 | 功能简介 |
 |----------|----------|
 | logout | 登出当前云开发账户 |
+| downloadTemplate | 下载CloudBase项目模板（React、小程序、AI编辑器配置等） |
 | listEnvs | 获取所有云开发环境信息 |
 | getEnvAuthDomains | 获取云开发环境的合法域名列表 |
 | createEnvDomain | 为云开发环境添加安全域名 |
@@ -566,45 +681,6 @@ graph TD
     J --> K[Web/小程序/API]
 ```
 
-## 🌟 为什么选择 CloudBase？
-
-- **⚡ 极速部署**：国内节点,访问速度比海外更快
-- **🛡️ 稳定可靠**：330 万开发者选择的 Serverless 平台
-- **🔧 开发友好**：专为AI时代设计的全栈平台
-- **💰 成本优化**：Serverless 架构更具弹性，新用户开发期间可以免费体验
-
-## 💬 技术交流群
-
-遇到问题或想要交流经验？加入我们的技术社区！
-
-### 🔥 微信交流群
-
-<div align="center">
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/toolkit-qrcode.png" width="200" alt="微信群二维码">
-<br>
-<i>扫码加入微信技术交流群</i>
-</div>
-
-**群内你可以：**
-- 💡 分享你的 AI + 云开发项目
-- 🤝 技术交流和开发问题沟通
-- 📢 获取最新功能更新和最佳实践
-- 🎯 参与产品功能讨论和建议
-
-### 📱 其他交流方式
-
-| 平台 | 链接 | 说明 |
-|------|------|------|
-| **官方文档** | [📖 查看文档](https://docs.cloudbase.net/) | 完整的云开发文档 |
-| **Issue 反馈** | [🐛 提交问题](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues) | Bug 反馈和功能请求 |
-
-### 🎉 社区活动
-
-- **每周技术分享**：群内定期分享 AI + 云开发最佳实践
-- **项目展示**：展示你用 AI 开发的精彩项目
-- **问题答疑**：腾讯云开发团队成员在线答疑
-- **新功能预览**：第一时间体验最新功能
-
 ## 🤝 贡献指南
 
 欢迎提交 Issue 和 Pull Request！请查看我们的[贡献指南](CONTRIBUTING.md)了解如何参与项目开发。
@@ -617,6 +693,3 @@ graph TD
 
 ⭐ 如果这个项目对你有帮助，请给我们一个 Star！ 
 
-## 📋 [常见问题 FAQ](./FAQ.md)
-
-如有迁移、集成等常见疑问，请查阅 [FAQ 常见问题](./FAQ.md)。 
