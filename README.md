@@ -82,6 +82,10 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 ### 2. 配置你的 AI IDE
 
+> 💡 **使用提示**：如果你在 Cursor 等工具中开启了自动执行(auto-run)模式，建议在"Command denylist"中添加敏感命令，避免自动运行如删除数据等敏感的操作
+> 
+> 默认模式下需要手动确认执行，较为安全。
+
 以下工具均支持 CloudBase AI ToolKit，可根据你的开发环境选择合适的工具：
 
 | 工具 | 支持平台 |
