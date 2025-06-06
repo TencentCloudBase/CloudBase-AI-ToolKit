@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/compare/v1.5.0...v1.6.0) (2025-06-06)
+
+
+### 其他
+
+* add cnb badge ([3eabacd](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/3eabacd1c27d6d201a3c7987402d795f5b895043))
+* add cursor install link ([cf712a9](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/cf712a9315a63bdd610c2274878ec8027e65856c))
+* add product-banner ([40e5532](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/40e553265b61d8bc62e993b53fe77cc779263bba))
+* function runtime add SUPPORTED_NODEJS_RUNTIMES ([fd11d16](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/fd11d169f986453bc6a573c38e0e97ada3b8a982)), closes [#3](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues/3)
+* update mcp log ([9aa03c8](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/9aa03c8e1d41d90846aba144378c381d2d7f81ed))
+* update rules for envId not found ([0bbd874](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/0bbd87466606c69e48f092870a820cab94f95b8f))
+
+
+### 新功能
+
+* add rules for cross db query ([de52863](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/de52863f5546f2af667a1477189bcdef7dbb80fe))
+* add universal templte ([3a6f55d](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/3a6f55d3dc98a08761c2393bc104b5effbb3f7d9))
+* support ai download template ([502fff1](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/502fff1526d6879d4e4f4a8b9a3559bd8cd7f8fd))
+* support miniprogram knowlege ([0ff5193](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/0ff5193dcce86f3cc214b9d2d3d1ce42356e5b5f))
+
 ## [1.5.0](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/compare/v1.4.0...v1.5.0) (2025-06-04)
 
 
