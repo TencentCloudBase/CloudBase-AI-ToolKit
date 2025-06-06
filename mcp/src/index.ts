@@ -2,7 +2,6 @@
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { z } from "zod";
 import { registerEnvTools } from "./tools/env.js";
 import { registerFileTools } from "./tools/file.js";
 import { registerFunctionTools } from "./tools/functions.js";
@@ -49,7 +48,7 @@ registerStorageTools(server);
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("TencentCloudBase MCP Server running on stdio");
+  console.log("TencentCloudBase MCP Server running on stdio");
 }
 
 main().catch((error) => {
