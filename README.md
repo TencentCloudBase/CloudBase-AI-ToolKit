@@ -86,6 +86,9 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 - **微信小程序 + 云开发模板**  
   [下载代码包](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
 
+- **通用云开发模板**  
+  [下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-project.zip) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-project)
+
 #### 🛠️ 已有项目增强
 
 如果你已经有自己的项目，只需在配置好 MCP 后，让 AI 调用 `downloadTemplate` 工具，选择 `rules` 模板，即可一键下载并补全 AI 编辑器规则配置到当前项目目录，无需手动操作。
