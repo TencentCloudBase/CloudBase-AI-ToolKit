@@ -103,6 +103,7 @@ for await (let str of res.textStream) {
 3. 云开发的 SDK 初始化时都需要填写环境 id，可以通过查询环境 id 来进行填写,然后进行登录，例如使用匿名登录
 4. Node.js 的云函数中需要包含package.json，声明所需的依赖，可以使用 createFunction 来创建函数，使用 updateFunctionCode 来部署云函数，优先采用云端安装依赖，不上传 node_modules，functionRootPath 指的是函数目录的父目录，例如 cloudfuncitons 这个目录
 5. 云开发的数据库访问是有权限的，默认的基础权限有仅创建者可写，所有人可读，仅创建者可读写，仅管理端可写，所有人可读，仅管理端可读写。如果直接从 web 端或者小程序端请求数据库，需要考虑配置合适的数据库权限，在云函数中，默认没有权限控制
+6. 如用户无特殊要求，涉及到跨数据库集合的操作必须通过云函数实现
 </cloudbase_knowledge>
 
 <cloudbase_db_notes>
@@ -128,7 +129,7 @@ for await (let str of res.textStream) {
 1. 部署云函数流程：可以通过 listFunctions MCP 工具来查询是否有云函数，然后直接调用 createFunction 或者 updateFunctionCode 更新云函数代码，只需要将functionRootPath 指向云函数目录的父目录(例如 cloudfuncitons 这个目录的绝对路径),不需要压缩代码等操作，上述工具会自动读取云函数父目录下的云函数同名目录的文件，并自动进行部署
 2. 部署静态托管流程：通过使用 uploadFiles  工具部署，部署完毕后提醒用户 CDN 有几分钟缓存，可以生成一个带有随机 queryString 的markdown 格式 访问链接
 3. 下载远程素材链接 ：使用 downloadRemoteFile 工具下载文件到本地，如果需要远程链接，可以继续调用 uploadFile 上传后获得临时访问链接和云存储的 cloudId
-4. 从知识库查询专业知识：可以使用 searchKnowledgeBase 工具智能检索云开发知识库（支持云开发与云函数），通过向量搜索快速获取专业文档与答案
+4. 从知识库查询专业知识：可以使用 searchKnowledgeBase 工具智能检索云开发知识库（支持云开发与云函数、小程序前端知识等），通过向量搜索快速获取专业文档与答案
 </work_flow>
 
 
