@@ -91,7 +91,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 #### 🛠️ 已有项目增强
 
-如果你已经有自己的项目，只需在配置好 MCP 后，让 AI 调用 `downloadTemplate` 工具，选择 `rules` 模板，即可一键下载并补全 AI 编辑器规则配置到当前项目目录，无需手动操作。
+如果你已经有自己的项目，只需在配置好 MCP 后，只需要对 AI 说 "在当前项目中下载云开发 AI 规则"，即可一键下载并补全 AI 编辑器规则配置到当前项目目录，无需手动操作。
 
 
 ### 2. 配置你的 AI IDE
