@@ -4,7 +4,7 @@
 
 # 🌟 CloudBase AI ToolKit
 
-**AI-Powered CloudBase: From Prompt to Production**
+**Smarter, faster development with AI prompts, MCP protocol, and CloudBase.**
 
 **🌍 Languages:** [中文](README.md) | **English**
 
@@ -25,13 +25,13 @@ Turn your ideas into deployable full-stack applications with just a prompt. Work
 
 ### 🚀 Three Core Capabilities
 
-**🤖 AI-Native Development**: Automatic code generation and architecture design <br>**☁️ Cloud Integration**: One-click access to database, cloud functions, and static hosting <br>**⚡ Rapid Deployment**: Full-stack applications online in minutes
+**🤖 AI-Powered Development**: AI auto-generates code and architecture<br>**☁️ Cloud Integration**: One-click access to database, cloud functions, static hosting<br>**⚡ Rapid Deployment**: Full-stack apps online in minutes
 
 ### 🛠️ Supported Platforms
 
-**Web Applications**: Modern frontend + static hosting<br>**WeChat Mini-Programs**: Cloud-native mini-program solutions<br>**Backend Services**: Cloud database + serverless functions + cloud hosting
+**Web Apps**: Modern frontend + static hosting<br>**WeChat Mini-Programs**: Cloud-native mini-program solutions<br>**Backend Services**: Cloud database + serverless functions + cloud hosting
 
-**Complete Video Demo**
+**Full Video Demo**
 
 https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
@@ -41,11 +41,12 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 | Feature | Description | Advantage |
 |---------|-------------|-----------|
-| **🤖 AI-Native** | Rule library designed for AI programming tools | Generated code follows cloud development best practices |
-| **🚀 One-Click Deploy** | MCP automated deployment to Tencent CloudBase platform | Serverless architecture, no server management needed |
-| **📱 Full-Stack Support** | Web + Mini-programs + Database + Backend integration | Support for various application types with backend hosting and database |
-| **🔧 Smart Debugging** | AI automatically reviews logs and fixes issues | Reduced operational costs |
-| **⚡ Lightning Fast** | Domestic CDN acceleration | Faster access than overseas platforms |
+| **🤖 AI-Native** | Rule library designed for AI programming tools | Code follows CloudBase best practices |
+| **🚀 One-Click Deploy** | MCP automated deployment to Tencent CloudBase | Serverless, no server management |
+| **📱 Full-Stack Support** | Web + Mini-programs + Database + Backend | Supports various app types, backend hosting, and database |
+| **🔧 Smart Debugging** | AI reviews logs and fixes issues | Lower ops cost |
+| **⚡ Lightning Fast** | China CDN acceleration | Faster than overseas platforms |
+| **📚 Smart Knowledge Base** | Built-in vector search for CloudBase, WeChat Mini-Program docs |
 
 ## 🚀 Quick Start
 
@@ -55,31 +56,65 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 Such as [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) etc.
 
 #### Set Up CloudBase Environment and Get Environment ID
-1. Visit [Tencent CloudBase Console](https://tcb.cloud.tencent.com/dev) to create an environment. New users can start with a free trial.
-2. Get your **Environment ID** from the "Overview" page in the console  
-   (This ID is required for deployment)
+1. Visit [Tencent CloudBase Console](https://tcb.cloud.tencent.com/dev) to create an environment. New users can start for free.
+2. Get your **Environment ID** from the "Overview" page in the console (needed for deployment)
 
-### 1. Create Project with Template
+### 1. Initialize or Enhance Your Project
 
-The following templates come with built-in cloud development rules configured for AI IDEs:
+We provide templates with CloudBase best practices and AI IDE rules. Two recommended ways:
 
-Choose the template that fits your project:
+#### 🚀 For New Projects
 
-- React Web App + CloudBase Template: [Download Package](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip) | [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
-- Mini-Program + CloudBase Template: [Download Package](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip) | [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
+Choose a template and initialize with one click:
+
+- **React Web App + CloudBase Template**  
+  [Download Package](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
+
+- **WeChat Mini-Program + CloudBase Template**  
+  [Download Package](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
+
+- **AI Rules Universal CloudBase Template**: Language and framework agnostic, includes CloudBase AI rules and MCP, suitable for any CloudBase project
+
+  [Download Package](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-project.zip) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-project)
+
+#### 🛠️ Enhance Existing Projects
+
+If you already have a project, after configuring MCP, just tell the AI "Download CloudBase AI rules in the current project" to instantly add and configure AI editor rules in your project directory—no manual steps needed.
 
 ### 2. Configure Your AI IDE
+
+> 💡 **Tip:** If you enable auto-run in tools like Cursor, add sensitive commands to the "Command denylist" to avoid accidental execution (e.g., data deletion). By default, manual confirmation is required for safety.
+
+Supported tools:
+
+| Tool | Platform |
+|------|----------|
+| [Cursor](https://cursor.com/) | Standalone IDE |
+| [WindSurf](https://windsurf.com/editor) | Standalone IDE, VSCode, JetBrains plugin |
+| [CodeBuddy](https://copilot.tencent.com/) | VS Code, JetBrains, WeChat DevTools plugin |
+| [CLINE](https://cline.so/) | VS Code plugin |
+| [GitHub Copilot](https://github.com/features/copilot) | VS Code plugin |
+| [Trae](https://www.trae.ai/) | Standalone IDE |
+| [Tongyi Lingma](https://tongyi.aliyun.com/lingma) | Standalone IDE, VS Code, JetBrains plugin |
+| [RooCode](https://roocode.com/) | VS Code plugin |
+| [Baidu Comate](https://comate.baidu.com/) | VS Code, JetBrains plugin|
+
+Follow the configuration guide for your tool below. Each tool requires your CloudBase environment ID for MCP features. If you don't have an environment, [create one first](#0-prerequisites).
 
 <details>
 <summary><strong>🔧 Cursor Configuration</strong></summary>
 
 #### Step 1: Auto-Apply AI Rules
 
-Templates include `.cursor/rules/` directory, AI will automatically recognize CloudBase best practices.
+Templates include `.cursor/rules/` directory, AI will auto-detect CloudBase best practices.
 
 #### Step 2: Configure MCP
 
-1. Modify `.cursor/mcp.json` in your project with your CloudBase environment ID
+Templates include MCP config. If not using a template, click below to install in Cursor:
+
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=CloudBase&config=eyJjb21tYW5kIjoibnB4IEBjbG91ZGJhc2UvY2xvdWRiYXNlLW1jcEBsYXRlc3QiLCJlbnYiOnsiQ0xPVURCQVNFX0VOVl9JRCI6IllPVVJfRU5WX0lEIn0sImRpc2FibGVkIjpmYWxzZX0%3D)
+
+1. Edit `.cursor/mcp.json` in your project, set your CloudBase environment ID:
 
 ```json
 {
@@ -97,11 +132,11 @@ Templates include `.cursor/rules/` directory, AI will automatically recognize Cl
 
 2. Enable CloudBase MCP Server
 
-Click the ⚙️ icon in the top-right corner of Cursor, then select "MCP". In the MCP Server page, find the cloudbase toggle button and enable it.
+Click the ⚙️ icon in Cursor, go to "MCP", find cloudbase and enable it.
 
 #### Step 3: Switch to Agent Mode
 
-Use Agent mode in the chat window for code generation and automated operations.
+Use Agent mode in chat for code generation and automation.
 
 </details>
 
@@ -315,82 +350,82 @@ Switch to agent mode in the bottom-left corner of the chat window.
 
 </details>
 
-### 3. Start Development
+### 3. Start Developing
 
-Confirm AI is connected to CloudBase:
-
-```
-Query current CloudBase environment information
-```
-
-Describe your requirements to AI for development:
+Make sure AI is connected to CloudBase:
 
 ```
-Create a real-time multiplayer Gomoku game website with online battles, then deploy it
+Query current CloudBase environment info
+```
+
+Describe your needs to the AI, e.g.:
+
+```
+Build a two-player online Gomoku game, support online battle, then deploy
 ```
 
 AI will automatically:
-- 📝 Generate frontend and backend code  
+- 📝 Generate frontend & backend code
 - 🚀 Deploy to CloudBase
 - 🔗 Return online access link
 
-If you encounter errors during development, share the error message with AI for troubleshooting:
+If you encounter errors, send the error message to AI for troubleshooting:
 
 ```
-Got an error: xxxx
+Error: xxxx
 ```
 
-You can also have AI debug and modify code using cloud function logs:
+You can also ask AI to debug and modify code using cloud function logs:
 
 ```
-Cloud function code doesn't meet requirements, requirement is xxx, please check logs and data for debugging and fixes
+Cloud function code doesn't meet requirements: xxx. Please check logs and data, debug and fix.
 ```
 
 ## 🎯 Use Cases
 
-### Case 1: Real-time Multiplayer Gomoku
+### Case 1: Two-Player Online Gomoku
 
-**Development Process:**
-1. Input requirement: "Create a real-time multiplayer Gomoku website with online battles"
+**Process:**
+1. Input: "Build a two-player online Gomoku game, support online battle"
 2. AI generates: Web app + cloud database + real-time data push
-3. Automatically deploys and provides access link
+3. Auto-deploy and get access link
 
-👉 **Live Demo:** [Gomoku Game](https://cloud1-5g39elugeec5ba0f-1300855855.tcloudbaseapp.com/gobang/#/)
+👉 **Try it:** [Gomoku Game](https://cloud1-5g39elugeec5ba0f-1300855855.tcloudbaseapp.com/gobang/#/)
 
 <details>
-<summary>📸 View Development Screenshots</summary>
+<summary>📸 See development screenshots</summary>
 
-| Development Process | Final Result |
-|---------------------|--------------|
-| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-001.png" width="400" alt="Development Screenshot 1"> | <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-004.png" width="400" alt="Gomoku Game Effect"> |
-| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-002.png" width="400" alt="Development Screenshot 2"> | Supports real-time multiplayer battles<br>Real-time game synchronization |
+| Development | Final Result |
+|-------------|-------------|
+| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-001.png" width="400" alt="Dev Screenshot 1"> | <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-004.png" width="400" alt="Gomoku Result"> |
+| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-002.png" width="400" alt="Dev Screenshot 2"> | Supports two-player online battle<br>Real-time board sync |
 
 </details>
 
-### Case 2: AI Pet Care Mini-Program
+### Case 2: AI Pet Mini-Program
 
-**Development Process:**
-1. Input: "Develop a pet care mini-program with AI-enhanced interactions"
-2. AI generates: Mini-program + cloud database + AI cloud functions
-3. Import into WeChat Developer Tools for publishing
+**Process:**
+1. Input: "Build a pet-raising mini-program, use AI for enhanced interaction"
+2. AI generates: Mini-program + cloud database + AI cloud function
+3. Import to WeChat DevTools to publish
 
 <details>
-<summary>📸 View Development Screenshots & Mini-Program Preview</summary>
+<summary>📸 See dev screenshots & preview</summary>
 
 <table>
 <tr>
 <td width="50%">
-<b>🖥️ Development Screenshots</b><br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-005.png" width="100%" alt="AI Pet Mini-Program Development Screenshot">
+<b>🖥️ Dev Screenshots</b><br>
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-005.png" width="100%" alt="AI Pet Mini-Program Dev Screenshot">
 <br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-003.png" width="100%" alt="Mini-Program Development Process">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-003.png" width="100%" alt="Mini-Program Dev Process">
 </td>
 <td width="50%">
 <b>📱 Mini-Program Preview</b><br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-006.png" width="200" alt="Mini-Program Interface 1">
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-007.png" width="200" alt="Mini-Program Interface 2">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-006.png" width="200" alt="Mini-Program UI 1">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-007.png" width="200" alt="Mini-Program UI 2">
 <br><br>
-<b>📲 Try QR Code</b><br>
+<b>📲 Experience QR Code</b><br>
 <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-008.png" width="150" alt="Mini-Program QR Code">
 </td>
 </tr>
@@ -398,128 +433,134 @@ Cloud function code doesn't meet requirements, requirement is xxx, please check 
 
 </details>
 
-### Case 3: Intelligent Issue Diagnosis
+### Case 3: Smart Issue Diagnosis
 
-When applications have problems:
-1. AI automatically reviews cloud function logs
-2. Analyzes error causes and generates fix code  
-3. Automatically redeploys
+When issues occur:
+1. AI checks cloud function logs
+2. Analyzes errors and generates fix code
+3. Auto-redeploys
 
 <details>
-<summary>📸 View Intelligent Diagnosis Process</summary>
+<summary>📸 See smart diagnosis process</summary>
 
 <div align="center">
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-009.png" width="600" alt="Intelligent Issue Diagnosis Process">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-009.png" width="600" alt="Smart Diagnosis Process">
 <br>
-<i>AI automatically analyzes logs and generates fix solutions</i>
+<i>AI auto-analyzes logs and generates fixes</i>
 </div>
 
 </details>
 
 ---
 
-## 🛠️ CloudBase MCP Tools Overview
-
-| Tool Name | Description |
-|-----------|-------------|
-| logout | Log out of current CloudBase account |
-| listEnvs | Get all CloudBase environment information |
-| getEnvAuthDomains | Get authorized domain list for CloudBase environment |
-| createEnvDomain | Add security domain for CloudBase environment |
-| deleteEnvDomain | Delete specified security domain for CloudBase environment |
-| getEnvInfo | Get current CloudBase environment information |
-| updateEnvInfo | Modify CloudBase environment alias |
-| createCollection | Create a new CloudBase database collection |
-| checkCollectionExists | Check if CloudBase database collection exists |
-| updateCollection | Update CloudBase database collection configuration (create or delete indexes) |
-| describeCollection | Get detailed information of CloudBase database collection |
-| listCollections | Get CloudBase database collection list |
-| checkIndexExists | Check if index exists |
-| distribution | Query data distribution in database collections |
-| insertDocuments | Insert documents into collection |
-| queryDocuments | Query documents in collection |
-| updateDocuments | Update documents in collection |
-| deleteDocuments | Delete documents in collection |
-| uploadFiles | Upload files to static website hosting |
-| listFiles | Get file list from static website hosting |
-| deleteFiles | Delete files or folders from static website hosting |
-| findFiles | Search files in static website hosting |
-| createHostingDomain | Bind custom domain |
-| deleteHostingDomain | Unbind custom domain |
-| getWebsiteConfig | Get static website configuration |
-| tcbCheckResource | Get domain configuration |
-| tcbModifyAttribute | Modify domain configuration |
-| getFunctionList | Get cloud function list |
-| createFunction | Create cloud function |
-| updateFunctionCode | Update cloud function code |
-| updateFunctionConfig | Update cloud function configuration |
-| getFunctionDetail | Get cloud function details |
-| invokeFunction | Invoke cloud function |
-| getFunctionLogs | Get cloud function logs |
-| createFunctionTriggers | Create cloud function triggers |
-| deleteFunctionTrigger | Delete cloud function trigger |
-| downloadRemoteFile | Download remote file to local temporary file |
-| uploadFile | Upload file to cloud storage (for business data files) |
-
-## 🏗️ Architecture Overview
-
-```mermaid
-graph TD
-    A[Developer] --> B[AI IDE]
-    B -->|Uses| C[CloudBase AI Rules]
-    C --> D[Generate Code]
-    B -->|Calls| E[CloudBase MCP]
-    E --> F{Deploy Check}
-    F -->|Success| G[CloudBase Platform]
-    F -->|Failure| H[Return Logs]
-    H --> I[AI Fix]
-    I --> E
-    G --> J[Live Application]
-    J --> K[Web/Mini-Program/API]
-```
-
 ## 🌟 Why Choose CloudBase?
 
-- **⚡ Lightning Deployment**: Domestic nodes, faster access than overseas platforms
-- **🛡️ Stable & Reliable**: Serverless platform chosen by 3.3M+ developers
-- **🔧 Developer-Friendly**: Full-stack platform designed for the AI era
-- **💰 Cost-Optimized**: Serverless architecture with better elasticity, free trial for new users during development
+- **⚡ Fast Deployment**: China nodes, faster than overseas
+- **🛡️ Reliable**: Trusted by 3.3M+ developers
+- **🔧 Dev-Friendly**: Full-stack platform for the AI era
+- **💰 Cost-Effective**: Serverless, free for new users during development
+
+## 📋 FAQ
+
+For migration, integration, and more, see [FAQ](./FAQ.md).
 
 ## 💬 Community
 
-Having issues or want to share experiences? Join our tech community!
+Need help or want to connect? Join our tech community!
 
 ### 🔥 WeChat Group
 
 <div align="center">
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/toolkit-qrcode.png" width="200" alt="WeChat Group QR Code">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/toolkit-qrcode.png" width="200" alt="WeChat Group QR">
 <br>
-<i>Scan to join WeChat tech community</i>
+<i>Scan to join the WeChat tech group</i>
 </div>
 
 **In the group you can:**
 - 💡 Share your AI + CloudBase projects
-- 🤝 Technical discussions and development Q&A
-- 📢 Get latest feature updates and best practices
-- 🎯 Participate in product feature discussions and suggestions
+- 🤝 Tech exchange and Q&A
+- 📢 Get latest updates and best practices
+- 🎯 Join product discussions and suggestions
 
-### 📱 Other Communication Channels
+### 📱 Other Channels
 
 | Platform | Link | Description |
-|----------|------|-------------|
-| **Official Docs** | [📖 View Docs](https://docs.cloudbase.net/) | Complete CloudBase documentation |
-| **Issue Feedback** | [🐛 Submit Issues](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues) | Bug reports and feature requests |
+|---------|------|-------------|
+| **Docs** | [📖 Docs](https://docs.cloudbase.net/) | Full CloudBase docs |
+| **Issue** | [🐛 Submit Issue](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues) | Bug reports & feature requests |
 
-### 🎉 Community Activities
+### 🎉 Community Events
 
-- **Weekly Tech Sharing**: Regular sharing of AI + CloudBase best practices
-- **Project Showcase**: Show off your AI-built projects
-- **Q&A Sessions**: Tencent CloudBase team members provide online support
-- **Feature Previews**: First access to new features
+- **Weekly Tech Sharing**: Best practices for AI + CloudBase
+- **Project Showcases**: Share your AI-powered projects
+- **Q&A**: Tencent CloudBase team online support
+- **Feature Previews**: Try new features first
+
+## 🛠️ CloudBase MCP Tools Overview
+
+| Tool | Description |
+|------|-------------|
+| logout | Log out current CloudBase account |
+| downloadTemplate | Download CloudBase project templates (React, Mini-Program, AI editor config, etc.) |
+| listEnvs | Get all CloudBase environments |
+| getEnvAuthDomains | Get valid domain list for environment |
+| createEnvDomain | Add safe domain to environment |
+| deleteEnvDomain | Remove domain from environment |
+| getEnvInfo | Get current environment info |
+| updateEnvInfo | Update environment alias |
+| createCollection | Create new DB collection |
+| checkCollectionExists | Check if DB collection exists |
+| updateCollection | Update DB collection config (create/delete index) |
+| describeCollection | Get DB collection details |
+| listCollections | List DB collections |
+| checkIndexExists | Check if index exists |
+| distribution | Query data distribution in collection |
+| insertDocuments | Insert docs into collection |
+| queryDocuments | Query docs in collection |
+| updateDocuments | Update docs in collection |
+| deleteDocuments | Delete docs in collection |
+| uploadFiles | Upload files to static hosting |
+| listFiles | List static hosting files |
+| deleteFiles | Delete static hosting files/folders |
+| findFiles | Search static hosting files |
+| createHostingDomain | Bind custom domain |
+| deleteHostingDomain | Unbind custom domain |
+| getWebsiteConfig | Get static website config |
+| tcbCheckResource | Get domain config |
+| tcbModifyAttribute | Modify domain config |
+| getFunctionList | Get cloud function list |
+| createFunction | Create cloud function |
+| updateFunctionCode | Update cloud function code |
+| updateFunctionConfig | Update cloud function config |
+| getFunctionDetail | Get cloud function details |
+| invokeFunction | Invoke cloud function |
+| getFunctionLogs | Get cloud function logs |
+| createFunctionTriggers | Create function trigger |
+| deleteFunctionTrigger | Delete function trigger |
+| downloadRemoteFile | Download remote file to local temp |
+| uploadFile | Upload file to cloud storage (for business data) |
+| searchKnowledgeBase | Smart search for CloudBase knowledge base (vector search for docs/answers) |
+
+## 🏗️ Architecture
+
+```mermaid
+graph TD
+    A[Developer] --> B[AI IDE]
+    B -->|Use| C[CloudBase AI Rules]
+    C --> D[Generate Code]
+    B -->|Call| E[CloudBase MCP]
+    E --> F{Check Deploy}
+    F -->|Success| G[CloudBase Platform]
+    F -->|Fail| H[Return Logs]
+    H --> I[AI Fix]
+    I --> E
+    G --> J[Online App]
+    J --> K[Web/Mini-Program/API]
+```
 
 ## 🤝 Contributing
 
-Welcome to submit Issues and Pull Requests! Please check our [Contributing Guide](CONTRIBUTING.md) to learn how to participate in project development.
+PRs and issues welcome! See our [Contributing Guide](CONTRIBUTING.md) for how to get involved.
 
 ## 📄 License
 
@@ -527,8 +568,4 @@ Welcome to submit Issues and Pull Requests! Please check our [Contributing Guide
 
 ---
 
-⭐ If this project helps you, please give us a Star! 
-
-## 📋 [FAQ](./FAQ.md)
-
-For common questions about migration, integration, etc., please check [FAQ](./FAQ.md). 
+⭐ If you find this project helpful, please give us a Star! 
