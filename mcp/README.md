@@ -100,6 +100,15 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 > 
 > 默认模式下需要手动确认执行，较为安全。
 
+#### 环境登录
+
+CloudBase AI ToolKit 提供了简单的环境登录管理：
+
+- **登录环境**: 使用 `login` 工具登录并选择云开发环境
+- **退出登录**: 使用 `logout` 工具退出当前环境
+
+登录成功后会自动保存环境配置，无需重启服务即可生效。
+
 以下工具均支持 CloudBase AI ToolKit，可根据你的开发环境选择合适的工具：
 
 | 工具 | 支持平台 |
@@ -623,6 +632,7 @@ AI 会自动：
 
 | 工具名称 | 功能简介 |
 |----------|----------|
+| login | 登录并选择云开发环境 |
 | logout | 登出当前云开发账户 |
 | downloadTemplate | 下载CloudBase项目模板（React、小程序、AI编辑器配置等） |
 | listEnvs | 获取所有云开发环境信息 |
