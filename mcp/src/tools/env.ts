@@ -3,6 +3,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getCloudBaseManager } from '../cloudbase-manager.js'
 import { logout } from '../auth.js'
 import { clearUserEnvId, _promptAndSetEnvironmentId } from './interactive.js'
+import { debug } from '../utils/logger.js'
 
 export function registerEnvTools(server: McpServer) {
   // login - 登录云开发环境
@@ -15,6 +16,8 @@ export function registerEnvTools(server: McpServer) {
     async ({ forceUpdate = false }) => {
       try {
         const { selectedEnvId, cancelled, error, noEnvs } = await _promptAndSetEnvironmentId(false);
+
+        debug("login", { selectedEnvId, cancelled, error, noEnvs });
 
         if (error) {
           return { content: [{ type: "text", text: error }] };

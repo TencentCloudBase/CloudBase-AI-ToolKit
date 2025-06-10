@@ -38,7 +38,7 @@ export function registerInteractiveTools(server: McpServer) {
             return {
               content: [{
                 type: "text",
-                text: `📝 用户澄清反馈:\n${result.data.response}`
+                text: `📝 用户澄清反馈:\n${result.data}`
               }]
             };
           }
@@ -61,14 +61,14 @@ export function registerInteractiveTools(server: McpServer) {
             const interactiveServer = getInteractiveServer();
             const result = await interactiveServer.clarifyRequest(dialogMessage, dialogOptions);
 
-            if (result.cancelled || result.data.response.includes('取消')) {
+            if (result.cancelled || (result.data && result.data.includes && result.data.includes('取消'))) {
               return { content: [{ type: "text", text: "❌ 用户取消了任务执行" }] };
             }
 
             return {
               content: [{
                 type: "text",
-                text: `✅ 用户确认: ${result.data.response}`
+                text: `✅ 用户确认: ${result.data}`
               }]
             };
           }
@@ -117,7 +117,7 @@ export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean): Pro
     if (result.cancelled) {
       return { selectedEnvId: null, cancelled: true };
     }
-    selectedEnvId = result.data.envId;
+    selectedEnvId = result.data;
   }
 
   // 4. 保存并设置环境ID

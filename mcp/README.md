@@ -25,7 +25,7 @@
 
 [![CNB 镜像](https://img.shields.io/badge/CNB-CloudBase--AI--ToolKit-blue?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHJ4PSIyIiBmaWxsPSIjM0I4MkY2Ii8+PHBhdGggZD0iTTUgM0g3VjVINSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNNSA3SDdWOUg1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==)](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit)
 
-当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
+当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
 
 <a href="https://www.producthunt.com/posts/cloudbase-ai-tookit?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-cloudbase&#0045;ai&#0045;tookit" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=971451&theme=light&t=1748519563832" alt="CloudBase&#0032;AI&#0032;Tookit - Prompt&#0032;to&#0032;Production&#0058;&#0032;Full&#0045;stack&#0044;&#0032;DB&#0032;&#0038;&#0032;functions—zero&#0032;setup&#0046; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
@@ -53,10 +53,10 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 |------|------|------|
 | **🤖 AI 原生** | 专为 AI 编程工具设计的规则库 | 生成代码符合云开发最佳实践 |
 | **🚀 一键部署** | MCP 自动化部署到腾讯云开发 CloudBase 平台 | Serverless 架构，无需购买服务器 |
-| **📱 全栈应用支持** | Web + 小程序 + 数据库 + 后端一体化 | 支持小程序/web 等多种应用形式,提供后端托管和数据库 |
+| **📱 全栈应用** | Web + 小程序 + 数据库 + 后端一体化 | 支持小程序/web 等多种应用形式,提供后端托管和数据库 |
 | **🔧 智能修复** | AI 自动查看日志并修复问题 | 降低运维成本 |
 | **⚡ 极速体验** | 国内 CDN 加速 | 比海外平台访问速度更快 |
-| **📚 智能知识库检索** | 内置支持云开发、微信小程序等专业知识库的智能向量检索 |
+| **📚 知识检索** | 内置支持云开发、微信小程序等专业知识 |专业知识库的智能向量检索
 
 
 ## 🚀 快速开始
@@ -65,12 +65,10 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 ### 0. 前置条件
 
 #### 安装 AI 开发工具
-例如 [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) 等
+例如 [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) 等，点击查看 [支持的 AI 开发工具列表](#2-配置你的-ai-ide)
 
-#### 开通云开发环境并获取环境 ID
-1. 访问 [腾讯云开发控制台](https://tcb.cloud.tencent.com/dev)开通环境，新用户可以免费开通体验
-2. 在控制台「概览」页面右侧获取 **环境ID**  
-   （后续部署需要此 ID）
+#### 开通云开发环境
+访问 [腾讯云开发控制台](https://tcb.cloud.tencent.com/dev)开通环境，新用户可以免费开通体验。
 
 ### 1. 快速初始化或增强你的项目
 
@@ -86,35 +84,23 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 - **微信小程序 + 云开发模板**  
   [下载代码包](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
 
-- **通用云开发模板**  
+- **AI 规则通用云开发模板** ：不限定语言和框架，内置 CloudBase AI 规则和MCP，适用于任意云开发项目
+
   [下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-project.zip) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-project)
 
 #### 🛠️ 已有项目增强
 
-如果你已经有自己的项目，只需在配置好 MCP 后，让 AI 调用 `downloadTemplate` 工具，选择 `rules` 模板，即可一键下载并补全 AI 编辑器规则配置到当前项目目录，无需手动操作。
+如果你已经有自己的项目，只需在配置好 MCP 后，只需要对 AI 说 "在当前项目中下载云开发 AI 规则"，即可一键下载并补全 AI 编辑器规则配置到当前项目目录，无需手动操作。
 
 
 ### 2. 配置你的 AI IDE
 
-> 💡 **使用提示**：如果你在 Cursor 等工具中开启了自动执行(auto-run)模式，建议在"Command denylist"中添加敏感命令，避免自动运行如删除数据等敏感的操作
-> 
-> 默认模式下需要手动确认执行，较为安全。
-
-#### 环境登录
-
-CloudBase AI ToolKit 提供了简单的环境登录管理：
-
-- **登录环境**: 使用 `login` 工具登录并选择云开发环境
-- **退出登录**: 使用 `logout` 工具退出当前环境
-
-登录成功后会自动保存环境配置，无需重启服务即可生效。
-
-以下工具均支持 CloudBase AI ToolKit，可根据你的开发环境选择合适的工具：
+以下工具均支持 CloudBase AI ToolKit，选择合适的工具并按说明配置：
 
 | 工具 | 支持平台 |
 |------|----------|
 | [Cursor](https://cursor.com/) | 独立 IDE|
-| [WindSurf](https://windsurf.com/editor) | 独立 IDE,VSCode、JetBrains 插件 |
+| [WindSurf](https://windsurf.com/editor) | 独立 IDE, VSCode、JetBrains 插件 |
 | [CodeBuddy](https://copilot.tencent.com/) | VS Code、JetBrains、微信开发者工具插件 |
 | [CLINE](https://cline.so/) | VS Code 插件 |
 | [GitHub Copilot](https://github.com/features/copilot) | VS Code 插件 |
@@ -122,25 +108,24 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
 | [通义灵码](https://tongyi.aliyun.com/lingma) | 独立 IDE，VS Code、 JetBrains插件 |
 | [RooCode](https://roocode.com/) | VS Code插件 |
 | [文心快码](https://comate.baidu.com/) | VS Code、JetBrains插件|
+| [Augment Code](https://www.augmentcode.com/) | VS Code、JetBrains 插件 |
 
-
-选择工具后，请按照下方对应的配置说明进行设置。每个工具都需要配置云开发环境 ID 才能使用 MCP 功能。如果你还没有云开发环境，请先[开通云开发环境](#0前置条件)。
+如果你使用的是模板项目，所有配置都已经预置完成,请按照指引进行检查和开启工具。如果不是从模板开始，需要按具体的说明手动添加相应配置：
 
 <details>
 <summary><strong>🔧 Cursor 配置</strong></summary>
 
+#### 步骤1：使用 AI 规则
 
-#### 步骤1：自动应用 AI 规则
-
-模板中已包含 `.cursor/rules/` 目录，AI 会自动识别云开发最佳实践。
+模板中已包含 `.cursor/rules/` 目录，AI 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
 #### 步骤2：配置 MCP
 
-模板中已经包含 mcp 配置，如果不是从模板开始，可以点击下方按钮安装到 Cursor 中
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，可以点击下方按钮安装到 Cursor 中：
 
 [![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=CloudBase&config=eyJjb21tYW5kIjoibnB4IEBjbG91ZGJhc2UvY2xvdWRiYXNlLW1jcEBsYXRlc3QiLCJlbnYiOnsiQ0xPVURCQVNFX0VOVl9JRCI6IllPVVJfRU5WX0lEIn0sImRpc2FibGVkIjpmYWxzZX0%3D)
 
-1. 请修改项目中的 `.cursor/mcp.json` ，填写你的云开发环境 ID
+或手动添加配置到 `.cursor/mcp.json`：
 
 ```json
 {
@@ -153,26 +138,24 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
 }
 ```
 
-2. 启用云开发 MCP Server
-
-点击 Cursor 客户端右上角的 ⚙️ 图标，点击进入之后，选择"MCP"，在 MCP Server 页面，找到 cloudbase 右边的开关按钮，点击启用
+然后点击 Cursor 客户端右上角的 ⚙️ 图标，进入"MCP"设置，找到 cloudbase 并启用。
 
 #### 步骤3：切换到 Agent 模式
 
-在 对话窗口中使用 Agent 进行代码生成和自动化操作
+在对话窗口中使用 Agent 进行代码生成和自动化操作。
 
 </details>
 
 <details>
 <summary><strong>🌊 Codeium/WindSurf 配置</strong></summary>
 
-#### 步骤1：自动应用 AI 规则
+#### 步骤1：使用 AI 规则
 
-模板中的 `.windsurf/` 目录包含专为 WindSurf 优化的配置。
+模板中的 `.windsurf/` 目录包含专为 WindSurf 优化的配置。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
 #### 步骤2：配置 MCP
 
-点击 windsurf 的 Plugins icon，点击"View raw config"，在其中加入 clodubase-mcp，同时设置环境 id
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 WindSurf 的 Plugins 配置中添加：
 
 ```json
 {
@@ -187,29 +170,20 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
 
 #### 步骤3：切换到 Write 模式
 
-在对话中切换到 Write 模式，这样可以智能进行生成
-
+在对话中切换到 Write 模式进行智能生成。
 
 </details>
 
 <details>
-
 <summary><strong>👥 CodeBuddy 配置</strong></summary>
 
+#### 步骤1：使用 AI 规则
 
-#### 步骤1：自动应用 AI 规则
+模板中已包含 `.rules/` 目录，CodeBuddy 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
-模板中已包含 `.rules/` 目录，CodeBuddy 会自动识别云开发最佳实践
+#### 步骤2：配置 MCP
 
-#### 步骤 2：配置 MCP 
-
-**配置云开发 MCP Server**
-
-点击 CodeBuddy 右上角的 MCP 图标
-
-点击进入之后，点击右侧的 + 号，在打开的文件中修改 MCP 配置
-
-其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
 ```json
 {
@@ -222,30 +196,22 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
 }
 ```
 
-#### 步骤 3：切换到 Craft 智能体
+#### 步骤3：切换到 Craft 智能体
 
-在对话窗口中切换到 Craft 模式，这样可以智能生成项目
-
-注意，在 CodeBuddy 的 Craft 中使用时，需要在右侧的设置按钮中，关闭确认计划功能，这样可以更好的执行工具。
+在对话窗口中切换到 Craft 模式。建议在右侧设置中关闭确认计划功能，以获得更流畅的体验。
 
 </details>
-
 
 <details>
 <summary><strong>🤖 CLINE 配置</strong></summary>
 
+#### 步骤1：使用 AI 规则
 
-#### 步骤1：自动应用 AI 规则
+模板中已包含 `.clinerules/` 目录，AI 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
-模板中已包含 `.clinerules/` 目录，AI 会自动识别云开发最佳实践
+#### 步骤2：配置 MCP
 
-#### 步骤 2：配置 MCP 
-
-**配置云开发 MCP Server**
-
-在 Cline 的面板中找到 MCP Server 图标，点击进入,点击 ⚙️ 设置图标，然后点击 Configure MCP Servers
-
-加入以下内容，其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP Server 配置中添加：
 
 ```json
 {
@@ -264,29 +230,22 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
 }
 ```
 
-#### 步骤 3：使用 AI 对话
+#### 步骤3：使用 AI 对话
 
-回到对话界面，建议使用代码生成能力较好和支持 function call 的模型
-
-
+建议使用支持代码生成和 function call 的模型。
 
 </details>
-
 
 <details>
 <summary><strong>🐙 GitHub Copilot 配置</strong></summary>
 
-#### GitHub Copilot Chat 配置
+#### 步骤1：使用 AI 规则
 
-#### 步骤1：自动应用 AI 规则
+模板中的 `.github/` 目录包含 Copilot 优化配置。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
-模板中的 `.github/` 目录包含 Copilot 优化配置。
+#### 步骤2：配置 MCP
 
-#### 步骤2：启用云开发 MCP
-
-模板中的 `.vscode/mcp.json` 目录已经包含云开发 MCP 配置
-
-请修改其中的环境 Id 为你的云开发环境 Id
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 `.vscode/mcp.json` 中添加：
 
 ```json
 {
@@ -301,27 +260,24 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
 }
 ```
 
-#### 步骤 3：切换到 Agent 模式
+#### 步骤3：切换到 Agent 模式
 
-在对话窗口左下角切换到 Agent 模式，进行对话
-
+在对话窗口左下角切换到 Agent 模式进行对话。
 
 </details>
 
 <details>
 <summary><strong>🎯 Trae 配置</strong></summary>
 
-本操作指引支持 Trae 国际版和 Trae CN 版本，建议使用 Claude/DeepSeek V3 0324 等模型进行测试
+本操作指引支持 Trae 国际版和 Trae CN 版本，建议使用 Claude/DeepSeek V3 0324 等模型进行测试。
 
-#### 步骤1：自动应用 AI 规则
+#### 步骤1：使用 AI 规则
 
-模板中的 `.trae/rules` 目录包含面向 Trae 的云开发规则配置，AI 会自动应用，无需修改。
+模板中的 `.trae/rules` 目录包含面向 Trae 的云开发规则配置。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
-#### 步骤2：启用云开发 MCP
+#### 步骤2：配置 MCP
 
-在 Trae 右上角点击 ⚙️设置图标，点击进入 MCP，点击设置中的手动配置，粘贴如下配置
-
-其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
 ```json
 {
@@ -333,32 +289,23 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
   }
 }
 ```
+
 #### 步骤3：使用 Builder with MCP 对话
 
-回到对话窗口，在智能体中选择使用 Builder with MCP 对话
-
+在智能体中选择 Builder with MCP 进行对话。
 
 </details>
 
 <details>
 <summary><strong>🧩 通义灵码 配置</strong></summary>
 
+#### 步骤1：使用 AI 规则
 
-#### 步骤1：自动应用 AI 规则
+模板中已包含 `.lingma/` 目录，通义灵码会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
-模板中已包含 `.lingma/` 通义灵码会自动识别云开发最佳实践
+#### 步骤2：配置 MCP
 
-#### 步骤 2：配置 MCP 
-
-**配置云开发 MCP Server**
-
-点击通义灵码右上角的昵称，然后选择个人设置，点击进入 MCP 设置
-
-
-
-点击进入之后，点击右侧的打开配置文件按钮，在打开的文件中修改 MCP 配置
-
-其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
 ```json
 {
@@ -371,64 +318,22 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
 }
 ```
 
-#### 步骤 3：切换到智能体模式
+#### 步骤3：切换到智能体模式
 
-在对话窗口左下角中切换到智能体模式，这样可以智能生成项目
-
+在对话窗口左下角切换到智能体模式。
 
 </details>
 
 <details>
 <summary><strong>🤖 RooCode 配置</strong></summary>
 
-#### 步骤1：自动应用 AI 规则
+#### 步骤1：使用 AI 规则
 
-模板中已包含 `.roo/rules` 目录，RooCode 会自动识别云开发最佳实践
+模板中已包含 `.roo/rules` 目录，RooCode 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
-#### 步骤2：配置 MCP 
+#### 步骤2：配置 MCP
 
-**配置云开发 MCP Server**
-
-点击 RooCode 右上角的设置图标，选择 MCP 配置，在打开的文件中修改 MCP 配置
-
-其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
-
-```json
-{
-    "mcpServers": {
-        "cloudbase": {
-            "command": "npx",
-            "args": [
-                "@cloudbase/cloudbase-mcp@latest"
-            ]
-            "disabled": false
-        }
-    }
-}
-```
-
-#### 步骤3：使用 AI 对话
-
-在对话窗口中使用 AI 进行代码生成和自动化操作
-
-</details>
-
-<details>
-<summary><strong>🤖 文心快码(Baidu Comate) 配置</strong></summary>
-
-#### 步骤1：自动应用 AI 规则
-
-模板中已包含 `.comate/rules` 目录，文心快码会自动识别云开发最佳实践
-
-#### 步骤2：配置 MCP 
-
-模板中已包含 `.comate/mcp.json` 目录，文心快码会自动识别项目中的 MCP
-
-**配置云开发 MCP Server**
-
-在文心快码的 Zulu 模式中，选择 MCP 配置-设置，在打开的文件中修改 MCP 配置
-
-其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
 ```json
 {
@@ -446,13 +351,122 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
 
 #### 步骤3：使用 AI 对话
 
-在对话窗口中切换到 Zulu 模式，然后使用 AI 进行代码生成和自动化操作
+在对话窗口中进行代码生成和自动化操作。
 
 </details>
 
+<details>
+<summary><strong>🤖 文心快码(Baidu Comate) 配置</strong></summary>
+
+#### 步骤1：使用 AI 规则
+
+模板中已包含 `.comate/rules` 目录，文心快码会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
+
+#### 步骤2：配置 MCP
+
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
+
+```json
+{
+    "mcpServers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ],
+            "disabled": false
+        }
+    }
+}
+```
+
+
+
+#### 步骤3：使用 AI 对话
+
+在对话窗口中切换到 Zulu 模式进行操作。
+
+</details>
+
+
+
+<details>
+<summary><strong>🚀 Augment Code 配置</strong></summary>
+
+#### 步骤1：使用 AI 规则
+
+模板中已包含 `.augment-guidelines` 文件，Augment Code 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则
+
+#### 步骤2：配置 MCP
+
+如果使用模板项目，MCP 配置已经预置完成(内置在`.vscode/settings.json`中)。如果不是从模板开始，需要在 Augment的 MCP 配置中添加云开发 MCP，[参考文档](https://docs.augmentcode.com/setup-augment/mcp)：
+
+```json
+{
+  "augment.advanced": {
+     "mcpServers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ]
+        }
+    }
+  }
+}
+```
+
+#### 步骤3：使用 Agent 模式
+
+在对话窗口中使用 Agent 模式进行智能代码生成和自动化操作。
+
+</details>
+
+<details>
+<summary><strong>🔄 更新 CloudBase AI ToolKit</strong></summary>
+
+**更新 AI 规则**
+
+如果你想在现有项目中更新到最新的云开发 AI 规则，只需对 AI 说：
+
+```
+下载云开发 AI 规则
+```
+
+AI 会自动下载并更新最新的规则配置到你的项目目录。
+
+**更新 MCP 工具**
+
+当有新版本的 MCP 工具发布时，你可以通过以下方式更新：
+
+1. **自动更新（推荐）**：在你的 AI 开发工具的 MCP 列表中，找到 cloudbase-mcp 并重新启用或刷新 MCP 列表即可自动安装最新版本
+
+2. **手动更新**：如果自动更新不成功，可以先禁用再重新启用 cloudbase-mcp，或者重启你的 AI IDE
+
+由于 MCP 配置中使用了 `@latest` 标签，通常会自动获取最新版本。
+
+</details>
+
+
 ### 3. 开始开发
 
-确认 AI 已经连接到云开发
+
+在开始使用前，只需要对 AI 说
+
+```
+登录云开发
+```
+AI 就会自动完成弹出登录腾讯云界面以及云开发的环境选择
+
+后续如需切换环境，可以说
+
+```
+退出云开发
+```
+
+AI 就会清理本地的配置，后续可以再要求 AI 登录云开发来重新登录。
+
+在登录成功后，可以确认 AI 已经连接到云开发
 
 ```
 查询当前云开发环境信息
@@ -560,7 +574,7 @@ AI 会自动：
 
 - **⚡ 极速部署**：国内节点,访问速度比海外更快
 - **🛡️ 稳定可靠**：330 万开发者选择的 Serverless 平台
-- **🔧 开发友好**：专为AI时代设计的全栈平台
+- **🔧 开发友好**：专为AI时代设计的全栈平台，支持自动环境配置
 - **💰 成本优化**：Serverless 架构更具弹性，新用户开发期间可以免费体验
 
 
@@ -605,7 +619,7 @@ AI 会自动：
 
 | 工具名称 | 功能简介 |
 |----------|----------|
-| login | 登录并选择云开发环境，也可以用来切换环境 |
+| login | 登录并自动配置云开发环境 |
 | logout | 登出当前云开发账户 |
 | downloadTemplate | 下载CloudBase项目模板（React、小程序、AI编辑器配置等） |
 | listEnvs | 获取所有云开发环境信息 |
@@ -629,11 +643,8 @@ AI 会自动：
 | listFiles | 获取静态网站托管的文件列表 |
 | deleteFiles | 删除静态网站托管的文件或文件夹 |
 | findFiles | 搜索静态网站托管的文件 |
-| createHostingDomain | 绑定自定义域名 |
-| deleteHostingDomain | 解绑自定义域名 |
+| domainManagement | 统一的域名管理工具，支持绑定、解绑、查询和修改域名配置 |
 | getWebsiteConfig | 获取静态网站配置 |
-| tcbCheckResource | 获取域名配置 |
-| tcbModifyAttribute | 修改域名配置 |
 | getFunctionList | 获取云函数列表 |
 | createFunction | 创建云函数 |
 | updateFunctionCode | 更新云函数代码 |
@@ -646,6 +657,7 @@ AI 会自动：
 | downloadRemoteFile | 下载远程文件到本地临时文件 |
 | uploadFile | 上传文件到云存储（适合存储业务数据文件） |
 | searchKnowledgeBase | 智能检索云开发知识库（支持云开发与云函数），通过向量搜索快速获取专业文档与答案。|
+| interactiveDialog | 统一的交互式对话工具，支持需求澄清和任务确认 |
 
 ## 🏗️ 架构原理
 
@@ -674,5 +686,5 @@ graph TD
 
 ---
 
-⭐ 如果这个项目对你有帮助，请给我们一个 Star！ 
+⭐ 如果这个项目对你有帮助，请给我们一个 Star！
 

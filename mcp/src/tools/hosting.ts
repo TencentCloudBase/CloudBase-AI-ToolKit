@@ -137,137 +137,19 @@ export function registerHostingTools(server: McpServer) {
     }
   );
 
-  // // setWebsiteDocument - 配置静态网站文档
-  // server.tool(
-  //   "setWebsiteDocument",
-  //   "配置静态网站的错误文档、索引文档和重定向规则",
-  //   {
-  //     indexDocument: z.string().describe("索引文档路径"),
-  //     errorDocument: z.string().optional().describe("错误文档路径"),
-  //     routingRules: z.array(z.object({
-  //       keyPrefixEquals: z.string().optional(),
-  //       httpErrorCodeReturnedEquals: z.string().optional(),
-  //       replaceKeyWith: z.string().optional(),
-  //       replaceKeyPrefixWith: z.string().optional()
-  //     })).optional().describe("重定向规则")
-  //   },
-  //   async ({ indexDocument, errorDocument, routingRules }) => {
-  //     const cloudbase = await getCloudBaseManager()
-  //     const result = await cloudbase.hosting.setWebsiteDocument({
-  //       indexDocument,
-  //       errorDocument,
-  //       routingRules
-  //     });
-  //     return {
-  //       content: [
-  //         {
-  //           type: "text",
-  //           text: JSON.stringify(result, null, 2)
-  //         }
-  //       ]
-  //     };
-  //   }
-  // );
-
-  // createHostingDomain - 绑定自定义域名
+  // domainManagement - 统一的域名管理工具
   server.tool(
-    "createHostingDomain",
-    "绑定自定义域名",
+    "domainManagement",
+    "统一的域名管理工具，支持绑定、解绑、查询和修改域名配置",
     {
-      domain: z.string().describe("自定义域名"),
-      certId: z.string().describe("证书ID")
-    },
-    async ({ domain, certId }) => {
-      const cloudbase = await getCloudBaseManager()
-      const result = await cloudbase.hosting.CreateHostingDomain({
-        domain,
-        certId
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
-    }
-  );
-
-  // deleteHostingDomain - 解绑自定义域名
-  server.tool(
-    "deleteHostingDomain",
-    "解绑自定义域名",
-    {
-      domain: z.string().describe("自定义域名")
-    },
-    async ({ domain }) => {
-      const cloudbase = await getCloudBaseManager()
-      const result = await cloudbase.hosting.deleteHostingDomain({
-        domain
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
-    }
-  );
-
-  // getWebsiteConfig - 获取静态网站配置
-  server.tool(
-    "getWebsiteConfig",
-    "获取静态网站配置",
-    {
-      confirm: z.literal("yes").describe("确认操作，默认传 yes")
-    },
-    async () => {
-      const cloudbase = await getCloudBaseManager()
-      const result = await cloudbase.hosting.getWebsiteConfig();
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
-    }
-  );
-
-  // tcbCheckResource - 获取域名配置
-  server.tool(
-    "tcbCheckResource",
-    "获取域名配置",
-    {
-      domains: z.array(z.string()).describe("域名列表")
-    },
-    async ({ domains }) => {
-      const cloudbase = await getCloudBaseManager()
-      const result = await cloudbase.hosting.tcbCheckResource({
-        domains
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
-    }
-  );
-
-  // tcbModifyAttribute - 修改域名配置
-  server.tool(
-    "tcbModifyAttribute",
-    "修改域名配置",
-    {
-      domain: z.string().describe("域名"),
-      domainId: z.number().describe("域名ID"),
+      action: z.enum(["create", "delete", "check", "modify"]).describe("操作类型: create=绑定域名, delete=解绑域名, check=查询域名配置, modify=修改域名配置"),
+      // 绑定域名参数
+      domain: z.string().optional().describe("域名"),
+      certId: z.string().optional().describe("证书ID（绑定域名时必需）"),
+      // 查询域名参数
+      domains: z.array(z.string()).optional().describe("域名列表（查询配置时使用）"),
+      // 修改域名参数
+      domainId: z.number().optional().describe("域名ID（修改配置时必需）"),
       domainConfig: z.object({
         Refer: z.object({
           Switch: z.string(),
@@ -291,15 +173,80 @@ export function registerHostingTools(server: McpServer) {
           Switch: z.string(),
           Qps: z.number().optional()
         }).optional()
-      }).describe("域名配置")
+      }).optional().describe("域名配置（修改配置时使用）")
     },
-    async ({ domain, domainId, domainConfig }) => {
+    async ({ action, domain, certId, domains, domainId, domainConfig }) => {
       const cloudbase = await getCloudBaseManager()
-      const result = await cloudbase.hosting.tcbModifyAttribute({
-        domain,
-        domainId,
-        domainConfig
-      });
+      let result;
+
+      switch (action) {
+        case "create":
+          if (!domain || !certId) {
+            throw new Error("绑定域名需要提供域名和证书ID");
+          }
+          result = await cloudbase.hosting.CreateHostingDomain({
+            domain,
+            certId
+          });
+          break;
+
+        case "delete":
+          if (!domain) {
+            throw new Error("解绑域名需要提供域名");
+          }
+          result = await cloudbase.hosting.deleteHostingDomain({
+            domain
+          });
+          break;
+
+        case "check":
+          if (!domains || domains.length === 0) {
+            throw new Error("查询域名配置需要提供域名列表");
+          }
+          result = await cloudbase.hosting.tcbCheckResource({
+            domains
+          });
+          break;
+
+        case "modify":
+          if (!domain || domainId === undefined || !domainConfig) {
+            throw new Error("修改域名配置需要提供域名、域名ID和配置信息");
+          }
+          result = await cloudbase.hosting.tcbModifyAttribute({
+            domain,
+            domainId,
+            domainConfig
+          });
+          break;
+
+        default:
+          throw new Error(`不支持的操作类型: ${action}`);
+      }
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              action,
+              result
+            }, null, 2)
+          }
+        ]
+      };
+    }
+  );
+
+  // getWebsiteConfig - 获取静态网站配置
+  server.tool(
+    "getWebsiteConfig",
+    "获取静态网站配置",
+    {
+      confirm: z.literal("yes").describe("确认操作，默认传 yes")
+    },
+    async () => {
+      const cloudbase = await getCloudBaseManager()
+      const result = await cloudbase.hosting.getWebsiteConfig();
       return {
         content: [
           {

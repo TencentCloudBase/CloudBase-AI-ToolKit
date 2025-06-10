@@ -23,8 +23,8 @@ class Logger {
   private useConsole: boolean;
 
   constructor(options: LoggerOptions = {}) {
-    // 通过环境变量控制是否启用日志
-    this.enabled = options.enabled ?? (process.env.MCP_DEBUG === 'true' || process.env.NODE_ENV === 'development');
+    // 默认开启
+    this.enabled = options.enabled ?? true;
     this.level = options.level ?? LogLevel.INFO;
     this.useConsole = options.console ?? false;
     

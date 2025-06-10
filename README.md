@@ -643,11 +643,8 @@ AI 会自动：
 | listFiles | 获取静态网站托管的文件列表 |
 | deleteFiles | 删除静态网站托管的文件或文件夹 |
 | findFiles | 搜索静态网站托管的文件 |
-| createHostingDomain | 绑定自定义域名 |
-| deleteHostingDomain | 解绑自定义域名 |
+| domainManagement | 统一的域名管理工具，支持绑定、解绑、查询和修改域名配置 |
 | getWebsiteConfig | 获取静态网站配置 |
-| tcbCheckResource | 获取域名配置 |
-| tcbModifyAttribute | 修改域名配置 |
 | getFunctionList | 获取云函数列表 |
 | createFunction | 创建云函数 |
 | updateFunctionCode | 更新云函数代码 |
@@ -660,6 +657,7 @@ AI 会自动：
 | downloadRemoteFile | 下载远程文件到本地临时文件 |
 | uploadFile | 上传文件到云存储（适合存储业务数据文件） |
 | searchKnowledgeBase | 智能检索云开发知识库（支持云开发与云函数），通过向量搜索快速获取专业文档与答案。|
+| interactiveDialog | 统一的交互式对话工具，支持需求澄清和任务确认 |
 
 ## 🏗️ 架构原理
 
