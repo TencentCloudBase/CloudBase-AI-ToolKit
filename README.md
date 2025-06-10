@@ -382,6 +382,14 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 
 
+#### 步骤3：使用 AI 对话
+
+在对话窗口中切换到 Zulu 模式进行操作。
+
+</details>
+
+
+
 <details>
 <summary><strong>🚀 Augment Code 配置</strong></summary>
 
@@ -414,12 +422,6 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 </details>
 
-
-#### 步骤3：使用 AI 对话
-
-在对话窗口中切换到 Zulu 模式进行操作。
-
-</details>
 
 ### 3. 开始开发
 
