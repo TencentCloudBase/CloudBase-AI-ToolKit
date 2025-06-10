@@ -67,10 +67,8 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 #### 安装 AI 开发工具
 例如 [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) 等
 
-#### 开通云开发环境并获取环境 ID
-1. 访问 [腾讯云开发控制台](https://tcb.cloud.tencent.com/dev)开通环境，新用户可以免费开通体验
-2. 在控制台「概览」页面右侧获取 **环境ID**  
-   （后续部署需要此 ID）
+#### 开通云开发环境
+访问 [腾讯云开发控制台](https://tcb.cloud.tencent.com/dev)开通环境，新用户可以免费开通体验。
 
 ### 1. 快速初始化或增强你的项目
 
@@ -101,7 +99,9 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 > 
 > 默认模式下需要手动确认执行，较为安全。
 
-以下工具均支持 CloudBase AI ToolKit，可根据你的开发环境选择合适的工具：
+在开始使用前，只需要对 AI 说"登录云开发"，AI 就会自动完成登录和环境选择。后续如需切换环境，可以说"退出云开发"后重新登录。
+
+以下工具均支持 CloudBase AI ToolKit，选择合适的工具并按说明配置：
 
 | 工具 | 支持平台 |
 |------|----------|
@@ -115,69 +115,59 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 | [RooCode](https://roocode.com/) | VS Code插件 |
 | [文心快码](https://comate.baidu.com/) | VS Code、JetBrains插件|
 
-
-选择工具后，请按照下方对应的配置说明进行设置。每个工具都需要配置云开发环境 ID 才能使用 MCP 功能。如果你还没有云开发环境，请先[开通云开发环境](#0前置条件)。
+如果你使用的是模板项目，所有配置都已经预置完成。如果不是从模板开始，需要按照以下说明添加相应配置：
 
 <details>
 <summary><strong>🔧 Cursor 配置</strong></summary>
 
+#### 步骤1：使用 AI 规则
 
-#### 步骤1：自动应用 AI 规则
-
-模板中已包含 `.cursor/rules/` 目录，AI 会自动识别云开发最佳实践。
+模板中已包含 `.cursor/rules/` 目录，AI 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
 #### 步骤2：配置 MCP
 
-模板中已经包含 mcp 配置，如果不是从模板开始，可以点击下方按钮安装到 Cursor 中
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，可以点击下方按钮安装到 Cursor 中：
 
 [![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=CloudBase&config=eyJjb21tYW5kIjoibnB4IEBjbG91ZGJhc2UvY2xvdWRiYXNlLW1jcEBsYXRlc3QiLCJlbnYiOnsiQ0xPVURCQVNFX0VOVl9JRCI6IllPVVJfRU5WX0lEIn0sImRpc2FibGVkIjpmYWxzZX0%3D)
 
-1. 请修改项目中的 `.cursor/mcp.json` ，填写你的云开发环境 ID
+或手动添加配置到 `.cursor/mcp.json`：
 
 ```json
 {
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-      }
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
 ```
 
-2. 启用云开发 MCP Server
-
-点击 Cursor 客户端右上角的 ⚙️ 图标，点击进入之后，选择"MCP"，在 MCP Server 页面，找到 cloudbase 右边的开关按钮，点击启用
+然后点击 Cursor 客户端右上角的 ⚙️ 图标，进入"MCP"设置，找到 cloudbase 并启用。
 
 #### 步骤3：切换到 Agent 模式
 
-在 对话窗口中使用 Agent 进行代码生成和自动化操作
+在对话窗口中使用 Agent 进行代码生成和自动化操作。
 
 </details>
 
 <details>
 <summary><strong>🌊 Codeium/WindSurf 配置</strong></summary>
 
-#### 步骤1：自动应用 AI 规则
+#### 步骤1：使用 AI 规则
 
-模板中的 `.windsurf/` 目录包含专为 WindSurf 优化的配置。
+模板中的 `.windsurf/` 目录包含专为 WindSurf 优化的配置。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
 #### 步骤2：配置 MCP
 
-点击 windsurf 的 Plugins icon，点击"View raw config"，在其中加入 clodubase-mcp，同时设置环境 id
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 WindSurf 的 Plugins 配置中添加：
 
 ```json
 {
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-      }
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -185,68 +175,48 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 #### 步骤3：切换到 Write 模式
 
-在对话中切换到 Write 模式，这样可以智能进行生成
-
+在对话中切换到 Write 模式进行智能生成。
 
 </details>
 
 <details>
-
 <summary><strong>👥 CodeBuddy 配置</strong></summary>
 
+#### 步骤1：使用 AI 规则
 
-#### 步骤1：自动应用 AI 规则
+模板中已包含 `.rules/` 目录，CodeBuddy 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
-模板中已包含 `.rules/` 目录，CodeBuddy 会自动识别云开发最佳实践
+#### 步骤2：配置 MCP
 
-#### 步骤 2：配置 MCP 
-
-**配置云开发 MCP Server**
-
-点击 CodeBuddy 右上角的 MCP 图标
-
-点击进入之后，点击右侧的 + 号，在打开的文件中修改 MCP 配置
-
-其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
 ```json
 {
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-      }
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
 ```
 
-#### 步骤 3：切换到 Craft 智能体
+#### 步骤3：切换到 Craft 智能体
 
-在对话窗口中切换到 Craft 模式，这样可以智能生成项目
-
-注意，在 CodeBuddy 的 Craft 中使用时，需要在右侧的设置按钮中，关闭确认计划功能，这样可以更好的执行工具。
+在对话窗口中切换到 Craft 模式。建议在右侧设置中关闭确认计划功能，以获得更流畅的体验。
 
 </details>
-
 
 <details>
 <summary><strong>🤖 CLINE 配置</strong></summary>
 
+#### 步骤1：使用 AI 规则
 
-#### 步骤1：自动应用 AI 规则
+模板中已包含 `.clinerules/` 目录，AI 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
-模板中已包含 `.clinerules/` 目录，AI 会自动识别云开发最佳实践
+#### 步骤2：配置 MCP
 
-#### 步骤 2：配置 MCP 
-
-**配置云开发 MCP Server**
-
-在 Cline 的面板中找到 MCP Server 图标，点击进入,点击 ⚙️ 设置图标，然后点击 Configure MCP Servers
-
-加入以下内容，其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP Server 配置中添加：
 
 ```json
 {
@@ -258,9 +228,6 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
       "args": [
         "@cloudbase/cloudbase-mcp@latest"
       ],
-      "env": {
-        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-      },
       "transportType": "stdio",
       "disabled": false
     }
@@ -268,29 +235,22 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 }
 ```
 
-#### 步骤 3：使用 AI 对话
+#### 步骤3：使用 AI 对话
 
-回到对话界面，建议使用代码生成能力较好和支持 function call 的模型
-
-
+建议使用支持代码生成和 function call 的模型。
 
 </details>
-
 
 <details>
 <summary><strong>🐙 GitHub Copilot 配置</strong></summary>
 
-#### GitHub Copilot Chat 配置
+#### 步骤1：使用 AI 规则
 
-#### 步骤1：自动应用 AI 规则
+模板中的 `.github/` 目录包含 Copilot 优化配置。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
-模板中的 `.github/` 目录包含 Copilot 优化配置。
+#### 步骤2：配置 MCP
 
-#### 步骤2：启用云开发 MCP
-
-模板中的 `.vscode/mcp.json` 目录已经包含云开发 MCP 配置
-
-请修改其中的环境 Id 为你的云开发环境 Id
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 `.vscode/mcp.json` 中添加：
 
 ```json
 {
@@ -299,112 +259,86 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
             "command": "npx",
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
-            ],
-            "env": {
-                "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-            }
+            ]
         }
     }
 }
 ```
 
-#### 步骤 3：切换到 Agent 模式
+#### 步骤3：切换到 Agent 模式
 
-在对话窗口左下角切换到 Agent 模式，进行对话
-
+在对话窗口左下角切换到 Agent 模式进行对话。
 
 </details>
 
 <details>
 <summary><strong>🎯 Trae 配置</strong></summary>
 
-本操作指引支持 Trae 国际版和 Trae CN 版本，建议使用 Claude/DeepSeek V3 0324 等模型进行测试
+本操作指引支持 Trae 国际版和 Trae CN 版本，建议使用 Claude/DeepSeek V3 0324 等模型进行测试。
 
-#### 步骤1：自动应用 AI 规则
+#### 步骤1：使用 AI 规则
 
-模板中的 `.trae/rules` 目录包含面向 Trae 的云开发规则配置，AI 会自动应用，无需修改。
+模板中的 `.trae/rules` 目录包含面向 Trae 的云开发规则配置。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
-#### 步骤2：启用云开发 MCP
+#### 步骤2：配置 MCP
 
-在 Trae 右上角点击 ⚙️设置图标，点击进入 MCP，点击设置中的手动配置，粘贴如下配置
-
-其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
 ```json
 {
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"], 
-      "env": {
-        "CLOUDBASE_ENV_ID": "你的云开发环境ID"  
-      }
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
 ```
+
 #### 步骤3：使用 Builder with MCP 对话
 
-回到对话窗口，在智能体中选择使用 Builder with MCP 对话
-
+在智能体中选择 Builder with MCP 进行对话。
 
 </details>
 
 <details>
 <summary><strong>🧩 通义灵码 配置</strong></summary>
 
+#### 步骤1：使用 AI 规则
 
-#### 步骤1：自动应用 AI 规则
+模板中已包含 `.lingma/` 目录，通义灵码会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
-模板中已包含 `.lingma/` 通义灵码会自动识别云开发最佳实践
+#### 步骤2：配置 MCP
 
-#### 步骤 2：配置 MCP 
-
-**配置云开发 MCP Server**
-
-点击通义灵码右上角的昵称，然后选择个人设置，点击进入 MCP 设置
-
-
-
-点击进入之后，点击右侧的打开配置文件按钮，在打开的文件中修改 MCP 配置
-
-其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
 ```json
 {
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-      }
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
 ```
 
-#### 步骤 3：切换到智能体模式
+#### 步骤3：切换到智能体模式
 
-在对话窗口左下角中切换到智能体模式，这样可以智能生成项目
-
+在对话窗口左下角切换到智能体模式。
 
 </details>
 
 <details>
 <summary><strong>🤖 RooCode 配置</strong></summary>
 
-#### 步骤1：自动应用 AI 规则
+#### 步骤1：使用 AI 规则
 
-模板中已包含 `.roo/rules` 目录，RooCode 会自动识别云开发最佳实践
+模板中已包含 `.roo/rules` 目录，RooCode 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
-#### 步骤2：配置 MCP 
+#### 步骤2：配置 MCP
 
-**配置云开发 MCP Server**
-
-点击 RooCode 右上角的设置图标，选择 MCP 配置，在打开的文件中修改 MCP 配置
-
-其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
 ```json
 {
@@ -414,9 +348,6 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
             ],
-            "env": {
-                "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-            },
             "disabled": false
         }
     }
@@ -425,26 +356,20 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 #### 步骤3：使用 AI 对话
 
-在对话窗口中使用 AI 进行代码生成和自动化操作
+在对话窗口中进行代码生成和自动化操作。
 
 </details>
 
 <details>
 <summary><strong>🤖 文心快码(Baidu Comate) 配置</strong></summary>
 
-#### 步骤1：自动应用 AI 规则
+#### 步骤1：使用 AI 规则
 
-模板中已包含 `.comate/rules` 目录，文心快码会自动识别云开发最佳实践
+模板中已包含 `.comate/rules` 目录，文心快码会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
-#### 步骤2：配置 MCP 
+#### 步骤2：配置 MCP
 
-模板中已包含 `.comate/mcp.json` 目录，文心快码会自动识别项目中的 MCP
-
-**配置云开发 MCP Server**
-
-在文心快码的 Zulu 模式中，选择 MCP 配置-设置，在打开的文件中修改 MCP 配置
-
-其中 CLOUDBASE_ENV_ID 填写你的云开发环境 ID
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
 ```json
 {
@@ -454,9 +379,6 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
             ],
-            "env": {
-                "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-            },
             "disabled": false
         }
     }
@@ -465,7 +387,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 #### 步骤3：使用 AI 对话
 
-在对话窗口中切换到 Zulu 模式，然后使用 AI 进行代码生成和自动化操作
+在对话窗口中切换到 Zulu 模式进行操作。
 
 </details>
 
@@ -579,7 +501,7 @@ AI 会自动：
 
 - **⚡ 极速部署**：国内节点,访问速度比海外更快
 - **🛡️ 稳定可靠**：330 万开发者选择的 Serverless 平台
-- **🔧 开发友好**：专为AI时代设计的全栈平台
+- **🔧 开发友好**：专为AI时代设计的全栈平台，支持自动环境配置
 - **💰 成本优化**：Serverless 架构更具弹性，新用户开发期间可以免费体验
 
 
@@ -624,6 +546,7 @@ AI 会自动：
 
 | 工具名称 | 功能简介 |
 |----------|----------|
+| login | 登录并自动配置云开发环境 |
 | logout | 登出当前云开发账户 |
 | downloadTemplate | 下载CloudBase项目模板（React、小程序、AI编辑器配置等） |
 | listEnvs | 获取所有云开发环境信息 |

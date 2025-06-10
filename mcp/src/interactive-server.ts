@@ -302,65 +302,116 @@ export class InteractiveServer {
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --primary-color: #0052D9;
-            --hover-color: #0062F5;
-            --border-color: #E7E7E7;
-            --text-primary: #1A1A1A;
-            --text-secondary: #666666;
-            --bg-secondary: #F5F5F5;
+            --primary-color: #4F46E5;
+            --primary-hover: #4338CA;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --border-color: #E5E7EB;
+            --bg-secondary: #F9FAFB;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #FFFFFF;
+            font-family: var(--font-mono);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            animation: modalIn 0.3s ease-out;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
         .header {
             background: var(--primary-color);
             color: white;
-            padding: 16px 24px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-left {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-        .logo-icon {
-            width: 32px;
-            height: 32px;
+        .logo {
+            width: 28px;
+            height: 28px;
+            animation: pulse 2s infinite;
         }
-        .header-title {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        .container {
-            padding: 24px;
-            max-width: 800px;
-            margin: 0 auto;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
         .title {
-            font-size: 20px;
-            margin-bottom: 8px;
-            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.025em;
         }
-        .subtitle {
-            color: var(--text-secondary);
+        .github-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
             font-size: 14px;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.1);
+        }
+        .github-link:hover {
+            opacity: 1;
+            background: rgba(255,255,255,0.2);
+        }
+        .content {
+            padding: 32px 24px;
+        }
+        .content-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .content-subtitle {
+            color: var(--text-secondary);
             margin-bottom: 24px;
+            line-height: 1.5;
         }
         .env-list {
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 12px;
             margin-bottom: 24px;
-            max-height: 400px;
+            max-height: 300px;
             overflow-y: auto;
         }
         .env-item {
-            padding: 16px;
+            padding: 16px 20px;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
         .env-item:last-child {
             border-bottom: none;
@@ -369,68 +420,75 @@ export class InteractiveServer {
             background: var(--bg-secondary);
         }
         .env-item.selected {
-            background: rgba(0, 82, 217, 0.1);
-            border-left: 3px solid var(--primary-color);
+            background: #EEF2FF;
+            border-left: 4px solid var(--primary-color);
         }
         .env-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             color: var(--primary-color);
+            flex-shrink: 0;
         }
         .env-info {
             flex: 1;
+            min-width: 0;
         }
         .env-name {
-            font-weight: 500;
+            font-weight: 600;
+            color: var(--text-primary);
             margin-bottom: 4px;
         }
         .env-id {
-            font-family: 'Monaco', monospace;
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-secondary);
-            padding: 2px 6px;
+            font-family: var(--font-mono);
             background: var(--bg-secondary);
+            padding: 2px 8px;
             border-radius: 4px;
             display: inline-block;
         }
-        .button-group {
+        .actions {
             display: flex;
             gap: 12px;
             justify-content: flex-end;
         }
         .btn {
-            padding: 8px 16px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            font-family: var(--font-mono);
         }
         .btn-primary {
             background: var(--primary-color);
             color: white;
         }
-        .btn-primary:hover {
-            background: var(--hover-color);
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
         }
         .btn-secondary {
             background: var(--bg-secondary);
             color: var(--text-secondary);
+            border: 1px solid var(--border-color);
         }
         .btn-secondary:hover {
-            background: #E0E0E0;
+            background: #F3F4F6;
         }
         .btn:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
         }
         .loading {
             display: none;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             margin-top: 16px;
             color: var(--text-secondary);
@@ -439,7 +497,7 @@ export class InteractiveServer {
         .spinner {
             width: 16px;
             height: 16px;
-            border: 2px solid var(--bg-secondary);
+            border: 2px solid var(--border-color);
             border-top: 2px solid var(--primary-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -451,41 +509,51 @@ export class InteractiveServer {
     </style>
 </head>
 <body>
-    <header class="header">
-        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M12 22V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M22 7L12 12L2 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="header-title">CloudBase AI Toolkit</span>
-    </header>
-
-    <div class="container">
-        <h1 class="title">选择云开发环境</h1>
-        <p class="subtitle">请选择要使用的云开发环境，系统将自动配置环境ID</p>
-        
-        <div class="env-list" id="envList">
-            <!-- 环境列表将通过JavaScript动态加载 -->
+    <div class="modal">
+        <div class="header">
+            <div class="header-left">
+                <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z"/>
+                    <path d="M12 22V12"/>
+                    <path d="M22 7L12 12L2 7"/>
+                </svg>
+                <span class="title">CloudBase AI Toolkit</span>
+            </div>
+            <a href="https://github.com/TencentCloudBase/CloudBase-AI-ToolKit" target="_blank" class="github-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                GitHub
+            </a>
         </div>
         
-        <div class="button-group">
-            <button class="btn btn-secondary" onclick="cancel()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M18 6L6 18M6 6l12 12"/>
-                </svg>
-                取消
-            </button>
-            <button class="btn btn-primary" id="confirmBtn" onclick="confirm()" disabled>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 6L9 17l-5-5"/>
-                </svg>
-                确认选择
-            </button>
-        </div>
-        
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <span>正在配置环境...</span>
+        <div class="content">
+            <h1 class="content-title">选择云开发环境</h1>
+            <p class="content-subtitle">请选择要使用的云开发环境，系统将自动配置环境ID</p>
+            
+            <div class="env-list" id="envList">
+                <!-- 环境列表将通过JavaScript动态加载 -->
+            </div>
+            
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="cancel()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                    取消
+                </button>
+                <button class="btn btn-primary" id="confirmBtn" onclick="confirm()" disabled>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                    确认选择
+                </button>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <span>正在配置环境...</span>
+            </div>
         </div>
     </div>
 
@@ -496,14 +564,14 @@ export class InteractiveServer {
         function renderEnvList() {
             const envList = document.getElementById('envList');
             if (envs.length === 0) {
-                envList.innerHTML = '<div style="padding: 16px; text-align: center; color: var(--text-secondary);">暂无可用环境</div>';
+                envList.innerHTML = '<div style="padding: 24px; text-align: center; color: var(--text-secondary);">暂无可用环境</div>';
                 return;
             }
             
             envList.innerHTML = envs.map((env, index) => \`
                 <div class="env-item" onclick="selectEnv('\${env.EnvId}')">
                     <svg class="env-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                     </svg>
                     <div class="env-info">
                         <div class="env-name">\${env.Alias || env.EnvId}</div>
@@ -896,54 +964,102 @@ export class InteractiveServer {
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --primary-color: #0052D9;
-            --hover-color: #0062F5;
-            --border-color: #E7E7E7;
-            --text-primary: #1A1A1A;
-            --text-secondary: #666666;
-            --bg-secondary: #F5F5F5;
+            --primary-color: #4F46E5;
+            --primary-hover: #4338CA;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --border-color: #E5E7EB;
+            --bg-secondary: #F9FAFB;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #FFFFFF;
+            font-family: var(--font-mono);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: var(--text-primary);
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+            animation: modalIn 0.3s ease-out;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
         .header {
             background: var(--primary-color);
             color: white;
-            padding: 16px 24px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-left {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-        .logo-icon {
-            width: 32px;
-            height: 32px;
+        .logo {
+            width: 28px;
+            height: 28px;
+            animation: pulse 2s infinite;
         }
-        .header-title {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        .container {
-            flex: 1;
-            padding: 24px;
-            max-width: 800px;
-            margin: 0 auto;
-            width: 100%;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
         .title {
-            font-size: 20px;
-            margin-bottom: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+        .github-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.1);
+        }
+        .github-link:hover {
+            opacity: 1;
+            background: rgba(255,255,255,0.2);
+        }
+        .content {
+            padding: 32px 24px;
+        }
+        .content-title {
+            font-size: 24px;
+            font-weight: 700;
             color: var(--text-primary);
+            margin-bottom: 8px;
         }
         .message {
-            background: var(--bg-secondary);
-            border-left: 3px solid var(--primary-color);
-            padding: 16px;
-            border-radius: 6px;
+            background: #EEF2FF;
+            border: 1px solid #C7D2FE;
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            border-radius: 12px;
             margin-bottom: 24px;
             font-size: 15px;
             line-height: 1.6;
@@ -953,27 +1069,29 @@ export class InteractiveServer {
             margin-bottom: 24px;
         }
         .option-item {
-            padding: 16px;
+            padding: 16px 20px;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 12px;
             margin-bottom: 12px;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
         .option-item:hover {
             background: var(--bg-secondary);
+            border-color: var(--primary-color);
         }
         .option-item.selected {
-            background: rgba(0, 82, 217, 0.1);
+            background: #EEF2FF;
             border-color: var(--primary-color);
         }
         .option-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             color: var(--primary-color);
+            flex-shrink: 0;
         }
         .custom-input {
             margin-bottom: 24px;
@@ -983,54 +1101,59 @@ export class InteractiveServer {
             min-height: 120px;
             padding: 16px;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 12px;
             font-size: 15px;
-            font-family: inherit;
+            font-family: var(--font-mono);
             resize: vertical;
             transition: all 0.2s;
+            line-height: 1.5;
         }
         .custom-input textarea:focus {
             outline: none;
             border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
-        .button-group {
+        .actions {
             display: flex;
             gap: 12px;
             justify-content: flex-end;
         }
         .btn {
-            padding: 8px 16px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            font-family: var(--font-mono);
         }
         .btn-primary {
             background: var(--primary-color);
             color: white;
         }
-        .btn-primary:hover {
-            background: var(--hover-color);
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
         }
         .btn-secondary {
             background: var(--bg-secondary);
             color: var(--text-secondary);
         }
         .btn-secondary:hover {
-            background: #E0E0E0;
+            background: #F3F4F6;
         }
         .btn:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
         }
         .loading {
             display: none;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             margin-top: 16px;
             color: var(--text-secondary);
@@ -1039,7 +1162,7 @@ export class InteractiveServer {
         .spinner {
             width: 16px;
             height: 16px;
-            border: 2px solid var(--bg-secondary);
+            border: 2px solid var(--border-color);
             border-top: 2px solid var(--primary-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -1051,54 +1174,64 @@ export class InteractiveServer {
     </style>
 </head>
 <body>
-    <header class="header">
-        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M12 22V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M22 7L12 12L2 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="header-title">CloudBase AI Toolkit</span>
-    </header>
+    <div class="modal">
+        <div class="header">
+            <div class="header-left">
+                <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z"/>
+                    <path d="M12 22V12"/>
+                    <path d="M22 7L12 12L2 7"/>
+                </svg>
+                <span class="title">CloudBase AI Toolkit</span>
+            </div>
+            <a href="https://github.com/TencentCloudBase/CloudBase-AI-ToolKit" target="_blank" class="github-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                GitHub
+            </a>
+        </div>
 
-    <div class="container">
-        <h1 class="title">需求澄清</h1>
-        <div class="message">${message}</div>
-        
-        ${optionsArray ? `
-        <div class="options" id="options">
-            ${optionsArray.map((option: string, index: number) => `
-                <div class="option-item" onclick="selectOption('${option}')">
-                    <svg class="option-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+        <div class="content">
+            <h1 class="content-title">需求澄清</h1>
+            <div class="message">${message}</div>
+            
+            ${optionsArray ? `
+            <div class="options" id="options">
+                ${optionsArray.map((option: string, index: number) => `
+                    <div class="option-item" onclick="selectOption('${option}')">
+                        <svg class="option-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+                        </svg>
+                        ${option}
+                    </div>
+                `).join('')}
+            </div>
+            ` : ''}
+            
+            <div class="custom-input">
+                <textarea id="customInput" placeholder="请输入您的具体需求或建议..." onkeyup="updateSubmitButton()"></textarea>
+            </div>
+            
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="cancel()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
                     </svg>
-                    ${option}
-                </div>
-            `).join('')}
-        </div>
-        ` : ''}
-        
-        <div class="custom-input">
-            <textarea id="customInput" placeholder="请输入您的具体需求或建议..." onkeyup="updateSubmitButton()"></textarea>
-        </div>
-        
-        <div class="button-group">
-            <button class="btn btn-secondary" onclick="cancel()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M18 6L6 18M6 6l12 12"/>
-                </svg>
-                取消
-            </button>
-            <button class="btn btn-primary" id="submitBtn" onclick="submit()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 6L9 17l-5-5"/>
-                </svg>
-                提交反馈
-            </button>
-        </div>
-        
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <span>正在提交...</span>
+                    取消
+                </button>
+                <button class="btn btn-primary" id="submitBtn" onclick="submit()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                    提交反馈
+                </button>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <span>正在提交...</span>
+            </div>
         </div>
     </div>
 
@@ -1166,53 +1299,128 @@ export class InteractiveServer {
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --primary-color: #0052D9;
-            --hover-color: #0062F5;
-            --border-color: #E7E7E7;
-            --text-primary: #1A1A1A;
-            --text-secondary: #666666;
-            --bg-secondary: #F5F5F5;
-            --warning-color: #FF4D4F;
-            --warning-bg: #FFF1F0;
+            --primary-color: #4F46E5;
+            --primary-hover: #4338CA;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --border-color: #E5E7EB;
+            --bg-secondary: #F9FAFB;
+            --warning-color: #DC2626;
+            --warning-bg: #FEF2F2;
+            --warning-border: #FECACA;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #FFFFFF;
+            font-family: var(--font-mono);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: var(--text-primary);
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+            animation: modalIn 0.3s ease-out;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
         .header {
             background: var(--primary-color);
             color: white;
-            padding: 16px 24px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-left {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-        .logo-icon {
-            width: 32px;
-            height: 32px;
+        .logo {
+            width: 28px;
+            height: 28px;
+            animation: pulse 2s infinite;
         }
-        .header-title {
+        .title {
             font-size: 18px;
             font-weight: 600;
+            letter-spacing: -0.025em;
         }
-        .container {
-            flex: 1;
-            padding: 24px;
-            max-width: 800px;
-            margin: 0 auto;
-            width: 100%;
+        .github-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.1);
+        }
+        .github-link:hover {
+            opacity: 1;
+            background: rgba(255,255,255,0.2);
+        }
+        .content {
+            padding: 32px 24px;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
         .title {
             font-size: 20px;
-            margin-bottom: 8px;
+            margin-bottom: 16px;
             color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
+            position: relative;
+        }
+        .title:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 2px;
         }
         .message {
             background: var(--bg-secondary);
@@ -1278,23 +1486,29 @@ export class InteractiveServer {
             justify-content: flex-end;
         }
         .btn {
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .btn-primary {
             background: var(--primary-color);
             color: white;
+            box-shadow: 0 4px 12px rgba(0,82,217,0.2);
         }
         .btn-primary:hover {
             background: var(--hover-color);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0,82,217,0.3);
         }
         .btn-secondary {
             background: var(--bg-secondary);
@@ -1302,6 +1516,7 @@ export class InteractiveServer {
         }
         .btn-secondary:hover {
             background: #E0E0E0;
+            transform: translateY(-1px);
         }
         .btn-warning {
             background: var(--warning-color);
@@ -1325,7 +1540,7 @@ export class InteractiveServer {
         .spinner {
             width: 16px;
             height: 16px;
-            border: 2px solid var(--bg-secondary);
+            border: 2px solid var(--border-color);
             border-top: 2px solid var(--primary-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -1337,62 +1552,76 @@ export class InteractiveServer {
     </style>
 </head>
 <body>
-    <header class="header">
-        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M12 22V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M22 7L12 12L2 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="header-title">CloudBase AI Toolkit</span>
-    </header>
-
-    <div class="container">
-        <h1 class="title">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/>
-                <path d="M12 16V12"/>
-                <path d="M12 8H12.01"/>
-            </svg>
-            操作确认
-        </h1>
-        
-        <div class="message">${message}</div>
-        
-        ${risks && risks.length > 0 ? `
-        <div class="risks">
-            <div class="risks-title">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-                    <path d="M12 9v4"/>
-                    <path d="M12 17h.01"/>
+    <div class="modal">
+        <div class="header">
+            <div class="header-left">
+                <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z"/>
+                    <path d="M12 22V12"/>
+                    <path d="M22 7L12 12L2 7"/>
                 </svg>
-                风险提示
+                <span class="title">CloudBase AI Toolkit</span>
             </div>
-            ${risks.map(risk => `<div class="risk-item">${risk}</div>`).join('')}
+            <a href="https://github.com/TencentCloudBase/CloudBase-AI-ToolKit" target="_blank" class="github-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                GitHub
+            </a>
         </div>
-        ` : ''}
-        
-        <div class="options">
-            ${confirmOptions.map((option, index) => `
-                <div class="option-item" onclick="selectOption('${option}')">
-                    <svg class="option-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        ${option.includes('确认') ? 
+
+            <div class="content">
+                <h1 class="content-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/>
+                        <path d="M12 16V12"/>
+                        <path d="M12 8H12.01"/>
+                    </svg>
+                    操作确认
+                </h1>
+                
+                <div class="message">${message}</div>
+                
+                ${risks && risks.length > 0 ? `
+                <div class="risks">
+                    <div class="risks-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                            <path d="M12 9v4"/>
+                            <path d="M12 17h.01"/>
+                        </svg>
+                        风险提示
+                    </div>
+                    ${risks.map(risk => `<div class="risk-item">${risk}</div>`).join('')}
+                </div>
+                ` : ''}
+                
+                <div class="options">
+                    ${confirmOptions.map((option, index) => {
+                        const className = option.includes('确认') ? 'confirm' : option.includes('取消') ? 'cancel' : '';
+                        const iconPath = option.includes('确认') ? 
                             '<path d="M20 6L9 17l-5-5"/>' :
                             option.includes('取消') ? 
                                 '<path d="M18 6L6 18M6 6l12 12"/>' :
-                                '<path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>'
-                        }
-                    </svg>
-                    ${option}
+                                '<path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>';
+                        
+                        return `
+                            <div class="option-item ${className}" onclick="selectOption('${option}')">
+                                <svg class="option-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    ${iconPath}
+                                </svg>
+                                ${option}
+                            </div>
+                        `;
+                    }).join('')}
                 </div>
-            `).join('')}
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <span>正在处理...</span>
+                </div>
+            </div>
         </div>
-        
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <span>正在处理...</span>
-        </div>
-    </div>
 
     <script>
         let selectedOption = null;
