@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getCloudBaseManager } from '../cloudbase-manager.js'
+import path from 'path';
 
 // 支持的 Node.js 运行时列表
 export const SUPPORTED_NODEJS_RUNTIMES = [
@@ -12,6 +13,28 @@ export const SUPPORTED_NODEJS_RUNTIMES = [
   'Nodejs 8.9（即将下线）',
 ];
 export const DEFAULT_NODEJS_RUNTIME = 'Nodejs 18.15';
+
+/**
+ * 处理函数根目录路径，确保不包含函数名
+ * @param functionRootPath 用户输入的路径
+ * @param functionName 函数名称
+ * @returns 处理后的根目录路径
+ */
+function processFunctionRootPath(functionRootPath: string | undefined, functionName: string): string | undefined {
+  if (!functionRootPath) return functionRootPath;
+  
+  const normalizedPath = path.normalize(functionRootPath);
+  const lastDir = path.basename(normalizedPath);
+  
+  // 如果路径的最后一级目录名与函数名相同，说明用户可能传入了包含函数名的路径
+  if (lastDir === functionName) {
+    const parentPath = path.dirname(normalizedPath);
+    console.warn(`检测到 functionRootPath 包含函数名 "${functionName}"，已自动调整为父目录: ${parentPath}`);
+    return parentPath;
+  }
+  
+  return functionRootPath;
+}
 
 export function registerFunctionTools(server: McpServer) {
   // getFunctionList - 获取云函数列表(推荐)
@@ -64,7 +87,7 @@ export function registerFunctionTools(server: McpServer) {
           version: z.number()
         })).optional().describe("Layer配置")
       }).describe("函数配置"),
-      functionRootPath: z.string().optional().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，指定之后可以自动上传这部分的文件作为代码"),
+      functionRootPath: z.string().optional().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，注意：不要包含函数名本身，例如函数名为 'hello'，应传入 '/path/to/cloudfunctions'，而不是 '/path/to/cloudfunctions/hello'"),
       force: z.boolean().describe("是否覆盖")
     },
     async ({ func, functionRootPath, force }) => {
@@ -72,10 +95,14 @@ export function registerFunctionTools(server: McpServer) {
       if (!func.runtime) {
         func.runtime = DEFAULT_NODEJS_RUNTIME;
       }
+      
+      // 处理函数根目录路径，确保不包含函数名
+      const processedRootPath = processFunctionRootPath(functionRootPath, func.name);
+      
       const cloudbase = await getCloudBaseManager()
       const result = await cloudbase.functions.createFunction({
         func,
-        functionRootPath,
+        functionRootPath: processedRootPath,
         force
       });
       return {
@@ -97,16 +124,19 @@ export function registerFunctionTools(server: McpServer) {
       func: z.object({
         name: z.string().describe("函数名称")
       }).describe("函数配置"),
-      functionRootPath: z.string().optional().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，指定之后可以自动上传这部分的文件作为代码")
+      functionRootPath: z.string().optional().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，注意：不要包含函数名本身，例如函数名为 'hello'，应传入 '/path/to/cloudfunctions'，而不是 '/path/to/cloudfunctions/hello'")
     },
     async ({ func, functionRootPath }) => {
+      // 处理函数根目录路径，确保不包含函数名
+      const processedRootPath = processFunctionRootPath(functionRootPath, func.name);
+      
       const cloudbase = await getCloudBaseManager()
       const result = await cloudbase.functions.updateFunctionCode({
         func: {
           ...func,
           installDependency: true // 默认安装依赖
         },
-        functionRootPath,
+        functionRootPath: processedRootPath,
       });
       return {
         content: [
