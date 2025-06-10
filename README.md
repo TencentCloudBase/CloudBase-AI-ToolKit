@@ -25,7 +25,7 @@
 
 [![CNB 镜像](https://img.shields.io/badge/CNB-CloudBase--AI--ToolKit-blue?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHJ4PSIyIiBmaWxsPSIjM0I4MkY2Ii8+PHBhdGggZD0iTTUgM0g3VjVINSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNNSA3SDdWOUg1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==)](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit)
 
-当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
+当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
 
 <a href="https://www.producthunt.com/posts/cloudbase-ai-tookit?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-cloudbase&#0045;ai&#0045;tookit" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=971451&theme=light&t=1748519563832" alt="CloudBase&#0032;AI&#0032;Tookit - Prompt&#0032;to&#0032;Production&#0058;&#0032;Full&#0045;stack&#0044;&#0032;DB&#0032;&#0038;&#0032;functions—zero&#0032;setup&#0046; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
@@ -56,7 +56,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 | **📱 全栈应用支持** | Web + 小程序 + 数据库 + 后端一体化 | 支持小程序/web 等多种应用形式,提供后端托管和数据库 |
 | **🔧 智能修复** | AI 自动查看日志并修复问题 | 降低运维成本 |
 | **⚡ 极速体验** | 国内 CDN 加速 | 比海外平台访问速度更快 |
-| **📚 智能知识库检索** | 内置支持云开发、微信小程序等专业知识库的智能向量检索 |
+| **📚 知识检索** | 内置支持云开发、微信小程序等专业知识 |专业知识库的智能向量检索
 
 
 ## 🚀 快速开始
@@ -65,7 +65,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 ### 0. 前置条件
 
 #### 安装 AI 开发工具
-例如 [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) 等
+例如 [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) 等，点击查看 [支持的 AI 开发工具列表](#2-配置你的-ai-ide)
 
 #### 开通云开发环境
 访问 [腾讯云开发控制台](https://tcb.cloud.tencent.com/dev)开通环境，新用户可以免费开通体验。
@@ -100,7 +100,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 | 工具 | 支持平台 |
 |------|----------|
 | [Cursor](https://cursor.com/) | 独立 IDE|
-| [WindSurf](https://windsurf.com/editor) | 独立 IDE,VSCode、JetBrains 插件 |
+| [WindSurf](https://windsurf.com/editor) | 独立 IDE, VSCode、JetBrains 插件 |
 | [CodeBuddy](https://copilot.tencent.com/) | VS Code、JetBrains、微信开发者工具插件 |
 | [CLINE](https://cline.so/) | VS Code 插件 |
 | [GitHub Copilot](https://github.com/features/copilot) | VS Code 插件 |
@@ -108,6 +108,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 | [通义灵码](https://tongyi.aliyun.com/lingma) | 独立 IDE，VS Code、 JetBrains插件 |
 | [RooCode](https://roocode.com/) | VS Code插件 |
 | [文心快码](https://comate.baidu.com/) | VS Code、JetBrains插件|
+| [Augment Code](https://www.augmentcode.com/) | VS Code、JetBrains 插件 |
 
 如果你使用的是模板项目，所有配置都已经预置完成,请按照指引进行检查和开启工具。如果不是从模板开始，需要按具体的说明手动添加相应配置：
 
@@ -378,6 +379,41 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
     }
 }
 ```
+
+
+
+<details>
+<summary><strong>🚀 Augment Code 配置</strong></summary>
+
+#### 步骤1：使用 AI 规则
+
+模板中已包含 `.augment-guidelines` 文件，Augment Code 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则
+
+#### 步骤2：配置 MCP
+
+如果使用模板项目，MCP 配置已经预置完成(内置在`vscode/settings.json`中)。如果不是从模板开始，需要在 Augment的 MCP 配置中添加云开发 MCP，[参考文档](https://docs.augmentcode.com/setup-augment/mcp)：
+
+```json
+{
+  "augment.advanced": {
+     "mcpServers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ]
+        }
+    }
+  }
+}
+```
+
+#### 步骤3：使用 Agent 模式
+
+在对话窗口中使用 Agent 模式进行智能代码生成和自动化操作。
+
+</details>
+
 
 #### 步骤3：使用 AI 对话
 
