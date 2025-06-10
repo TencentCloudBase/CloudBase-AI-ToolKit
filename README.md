@@ -95,12 +95,6 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 ### 2. 配置你的 AI IDE
 
-> 💡 **使用提示**：如果你在 Cursor 等工具中开启了自动执行(auto-run)模式，建议在"Command denylist"中添加敏感命令，避免自动运行如删除数据等敏感的操作
-> 
-> 默认模式下需要手动确认执行，较为安全。
-
-在开始使用前，只需要对 AI 说"登录云开发"，AI 就会自动完成登录和环境选择。后续如需切换环境，可以说"退出云开发"后重新登录。
-
 以下工具均支持 CloudBase AI ToolKit，选择合适的工具并按说明配置：
 
 | 工具 | 支持平台 |
@@ -115,7 +109,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 | [RooCode](https://roocode.com/) | VS Code插件 |
 | [文心快码](https://comate.baidu.com/) | VS Code、JetBrains插件|
 
-如果你使用的是模板项目，所有配置都已经预置完成。如果不是从模板开始，需要按照以下说明添加相应配置：
+如果你使用的是模板项目，所有配置都已经预置完成,请按照指引进行检查和开启工具。如果不是从模板开始，需要按具体的说明手动添加相应配置：
 
 <details>
 <summary><strong>🔧 Cursor 配置</strong></summary>
@@ -393,7 +387,23 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 ### 3. 开始开发
 
-确认 AI 已经连接到云开发
+
+在开始使用前，只需要对 AI 说
+
+```
+登录云开发
+```
+AI 就会自动完成弹出登录腾讯云界面以及云开发的环境选择
+
+后续如需切换环境，可以说
+
+```
+退出云开发
+```
+
+AI 就会清理本地的配置，后续可以再要求 AI 登录云开发来重新登录。
+
+在登录成功后，可以确认 AI 已经连接到云开发
 
 ```
 查询当前云开发环境信息
