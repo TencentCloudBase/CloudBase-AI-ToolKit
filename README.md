@@ -399,7 +399,7 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 
 #### 步骤2：配置 MCP
 
-如果使用模板项目，MCP 配置已经预置完成(内置在`vscode/settings.json`中)。如果不是从模板开始，需要在 Augment的 MCP 配置中添加云开发 MCP，[参考文档](https://docs.augmentcode.com/setup-augment/mcp)：
+如果使用模板项目，MCP 配置已经预置完成(内置在`.vscode/settings.json`中)。如果不是从模板开始，需要在 Augment的 MCP 配置中添加云开发 MCP，[参考文档](https://docs.augmentcode.com/setup-augment/mcp)：
 
 ```json
 {
@@ -419,6 +419,31 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 #### 步骤3：使用 Agent 模式
 
 在对话窗口中使用 Agent 模式进行智能代码生成和自动化操作。
+
+</details>
+
+<details>
+<summary><strong>🔄 更新 CloudBase AI ToolKit</strong></summary>
+
+**更新 AI 规则**
+
+如果你想在现有项目中更新到最新的云开发 AI 规则，只需对 AI 说：
+
+```
+下载云开发 AI 规则
+```
+
+AI 会自动下载并更新最新的规则配置到你的项目目录。
+
+**更新 MCP 工具**
+
+当有新版本的 MCP 工具发布时，你可以通过以下方式更新：
+
+1. **自动更新（推荐）**：在你的 AI 开发工具的 MCP 列表中，找到 cloudbase-mcp 并重新启用或刷新 MCP 列表即可自动安装最新版本
+
+2. **手动更新**：如果自动更新不成功，可以先禁用再重新启用 cloudbase-mcp，或者重启你的 AI IDE
+
+由于 MCP 配置中使用了 `@latest` 标签，通常会自动获取最新版本。
 
 </details>
 
@@ -663,5 +688,5 @@ graph TD
 
 ---
 
-⭐ 如果这个项目对你有帮助，请给我们一个 Star！ 
+⭐ 如果这个项目对你有帮助，请给我们一个 Star！
 
