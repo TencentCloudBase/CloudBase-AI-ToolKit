@@ -2,25 +2,81 @@ import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getCloudBaseManager } from '../cloudbase-manager.js'
 import { logout } from '../auth.js'
+import { clearUserEnvId, _promptAndSetEnvironmentId } from './interactive.js'
 
 export function registerEnvTools(server: McpServer) {
-  // logout
+  // login - 登录云开发环境
+  server.tool(
+    "login",
+    "登录云开发环境并选择要使用的环境",
+    {
+      forceUpdate: z.boolean().optional().describe("是否强制重新选择环境")
+    },
+    async ({ forceUpdate = false }) => {
+      try {
+        const { selectedEnvId, cancelled, error, noEnvs } = await _promptAndSetEnvironmentId(false);
+
+        if (error) {
+          return { content: [{ type: "text", text: error }] };
+        }
+
+        if (noEnvs) {
+          return { content: [{ type: "text", text: "当前账户下暂无可用的云开发环境，请先在腾讯云控制台创建环境" }] };
+        }
+
+        if (cancelled) {
+          return { content: [{ type: "text", text: "用户取消了登录" }] };
+        }
+
+        if (selectedEnvId) {
+          return {
+            content: [{
+              type: "text",
+              text: `✅ 登录成功，当前环境: ${selectedEnvId}`
+            }]
+          };
+        }
+
+        throw new Error("登录失败");
+      } catch (error) {
+        return {
+          content: [{
+            type: "text",
+            text: `登录失败: ${error instanceof Error ? error.message : String(error)}`
+          }]
+        };
+      }
+    }
+  );
+
+  // logout - 退出云开发环境
   server.tool(
     "logout",
-    "登出当前云开发账户",
+    "退出云开发环境",
     {
       confirm: z.literal("yes").describe("确认操作，默认传 yes")
     },
-    async ({ confirm }) => {
-      const result = await logout();
-      return {
-        content: [
-          {
+    async () => {
+      try {
+        // 登出账户
+        await logout();
+        // 清理环境ID配置
+        await clearUserEnvId();
+        
+        return {
+          content: [{
             type: "text",
-            text: "success"
-          }
-        ]
-      };
+            text: "✅ 已退出登录"
+          }]
+        };
+      } catch (error) {
+        return {
+          content: [{
+            type: "text",
+            text: `退出失败: ${error instanceof Error ? error.message : String(error)}`
+          }]
+        };
+      }
     }
   );
 
@@ -32,7 +88,7 @@ export function registerEnvTools(server: McpServer) {
       confirm: z.literal("yes").describe("确认操作，默认传 yes")
     },
     async () => {
-      const cloudbase = await getCloudBaseManager()
+      const cloudbase = await getCloudBaseManager({ requireEnvId: false })
       const result = await cloudbase.env.listEnvs();
       return {
         content: [
