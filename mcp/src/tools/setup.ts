@@ -106,6 +106,30 @@ async function copyFileIfNotExists(src: string, dest: string): Promise<{ copied:
   }
 }
 
+// 复制文件，支持覆盖模式
+async function copyFile(src: string, dest: string, overwrite: boolean = false): Promise<{ copied: boolean; reason?: string; action?: string }> {
+  try {
+    const destExists = fs.existsSync(dest);
+    
+    // 如果目标文件存在且不允许覆盖
+    if (destExists && !overwrite) {
+      return { copied: false, reason: '文件已存在', action: 'skipped' };
+    }
+    
+    // 创建目标目录
+    await fsPromises.mkdir(path.dirname(dest), { recursive: true });
+    
+    // 复制文件
+    await fsPromises.copyFile(src, dest);
+    return { 
+      copied: true, 
+      action: destExists ? 'overwritten' : 'created'
+    };
+  } catch (error) {
+    return { copied: false, reason: `复制失败: ${error instanceof Error ? error.message : '未知错误'}` };
+  }
+}
+
 export function registerSetupTools(server: McpServer) {
   server.tool(
     "downloadTemplate",
@@ -116,11 +140,12 @@ export function registerSetupTools(server: McpServer) {
 - miniprogram: 微信小程序 + 云开发模板  
 - rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置
 
-工具会自动下载模板到临时目录，解压后如果检测到WORKSPACE_FOLDER_PATHS环境变量，则复制到项目目录（不覆盖已存在文件）。`,
+工具会自动下载模板到临时目录，解压后如果检测到WORKSPACE_FOLDER_PATHS环境变量，则复制到项目目录。`,
     {
-      template: z.enum(["react", "miniprogram", "rules"]).describe("要下载的模板类型")
+      template: z.enum(["react", "miniprogram", "rules"]).describe("要下载的模板类型"),
+      overwrite: z.boolean().optional().describe("是否覆盖已存在的文件，默认为false（不覆盖）")
     },
-    async ({ template }) => {
+    async ({ template, overwrite = false }) => {
       try {
         const templateConfig = TEMPLATES[template];
         if (!templateConfig) {
@@ -147,7 +172,8 @@ export function registerSetupTools(server: McpServer) {
         // 检查是否需要复制到项目目录
         const workspaceFolder = process.env.WORKSPACE_FOLDER_PATHS;
         let finalFiles: string[] = [];
-        let copiedCount = 0;
+        let createdCount = 0;
+        let overwrittenCount = 0;
         let skippedCount = 0;
         const results: string[] = [];
 
@@ -156,10 +182,14 @@ export function registerSetupTools(server: McpServer) {
             const srcPath = path.join(extractDir, relativePath);
             const destPath = path.join(workspaceFolder, relativePath);
             
-            const copyResult = await copyFileIfNotExists(srcPath, destPath);
+            const copyResult = await copyFile(srcPath, destPath, overwrite);
             
             if (copyResult.copied) {
-              copiedCount++;
+              if (copyResult.action === 'overwritten') {
+                overwrittenCount++;
+              } else {
+                createdCount++;
+              }
               finalFiles.push(destPath);
             } else {
               skippedCount++;
@@ -168,8 +198,20 @@ export function registerSetupTools(server: McpServer) {
           }
 
           results.push(`✅ ${templateConfig.description} 同步完成`);
-          results.push(`📁 保存在临时目录: ${extractDir}`);
-          results.push(`📊 复制了 ${copiedCount} 个文件${skippedCount > 0 ? `，跳过 ${skippedCount} 个已存在文件` : ''}`);
+          results.push(`📁 临时目录: ${extractDir}`);
+          
+          const stats: string[] = [];
+          if (createdCount > 0) stats.push(`新建 ${createdCount} 个文件`);
+          if (overwrittenCount > 0) stats.push(`覆盖 ${overwrittenCount} 个文件`);
+          if (skippedCount > 0) stats.push(`跳过 ${skippedCount} 个已存在文件`);
+          
+          if (stats.length > 0) {
+            results.push(`📊 ${stats.join('，')}`);
+          }
+          
+          if (overwrite || overwrittenCount > 0 || skippedCount > 0) {
+            results.push(`🔄 覆盖模式: ${overwrite ? '启用' : '禁用'}`);
+          }
         } else {
           finalFiles = extractedFiles.map(relativePath => path.join(extractDir, relativePath));
           results.push(`✅ ${templateConfig.description} 下载完成`);
