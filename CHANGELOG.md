@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/compare/v1.6.0...v1.7.0) (2025-06-10)
+
+
+### 其他
+
+* update doc ([bd49e04](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/bd49e0488b5ebcd16dd5d9c19a9ca801b1b0942c))
+
+
+### 新功能
+
+* 新增 login 工具交互式选择环境,新增 interactiveDialog 统一的交互式对话工具，支持需求澄清和任务确认，当需要和用户确认下一步的操作的时候，可以调用这个工具的clarify，如果有敏感的操作，需要用户确认，可以调用这个工具的confirm ([d7d5293](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/d7d5293d8fc1611c9363fa45d743e637da07266e))
+* 增加规则 交互式反馈规则：在需求不明确时主动与用户对话澄清，优先使用自动化工具完成配置。执行高风险操作前必须获得用户确认。环境管理通过login/logout工具完成，交互对话使用interactiveDialog工具处理需求澄清和风险确认。简单修改无需确认，关键节点（如部署、数据删除）需交互，保持消息简洁并用emoji标记状态。 ([c234e9a](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/c234e9a065fc23181125cacafcee0a6d75773762))
+
 ## [1.6.0](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/compare/v1.5.0...v1.6.0) (2025-06-06)
 
 
