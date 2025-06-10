@@ -147,10 +147,7 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-      }
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -182,10 +179,7 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-      }
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -222,10 +216,7 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-      }
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -266,9 +257,6 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
       "args": [
         "@cloudbase/cloudbase-mcp@latest"
       ],
-      "env": {
-        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-      },
       "transportType": "stdio",
       "disabled": false
     }
@@ -307,10 +295,7 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
             "command": "npx",
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
-            ],
-            "env": {
-                "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-            }
+            ]
         }
     }
 }
@@ -343,10 +328,7 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"], 
-      "env": {
-        "CLOUDBASE_ENV_ID": "你的云开发环境ID"  
-      }
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -383,10 +365,7 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-      }
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -421,10 +400,7 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
             "command": "npx",
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
-            ],
-            "env": {
-                "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-            },
+            ]
             "disabled": false
         }
     }
@@ -462,9 +438,6 @@ CloudBase AI ToolKit 提供了简单的环境登录管理：
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
             ],
-            "env": {
-                "CLOUDBASE_ENV_ID": "你的云开发环境ID"
-            },
             "disabled": false
         }
     }
@@ -632,7 +605,7 @@ AI 会自动：
 
 | 工具名称 | 功能简介 |
 |----------|----------|
-| login | 登录并选择云开发环境 |
+| login | 登录并选择云开发环境，也可以用来切换环境 |
 | logout | 登出当前云开发账户 |
 | downloadTemplate | 下载CloudBase项目模板（React、小程序、AI编辑器配置等） |
 | listEnvs | 获取所有云开发环境信息 |
