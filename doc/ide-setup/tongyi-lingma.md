@@ -55,7 +55,7 @@
 ## 📚 相关资源
 
 - [通义灵码官网](https://tongyi.aliyun.com/lingma)
-- [CloudBase AI ToolKit 首页](../index)
+- [CloudBase AI ToolKit 首页](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/)
 
 ## 💬 技术支持
 

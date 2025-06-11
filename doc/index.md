@@ -74,7 +74,7 @@ graph TB
         C[移动应用]
     end
     
-    D[CloudBase SDK]
+    D[SDK]
     
     subgraph "云开发平台"
         E[云函数]

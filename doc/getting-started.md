@@ -3,7 +3,7 @@
 ## 0. 前置条件
 
 ### 安装 AI 开发工具
-例如 [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) 等，点击查看 [支持的 AI 开发工具列表](../index.md#-支持的-ai-开发工具)
+例如 [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) 等，点击查看 [支持的 AI 开发工具列表](/ai/cloudbase-ai-toolkit/#-支持的-ai-开发工具)
 
 ### 开通云开发环境
 访问 [腾讯云开发控制台](https://tcb.cloud.tencent.com/dev)开通环境，新用户可以免费开通体验。

@@ -46,4 +46,4 @@
 ## 📚 相关资源
 
 - [文心快码官网](https://comate.baidu.com/)
-- [CloudBase AI ToolKit 首页](../index) 
+- [CloudBase AI ToolKit 首页](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/) 

@@ -42,4 +42,4 @@
 ## 📚 相关资源
 
 - [RooCode 官网](https://roocode.com/)
-- [CloudBase AI ToolKit 首页](../index) 
+- [CloudBase AI ToolKit 首页](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/) 

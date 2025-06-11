@@ -94,7 +94,7 @@
 ## 📚 相关资源
 
 - [Trae 官方网站](https://www.trae.ai/)
-- [CloudBase AI ToolKit 首页](../index)
+- [CloudBase AI ToolKit 首页](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/)
 - [快速开始指南](../getting-started)
 
 ## 💬 技术支持

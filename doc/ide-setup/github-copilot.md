@@ -257,7 +257,7 @@
 
 - [GitHub Copilot 官方文档](https://docs.github.com/copilot)
 - [VS Code Copilot 扩展](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)
-- [CloudBase AI ToolKit 首页](../index)
+- [CloudBase AI ToolKit 首页](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/)
 - [快速开始指南](../getting-started)
 - [开发指南](../development)
 

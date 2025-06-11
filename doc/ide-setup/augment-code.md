@@ -163,7 +163,7 @@
 ## 📚 相关资源
 
 - [Augment Code 官方文档](https://docs.augmentcode.com/)
-- [CloudBase AI ToolKit 首页](../index)
+- [CloudBase AI ToolKit 首页](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/)
 - [快速开始指南](../getting-started)
 - [开发指南](../development)
 
