@@ -2214,7 +2214,9 @@ export class InteractiveServer {
             color: var(--text-primary);
             animation: fadeInUp 0.8s ease-out 0.4s both;
             position: relative;
-            overflow: hidden;
+            overflow: scroll;
+            white-space: pre;
+            max-height: 300px;
         }
         
         .message::before {
