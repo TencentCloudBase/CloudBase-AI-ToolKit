@@ -15,6 +15,10 @@ const TEMPLATES = {
     description: "React + CloudBase 全栈应用模板",
     url: "https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip"
   },
+  "vue": {
+    description: "Vue + CloudBase 全栈应用模板",
+    url: "https://static.cloudbase.net/cloudbase-examples/web-cloudbase-vue-template.zip"
+  },
   "miniprogram": {
     description: "微信小程序 + 云开发模板", 
     url: "https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip"
@@ -137,12 +141,13 @@ export function registerSetupTools(server: McpServer) {
 
 支持的模板:
 - react: React + CloudBase 全栈应用模板
+- vue: Vue + CloudBase 全栈应用模板
 - miniprogram: 微信小程序 + 云开发模板  
 - rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置
 
 工具会自动下载模板到临时目录，解压后如果检测到WORKSPACE_FOLDER_PATHS环境变量，则复制到项目目录。`,
     {
-      template: z.enum(["react", "miniprogram", "rules"]).describe("要下载的模板类型"),
+      template: z.enum(["react", "vue", "miniprogram", "rules"]).describe("要下载的模板类型"),
       overwrite: z.boolean().optional().describe("是否覆盖已存在的文件，默认为false（不覆盖）")
     },
     async ({ template, overwrite = false }) => {

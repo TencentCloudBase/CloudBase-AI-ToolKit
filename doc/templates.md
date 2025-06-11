@@ -4,6 +4,14 @@
 
 ## 🚀 新项目推荐
 
+### 微信小程序 + 云开发模板
+
+云开发小程序解决方案模板，包含小程序基础配置。
+
+- **下载地址**：[代码包下载](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001)
+- **开源代码**：[GitHub](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
+- **适用场景**：微信小程序开发
+
 ### React Web 应用 + 云开发模板
 
 现代化的 React 全栈应用模板，包含云开发集成配置。
@@ -12,13 +20,15 @@
 - **开源代码**：[GitHub](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
 - **适用场景**：Web 应用开发
 
-### 微信小程序 + 云开发模板
+### Vue Web 应用 + 云开发模板
 
-云开发小程序解决方案模板，包含小程序基础配置。
+现代化的 Vue 全栈应用模板，包含云开发集成配置。
 
-- **下载地址**：[代码包下载](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001)
-- **开源代码**：[GitHub](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
-- **适用场景**：微信小程序开发
+- **下载地址**：[代码包下载](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-vue-template.zip?v=2025053001)
+- **开源代码**：[GitHub](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-vue-template)
+- **适用场景**：Web 应用开发
+
+
 
 ### AI 规则通用云开发模板
 
