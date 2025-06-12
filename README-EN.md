@@ -121,7 +121,7 @@ Templates include MCP config. If not using a template, click below to install in
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "CLOUDBASE_ENV_ID": "your-cloudbase-env-id"
       }
@@ -156,7 +156,7 @@ Click WindSurf's Plugins icon, click "View raw config", add cloudbase-mcp and se
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "CLOUDBASE_ENV_ID": "your-cloudbase-env-id"
       }
@@ -189,7 +189,7 @@ Set CLOUDBASE_ENV_ID to your CloudBase environment ID
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "CLOUDBASE_ENV_ID": "your-cloudbase-env-id"
       }
@@ -300,7 +300,7 @@ Replace CLOUDBASE_ENV_ID with your CloudBase environment ID
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"], 
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"], 
       "env": {
         "CLOUDBASE_ENV_ID": "your-cloudbase-env-id"  
       }
@@ -335,7 +335,7 @@ Set CLOUDBASE_ENV_ID to your CloudBase environment ID
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "CLOUDBASE_ENV_ID": "your-cloudbase-env-id"
       }

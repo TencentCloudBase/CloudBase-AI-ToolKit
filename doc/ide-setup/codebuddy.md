@@ -30,7 +30,7 @@
   "mcpServers": {
     "cloudbase": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"]
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -147,7 +147,7 @@
   "mcpServers": {
     "cloudbase": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
       "timeout": 120000,
       "env": {
         "CLOUDBASE_DEBUG": "true"
