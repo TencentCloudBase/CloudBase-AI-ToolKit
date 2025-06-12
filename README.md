@@ -657,7 +657,7 @@ AI 会自动：
 | deleteFunctionTrigger | 删除云函数触发器 |
 | downloadRemoteFile | 下载远程文件到本地临时文件 |
 | uploadFile | 上传文件到云存储（适合存储业务数据文件） |
-| searchKnowledgeBase | 智能检索云开发知识库（支持云开发与云函数），通过向量搜索快速获取专业文档与答案。|
+| searchKnowledgeBase | 智能检索云开发知识库（支持云开发与云函数以及小程序知识），通过向量搜索快速获取专业文档与答案。|
 | interactiveDialog | 统一的交互式对话工具，支持需求澄清和任务确认 |
 
 ## 🏗️ 架构原理
