@@ -88,7 +88,6 @@ export function registerInteractiveTools(server: McpServer) {
 // 封装了获取环境、提示选择、保存配置的核心逻辑
 export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean): Promise<{ selectedEnvId: string | null; cancelled: boolean; error?: string; noEnvs?: boolean }> {
   // 1. 确保用户已登录
-
   const loginState = await getLoginState();
   debug('loginState',loginState)
   if (!loginState) {
@@ -120,10 +119,10 @@ export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean): Pro
     selectedEnvId = result.data;
   }
 
-  // 4. 保存并设置环境ID
+  // 4. 保存环境ID配置
   if (selectedEnvId) {
     await saveEnvIdToUserConfig(selectedEnvId);
-    process.env.CLOUDBASE_ENV_ID = selectedEnvId;
+    debug('环境ID已保存到配置文件:', selectedEnvId);
   }
 
   return { selectedEnvId, cancelled: false };
@@ -135,7 +134,7 @@ function getUserConfigPath(): string {
 }
 
 // 保存环境ID到用户配置文件
-async function saveEnvIdToUserConfig(envId: string): Promise<void> {
+export async function saveEnvIdToUserConfig(envId: string): Promise<void> {
   const configPath = getUserConfigPath();
   
   try {
@@ -146,7 +145,7 @@ async function saveEnvIdToUserConfig(envId: string): Promise<void> {
     };
     
     await fs.writeFile(configPath, JSON.stringify(config, null, 2), 'utf8');
-    // 环境ID已保存 - 静默操作避免干扰MCP返回值
+    debug('环境ID配置已保存到文件:', configPath);
     
   } catch (error) {
     console.error('保存环境ID配置失败:', error);
@@ -155,7 +154,7 @@ async function saveEnvIdToUserConfig(envId: string): Promise<void> {
 }
 
 // 从用户配置文件读取环境ID
-async function loadEnvIdFromUserConfig(): Promise<string | null> {
+export async function loadEnvIdFromUserConfig(): Promise<string | null> {
   const configPath = getUserConfigPath();
   
   try {
@@ -164,6 +163,8 @@ async function loadEnvIdFromUserConfig(): Promise<string | null> {
     const envId = config.envId || null;
     if (!envId) {
         warn(`Config file ${configPath} found, but 'envId' property is missing or empty.`);
+    } else {
+        debug('从配置文件加载环境ID:', envId);
     }
     return envId;
   } catch (err: any) {
@@ -177,39 +178,16 @@ async function loadEnvIdFromUserConfig(): Promise<string | null> {
   }
 }
 
-// 检查并设置环境ID
-export async function ensureEnvId(): Promise<string | null> {
-  // 优先使用进程环境变量
-  if (process.env.CLOUDBASE_ENV_ID) {
-    return process.env.CLOUDBASE_ENV_ID;
-  }
-  
-  // 从用户配置文件读取
-  const envId = await loadEnvIdFromUserConfig();
-  if (envId) {
-    // 设置到进程环境变量中
-    process.env.CLOUDBASE_ENV_ID = envId;
-    return envId;
-  }
-  
-  return null;
-}
-
 // 清理用户环境ID配置
 export async function clearUserEnvId(): Promise<void> {
   const configPath = getUserConfigPath();
   
   try {
     await fs.unlink(configPath);
-    // 清理进程环境变量
-    delete process.env.CLOUDBASE_ENV_ID;
-    delete process.env.TENCENTCLOUD_SECRETID;
-    delete process.env.TENCENTCLOUD_SECRETKEY;
-    delete process.env.TENCENTCLOUD_SESSIONTOKEN;
-    // 环境ID配置已清理 - 静默操作
+    debug('环境ID配置文件已删除:', configPath);
   } catch (error) {
     // 文件不存在或删除失败，忽略错误
-    // 环境ID配置文件不存在或已清理 - 静默操作
+    debug('环境ID配置文件不存在或已清理:', configPath);
   }
 }
 

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { getCloudBaseManager } from '../cloudbase-manager.js'
+import { getCloudBaseManager, resetCloudBaseManagerCache } from '../cloudbase-manager.js'
 import { logout } from '../auth.js'
 import { clearUserEnvId, _promptAndSetEnvironmentId } from './interactive.js'
 import { debug } from '../utils/logger.js'
@@ -65,6 +65,7 @@ export function registerEnvTools(server: McpServer) {
         await logout();
         // 清理环境ID配置
         await clearUserEnvId();
+        await resetCloudBaseManagerCache();
         
         return {
           content: [{

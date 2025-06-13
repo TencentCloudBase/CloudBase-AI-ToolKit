@@ -26,7 +26,7 @@ export class InteractiveServer {
   
   // 固定端口配置
   private readonly DEFAULT_PORT = 3721;
-  private readonly FALLBACK_PORTS = [3722, 3723, 3724, 3725];
+  private readonly FALLBACK_PORTS = [3722, 3723, 3724, 3725, 3726, 3727, 3728, 3729, 3730, 3731, 3732, 3733, 3734, 3735];
 
   constructor() {
     this.app = express();
@@ -35,6 +35,20 @@ export class InteractiveServer {
     
     this.setupExpress();
     this.setupWebSocket();
+    
+    // 确保进程退出时清理资源
+    process.on('exit', () => this.cleanup());
+    process.on('SIGINT', () => this.cleanup());
+    process.on('SIGTERM', () => this.cleanup());
+  }
+
+  private cleanup() {
+    if (this.isRunning) {
+      debug('Cleaning up interactive server resources...');
+      this.server.close();
+      this.wss.close();
+      this.isRunning = false;
+    }
   }
 
   private setupExpress() {
@@ -178,7 +192,7 @@ export class InteractiveServer {
       
       const tryNextPort = () => {
         if (currentIndex >= tryPorts.length) {
-          const err = new Error('All ports are in use, failed to start server');
+          const err = new Error(`All ${tryPorts.length} ports are in use (${tryPorts.join(', ')}), failed to start server`);
           error('Server start failed', err);
           reject(err);
           return;
@@ -187,34 +201,53 @@ export class InteractiveServer {
         const portToTry = tryPorts[currentIndex];
         currentIndex++;
         
-        debug(`Trying to start server on port ${portToTry}`);
+        debug(`Trying to start server on port ${portToTry} (attempt ${currentIndex}/${tryPorts.length})`);
         
-        // 清除之前的错误监听器
+        // 清除之前的所有监听器
         this.server.removeAllListeners('error');
+        this.server.removeAllListeners('listening');
         
-        this.server.on('error', (err: any) => {
+        // 设置错误处理
+        const errorHandler = (err: any) => {
           if (err.code === 'EADDRINUSE') {
             warn(`Port ${portToTry} is in use, trying next port...`);
+            // 清理当前尝试
+            this.server.removeAllListeners('error');
+            this.server.removeAllListeners('listening');
             tryNextPort();
           } else {
             error('Server error', err);
             reject(err);
           }
-        });
-
-        this.server.listen(portToTry, '127.0.0.1', () => {
+        };
+        
+        // 设置成功监听处理
+        const listeningHandler = () => {
           const address = this.server.address();
           if (address && typeof address === 'object') {
             this.port = address.port;
             this.isRunning = true;
             info(`Interactive server started successfully on http://localhost:${this.port}`);
+            // 移除临时监听器
+            this.server.removeListener('error', errorHandler);
+            this.server.removeListener('listening', listeningHandler);
             resolve(this.port);
           } else {
             const err = new Error('Failed to get server address');
             error('Server start error', err);
             reject(err);
           }
-        });
+        };
+        
+        this.server.once('error', errorHandler);
+        this.server.once('listening', listeningHandler);
+
+        try {
+          this.server.listen(portToTry, '127.0.0.1');
+        } catch (err) {
+          error(`Failed to bind to port ${portToTry}:`, err);
+          tryNextPort();
+        }
       };
       
       tryNextPort();
@@ -222,13 +255,48 @@ export class InteractiveServer {
   }
 
   async stop() {
-    if (!this.isRunning) return;
+    if (!this.isRunning) {
+      debug('Interactive server is not running, nothing to stop');
+      return;
+    }
 
-    return new Promise<void>((resolve) => {
-      this.server.close(() => {
+    info('Stopping interactive server...');
+    
+    return new Promise<void>((resolve, reject) => {
+      // 设置超时，防止无限等待
+      const timeout = setTimeout(() => {
+        warn('Server close timeout, forcing cleanup');
         this.isRunning = false;
+        this.port = 0;
         resolve();
-      });
+      }, 5000);
+      
+      try {
+        // 首先关闭WebSocket服务器
+        this.wss.close(() => {
+          debug('WebSocket server closed');
+        });
+        
+        // 然后关闭HTTP服务器
+        this.server.close((err) => {
+          clearTimeout(timeout);
+          if (err) {
+            error('Error closing server:', err);
+            reject(err);
+          } else {
+            info('Interactive server stopped successfully');
+            this.isRunning = false;
+            this.port = 0;
+            resolve();
+          }
+        });
+      } catch (err) {
+        clearTimeout(timeout);
+        error('Error stopping server:', err);
+        this.isRunning = false;
+        this.port = 0;
+        reject(err);
+      }
     });
   }
 
@@ -2493,6 +2561,16 @@ export class InteractiveServer {
 </body>
 </html>`;
   }
+
+  // 公共方法获取运行状态
+  get running(): boolean {
+    return this.isRunning;
+  }
+
+  // 公共方法获取端口
+  get currentPort(): number {
+    return this.port;
+  }
 }
 
 // 单例实例
@@ -2503,4 +2581,29 @@ export function getInteractiveServer(): InteractiveServer {
     interactiveServerInstance = new InteractiveServer();
   }
   return interactiveServerInstance;
+}
+
+export async function resetInteractiveServer(): Promise<void> {
+  if (interactiveServerInstance) {
+    try {
+      await interactiveServerInstance.stop();
+    } catch (err) {
+      error('Error stopping existing server instance:', err);
+    }
+    interactiveServerInstance = null;
+  }
+}
+
+export async function getInteractiveServerSafe(): Promise<InteractiveServer> {
+  // 如果当前实例存在但不在运行状态，先清理
+  if (interactiveServerInstance && !interactiveServerInstance.running) {
+    try {
+      await interactiveServerInstance.stop();
+    } catch (err) {
+      debug('Error stopping non-running server:', err);
+    }
+    interactiveServerInstance = null;
+  }
+  
+  return getInteractiveServer();
 }
