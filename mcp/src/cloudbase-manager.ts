@@ -1,115 +1,81 @@
 import { getLoginState } from './auth.js'
 import { ensureEnvId, autoSetupEnvironmentId } from './tools/interactive.js'
 import CloudBase from "@cloudbase/manager-node";
-import { debug,error } from './utils/logger.js';
+import { debug, error } from './utils/logger.js';
 
-let initializationPromise: Promise<CloudBase> | null = null;
-let noEnvIdInitializationPromise: Promise<CloudBase> | null = null;
-const INITIALIZATION_TIMEOUT = 30000; // 30 seconds
+const ENV_ID_TIMEOUT = 30000; // 30 seconds
+
+let cachedEnvId: string | null = null;
+let envIdPromise: Promise<string> | null = null;
+
+async function getEnvIdWithCache(): Promise<string> {
+    if (cachedEnvId) return cachedEnvId;
+    if (envIdPromise) return envIdPromise;
+
+    envIdPromise = (async () => {
+        let userEnvId = await ensureEnvId();
+        if (!userEnvId) {
+            debug("未找到环境ID，尝试自动设置...");
+            userEnvId = await autoSetupEnvironmentId();
+            if (!userEnvId) {
+                throw new Error("CloudBase Environment ID not found after auto setup. Please set CLOUDBASE_ENV_ID or run setupEnvironmentId tool.");
+            }
+        }
+        cachedEnvId = userEnvId;
+        return userEnvId;
+    })();
+
+    // 增加超时保护
+    const timeoutPromise = new Promise<string>((_, reject) => {
+        const id = setTimeout(() => {
+            clearTimeout(id);
+            reject(new Error(`EnvId 获取超时（${ENV_ID_TIMEOUT / 1000}秒）`));
+        }, ENV_ID_TIMEOUT);
+    });
+
+    return Promise.race([envIdPromise, timeoutPromise])
+        .catch(err => {
+            envIdPromise = null;
+            throw err;
+        });
+}
 
 interface GetManagerOptions {
     requireEnvId?: boolean;
 }
 
-export function getCloudBaseManager(options: GetManagerOptions = {}): Promise<CloudBase> {
+/**
+ * 每次都实时获取最新的 token/secretId/secretKey
+ */
+export async function getCloudBaseManager(options: GetManagerOptions = {}): Promise<CloudBase> {
     const { requireEnvId = true } = options;
 
-    if (requireEnvId) {
-        if (initializationPromise) {
-            return initializationPromise;
+    try {
+        const loginState = await getLoginState();
+        const {
+            envId: loginEnvId,
+            secretId,
+            secretKey,
+            token
+        } = loginState;
+
+        let finalEnvId: string | undefined;
+        if (requireEnvId) {
+            finalEnvId = await getEnvIdWithCache();
         }
 
-        const executor = async (): Promise<CloudBase> => {
-            try {
-                // 检查并确保环境ID已配置
-                let userEnvId = await ensureEnvId();
-                if (!userEnvId) {
-                    debug("未找到环境ID，尝试自动设置...");
-                    userEnvId = await autoSetupEnvironmentId();
-                    
-                    if (!userEnvId) {
-                        throw new Error("CloudBase Environment ID not found after auto setup. Please set CLOUDBASE_ENV_ID or run setupEnvironmentId tool.");
-                    }
-                }
-
-                const loginState = await getLoginState()
-                const {
-                    envId,
-                    secretId,
-                    secretKey,
-                    token
-                } = loginState;
-
-                const manager = new CloudBase({
-                    secretId,
-                    secretKey,
-                    envId: userEnvId,
-                    token,
-                    proxy: process.env.http_proxy
-                });
-
-                return manager;
-            } catch (err) {
-                error('Failed to initialize CloudBase Manager:', err);
-                throw err;
-            }
-        };
-
-        const timeoutPromise = new Promise<CloudBase>((_, reject) => {
-            const id = setTimeout(() => {
-                clearTimeout(id);
-                reject(new Error(`CloudBase Manager initialization timed out after ${INITIALIZATION_TIMEOUT / 1000} seconds.`));
-            }, INITIALIZATION_TIMEOUT);
+        // envId 优先顺序：cache > loginState > undefined
+        const manager = new CloudBase({
+            secretId,
+            secretKey,
+            envId: finalEnvId || loginEnvId,
+            token,
+            proxy: process.env.http_proxy
         });
 
-        initializationPromise = Promise.race([executor(), timeoutPromise]);
-        
-        initializationPromise.catch(() => {
-            initializationPromise = null;
-        });
-
-        return initializationPromise;
+        return manager;
+    } catch (err) {
+        error('Failed to initialize CloudBase Manager:', err instanceof Error ? err.message : String(err));
+        throw err;
     }
-
-    if (noEnvIdInitializationPromise) {
-        return noEnvIdInitializationPromise;
-    }
-
-    const noEnvIdExecutor = async (): Promise<CloudBase> => {
-        try {
-            const loginState = await getLoginState();
-            const {
-                secretId,
-                secretKey,
-                token
-            } = loginState;
-
-            const manager = new CloudBase({
-                secretId,
-                secretKey,
-                token,
-                proxy: process.env.http_proxy
-            });
-
-            return manager;
-        } catch (err) {
-            error('Failed to initialize CloudBase Manager (no envId):', err instanceof Error ? err.message : String(err));
-            throw err;
-        }
-    };
-    
-    const timeoutPromise = new Promise<CloudBase>((_, reject) => {
-        const id = setTimeout(() => {
-            clearTimeout(id);
-            reject(new Error(`CloudBase Manager (no envId) initialization timed out after ${INITIALIZATION_TIMEOUT / 1000} seconds.`));
-        }, INITIALIZATION_TIMEOUT);
-    });
-
-    noEnvIdInitializationPromise = Promise.race([noEnvIdExecutor(), timeoutPromise]);
-
-    noEnvIdInitializationPromise.catch(() => {
-        noEnvIdInitializationPromise = null;
-    });
-
-    return noEnvIdInitializationPromise;
 }
