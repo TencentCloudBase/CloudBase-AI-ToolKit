@@ -1,12 +1,40 @@
 # 快速开始
 
-## 0. 前置条件
+### 0. 前置条件
 
-### 安装 AI 开发工具
-例如 [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) 等，点击查看 [支持的 AI 开发工具列表](/ai/cloudbase-ai-toolkit/#-支持的-ai-开发工具)
+<details>
+<summary>安装 AI 开发工具</summary>
 
-### 开通云开发环境
+例如 [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) 等，点击查看 [支持的 AI 开发工具列表](#2-配置你的-ai-ide)
+
+</details>
+
+<details>
+<summary>开通云开发环境</summary>
+
 访问 [腾讯云开发控制台](https://tcb.cloud.tencent.com/dev)开通环境，新用户可以免费开通体验。
+
+</details>
+
+<details>
+<summary>安装 Node.js</summary>
+
+确保您的计算机上安装了 Node.js。您可以从 [Node.js 官网](https://nodejs.org/) 下载并安装最新版本。
+
+</details>
+
+<details>
+<summary>设置 npm 源</summary>
+
+为了提高依赖包的下载速度，建议将 npm 源设置为腾讯镜像源。您可以在终端中运行以下命令：
+
+```bash
+npm config set registry https://mirrors.cloud.tencent.com/npm/
+```
+
+这样可以加快依赖包的下载速度，特别是在中国大陆地区。
+
+</details>
 
 ## 1. 快速初始化或增强你的项目
 
