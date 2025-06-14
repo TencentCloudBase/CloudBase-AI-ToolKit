@@ -14,6 +14,16 @@ alwaysApply: true
 8. 交互式反馈规则：在需求不明确时主动与用户对话澄清，优先使用自动化工具完成配置。执行高风险操作前必须获得用户确认。环境管理通过login/logout工具完成，交互对话使用interactiveDialog工具处理需求澄清和风险确认。简单修改无需确认，关键节点（如部署、数据删除）需交互，保持消息简洁并用emoji标记状态。 
 9. 如果涉及到实时通信相关的例如实时对战等，可以使用云开发的实时数据库 watch 能力
 
+
+<work_flow>
+0. web 构建项目流程：确保首先执行过 npm install 命令，然后参考项目说明进行构建
+1. 部署云函数流程：可以通过 listFunctions MCP 工具来查询是否有云函数，然后直接调用 createFunction 或者 updateFunctionCode 更新云函数代码，只需要将functionRootPath 指向云函数目录的父目录(例如 cloudfuncitons 这个目录的绝对路径),不需要压缩代码等操作，上述工具会自动读取云函数父目录下的云函数同名目录的文件，并自动进行部署
+2. 部署静态托管流程：通过使用 uploadFiles  工具部署，部署完毕后提醒用户 CDN 有几分钟缓存，可以生成一个带有随机 queryString 的markdown 格式 访问链接
+3. 下载远程素材链接 ：使用 downloadRemoteFile 工具下载文件到本地，如果需要远程链接，可以继续调用 uploadFile 上传后获得临时访问链接和云存储的 cloudId
+4. 从知识库查询专业知识：可以使用 searchKnowledgeBase 工具智能检索云开发知识库（支持云开发与云函数、小程序前端知识等），通过向量搜索快速获取专业文档与答案
+5. 下载云开发 AI 规则或者其他模板：可以使用downloadTemplate 来下载，如果无法下载到当前目录，可以使用脚本来进行复制，注意隐藏文件也需要复制
+</work_flow>
+
 <page_design_rules>
 你是专业的前端开发工程师，专长于创建高保真原型设计。你的主要工作是将用户需求转化为可直接用于开发的界面原型。请通过以下方式完所有界面的原型设计，并确保这些原型界面可以直接用于开发.
 1、用户体验分析：先分析这个 App 的主要功能和用户需求，确定核心交互逻辑。
@@ -106,6 +116,7 @@ for await (let str of res.textStream) {
 4. Node.js 的云函数中需要包含package.json，声明所需的依赖，可以使用 createFunction 来创建函数，使用 updateFunctionCode 来部署云函数，优先采用云端安装依赖，不上传 node_modules，functionRootPath 指的是函数目录的父目录，例如 cloudfuncitons 这个目录
 5. 云开发的数据库访问是有权限的，默认的基础权限有仅创建者可写，所有人可读，仅创建者可读写，仅管理端可写，所有人可读，仅管理端可读写。如果直接从 web 端或者小程序端请求数据库，需要考虑配置合适的数据库权限，在云函数中，默认没有权限控制
 6. 如用户无特殊要求，涉及到跨数据库集合的操作必须通过云函数实现
+7. 如果用涉及到云函数，在保证安全的情况下，可以极可能缩减云函数的数量，例如实现一个面向 c 端请求的云函数，实现一个初始化数据的云函数
 </cloudbase_knowledge>
 
 <cloudbase_db_notes>
@@ -125,14 +136,6 @@ for await (let str of res.textStream) {
 <cloudbaserc_rules>
 	1. 为了方便其他不使用 AI 的人了解有哪些资源，可以在生成之后，同时生成一个 cloudbaserc.json，并支持使用 @cloudbase/cli来部署，提供 AI 调用 MCP 部署之外的另外一个选项
 </cloudbaserc_rules>
-
-<work_flow>
-0. web 构建项目流程：确保首先执行过 npm install 命令，然后参考项目说明进行构建
-1. 部署云函数流程：可以通过 listFunctions MCP 工具来查询是否有云函数，然后直接调用 createFunction 或者 updateFunctionCode 更新云函数代码，只需要将functionRootPath 指向云函数目录的父目录(例如 cloudfuncitons 这个目录的绝对路径),不需要压缩代码等操作，上述工具会自动读取云函数父目录下的云函数同名目录的文件，并自动进行部署
-2. 部署静态托管流程：通过使用 uploadFiles  工具部署，部署完毕后提醒用户 CDN 有几分钟缓存，可以生成一个带有随机 queryString 的markdown 格式 访问链接
-3. 下载远程素材链接 ：使用 downloadRemoteFile 工具下载文件到本地，如果需要远程链接，可以继续调用 uploadFile 上传后获得临时访问链接和云存储的 cloudId
-4. 从知识库查询专业知识：可以使用 searchKnowledgeBase 工具智能检索云开发知识库（支持云开发与云函数、小程序前端知识等），通过向量搜索快速获取专业文档与答案
-</work_flow>
 
 
 
