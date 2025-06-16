@@ -40,20 +40,28 @@ alwaysApply: true
 2. 项目尽量使用 vite 等现代前端工程化体系，通过 npm 安装依赖
 3. 前端项目如何涉及到路由，可以默认用 hash 路由，可以解决路由刷新404的问题，更适合部署到静态网站托管
 4. 如果是一个前端项目，你可以在构建完毕后使用云开发静态托管，先本地启动预览，然后可以跟用户确认是否需要部署到云开发静态托管，部署的时候，如果用户没有特殊要求，一般不要直接部署到根目录，并返回部署后的地址，需要是一个markdown 的链接格式
-5. 如果是 react/vue 等项目可以用本身的 dev 命令来预览，html 纯静态网页可以进到指定的产物目录后，可以用 `npx live-server` 预览
+5. 本地启动预览静态网页可以进到指定的产物目录后，可以用 `npx live-server`
 6. web 项目部署到静态托管 cdn 上时，由于无法提前预知路径，publicPath 之类的配置应该采用用相对路径而不是绝对路径。这会解决资源加载的问题
-7. 如果用户项目中需要用到数据库，云函数等功能，需要在 web 应用引入 @cloudbase/js-sdk@2.16.0
+7. 如果用户项目中需要用到数据库，云函数等功能，需要在 web 应用引入 @cloudbase/js-sdk@latest
 ```js
 const app = cloudbase.init({
-  env: 'xxxx-yyy';
+  env: 'xxxx-yyy'; // 可以通过 MCP来查询环境 id
 });
 const auth = app.auth();
-// 重要 2.x的 jssdk 匿名登录必须采用下方的方式
-await auth.signInAnonymously();
-const loginScope = await auth.loginScope();
-// 如为匿名登录，则输出 true
-console.log(loginScope === 'anonymous');
-```
+
+// 检查当前登录状态
+let loginState = await auth.getLoginState();
+
+if (loginState && loginState.isLoggedIn) {
+  // 已登录
+} else {
+  // 未登录
+  // 如果是游客类型，需要用下方的方式
+  // 重要 2.x的 jssdk 匿名登录必须采用下方的方式
+  // await auth.signInAnonymously();
+  // 如果需要登录，可以用下方的方式
+  // await auth.toDefaultLoginPage()
+}
 </web_rules>
 
 <miniprogram_rules>
@@ -116,7 +124,8 @@ for await (let str of res.textStream) {
 4. Node.js 的云函数中需要包含package.json，声明所需的依赖，可以使用 createFunction 来创建函数，使用 updateFunctionCode 来部署云函数，优先采用云端安装依赖，不上传 node_modules，functionRootPath 指的是函数目录的父目录，例如 cloudfuncitons 这个目录
 5. 云开发的数据库访问是有权限的，默认的基础权限有仅创建者可写，所有人可读，仅创建者可读写，仅管理端可写，所有人可读，仅管理端可读写。如果直接从 web 端或者小程序端请求数据库，需要考虑配置合适的数据库权限，在云函数中，默认没有权限控制
 6. 如用户无特殊要求，涉及到跨数据库集合的操作必须通过云函数实现
-7. 如果用涉及到云函数，在保证安全的情况下，可以极可能缩减云函数的数量，例如实现一个面向 c 端请求的云函数，实现一个初始化数据的云函数
+7. 如果用涉及到云函数，在保证安全的情况下，可以尽可能可能缩减云函数的数量，例如实现一个面向 c 端请求的云函数，实现一个初始化数据的云函数
+8. 使用
 </cloudbase_knowledge>
 
 <cloudbase_db_notes>
