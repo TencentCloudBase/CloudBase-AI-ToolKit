@@ -10,7 +10,7 @@ export const SUPPORTED_NODEJS_RUNTIMES = [
   'Nodejs 14.18',
   'Nodejs 12.16',
   'Nodejs 10.15',
-  'Nodejs 8.9（即将下线）',
+  'Nodejs 8.9',
 ];
 export const DEFAULT_NODEJS_RUNTIME = 'Nodejs 18.15';
 
@@ -72,7 +72,7 @@ export function registerFunctionTools(server: McpServer) {
           vpcId: z.string(),
           subnetId: z.string()
         }).optional().describe("私有网络配置"),
-        runtime: z.string().optional().describe("运行时环境，可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，') + "，默认 Nodejs 18.15"),
+        runtime: z.string().optional().describe("运行时环境,建议指定为 'Nodejs 18.15'，其他可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，')),
         installDependency: z.boolean().optional().describe("是否安装依赖，建议传 true"),
         triggers: z.array(z.object({
           name: z.string(),
