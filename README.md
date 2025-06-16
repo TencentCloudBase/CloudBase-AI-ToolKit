@@ -77,9 +77,9 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 </details>
 
 <details>
-<summary>安装 Node.js</summary>
+<summary>安装 Node.js v18及以上版本</summary>
 
-确保您的计算机上安装了 Node.js。您可以从 [Node.js 官网](https://nodejs.org/) 下载并安装最新版本。
+确保您的计算机上安装了 Node.js v18 及以上版本。您可以从 [Node.js 官网](https://nodejs.org/) 下载并安装最新版本。
 
 </details>
 
