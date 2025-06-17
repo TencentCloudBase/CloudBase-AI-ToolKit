@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { getCloudBaseManager } from '../cloudbase-manager.js'
+import { getCloudBaseManager, getEnvId } from '../cloudbase-manager.js'
 
 
 // 云开发数据库集合相关的类型定义
@@ -32,6 +32,363 @@ async function getDatabaseInstanceId() {
     throw new Error("无法获取数据库实例ID");
   }
   return EnvInfo.Databases[0].InstanceId;
+}
+
+// 生成SDK使用文档的函数
+function generateSDKDocs(modelName: string, modelTitle: string, userFields: any[], relations: any[]): string {
+  // 获取主要字段（前几个非关联字段）
+  const mainFields = userFields.filter(f => !f.linkage);
+  const requiredFields = userFields.filter(f => f.required);
+  const stringFields = userFields.filter(f => f.type === 'string' && !f.linkage);
+  const numberFields = userFields.filter(f => f.type === 'number');
+
+  // 生成字段示例值
+  const generateFieldValue = (field: any) => {
+    if (field.enum && field.enum.length > 0) {
+      return `"${field.enum[0]}"`;
+    }
+    switch (field.type) {
+      case 'string':
+        return field.format === 'email' ? '"user@example.com"' :
+               field.format === 'url' ? '"https://example.com"' :
+               `"示例${field.title || field.name}"`;
+      case 'number':
+        return field.format === 'currency' ? '99.99' : '1';
+      case 'boolean':
+        return field.default !== undefined ? field.default : 'true';
+      case 'array':
+        return '[]';
+      case 'object':
+        return '{}';
+      default:
+        return `"${field.title || field.name}值"`;
+    }
+  };
+
+  // 生成创建数据示例
+  const createDataExample = mainFields.map(field =>
+    `    ${field.name}: ${generateFieldValue(field)}, // ${field.description || field.title || field.name}`
+  ).join('\n');
+
+  // 生成更新数据示例
+  const updateDataExample = mainFields.slice(0, 2).map(field =>
+    `    ${field.name}: ${generateFieldValue(field)}, // ${field.description || field.title || field.name}`
+  ).join('\n');
+
+  // 生成查询条件示例
+  const queryField = stringFields[0] || mainFields[0];
+  const queryExample = queryField ?
+    `      ${queryField.name}: {\n        $eq: ${generateFieldValue(queryField)}, // 根据${queryField.description || queryField.title || queryField.name}查询\n      },` :
+    '      _id: {\n        $eq: "记录ID", // 根据ID查询\n      },';
+
+  return `# 数据模型 ${modelTitle} (${modelName}) SDK 使用文档
+
+## 数据模型字段说明
+
+${userFields.map(field => {
+  let fieldDoc = `- **${field.name}** (${field.type})`;
+  if (field.required) fieldDoc += ' *必填*';
+  if (field.description) fieldDoc += `: ${field.description}`;
+  if (field.format) fieldDoc += ` [格式: ${field.format}]`;
+  if (field.enum) fieldDoc += ` [可选值: ${field.enum.join(', ')}]`;
+  if (field.default !== undefined) fieldDoc += ` [默认值: ${field.default}]`;
+  return fieldDoc;
+}).join('\n')}
+
+${relations.length > 0 ? `
+## 关联关系
+
+${relations.map(rel =>
+  `- **${rel.field}**: 关联到 ${rel.targetModel} 模型的 ${rel.foreignKey} 字段`
+).join('\n')}
+` : ''}
+
+## 增删改查操作
+
+### 创建数据
+
+#### 创建单条数据 \`create\`
+
+\`\`\`javascript
+const { data } = await models.${modelName}.create({
+  data: {
+${createDataExample}
+  },
+});
+
+// 返回创建的记录 id
+console.log(data);
+// { id: "7d8ff72c665eb6c30243b6313aa8539e"}
+\`\`\`
+
+#### 创建多条数据 \`createMany\`
+
+\`\`\`javascript
+const { data } = await models.${modelName}.createMany({
+  data: [
+    {
+${createDataExample}
+    },
+    {
+${createDataExample}
+    },
+  ],
+});
+
+// 返回创建的记录 idList
+console.log(data);
+// {
+//   "idList": [
+//       "7d8ff72c665ebe5c02442a1a7b29685e",
+//       "7d8ff72c665ebe5c02442a1b77feba4b"
+//   ]
+// }
+\`\`\`
+
+### 更新数据
+
+#### 更新单条数据 \`update\`
+
+\`\`\`javascript
+const { data } = await models.${modelName}.update({
+  data: {
+${updateDataExample}
+  },
+  filter: {
+    where: {
+      _id: {
+        $eq: "记录ID", // 推荐传入_id数据标识进行操作
+      },
+    },
+  },
+});
+
+// 返回更新成功的条数
+console.log(data);
+// { count: 1}
+\`\`\`
+
+#### 创建或更新数据 \`upsert\`
+
+\`\`\`javascript
+const recordData = {
+${createDataExample}
+  _id: "指定ID",
+};
+
+const { data } = await models.${modelName}.upsert({
+  create: recordData,
+  update: recordData,
+  filter: {
+    where: {
+      _id: {
+        $eq: recordData._id,
+      },
+    },
+  },
+});
+
+console.log(data);
+// 新增时返回: { "count": 0, "id": "指定ID" }
+// 更新时返回: { "count": 1, "id": "" }
+\`\`\`
+
+#### 更新多条数据 \`updateMany\`
+
+\`\`\`javascript
+const { data } = await models.${modelName}.updateMany({
+  data: {
+${updateDataExample}
+  },
+  filter: {
+    where: {
+${queryExample}
+    },
+  },
+});
+
+// 返回更新成功的条数
+console.log(data);
+// { "count": 5 }
+\`\`\`
+
+### 删除数据
+
+#### 删除单条 \`delete\`
+
+\`\`\`javascript
+const { data } = await models.${modelName}.delete({
+  filter: {
+    where: {
+      _id: {
+        $eq: "记录ID", // 推荐传入_id数据标识进行操作
+      },
+    },
+  },
+});
+
+// 返回删除成功的条数
+console.log(data);
+// { "count": 1 }
+\`\`\`
+
+#### 删除多条 \`deleteMany\`
+
+\`\`\`javascript
+const { data } = await models.${modelName}.deleteMany({
+  filter: {
+    where: {
+${queryExample}
+    },
+  },
+});
+
+// 返回删除成功的条数
+console.log(data);
+// { "count": 3 }
+\`\`\`
+
+### 读取数据
+
+#### 读取单条数据 \`get\`
+
+\`\`\`javascript
+const { data } = await models.${modelName}.get({
+  filter: {
+    where: {
+      _id: {
+        $eq: "记录ID", // 推荐传入_id数据标识进行操作
+      },
+    },
+  },
+});
+
+// 返回查询到的数据
+console.log(data);
+// {
+//   "_id": "记录ID",
+${userFields.slice(0, 5).map(field =>
+  `//   "${field.name}": ${generateFieldValue(field)}, // ${field.description || field.title || field.name}`
+).join('\n')}
+//   "createdAt": 1717488585078,
+//   "updatedAt": 1717490751944
+// }
+\`\`\`
+
+#### 读取多条数据 \`list\`
+
+\`\`\`javascript
+const { data } = await models.${modelName}.list({
+  filter: {
+    where: {
+${queryExample}
+    },
+  },
+  getCount: true, // 开启用来获取总数
+});
+
+// 返回查询到的数据列表 records 和 总数 total
+console.log(data);
+// {
+//   "records": [
+//     {
+//       "_id": "记录ID1",
+${userFields.slice(0, 3).map(field =>
+  `//       "${field.name}": ${generateFieldValue(field)}, // ${field.description || field.title || field.name}`
+).join('\n')}
+//       "createdAt": 1717488585078,
+//       "updatedAt": 1717490751944
+//     },
+//     // ... 更多记录
+//   ],
+//   "total": 10
+// }
+\`\`\`
+
+## 查询条件和排序
+
+### 常用查询条件
+
+\`\`\`javascript
+// 等于查询
+const { data } = await models.${modelName}.list({
+  filter: {
+    where: {
+${queryField ? `      ${queryField.name}: {
+        $eq: ${generateFieldValue(queryField)}, // ${queryField.description || queryField.title || queryField.name}等于指定值
+      },` : '      _id: { $eq: "记录ID" },'}
+    },
+  },
+});
+
+${stringFields.length > 0 ? `// 模糊查询
+const { data: searchData } = await models.${modelName}.list({
+  filter: {
+    where: {
+      ${stringFields[0].name}: {
+        $regex: "关键词", // ${stringFields[0].description || stringFields[0].title || stringFields[0].name}包含关键词
+      },
+    },
+  },
+});` : ''}
+
+${numberFields.length > 0 ? `// 范围查询
+const { data: rangeData } = await models.${modelName}.list({
+  filter: {
+    where: {
+      ${numberFields[0].name}: {
+        $gte: 10, // ${numberFields[0].description || numberFields[0].title || numberFields[0].name}大于等于10
+        $lte: 100, // ${numberFields[0].description || numberFields[0].title || numberFields[0].name}小于等于100
+      },
+    },
+  },
+});` : ''}
+\`\`\`
+
+### 排序
+
+\`\`\`javascript
+const { data } = await models.${modelName}.list({
+  filter: {
+    where: {},
+    orderBy: [
+      {
+        ${mainFields[0] ? `${mainFields[0].name}: "asc", // 按${mainFields[0].description || mainFields[0].title || mainFields[0].name}升序` : '_id: "desc", // 按ID降序'}
+      },
+    ],
+  },
+});
+\`\`\`
+
+${relations.length > 0 ? `
+## 关联查询
+
+${relations.map(rel => `
+### 查询关联的 ${rel.targetModel} 数据
+
+\`\`\`javascript
+const { data } = await models.${modelName}.list({
+  filter: {
+    where: {},
+    include: {
+      ${rel.field}: true, // 包含关联的${rel.targetModel}数据
+    },
+  },
+});
+
+// 返回的数据中会包含关联信息
+console.log(data.records[0].${rel.field});
+\`\`\`
+`).join('')}
+` : ''}
+
+## 更多操作
+
+更多高级查询、分页、聚合等操作，请参考：
+- [查询和筛选](https://docs.cloudbase.net/model/select)
+- [过滤和排序](https://docs.cloudbase.net/model/filter-and-sort)
+${relations.length > 0 ? '- [关联关系](https://docs.cloudbase.net/model/relation)' : ''}
+`;
 }
 
 export function registerDatabaseTools(server: McpServer) {
@@ -750,4 +1107,287 @@ export function registerDatabaseTools(server: McpServer) {
       }
     }
   );
-} 
+
+  // 数据模型查询工具
+  server.tool(
+    "manageDataModel",
+    "数据模型查询工具，支持查询和列表数据模型（只读操作）。list操作返回基础信息（不含Schema），get操作返回详细信息（含简化的Schema，包括字段列表、格式、关联关系等），docs操作生成SDK使用文档",
+    {
+      action: z.enum(["get", "list", "docs"]).describe("操作类型：get=查询单个模型（含Schema字段列表、格式、关联关系），list=获取模型列表（不含Schema），docs=生成SDK使用文档"),
+      name: z.string().optional().describe("模型名称（get操作时必填）"),
+      names: z.array(z.string()).optional().describe("模型名称数组（list操作时可选，用于过滤）")
+    },
+    async ({ action, name, names }) => {
+      try {
+        const cloudbase = await getCloudBaseManager();
+        let currentEnvId = await getEnvId();
+
+        let result;
+
+        switch (action) {
+
+          case 'get':
+            if (!name) {
+              throw new Error('获取数据模型需要提供模型名称');
+            }
+
+            try {
+              result = await cloudbase.commonService('lowcode').call({
+                Action: 'DescribeBasicDataSource',
+                Param: {
+                  EnvId: currentEnvId,
+                  Name: name
+                }
+              });
+
+              // 只保留基础字段，过滤掉冗余信息，并简化Schema
+              let simplifiedSchema = null;
+
+              // 解析并简化Schema
+              if (result.Data.Schema) {
+                try {
+                  const schema = JSON.parse(result.Data.Schema);
+                  const properties = schema.properties || {};
+
+                  // 提取用户定义的字段（排除系统字段）
+                  const userFields = Object.keys(properties)
+                    .filter(key => !properties[key]['x-system']) // 排除系统字段
+                    .map(key => {
+                      const field = properties[key];
+                      const fieldInfo: any = {
+                        name: key,
+                        type: field.type,
+                        format: field.format,
+                        title: field.title || key,
+                        required: schema.required?.includes(key) || false,
+                        description: field.description || ''
+                      };
+
+                      if (field['x-parent']) {
+                       fieldInfo.linkage = field['x-parent'];
+                      }
+
+                      return fieldInfo;
+                    });
+
+                  // 提取关联关系
+                  const relations = userFields
+                    .filter(field => field.linkage)
+                    .map(field => ({
+                      field: field.name,
+                      type: field.format,
+                      title: field.title,
+                      targetModel: field.linkage.parentDataSourceName,
+                      foreignKey: field.linkage.parentFieldKey,
+                      displayField: field.linkage.parentFieldTitle
+                    }));
+
+                  simplifiedSchema = {
+                    userFields,
+                    relations,
+                    totalFields: Object.keys(properties).length,
+                    userFieldsCount: userFields.length
+                  };
+                } catch (e) {
+                  simplifiedSchema = { error: 'Schema解析失败' };
+                }
+              }
+
+              const simplifiedModel = {
+                DbInstanceType: result.Data.DbInstanceType,
+                Title: result.Data.Title,
+                Description: result.Data.Description,
+                Name: result.Data.Name,
+                UpdatedAt: result.Data.UpdatedAt,
+                Schema: simplifiedSchema
+              };
+
+              return {
+                content: [{
+                  type: "text",
+                  text: JSON.stringify({
+                    success: true,
+                    action: 'get',
+                    data: simplifiedModel,
+                    message: "获取数据模型成功"
+                  }, null, 2)
+                }]
+              };
+            } catch (error: any) {
+              if (error.original?.Code === 'ResourceNotFound') {
+                return {
+                  content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                      success: false,
+                      action: 'get',
+                      error: 'ResourceNotFound',
+                      message: `数据模型 ${name} 不存在`
+                    }, null, 2)
+                  }]
+                };
+              }
+              throw error;
+            }
+
+          case 'list':
+            // 构建请求参数
+            const listParams: any = {
+              EnvId: currentEnvId,
+              PageIndex: 1,
+              PageSize: 1000,
+              QuerySystemModel: true, // 查询系统模型
+              QueryConnector: 0 // 0 表示数据模型
+            };
+
+            // 只有当 names 参数存在且不为空时才添加过滤条件
+            if (names && names.length > 0) {
+              listParams.DataSourceNames = names;
+            }
+
+            result = await cloudbase.commonService('lowcode').call({
+              Action: 'DescribeDataSourceList',
+              Param: listParams
+            });
+
+            const models = result.Data?.Rows || [];
+
+            // 只保留基础字段，list操作不返回Schema
+            const simplifiedModels = models.map((model: any) => ({
+              DbInstanceType: model.DbInstanceType,
+              Title: model.Title,
+              Description: model.Description,
+              Name: model.Name,
+              UpdatedAt: model.UpdatedAt
+            }));
+
+            return {
+              content: [{
+                type: "text",
+                text: JSON.stringify({
+                  success: true,
+                  action: 'list',
+                  data: simplifiedModels,
+                  count: simplifiedModels.length,
+                  message: "获取数据模型列表成功"
+                }, null, 2)
+              }]
+            };
+
+          case 'docs':
+            if (!name) {
+              throw new Error('生成SDK文档需要提供模型名称');
+            }
+
+            try {
+              // 先获取模型信息
+              result = await cloudbase.commonService('lowcode').call({
+                Action: 'DescribeBasicDataSource',
+                Param: {
+                  EnvId: currentEnvId,
+                  Name: name
+                }
+              });
+
+              if (!result.Data) {
+                throw new Error(`数据模型 ${name} 不存在`);
+              }
+
+              // 解析Schema获取字段信息
+              let userFields: any[] = [];
+              let relations: any[] = [];
+
+              if (result.Data.Schema) {
+                try {
+                  const schema = JSON.parse(result.Data.Schema);
+                  console.log(result.Data)
+                  const properties = schema.properties || {};
+
+                  // 提取用户定义的字段
+                  userFields = Object.keys(properties)
+                    .filter(key => !properties[key]['x-system'])
+                    .map(key => {
+                      const field = properties[key];
+                      return {
+                        name: key,
+                        type: field.type,
+                        title: field.title || key,
+                        required: schema.required?.includes(key) || false,
+                        description: field.description || '',
+                        format: field.format,
+                        enum: field.enum,
+                        default: field.default,
+                        linkage: field['x-parent']
+                      };
+                    });
+
+                  // 提取关联关系
+                  relations = userFields
+                    .filter(field => field.linkage)
+                    .map(field => ({
+                      field: field.name,
+                      type: field.format,
+                      title: field.title,
+                      targetModel: field.linkage.parentDataSourceName,
+                      foreignKey: field.linkage.parentFieldKey,
+                      displayField: field.linkage.parentFieldTitle
+                    }));
+                } catch (e) {
+                  // Schema解析失败，使用空数组
+                  console.error('Schema解析失败', e);
+                }
+              }
+
+              // 生成SDK使用文档
+              const docs = generateSDKDocs(result.Data.Name, result.Data.Title, userFields, relations);
+
+              return {
+                content: [{
+                  type: "text",
+                  text: JSON.stringify({
+                    success: true,
+                    action: 'docs',
+                    modelName: name,
+                    modelTitle: result.Data.Title,
+                    docs,
+                    message: "SDK使用文档生成成功"
+                  }, null, 2)
+                }]
+              };
+            } catch (error: any) {
+              if (error.original?.Code === 'ResourceNotFound') {
+                return {
+                  content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                      success: false,
+                      action: 'docs',
+                      error: 'ResourceNotFound',
+                      message: `数据模型 ${name} 不存在`
+                    }, null, 2)
+                  }]
+                };
+              }
+              throw error;
+            }
+
+          default:
+            throw new Error(`不支持的操作类型: ${action}`);
+        }
+      } catch (error: any) {
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify({
+              success: false,
+              action,
+              error: error.message || error.original?.Message || '未知错误',
+              code: error.original?.Code,
+              message: "数据模型操作失败"
+            }, null, 2)
+          }]
+        };
+      }
+    }
+  );
+}

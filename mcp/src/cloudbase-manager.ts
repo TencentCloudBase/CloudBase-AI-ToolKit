@@ -2,7 +2,6 @@ import { getLoginState } from './auth.js'
 import { loadEnvIdFromUserConfig, saveEnvIdToUserConfig, autoSetupEnvironmentId } from './tools/interactive.js'
 import CloudBase from "@cloudbase/manager-node";
 import { debug, error } from './utils/logger.js';
-
 const ENV_ID_TIMEOUT = 30000; // 30 seconds
 
 // 统一的环境ID管理类
@@ -102,6 +101,11 @@ class EnvironmentManager {
 // 全局实例
 const envManager = new EnvironmentManager();
 
+// 导出环境ID获取函数
+export async function getEnvId() {
+    return envManager.getEnvId();
+}
+
 // 导出函数保持兼容性
 export function resetCloudBaseManagerCache() {
     envManager.reset();
@@ -139,7 +143,6 @@ export async function getCloudBaseManager(options: GetManagerOptions = {}): Prom
             token,
             proxy: process.env.http_proxy
         });
-
         return manager;
     } catch (err) {
         error('Failed to initialize CloudBase Manager:', err instanceof Error ? err.message : String(err));

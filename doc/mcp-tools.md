@@ -26,6 +26,7 @@ CloudBase AI ToolKit 提供了完整的 MCP 工具集，支持云开发的各种
 | queryDocuments | 查询集合中的文档 |
 | updateDocuments | 更新集合中的文档 |
 | deleteDocuments | 删除集合中的文档 |
+| manageDataModel | 数据模型查询工具，支持查询和列表数据模型（只读操作）。list操作返回基础信息，get操作返回详细信息含Schema（字段列表、格式、关联关系等），docs操作生成SDK使用文档 |
 | uploadFiles | 上传文件到静态网站托管 |
 | listFiles | 获取静态网站托管的文件列表 |
 | deleteFiles | 删除静态网站托管的文件或文件夹 |
