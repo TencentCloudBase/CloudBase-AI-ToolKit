@@ -41,8 +41,8 @@ class Logger {
       ? `[${timestamp}] [${levelName}] ${message} ${JSON.stringify(data, null, 2)}`
       : `[${timestamp}] [${levelName}] ${message}`;
 
-    // 输出到控制台（仅在调试模式下）
-    if (this.useConsole && process.env.NODE_ENV === 'development') {
+    // 输出到控制台（在开发模式或明确启用时）
+    if (this.useConsole) {
       console.error(logMessage); // 使用 stderr 避免污染 stdout
     }
 
@@ -126,13 +126,13 @@ class Logger {
 
 // 创建全局 logger 实例
 export const logger = new Logger({
-  enabled: process.env.MCP_DEBUG === 'true',
-  level: LogLevel.INFO,
-  console: process.env.NODE_ENV === 'development'
+  enabled: (process.env.MCP_DEBUG ?? 'true') === 'true',
+  level: LogLevel.DEBUG,
+  console: (process.env.NODE_ENV === 'development') || (process.env.MCP_CONSOLE_LOG === 'true')
 });
 
 // 便捷的导出函数
-export const debug = (message: string, data?: any) => logger.error(message, data);
+export const debug = (message: string, data?: any) => logger.debug(message, data);
 export const info = (message: string, data?: any) => logger.info(message, data);
 export const warn = (message: string, data?: any) => logger.warn(message, data);
 export const error = (message: string, data?: any) => logger.error(message, data);

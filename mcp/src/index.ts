@@ -3,7 +3,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { registerEnvTools } from "./tools/env.js";
-import { registerFileTools } from "./tools/file.js";
+// import { registerFileTools } from "./tools/file.js";
 import { registerFunctionTools } from "./tools/functions.js";
 import { registerDatabaseTools } from "./tools/database.js";
 import { registerHostingTools } from "./tools/hosting.js";
@@ -12,6 +12,8 @@ import { registerStorageTools } from "./tools/storage.js";
 import { registerRagTools } from './tools/rag.js';
 import { registerSetupTools } from "./tools/setup.js";
 import { registerInteractiveTools } from "./tools/interactive.js";
+import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
+import { telemetryReporter } from "./utils/telemetry.js";
 
 // Create server instance
 const server = new McpServer({
@@ -22,6 +24,9 @@ const server = new McpServer({
     tools: {},
   },
 });
+
+// 启用数据上报功能（包装工具调用）
+wrapServerWithTelemetry(server);
 
 // Register environment management tools
 registerEnvTools(server);
@@ -57,6 +62,15 @@ async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
   console.log("TencentCloudBase MCP Server running on stdio");
+
+  // 上报启动信息
+  if (telemetryReporter.isEnabled()) {
+    telemetryReporter.report('mcp_server_start', {
+      version: '1.0.0',
+      nodeVersion: process.version,
+      platform: process.platform
+    });
+  }
 }
 
 main().catch((error) => {

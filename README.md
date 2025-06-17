@@ -706,6 +706,15 @@ graph TD
     J --> K[Web/小程序/API]
 ```
 
+## 🔒 数据统计说明
+
+为了改进产品体验，CloudBase AI ToolKit 会收集匿名使用统计信息：
+
+- **收集内容**：工具调用情况、基础环境信息（操作系统、Node.js版本等）
+- **隐私保护**：不收集代码内容、文件路径等敏感信息，仅用于产品改进
+
+可通过环境变量 `CLOUDBASE_MCP_TELEMETRY_DISABLED` 设置为 `true` 禁用数据统计
+
 ## 🤝 贡献指南
 
 欢迎提交 Issue 和 Pull Request！请查看我们的[贡献指南](CONTRIBUTING.md)了解如何参与项目开发。

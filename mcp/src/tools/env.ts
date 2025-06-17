@@ -15,7 +15,7 @@ export function registerEnvTools(server: McpServer) {
     },
     async ({ forceUpdate = false }) => {
       try {
-        const { selectedEnvId, cancelled, error, noEnvs } = await _promptAndSetEnvironmentId(false);
+        const { selectedEnvId, cancelled, error, noEnvs } = await _promptAndSetEnvironmentId(forceUpdate);
 
         debug("login", { selectedEnvId, cancelled, error, noEnvs });
 
@@ -65,7 +65,7 @@ export function registerEnvTools(server: McpServer) {
         await logout();
         // 清理环境ID配置
         await clearUserEnvId();
-        await resetCloudBaseManagerCache();
+        resetCloudBaseManagerCache();
         
         return {
           content: [{
