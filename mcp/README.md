@@ -612,7 +612,7 @@ AI 会自动：
 
 ## 📋 常见问题 FAQ
 
-如有迁移、集成等常见疑问，请查阅 [FAQ 常见问题](./FAQ.md)。 
+如有迁移、集成等常见疑问，请查阅 [FAQ 常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)。 
 
 ## 💬 技术交流群
 
