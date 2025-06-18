@@ -1,29 +1,62 @@
-# 云开发 + CodeBuddy
+# CloudBase AI Toolkit + CodeBuddy - AI 驱动的全栈云开发解决方案
 
-> 💡 **为什么选择这个配置？**  
-> CodeBuddy 是腾讯推出的 AI 编程助手，具有强大的 Craft 智能体功能，能够与微信开发者工具深度集成。通过云开发配置，能够无缝开发小程序、Web 应用和企业级项目，特别适合腾讯生态的全栈开发。
+<div align="center">
 
-## 📦 获取项目模板
+![CloudBase AI Toolkit](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/cloudbase-ai-toolkit.png)
 
-推荐使用预配置的项目模板快速开始：
+**🚀 CodeBuddy + 云开发 = 几分钟内从想法到上线的全栈应用**
 
-> 📖 **查看完整模板列表**：[项目模板](../templates)
+[![GitHub Stars](https://img.shields.io/github/stars/TencentCloudBase/CloudBase-AI-ToolKit?style=social)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+[![开源协议](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/blob/main/LICENSE)
 
-**已有项目增强**：
-如果你已经有项目，配置好 MCP 后，对 AI 说：
+</div>
+
+> 💡 **为什么选择 CodeBuddy + CloudBase AI Toolkit？**
+> CodeBuddy 是腾讯推出的 AI 编程助手，具有强大的 Craft 智能体功能，能够与微信开发者工具深度集成。结合 CloudBase AI Toolkit，让你通过自然语言描述需求，AI 自动生成并部署全栈应用到腾讯云开发平台。特别适合腾讯生态的全栈开发，包括小程序、Web 应用和企业级项目。
+
+## ✨ 核心优势
+
+| 🎯 **开发效率** | ⚡ **部署速度** | 🛡️ **稳定可靠** |
+|---|---|---|
+| AI 自动生成代码和架构<br/>内置云开发最佳实践规则<br/>智能错误修复和优化 | 一键部署到腾讯云开发<br/>国内 CDN 加速访问<br/>Serverless 架构免运维 | 330万开发者验证的平台<br/>企业级安全和稳定性<br/>完善的监控和日志系统 |
+
+## 🚀 5分钟快速开始
+
+### 方式一：使用项目模板（推荐）
+
+选择预配置的项目模板，开箱即用：
+
+<div align="center">
+
+**[📦 查看所有项目模板](../templates)**
+
+</div>
+
+### 方式二：现有项目集成
+
+如果你已有项目，只需 3 步集成：
+
+```bash
+# 1. 配置 MCP（具体配置见下方详细步骤）
+# 2. 下载 AI 规则
+# 3. 开始使用
 ```
-在当前项目中下载云开发 AI 规则
-```
 
-## 👥 CodeBuddy 配置
+配置完成后，对 AI 说：**"登录云开发"** 即可开始！
 
-### 步骤1：使用 AI 规则
+## 🔧 详细配置指南
 
-模板中已包含 `.rules/` 目录，CodeBuddy 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
+### 步骤 1：安装 CodeBuddy
 
-### 步骤2：配置 MCP
+根据你的开发环境选择安装方式：
 
-点开 CodeBuddy 右上角的 MCP 按钮，点击右侧的添加，在 MCP 配置中添加云开发的 MCP
+- **VS Code**: 在扩展商店搜索 "CodeBuddy" 安装
+- **JetBrains**: 在插件市场搜索 "CodeBuddy" 安装
+- **微信开发者工具**: 从腾讯云官网下载插件
+
+### 步骤 2：配置 CloudBase MCP
+
+点开 CodeBuddy 右上角的 MCP 按钮，点击右侧的添加，在 MCP 配置中添加：
 
 ```json
 {
@@ -36,11 +69,22 @@
 }
 ```
 
-### 步骤3：切换到 Craft 智能体
+### 步骤 3：启用 AI 规则
 
-在对话窗口中切换到 Craft 模式。建议在右侧设置中关闭确认计划功能，以获得更流畅的体验。
+模板项目已包含 `.rules/` 目录。如果是现有项目，对 AI 说：
+```
+在当前项目中下载云开发 AI 规则
+```
 
-## 开始使用
+### 步骤 4：开始开发
+
+在 Craft 模式下与 AI 对话（建议关闭确认计划功能）：
+
+```
+登录云开发
+```
+
+## 🎯 开始使用
 
 配置完成后，对 AI 说：
 
@@ -48,189 +92,74 @@
 登录云开发
 ```
 
-开始你的开发之旅！
-
-## 特色功能
-
-- **Craft 智能体**：专为代码生成优化
-- **微信开发者工具集成**：支持小程序开发
-- **企业级部署**：支持企业内部部署
-
-## 故障排除
-
-**MCP 不生效？**
-1. 检查 MCP 配置格式
-2. 重启 CodeBuddy
-3. 确认 MCP 服务已启用
-
-## 🚀 快速配置
-
-### 步骤 1：安装 CodeBuddy
-
-根据你的开发环境选择安装方式：
-
-- **VS Code**: 在扩展商店搜索 "CodeBuddy" 安装
-- **JetBrains**: 在插件市场搜索 "CodeBuddy" 安装  
-- **微信开发者工具**: 从腾讯云官网下载插件
-
-### 步骤 4：启用 Craft 模式
-
-1. 在对话窗口中切换到 **Craft** 模式
-2. 建议在右侧设置中关闭确认计划功能，获得更流畅的体验
-3. 确认 MCP 工具已成功连接
-
-## 🎯 开始使用
-
-### 1. 登录云开发
-
-在 Craft 模式下与 AI 对话：
+然后就可以开始开发了，例如：
 
 ```
-登录云开发
+创建一个在线投票系统，支持创建投票、参与投票、结果统计，使用云数据库存储，最后部署
 ```
 
-### 2. 验证连接
+CodeBuddy 特别适合小程序开发，支持微信开发者工具集成。
 
-```
-查询当前云开发环境信息
-```
+## 🌟 CloudBase AI Toolkit 开源项目
 
-### 3. 开始开发
+<div align="center">
 
-```
-开发一个在线投票系统，支持创建投票、参与投票、结果统计，使用云数据库存储，最后部署
-```
+### 🔥 加入开源社区
 
-## 💡 使用技巧
+[![GitHub](https://img.shields.io/badge/GitHub-TencentCloudBase/CloudBase--AI--ToolKit-black?style=for-the-badge&logo=github)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+[![CNB社区](https://img.shields.io/badge/CNB-CloudBase--AI--ToolKit-orange?style=for-the-badge)](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit)
 
-### Craft 模式特性
+**⭐ Star 项目 | 🤝 贡献代码 | 💬 技术交流**
 
-- **智能规划**：AI 自动分析需求并制定开发计划
-- **代码生成**：支持完整项目的代码生成
-- **自动执行**：可以自动执行开发和部署流程
-- **实时反馈**：开发过程中提供实时状态反馈
-
-### 开发工作流
-
-```bash
-# 完整项目开发
-创建一个社交媒体应用，包含：
-- 用户注册登录
-- 动态发布和浏览
-- 点赞评论功能
-- 图片上传存储
-- 消息推送
-- 部署上线
-
-# 功能迭代
-在现有项目中添加实时聊天功能，使用云数据库实时推送
-
-# 数据分析
-为应用添加用户行为分析功能，统计用户活跃度和使用习惯
-```
-
-### 最佳实践
-
-1. **使用 Craft 模式**：Craft 模式提供最佳的开发体验
-2. **关闭确认计划**：提高开发效率，减少人工干预
-3. **详细需求描述**：清晰的需求描述有助于生成高质量代码
-4. **模块化开发**：大型项目建议分模块逐步实现
-
-## 🔧 高级配置
-
-### MCP 高级设置
-
-在 MCP 配置中可以添加更多选项：
-
-```json
-{
-  "mcpServers": {
-    "cloudbase": {
-      "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "timeout": 120000,
-      "env": {
-        "CLOUDBASE_DEBUG": "true"
-      }
-    }
-  }
-}
-```
-
-### 团队协作配置
-
-为团队项目配置统一的规则文件：
-
-```markdown
-# 团队开发规范
-- 使用 TypeScript 进行类型安全开发
-- 遵循 ESLint 和 Prettier 代码规范
-- 优先使用云开发服务，减少第三方依赖
-- 所有 API 接口使用云函数实现
-- 数据库操作统一通过云函数处理
-```
+</div>
 
 ## 🛠️ 故障排除
 
-### MCP 连接失败
+### 常见问题
 
-**问题：** 无法连接到云开发 MCP 服务
+**Q: MCP 连接失败？**
+A:
+1. 检查 MCP 配置格式是否正确
+2. 重启 CodeBuddy
+3. 确认网络连接正常
 
-**解决方案：**
-1. 检查 MCP 配置是否正确
-2. 确认 npx 命令可用：`npx --version`
-3. 检查网络连接状态
-4. 重启 CodeBuddy 插件
-
-### Craft 模式异常
-
-**问题：** Craft 模式下无法执行操作
-
-**解决方案：**
+**Q: Craft 模式无法执行操作？**
+A:
 1. 切换到其他模式再切回 Craft 模式
 2. 检查项目权限设置
 3. 确认工作目录正确
 
-### 代码生成问题
-
-**问题：** 生成的代码不符合预期
-
-**解决方案：**
+**Q: AI 生成的代码不符合预期？**
+A:
 1. 明确描述技术栈和框架要求
-2. 提供示例代码或参考文档
-3. 使用项目模板确保规范一致性
+2. 使用项目模板确保规范一致性
+3. 提供更详细的需求描述
 
-## 📱 微信开发者工具集成
+更多问题请查看：[完整 FAQ](../faq)
 
-CodeBuddy 特别优化了微信小程序开发体验：
+## 📚 相关资源
 
-### 小程序开发流程
+- [📖 开发指南](../development) - 深入了解开发最佳实践
+- [🎯 使用案例](../examples) - 查看实际应用案例
+- [🔧 MCP 工具](../mcp-tools) - 了解所有可用工具
+- [❓ 常见问题](../faq) - 查看常见问题解答
 
-```bash
-# 创建小程序项目
-创建一个外卖配送小程序，包含：
-- 商家列表和商品展示
-- 购物车和订单管理
-- 地图定位和配送跟踪
-- 微信支付集成
-- 用户评价系统
+## 💬 技术交流
 
-# 云开发集成
-为小程序添加云开发后端，包括云数据库、云函数、云存储
+### 微信技术交流群
 
-# 发布部署
-完善小程序功能后进行预览和发布
-```
+<div align="center">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/toolkit-qrcode.png" width="200" alt="微信群二维码"/>
+<br/>
+<i>扫码加入微信技术交流群</i>
+</div>
 
-### 小程序特色功能
+---
 
-- **云开发一体化**：原生支持微信云开发
-- **组件库集成**：自动使用微信小程序组件
-- **API 调用优化**：智能使用微信小程序 API
-- **真机调试**：支持真机预览和调试
+<div align="center">
 
-## 💡 开发场景示例
+**🚀 立即开始使用 CodeBuddy + CloudBase AI Toolkit**
 
-### 电商应用开发
+[开始使用](../getting-started) | [查看模板](../templates) | [GitHub 仓库](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
 
-```
+</div>

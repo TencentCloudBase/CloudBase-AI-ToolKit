@@ -1,9 +1,50 @@
-# 云开发 + GitHub Copilot 配置指南
+# CloudBase AI Toolkit + GitHub Copilot - AI 驱动的全栈云开发解决方案
 
-> 💡 **为什么选择这个配置？**  
-> GitHub Copilot 是 GitHub 官方的 AI 编程助手，支持强大的代码生成和智能建议。通过配置 CloudBase AI ToolKit，可以将 Copilot 的 AI 能力与云开发平台无缝集成，特别适合已有 GitHub Copilot 订阅且习惯 VS Code 环境的开发者。
+<div align="center">
 
-## 🚀 快速配置
+![CloudBase AI Toolkit](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/cloudbase-ai-toolkit.png)
+
+**🚀 GitHub Copilot + 云开发 = 几分钟内从想法到上线的全栈应用**
+
+[![GitHub Stars](https://img.shields.io/github/stars/TencentCloudBase/CloudBase-AI-ToolKit?style=social)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+[![开源协议](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/blob/main/LICENSE)
+
+</div>
+
+> 💡 **为什么选择 GitHub Copilot + CloudBase AI Toolkit？**
+> GitHub Copilot 是 GitHub 官方的 AI 编程助手，支持强大的代码生成和智能建议。结合 CloudBase AI Toolkit，让你通过自然语言描述需求，AI 自动生成并部署全栈应用到腾讯云开发平台。特别适合已有 GitHub Copilot 订阅且习惯 VS Code 环境的开发者。
+
+## ✨ 核心优势
+
+| 🎯 **开发效率** | ⚡ **部署速度** | 🛡️ **稳定可靠** |
+|---|---|---|
+| AI 自动生成代码和架构<br/>内置云开发最佳实践规则<br/>智能错误修复和优化 | 一键部署到腾讯云开发<br/>国内 CDN 加速访问<br/>Serverless 架构免运维 | 330万开发者验证的平台<br/>企业级安全和稳定性<br/>完善的监控和日志系统 |
+
+## 🚀 5分钟快速开始
+
+### 方式一：使用项目模板（推荐）
+
+选择预配置的项目模板，开箱即用：
+
+<div align="center">
+
+**[📦 查看所有项目模板](../templates)**
+
+</div>
+
+### 方式二：现有项目集成
+
+如果你已有项目，只需 3 步集成：
+
+```bash
+# 1. 配置 MCP（具体配置见下方详细步骤）
+# 2. 下载 AI 规则
+# 3. 开始使用
+```
+
+配置完成后，对 AI 说：**"登录云开发"** 即可开始！
+
+## 🔧 详细配置指南
 
 ### 步骤 1：安装 GitHub Copilot
 
@@ -11,13 +52,7 @@
 2. 在 VS Code 中安装 "GitHub Copilot" 和 "GitHub Copilot Chat" 扩展
 3. 使用 GitHub 账号登录授权
 
-### 步骤 2：获取项目模板
-
-> 📖 **查看完整模板列表**：[项目模板](../templates)
-
-如果你已经有项目，可以跳过此步骤。
-
-### 步骤 3：配置 MCP
+### 步骤 2：配置 CloudBase MCP
 
 创建 `.vscode/mcp.json` 文件：
 
@@ -34,238 +69,105 @@
 }
 ```
 
-### 步骤 4：配置 AI 规则
+### 步骤 3：启用 AI 规则
 
 创建 `.github/copilot-instructions.md` 文件，或直接对 AI 说：
-
 ```
 在当前项目中下载云开发 AI 规则
 ```
 
-## 🎯 开始使用
-
-### 1. 启用 Agent 模式
+### 步骤 4：开始开发
 
 在 VS Code 中：
 1. 打开 Copilot Chat 面板
 2. 在对话窗口左下角切换到 **Agent** 模式
 3. 确认 MCP 工具已连接
 
-### 2. 登录云开发
+与 AI 对话：
 
 ```
 登录云开发
 ```
 
-### 3. 开始开发
+## 🎯 开始使用
+
+配置完成后，对 AI 说：
 
 ```
-创建一个在线相册应用，支持图片上传、分类管理、分享功能，使用云存储和云数据库，最后部署
+登录云开发
 ```
 
-## 💡 使用技巧
+然后就可以开始开发了，例如：
 
-### Copilot Chat 功能
-
-- **代码建议**：在编写代码时获得智能补全
-- **对话式开发**：通过自然语言描述需求
-- **代码解释**：解释复杂代码逻辑
-- **错误修复**：智能识别和修复问题
-
-### 常用指令
-
-```bash
-# 项目初始化
-@workspace 使用云开发创建一个待办应用，包含用户认证和数据持久化
-
-# 功能开发
-为当前项目添加用户头像上传功能，使用云存储服务
-
-# 代码优化
-#selection 优化这段代码的性能和可读性
-
-# 问题解决
-我的云函数部署失败了，错误信息是：[错误内容]，请帮我排查问题
+```
+创建一个在线投票系统，支持创建投票、参与投票、结果统计，使用云数据库存储，最后部署
 ```
 
-### 最佳实践
+GitHub Copilot 支持 @workspace 和 #selection 等指令，可以更好地理解项目上下文。
 
-1. **使用 @workspace**：让 Copilot 理解整个项目上下文
-2. **选择代码片段**：使用 #selection 针对特定代码操作
-3. **明确技术栈**：在对话中明确使用云开发技术栈
-4. **分步骤开发**：复杂功能分解为多个步骤
+## 🌟 CloudBase AI Toolkit 开源项目
 
-## 🔧 高级配置
+<div align="center">
 
-### 工作区设置
+### 🔥 加入开源社区
 
-在 `.vscode/settings.json` 中添加：
+[![GitHub](https://img.shields.io/badge/GitHub-TencentCloudBase/CloudBase--AI--ToolKit-black?style=for-the-badge&logo=github)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+[![CNB社区](https://img.shields.io/badge/CNB-CloudBase--AI--ToolKit-orange?style=for-the-badge)](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit)
 
-```json
-{
-  "github.copilot.enable": {
-    "*": true,
-    "yaml": false,
-    "plaintext": false
-  },
-  "github.copilot.advanced": {
-    "debug.overrideEngine": "copilot-chat",
-    "inlineSuggestCount": 3
-  }
-}
-```
+**⭐ Star 项目 | 🤝 贡献代码 | 💬 技术交流**
 
-### 自定义 Copilot 指令
-
-创建 `.github/copilot-instructions.md`：
-
-```markdown
-# 云开发项目指令
-
-## 开发规范
-- 优先使用云开发 SDK 2.x 版本
-- 所有数据库操作通过云函数处理
-- 遵循 TypeScript 最佳实践
-- 使用现代化的 React/Vue 组件写法
-
-## 架构规范
-- 前端：使用 Vite + React/Vue 
-- 后端：云函数 + 云数据库
-- 存储：云存储 + 静态托管
-- 部署：自动化 CI/CD 流程
-```
+</div>
 
 ## 🛠️ 故障排除
 
-### Copilot 无法连接
+### 常见问题
 
-**问题：** GitHub Copilot 无法正常工作
-
-**解决方案：**
+**Q: GitHub Copilot 无法连接？**
+A:
 1. 检查 GitHub Copilot 订阅状态
 2. 在 VS Code 中重新登录 GitHub 账号
 3. 重启 VS Code 应用
 4. 检查网络连接状态
 
-### MCP 工具不可用
-
-**问题：** Agent 模式下无法调用云开发工具
-
-**解决方案：**
+**Q: MCP 工具不可用？**
+A:
 1. 确认 `.vscode/mcp.json` 配置正确
 2. 检查 npx 命令是否可用
 3. 重新启用 GitHub Copilot Chat 扩展
 4. 查看 VS Code 输出日志
 
-### 代码建议不准确
+**Q: AI 生成的代码不符合预期？**
+A:
+1. 在 `.github/copilot-instructions.md` 中明确规范
+2. 使用 @workspace 让 AI 理解项目上下文
+3. 提供示例代码作为参考
 
-**问题：** Copilot 生成的代码不符合云开发规范
-
-**解决方案：**
-1. 添加详细的项目说明文档
-2. 在 `.github/copilot-instructions.md` 中明确规范
-3. 使用 @workspace 让 AI 理解项目上下文
-4. 提供示例代码作为参考
-
-## 📚 Copilot 开发模式
-
-### 智能补全
-
-在编写代码时，Copilot 会自动提供建议：
-
-```javascript
-// 输入注释，Copilot 会生成对应代码
-// 创建云函数处理用户注册
-```
-
-### 对话式开发
-
-```bash
-@workspace 在当前项目中添加以下功能：
-1. 用户注册登录页面
-2. 云函数处理用户认证
-3. 数据库存储用户信息
-4. 前端状态管理
-```
-
-### 代码重构
-
-```bash
-#selection 重构这个组件，要求：
-- 使用 TypeScript
-- 添加错误处理
-- 优化性能
-- 遵循 React 最佳实践
-```
-
-## 💡 开发技巧
-
-### 使用工作区上下文
-
-```
-@workspace 基于当前项目的技术栈，为我设计一个用户权限管理系统
-```
-
-### 文件级别操作
-
-```
-为 #file:components/UserProfile.tsx 添加编辑功能
-```
-
-### 终端集成
-
-```
-@terminal 帮我构建并部署当前项目到云开发平台
-```
-
-## 🎯 实际开发场景
-
-### 快速原型
-
-```
-@workspace 快速创建一个笔记应用原型，包含：
-- Markdown 编辑器
-- 笔记分类管理
-- 云端同步存储
-- 搜索功能
-```
-
-### 企业应用
-
-```
-开发一个企业级 CRM 系统，要求：
-1. 客户信息管理
-2. 销售漏斗跟踪
-3. 任务和日程管理
-4. 数据分析报表
-5. 移动端支持
-6. 部署到云开发平台
-```
-
-### API 开发
-
-```
-为电商平台设计并实现以下 API：
-- 商品管理（增删改查）
-- 订单处理流程
-- 支付集成接口
-- 库存管理系统
-使用云函数实现，包含完整的错误处理和数据验证
-```
+更多问题请查看：[完整 FAQ](../faq)
 
 ## 📚 相关资源
 
-- [GitHub Copilot 官方文档](https://docs.github.com/copilot)
-- [VS Code Copilot 扩展](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)
-- [CloudBase AI ToolKit 首页](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/)
-- [快速开始指南](../getting-started)
-- [开发指南](../development)
+- [📖 开发指南](../development) - 深入了解开发最佳实践
+- [🎯 使用案例](../examples) - 查看实际应用案例
+- [🔧 MCP 工具](../mcp-tools) - 了解所有可用工具
+- [❓ 常见问题](../faq) - 查看常见问题解答
+- [GitHub Copilot 官方文档](https://docs.github.com/copilot) - GitHub Copilot 官方文档
 
-## 💬 技术支持
+## 💬 技术交流
 
-遇到问题？获取帮助：
+### 微信技术交流群
 
-- 📖 查看 [常见问题 FAQ](../faq)
-- 🐛 提交 [GitHub Issue](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues)
-- 💬 加入微信技术交流群
-- 🎯 访问 [GitHub Copilot 社区](https://github.com/community) 
+<div align="center">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/toolkit-qrcode.png" width="200" alt="微信群二维码"/>
+<br/>
+<i>扫码加入微信技术交流群</i>
+</div>
+
+---
+
+<div align="center">
+
+**🚀 立即开始使用 GitHub Copilot + CloudBase AI Toolkit**
+
+[开始使用](../getting-started) | [查看模板](../templates) | [GitHub 仓库](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+
+</div>

@@ -29,7 +29,7 @@
 **📹 完整视频演示 ⬇️**
 
 <a href="https://www.bilibili.com/video/BV1hpjvzGESg/" target="_blank">
-  <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/video-banner.png" alt="视频演示" />
+  <img style="max-width: 600px; height: auto;" src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/video-banner.png" alt="视频演示" />
 </a>
 
 | 🚀 **核心能力** | 🛠️ **支持平台** |

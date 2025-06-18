@@ -1,17 +1,56 @@
-# 云开发 + Augment Code 配置指南
+# CloudBase AI Toolkit + Augment Code - AI 驱动的全栈云开发解决方案
 
-> 💡 **为什么选择这个配置？**  
-> Augment Code 是一款强大的 AI 编程助手，支持 VS Code 和 JetBrains 平台。通过配置 CloudBase AI ToolKit，可以实现智能化的云端开发体验，特别适合需要跨平台开发和高度定制化 AI 开发环境的专业开发者。
+<div align="center">
 
-## 🚀 快速配置
+![CloudBase AI Toolkit](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/cloudbase-ai-toolkit.png)
 
-### 步骤 1：获取项目模板
+**🚀 Augment Code + 云开发 = 几分钟内从想法到上线的全栈应用**
 
-> 📖 **查看完整模板列表**：[项目模板](../templates)
+[![GitHub Stars](https://img.shields.io/github/stars/TencentCloudBase/CloudBase-AI-ToolKit?style=social)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+[![开源协议](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/blob/main/LICENSE)
 
-如果你已经有项目，可以跳过此步骤。
+</div>
 
-### 步骤 2：配置 MCP
+> 💡 **为什么选择 Augment Code + CloudBase AI Toolkit？**
+> Augment Code 是一款强大的 AI 编程助手，支持 VS Code 和 JetBrains 平台。结合 CloudBase AI Toolkit，让你通过自然语言描述需求，AI 自动生成并部署全栈应用到腾讯云开发平台。特别适合需要跨平台开发和高度定制化 AI 开发环境的专业开发者。
+
+## ✨ 核心优势
+
+| 🎯 **开发效率** | ⚡ **部署速度** | 🛡️ **稳定可靠** |
+|---|---|---|
+| AI 自动生成代码和架构<br/>内置云开发最佳实践规则<br/>智能错误修复和优化 | 一键部署到腾讯云开发<br/>国内 CDN 加速访问<br/>Serverless 架构免运维 | 330万开发者验证的平台<br/>企业级安全和稳定性<br/>完善的监控和日志系统 |
+
+## 🚀 5分钟快速开始
+
+### 方式一：使用项目模板（推荐）
+
+选择预配置的项目模板，开箱即用：
+
+<div align="center">
+
+**[📦 查看所有项目模板](../templates)**
+
+</div>
+
+### 方式二：现有项目集成
+
+如果你已有项目，只需 3 步集成：
+
+```bash
+# 1. 配置 MCP（具体配置见下方详细步骤）
+# 2. 下载 AI 规则
+# 3. 开始使用
+```
+
+配置完成后，对 AI 说：**"登录云开发"** 即可开始！
+
+## 🔧 详细配置指南
+
+### 步骤 1：安装 Augment Code
+
+从 [Augment Code 官网](https://www.augmentcode.com/) 下载并安装对应平台的插件。
+
+### 步骤 2：配置 CloudBase MCP
 
 在 `.vscode/settings.json` 中添加：
 
@@ -30,148 +69,99 @@
 }
 ```
 
-### 步骤 3：配置 AI 规则
+### 步骤 3：启用 AI 规则
 
 创建 `.augment-guidelines` 文件，或直接对 AI 说：
-
 ```
 在当前项目中下载云开发 AI 规则
 ```
 
-## 🎯 开始使用
+### 步骤 4：开始开发
 
-### 使用 Agent 模式
-
-在对话窗口中使用 Agent 模式进行智能代码生成和自动化操作。
+在 Agent 模式下与 AI 对话：
 
 ```
 登录云开发
 ```
 
+## 🎯 开始使用
+
+配置完成后，对 AI 说：
+
 ```
-创建一个智能推荐系统，支持用户行为分析、内容推荐、个性化配置，使用云数据库和云函数，最后部署
-```
-
-## 💡 使用技巧
-
-### Agent 模式特性
-
-- **智能代码生成**：支持复杂的代码生成任务
-- **自动化操作**：可以自动执行开发和部署流程
-- **MCP 工具集成**：直接调用云开发相关工具
-- **上下文理解**：理解整个项目的上下文信息
-
-### 开发工作流
-
-```bash
-# 完整应用开发
-开发一个内容管理系统，包含：
-- 文章编辑发布
-- 用户权限管理
-- 评论互动系统
-- 数据统计分析
-- 移动端适配
-- 部署到云开发
-
-# API 设计
-设计并实现完整的电商 API，包含商品、订单、支付、物流等模块
-
-# 性能优化
-对现有应用进行性能分析和优化，包含前端和后端优化
+登录云开发
 ```
 
-### 最佳实践
+然后就可以开始开发了，例如：
 
-1. **使用 Agent 模式**：Agent 模式提供最佳的开发体验
-2. **详细需求描述**：清晰描述功能需求和技术要求
-3. **模块化开发**：大型项目建议分模块逐步实现
-4. **及时测试验证**：每个功能完成后及时测试
+```
+创建一个在线投票系统，支持创建投票、参与投票、结果统计，使用云数据库存储，最后部署
+```
+
+Augment Code 支持跨平台开发（VS Code 和 JetBrains），具有强大的代码生成和重构能力。
+
+## 🌟 CloudBase AI Toolkit 开源项目
+
+<div align="center">
+
+### 🔥 加入开源社区
+
+[![GitHub](https://img.shields.io/badge/GitHub-TencentCloudBase/CloudBase--AI--ToolKit-black?style=for-the-badge&logo=github)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+[![CNB社区](https://img.shields.io/badge/CNB-CloudBase--AI--ToolKit-orange?style=for-the-badge)](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit)
+
+**⭐ Star 项目 | 🤝 贡献代码 | 💬 技术交流**
+
+</div>
 
 ## 🛠️ 故障排除
 
-### MCP 连接问题
+### 常见问题
 
-**问题：** 无法连接到云开发 MCP 服务
-
-**解决方案：**
+**Q: MCP 连接失败？**
+A:
 1. 检查 `.vscode/settings.json` 中的 MCP 配置
 2. 确认 npx 命令可用：`npx --version`
 3. 重启 VS Code 应用
 4. 检查网络连接状态
 
-### Agent 模式异常
-
-**问题：** Agent 模式下无法执行操作
-
-**解决方案：**
+**Q: Agent 模式无法执行操作？**
+A:
 1. 检查 Augment Code 扩展是否正常启用
 2. 确认项目权限设置正确
 3. 查看扩展输出日志定位问题
 
-## 📚 Augment Code 特色功能
+**Q: AI 生成的代码不符合预期？**
+A:
+1. 详细描述功能需求和技术要求
+2. 使用项目模板确保规范一致性
+3. 分模块逐步实现复杂项目
 
-### 智能重构
-
-```
-重构当前项目的数据层，要求：
-- 统一数据访问接口
-- 添加缓存机制
-- 优化查询性能
-- 增强错误处理
-```
-
-### 架构设计
-
-```
-为微服务架构设计完整的用户管理服务，包含服务拆分、API 设计、数据存储方案
-```
-
-### 代码审查
-
-```
-审查当前代码质量，提供改进建议，包含性能、安全性、可维护性等方面
-```
-
-## 💡 开发场景示例
-
-### 企业级应用
-
-```
-开发一个企业级人力资源管理系统，包含：
-1. 员工信息管理
-2. 考勤打卡系统
-3. 薪资计算模块
-4. 绩效考核管理
-5. 报表统计分析
-6. 移动端支持
-7. 部署到云开发平台
-```
-
-### 电商平台
-
-```
-创建一个完整的电商平台，要求：
-- 商品管理和展示
-- 购物车和订单流程
-- 支付集成
-- 库存管理
-- 用户评价系统
-- 数据分析后台
-- 使用云开发提供后端支持
-```
+更多问题请查看：[完整 FAQ](../faq)
 
 ## 📚 相关资源
 
-- [Augment Code 官方文档](https://docs.augmentcode.com/)
-- [CloudBase AI ToolKit 首页](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/)
-- [快速开始指南](../getting-started)
-- [开发指南](../development)
+- [📖 开发指南](../development) - 深入了解开发最佳实践
+- [🎯 使用案例](../examples) - 查看实际应用案例
+- [🔧 MCP 工具](../mcp-tools) - 了解所有可用工具
+- [❓ 常见问题](../faq) - 查看常见问题解答
+- [Augment Code 官方文档](https://docs.augmentcode.com/) - Augment Code 官方文档
 
-## 💬 技术支持
+## 💬 技术交流
 
-遇到问题？获取帮助：
+### 微信技术交流群
 
-- 📖 查看 [常见问题 FAQ](../faq)
-- 🐛 提交 [GitHub Issue](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues)
-- 💬 加入微信技术交流群
-- 🌐 访问 [Augment Code 社区](https://www.augmentcode.com/community) 
+<div align="center">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/toolkit-qrcode.png" width="200" alt="微信群二维码"/>
+<br/>
+<i>扫码加入微信技术交流群</i>
+</div>
+
+---
+
+<div align="center">
+
+**🚀 立即开始使用 Augment Code + CloudBase AI Toolkit**
+
+[开始使用](../getting-started) | [查看模板](../templates) | [GitHub 仓库](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+
+</div>

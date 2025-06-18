@@ -2,6 +2,7 @@
 
 ### 0. 前置条件
 
+
 <details>
 <summary>安装 AI 开发工具</summary>
 
@@ -17,24 +18,34 @@
 </details>
 
 <details>
-<summary>安装 Node.js</summary>
+<summary>安装 Node.js v18及以上版本</summary>
 
-确保您的计算机上安装了 Node.js。您可以从 [Node.js 官网](https://nodejs.org/) 下载并安装最新版本。
+确保您的计算机上安装了 Node.js v18 及以上版本。您可以从 [Node.js 官网](https://nodejs.org/) 下载并安装最新版本。
 
 </details>
 
 <details>
-<summary>设置 npm 源</summary>
+<summary>可选：设置 npm 源</summary>
 
-为了提高依赖包的下载速度，建议将 npm 源设置为腾讯镜像源。您可以在终端中运行以下命令：
+为了提高依赖包的下载速度，建议将 npm 源设置为腾讯镜像源。您可以在**终端命令行**中运行以下命令：
 
 ```bash
 npm config set registry https://mirrors.cloud.tencent.com/npm/
 ```
 
 这样可以加快依赖包的下载速度，特别是在中国大陆地区。
-
 </details>
+
+<details>
+<summary>可选：清理 npx 缓存</summary>
+由于 npx 这个工具本身存在一个缓存的 bug，可能导致 CloudBase AI ToolKit 安装问题，您可以尝试清理 npx 缓存。
+
+在**终端命令行**中运行以下命令：
+```
+npx -y clear-npx-cache 
+```
+</details>
+
 
 ## 1. 快速初始化或增强你的项目
 
@@ -87,17 +98,7 @@ AI 就会清理本地的配置，后续可以再要求 AI 登录云开发来重�
 ```
 查询当前云开发环境信息
 ```
-
 向 AI 描述你的需求,进行开发：
-
-```
-做一个双人在线对战五子棋网站，支持联机对战，最后进行部署
-```
-
-AI 会自动：
-- �� 生成前后端代码  
-- 🚀 部署到云开发
-- 🔗 返回在线访问链接
 
 开发过程中如果遇到报错，可以把错误信息发给 AI 来进行排障
 
@@ -135,23 +136,10 @@ AI 会自动：
 ✅ 一键部署到云端并获得访问链接  
 ✅ AI 智能排查和修复开发问题  
 
-## 🔄 常见问题
-
-### Q: 如何更新到最新版本？
-A: 在 AI IDE 的 MCP 配置中重新启用 cloudbase-mcp 即可自动获取最新版本。
-
-### Q: 支持哪些类型的应用？
-A: 支持 Web 应用、微信小程序、API 服务等，涵盖前端、后端、数据库的完整技术栈。
-
-### Q: 是否有免费额度？
-A: 新用户可以免费开通云开发环境体验，包含静态托管、云数据库、云函数等服务的免费额度。
-
-### Q: 如何获取技术支持？
-A: 可以通过 GitHub Issues、微信技术群或官方文档获取帮助。详见 [技术支持](./faq#技术支持)。
-
 ## 📚 下一步
 
 - 📖 [了解项目模板](./templates) - 深入了解各种项目模板
 - 💻 [开发指南](./development) - 掌握高级开发技巧  
 - 🎯 [使用案例](./examples) - 学习实际项目经验
 - 🛠️ [MCP 工具参考](./mcp-tools) - 了解所有可用工具 
+- ❓ [常见问题](./faq) - 解决开发中的问题

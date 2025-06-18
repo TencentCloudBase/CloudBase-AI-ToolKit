@@ -1,18 +1,18 @@
-# CloudBase AI Toolkit + CLINE - AI 驱动的全栈云开发解决方案
+# CloudBase AI Toolkit + [IDE名称] - AI 驱动的全栈云开发解决方案
 
 <div align="center">
 
 ![CloudBase AI Toolkit](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/cloudbase-ai-toolkit.png)
 
-**🚀 CLINE + 云开发 = 几分钟内从想法到上线的全栈应用**
+**🚀 [IDE名称] + 云开发 = 几分钟内从想法到上线的全栈应用**
 
 [![GitHub Stars](https://img.shields.io/github/stars/TencentCloudBase/CloudBase-AI-ToolKit?style=social)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
 [![开源协议](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/blob/main/LICENSE)
 
 </div>
 
-> 💡 **为什么选择 CLINE + CloudBase AI Toolkit？**
-> CLINE 是一款强大的 VS Code AI 助手插件，支持复杂的代码生成和项目管理。结合 CloudBase AI Toolkit，让你通过自然语言描述需求，AI 自动生成并部署全栈应用到腾讯云开发平台。特别适合需要精细控制开发流程和熟悉 VS Code 环境的开发者。
+> 💡 **为什么选择 [IDE名称] + CloudBase AI Toolkit？**  
+> [IDE特色描述] + CloudBase AI Toolkit 的强大组合，让你通过自然语言描述需求，AI 自动生成并部署全栈应用到腾讯云开发平台。特别适合 [适用场景]。
 
 ## ✨ 核心优势
 
@@ -46,47 +46,21 @@
 
 ## 🔧 详细配置指南
 
-### 步骤 1：安装 CLINE
+### 步骤 1：安装 [IDE名称]
 
-1. 打开 VS Code
-2. 在扩展商店搜索 "CLINE"
-3. 点击安装 CLINE 插件
+[IDE特定的安装说明]
 
 ### 步骤 2：配置 CloudBase MCP
 
-创建 `.clinerules/mcp.json` 文件：
-
-```json
-{
-  "mcpServers": {
-    "cloudbase": {
-      "autoApprove": [],
-      "timeout": 60,
-      "command": "npx",
-      "args": [
-        "@cloudbase/cloudbase-mcp@latest"
-      ],
-      "transportType": "stdio",
-      "disabled": false
-    }
-  }
-}
-```
+[IDE特定的MCP配置方法，包括一键安装按钮或手动配置]
 
 ### 步骤 3：启用 AI 规则
 
-创建 `.clinerules/cloudbase.md` 文件，或直接对 AI 说：
-```
-在当前项目中下载云开发 AI 规则
-```
+[AI规则配置说明]
 
 ### 步骤 4：开始开发
 
-1. 在 VS Code 侧边栏点击 CLINE 图标
-2. 选择合适的 AI 模型（推荐 Claude 3.5 Sonnet 或 GPT-4）
-3. 确认 MCP 连接状态
-
-与 AI 对话：
+在 [IDE特定模式] 下与 AI 对话：
 
 ```
 登录云开发
@@ -106,8 +80,6 @@
 创建一个在线投票系统，支持创建投票、参与投票、结果统计，使用云数据库存储，最后部署
 ```
 
-CLINE 支持多种 AI 模型（Claude、GPT-4、DeepSeek 等），可以根据需要选择。
-
 ## 🌟 CloudBase AI Toolkit 开源项目
 
 <div align="center">
@@ -126,34 +98,25 @@ CLINE 支持多种 AI 模型（Claude、GPT-4、DeepSeek 等），可以根据�
 ### 常见问题
 
 **Q: MCP 连接失败？**
-A:
-1. 检查 `.clinerules/mcp.json` 配置格式
-2. 确认 npx 命令可用：`npx --version`
-3. 重启 VS Code 和 CLINE 插件
-4. 检查网络连接状态
+A: 
+1. 检查配置文件格式是否正确
+2. 重启 [IDE名称]
+3. 确认网络连接正常
 
 **Q: AI 生成的代码不符合预期？**
 A:
-1. 提供更详细的需求描述和技术要求
-2. 检查 AI 规则文件是否正确配置
-3. 尝试分步骤描述需求
-4. 使用项目模板确保规范一致性
-
-**Q: 文件操作权限不足？**
-A:
-1. 检查项目目录权限设置
-2. 确认 VS Code 有足够的文件访问权限
-3. 避免在系统保护目录下操作
+1. 明确描述技术栈和框架要求
+2. 使用项目模板确保规范一致性
+3. 提供更详细的需求描述
 
 更多问题请查看：[完整 FAQ](../faq)
 
 ## 📚 相关资源
 
 - [📖 开发指南](../development) - 深入了解开发最佳实践
-- [🎯 使用案例](../examples) - 查看实际应用案例
+- [🎯 使用案例](../examples) - 查看实际应用案例  
 - [🔧 MCP 工具](../mcp-tools) - 了解所有可用工具
 - [❓ 常见问题](../faq) - 查看常见问题解答
-- [CLINE 官方文档](https://cline.so/docs) - CLINE 插件官方文档
 
 ## 💬 技术交流
 
@@ -169,7 +132,7 @@ A:
 
 <div align="center">
 
-**🚀 立即开始使用 CLINE + CloudBase AI Toolkit**
+**🚀 立即开始使用 [IDE名称] + CloudBase AI Toolkit**
 
 [开始使用](../getting-started) | [查看模板](../templates) | [GitHub 仓库](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
 
