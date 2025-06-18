@@ -26,7 +26,7 @@
 当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
 
 
-**📹 完整视频演示 ⬇️ **
+**📹 完整视频演示 ⬇️**
 
 [![视频演示](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/video-banner.png)](https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a)
 
