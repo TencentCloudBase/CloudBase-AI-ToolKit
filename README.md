@@ -28,7 +28,7 @@
 
 **📹 完整视频演示 ⬇️**
 
-[![视频演示](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/video-banner.png)](https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a)
+[![视频演示](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/video-banner.png)](https://www.bilibili.com/video/BV1hpjvzGESg/)
 
 | 🚀 **核心能力** | 🛠️ **支持平台** |
 |---|---|
