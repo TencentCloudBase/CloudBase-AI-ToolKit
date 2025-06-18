@@ -180,7 +180,7 @@ async function syncConfigs(options = {}) {
     const templatePath = templatePaths[i];
     console.log(`\n[${i + 1}/${templatePaths.length}] 处理模板: ${templatePath}`);
     
-    const targetDir = path.join(projectRoot, '..', 'awsome-cloudbase-examples', templatePath);
+    const targetDir = path.join(projectRoot, '..', 'cloudbase-examples', templatePath);
     
     if (!checkTargetExists(path.dirname(targetDir))) {
       console.log(`  ⚠️  跳过: 目标目录不存在 ${templatePath}`);
@@ -243,12 +243,12 @@ async function syncConfigs(options = {}) {
 async function handleGitOperations() {
   console.log('\n🔄 开始Git操作...');
   
-  const examplesDir = path.join(projectRoot, '..', 'awsome-cloudbase-examples');
+  const examplesDir = path.join(projectRoot, '..', 'cloudbase-examples');
   
   if (!fs.existsSync(examplesDir)) {
-    console.log('⚠️  awsome-cloudbase-examples 目录不存在，跳过Git操作');
+    console.log('⚠️  cloudbase-examples 目录不存在，跳过Git操作');
     console.log('请先克隆该仓库到上级目录：');
-    console.log('git clone https://github.com/TencentCloudBase/awsome-cloudbase-examples.git');
+    console.log('git clone https://github.com/TencentCloudBase/awsome-cloudbase-examples.git cloudbase-examples');
     return;
   }
   
