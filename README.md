@@ -25,36 +25,26 @@
 
 当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
 
-<a href="https://www.producthunt.com/posts/cloudbase-ai-tookit?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-cloudbase&#0045;ai&#0045;tookit" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=971451&theme=light&t=1748519563832" alt="CloudBase&#0032;AI&#0032;Tookit - Prompt&#0032;to&#0032;Production&#0058;&#0032;Full&#0045;stack&#0044;&#0032;DB&#0032;&#0038;&#0032;functions—zero&#0032;setup&#0046; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
-[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=CloudBase&config=eyJjb21tYW5kIjoibnB4IEBjbG91ZGJhc2UvY2xvdWRiYXNlLW1jcEBsYXRlc3QiLCJkaXNhYmxlZCI6ZmFsc2V9)
+**📹 完整视频演示 ⬇️ **
 
+[![视频演示](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/video-banner.png)](https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a)
 
-
-### 🚀 三大核心能力
-
-**🤖 AI智能开发**: AI自动生成代码和架构设计 <br>**☁️ 云开发集成**: 一键接入数据库、云函数、静态托管 <br>**⚡ 快速部署**: 几分钟内完成全栈应用上线
-### 🛠️ 支持平台
-
-**Web应用**: 现代化前端 + 静态托管<br>**微信小程序**: 云开发小程序解决方案<br>**后端服务**: 云数据库 + 无服务器函数+云托管
+| 🚀 **核心能力** | 🛠️ **支持平台** |
+|---|---|
+| 🤖 **AI智能开发**: AI自动生成代码和架构设计<br>☁️ **云开发集成**: 一键接入数据库、云函数、静态托管<br>⚡ **快速部署**: 几分钟内完成全栈应用上线 | **Web应用**: 现代化前端 + 静态托管<br>**微信小程序**: 云开发小程序解决方案<br>**后端服务**: 云数据库 + 无服务器函数+云托管 |
 
 
-
-**完整视频演示**
-
-https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 </div> 
 
 ## ✨ 核心特性
 
-| 特性 | 说明 | 优势 |
-|------|------|------|
-| **🤖 AI 原生** | 专为 AI 编程工具设计的规则库 | 生成代码符合云开发最佳实践 |
-| **🚀 一键部署** | MCP 自动化部署到腾讯云开发 CloudBase 平台 | Serverless 架构，无需购买服务器 |
-| **📱 全栈应用** | Web + 小程序 + 数据库 + 后端一体化 | 支持小程序/web 等多种应用形式,提供后端托管和数据库 |
-| **🔧 智能修复** | AI 自动查看日志并修复问题 | 降低运维成本 |
-| **⚡ 极速体验** | 国内 CDN 加速 | 比海外平台访问速度更快 |
-| **📚 知识检索** | 内置支持云开发、微信小程序等专业知识 |专业知识库的智能向量检索
+- **🤖 AI 原生** - 专为 AI 编程工具设计的规则库，生成代码符合云开发最佳实践
+- **🚀 一键部署** - MCP 自动化部署到腾讯云开发 CloudBase 平台，Serverless 架构无需购买服务器
+- **📱 全栈应用** - Web + 小程序 + 数据库 + 后端一体化，支持多种应用形式和后端托管
+- **🔧 智能修复** - AI 自动查看日志并修复问题，降低运维成本
+- **⚡ 极速体验** - 国内 CDN 加速，比海外平台访问速度更快
+- **📚 知识检索** - 内置云开发、微信小程序等专业知识库的智能向量检索
 
 
 ## 🚀 快速开始
@@ -84,16 +74,25 @@ https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
 </details>
 
 <details>
-<summary>设置 npm 源</summary>
+<summary>可选：设置 npm 源</summary>
 
-为了提高依赖包的下载速度，建议将 npm 源设置为腾讯镜像源。您可以在终端中运行以下命令：
+为了提高依赖包的下载速度，建议将 npm 源设置为腾讯镜像源。您可以在**终端命令行**中运行以下命令：
 
 ```bash
 npm config set registry https://mirrors.cloud.tencent.com/npm/
 ```
 
 这样可以加快依赖包的下载速度，特别是在中国大陆地区。
+</details>
 
+<details>
+<summary>可选：清理 npx 缓存</summary>
+由于 npx 这个工具本身存在一个缓存的 bug，可能导致 CloudBase AI ToolKit 安装问题，您可以尝试清理 npx 缓存。
+
+在**终端命令行**中运行以下命令：
+```
+npx -y clear-npx-cache 
+```
 </details>
 
 ### 1. 快速初始化或增强你的项目
@@ -124,6 +123,9 @@ npm config set registry https://mirrors.cloud.tencent.com/npm/
 
 ### 2. 配置你的 AI IDE
 
+> [!TIP]
+> 温馨提示：如果你使用的是模板项目，所有配置都已经预置完成,请按照指引进行检查和开启工具。如果不是从模板开始，需要按具体的说明手动添加相应配置：
+
 以下工具均支持 CloudBase AI ToolKit，选择合适的工具并按说明配置：
 
 | 工具 | 支持平台 |
@@ -139,7 +141,6 @@ npm config set registry https://mirrors.cloud.tencent.com/npm/
 | [文心快码](https://comate.baidu.com/) | VS Code、JetBrains插件|
 | [Augment Code](https://www.augmentcode.com/) | VS Code、JetBrains 插件 |
 
-如果你使用的是模板项目，所有配置都已经预置完成,请按照指引进行检查和开启工具。如果不是从模板开始，需要按具体的说明手动添加相应配置：
 
 <details>
 <summary><strong>🔧 Cursor 配置</strong></summary>

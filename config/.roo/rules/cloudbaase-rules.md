@@ -125,7 +125,11 @@ for await (let str of res.textStream) {
 5. 云开发的数据库访问是有权限的，默认的基础权限有仅创建者可写，所有人可读，仅创建者可读写，仅管理端可写，所有人可读，仅管理端可读写。如果直接从 web 端或者小程序端请求数据库，需要考虑配置合适的数据库权限，在云函数中，默认没有权限控制
 6. 如用户无特殊要求，涉及到跨数据库集合的操作必须通过云函数实现
 7. 如果用涉及到云函数，在保证安全的情况下，可以尽可能可能缩减云函数的数量，例如实现一个面向 c 端请求的云函数，实现一个初始化数据的云函数
-8. 使用
+8. 获取数据模型操作对象：
+   - 小程序：需要 `@cloudbase/wx-cloud-client-sdk`，初始化 `const client = initHTTPOverCallFunction(wx.cloud)`，使用 `client.models`
+   - 云函数：需要 `@cloudbase/node-sdk@3.10+`，初始化 `const app = cloudbase.init({env})`，使用 `app.models`
+   - Web：需要 `@cloudbase/js-sdk`，初始化 `const app = cloudbase.init({env})`，登录后使用 `app.models`
+9. 数据模型查询：可调用 MCP manageDataModel 工具查询模型列表、获取模型详细信息（含Schema字段）、获取具体的 models SDK使用文档
 </cloudbase_knowledge>
 
 <cloudbase_db_notes>
