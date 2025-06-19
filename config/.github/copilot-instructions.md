@@ -130,6 +130,11 @@ for await (let str of res.textStream) {
    - 云函数：需要 `@cloudbase/node-sdk@3.10+`，初始化 `const app = cloudbase.init({env})`，使用 `app.models`
    - Web：需要 `@cloudbase/js-sdk`，初始化 `const app = cloudbase.init({env})`，登录后使用 `app.models`
 9. 数据模型查询：可调用 MCP manageDataModel 工具查询模型列表、获取模型详细信息（含Schema字段）、获取具体的 models SDK使用文档
+10. MySQL 数据模型调用规则
+   - MySQL 数据模型不能使用 collection 方式调用，必须使用数据模型 SDK
+   - 错误：`db.collection('model_name').get()`
+   - 正确：`app.models.model_name.list({ filter: { where: {} } })`
+   - 使用 manageDataModel 工具的 docs 方法获取具体 SDK 用法
 </cloudbase_knowledge>
 
 <cloudbase_db_notes>
