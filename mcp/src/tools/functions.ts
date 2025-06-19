@@ -5,14 +5,14 @@ import path from 'path';
 
 // 支持的 Node.js 运行时列表
 export const SUPPORTED_NODEJS_RUNTIMES = [
-  'Nodejs 18.15',
-  'Nodejs 16.13',
-  'Nodejs 14.18',
-  'Nodejs 12.16',
-  'Nodejs 10.15',
-  'Nodejs 8.9',
+  'Nodejs18.15',
+  'Nodejs16.13',
+  'Nodejs14.18',
+  'Nodejs12.16',
+  'Nodejs10.15',
+  'Nodejs8.9',
 ];
-export const DEFAULT_NODEJS_RUNTIME = 'Nodejs 18.15';
+export const DEFAULT_NODEJS_RUNTIME = 'Nodejs18.15';
 
 /**
  * 处理函数根目录路径，确保不包含函数名
