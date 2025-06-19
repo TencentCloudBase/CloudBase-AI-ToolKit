@@ -33,7 +33,7 @@ alwaysApply: true
 5、真实感增强：
   - 使用真实的 UI 图片，而非占位符图片（可从 Unsplash、Pexels、Apple 官方 UI 资源中选择）
 如无特别要求，给出至多4个页面即可。无需考虑生成长度与复杂度，保证应用的丰富
-</page_desgin_rules>
+</page_design_rules>
 
 <web_rules>
 1. web 项目一般前端源代码存放在 src 目录下，构建后的产物放在 dist 目录下，云函数放在 cloudfunctions 目录下
