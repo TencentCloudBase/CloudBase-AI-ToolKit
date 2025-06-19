@@ -15,6 +15,7 @@ import { registerInteractiveTools } from "./tools/interactive.js";
 import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
 import { telemetryReporter, reportToolkitLifecycle } from "./utils/telemetry.js";
 import { info } from "./utils/logger.js";
+import { registerGatewayTools } from "./tools/gateway.js"
 
 // 记录启动时间
 const startTime = Date.now();
@@ -61,6 +62,8 @@ registerSetupTools(server);
 
 // Register interactive tools
 registerInteractiveTools(server);
+
+registerGatewayTools(server);
 
 async function main() {
   const transport = new StdioServerTransport();
