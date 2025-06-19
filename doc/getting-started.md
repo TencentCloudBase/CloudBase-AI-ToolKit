@@ -73,7 +73,7 @@ npx -y clear-npx-cache
 
 CloudBase AI ToolKit 支持多种 AI 开发工具，查看 [支持的 AI 开发工具列表](/ai/cloudbase-ai-toolkit/#-支持的-ai-开发工具) 选择合适的工具。
 
-> 📖 **详细配置说明**：查看 [IDE配置指南](../ide-setup/) 了解如何配置你的开发工具
+> 📖 **详细配置说明**：查看 [IDE配置指南](../ide-setup/cursor) 了解如何配置你的开发工具
 
 ## 3. 开始开发
 
