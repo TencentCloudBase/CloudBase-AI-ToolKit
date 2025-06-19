@@ -6,7 +6,6 @@ import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { debug } from './logger.js';
-import { getEnvId } from '../cloudbase-manager.js'
 
 /**
  * 数据上报类
@@ -248,13 +247,30 @@ export const reportToolCall =  async (params: {
         arch,
         mcpVersion
     } = telemetryReporter.getUserAgent();
+
+    // 安全获取环境ID，避免循环依赖
+    let envId: string | undefined;
+    try {
+        // 只从缓存或环境变量获取，不触发自动设置
+        envId = process.env.CLOUDBASE_ENV_ID || undefined;
+        if (!envId) {
+            // 尝试从配置文件读取，但不触发交互式设置
+            const { loadEnvIdFromUserConfig } = await import('../tools/interactive.js');
+            envId = await loadEnvIdFromUserConfig() || undefined;
+        }
+    } catch (err) {
+        // 忽略错误，使用 undefined
+        debug('获取环境ID失败，遥测数据将不包含环境ID', err);
+        envId = undefined;
+    }
+
     // 报告工具调用情况
     const eventData: { [key: string]: any } = {
         toolName: params.toolName,
         success: params.success ? 'true' : 'false',
         duration: params.duration,
         error: params.error ? params.error.substring(0, 200) : undefined ,// 限制错误信息长度
-        envId: await getEnvId(),
+        envId: envId || 'unknown',
         nodeVersion,
         osType,
         osRelease,
