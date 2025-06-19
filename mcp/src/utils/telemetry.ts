@@ -294,3 +294,51 @@ export const reportToolCall =  async (params: {
 
     telemetryReporter.report('toolkit_tool_call', eventData);
 };
+
+// Toolkit 生命周期上报
+export const reportToolkitLifecycle = async (params: {
+    event: 'start' | 'exit';
+    duration?: number; // 对于 exit 事件，表示运行时长
+    exitCode?: number; // 对于 exit 事件，表示退出码
+    error?: string; // 对于异常退出
+}) => {
+    const {
+        nodeVersion,
+        osType,
+        osRelease,
+        arch,
+        mcpVersion
+    } = telemetryReporter.getUserAgent();
+
+    // 安全获取环境ID，避免循环依赖
+    let envId: string | undefined;
+    try {
+        // 只从缓存或环境变量获取，不触发自动设置
+        envId = process.env.CLOUDBASE_ENV_ID || undefined;
+        if (!envId) {
+            // 尝试从配置文件读取，但不触发交互式设置
+            const { loadEnvIdFromUserConfig } = await import('../tools/interactive.js');
+            envId = await loadEnvIdFromUserConfig() || undefined;
+        }
+    } catch (err) {
+        // 忽略错误，使用 undefined
+        debug('获取环境ID失败，遥测数据将不包含环境ID', err);
+        envId = undefined;
+    }
+
+    // 报告 Toolkit 生命周期事件
+    const eventData: { [key: string]: any } = {
+        event: params.event,
+        duration: params.duration,
+        exitCode: params.exitCode,
+        error: params.error ? params.error.substring(0, 200) : undefined, // 限制错误信息长度
+        envId: envId || 'unknown',
+        nodeVersion,
+        osType,
+        osRelease,
+        arch,
+        mcpVersion
+    };
+
+    telemetryReporter.report('toolkit_lifecycle', eventData);
+};
