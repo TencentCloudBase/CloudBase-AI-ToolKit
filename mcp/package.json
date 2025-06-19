@@ -16,6 +16,7 @@
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
     "build": "tsc && chmod 755 dist/index.js",
+    "test": "npm run build && npx @modelcontextprotocol/inspector node ./dist/index.js",
     "prepublishOnly": "npm run build"
   },
   "files": [

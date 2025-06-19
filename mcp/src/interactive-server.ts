@@ -269,7 +269,7 @@ export class InteractiveServer {
         this.isRunning = false;
         this.port = 0;
         resolve();
-      }, 5000);
+      }, 30000);
       
       try {
         // 首先关闭WebSocket服务器

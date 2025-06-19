@@ -101,7 +101,6 @@ export function registerRagTools(server: McpServer) {
         if (result.code) {
             throw new Error(result.message)
         }
-        console.log(result)
         return {
             content: [{
                 type: "text",

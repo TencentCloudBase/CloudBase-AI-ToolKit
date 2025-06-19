@@ -14,6 +14,7 @@ import { registerSetupTools } from "./tools/setup.js";
 import { registerInteractiveTools } from "./tools/interactive.js";
 import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
 import { telemetryReporter } from "./utils/telemetry.js";
+import { info } from "./utils/logger.js";
 
 // Create server instance
 const server = new McpServer({
@@ -61,7 +62,7 @@ registerInteractiveTools(server);
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.log("TencentCloudBase MCP Server running on stdio");
+  info("TencentCloudBase MCP Server running on stdio");
 
   // 上报启动信息
   if (telemetryReporter.isEnabled()) {

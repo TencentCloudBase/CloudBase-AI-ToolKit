@@ -1300,7 +1300,6 @@ export function registerDatabaseTools(server: McpServer) {
               if (result.Data.Schema) {
                 try {
                   const schema = JSON.parse(result.Data.Schema);
-                  console.log(result.Data)
                   const properties = schema.properties || {};
 
                   // 提取用户定义的字段
