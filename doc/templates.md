@@ -28,7 +28,13 @@
 - **开源代码**：[GitHub](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-vue-template)
 - **适用场景**：Web 应用开发
 
+### UniApp 跨端应用 + 云开发模板
 
+基于 UniApp 的云开发跨端应用模板，可编译到 H5 和微信小程序。
+
+- **下载地址**：[代码包下载](https://static.cloudbase.net/cloudbase-examples/universal-cloudbase-uniapp-template.zip?v=2025053001)
+- **开源代码**：[GitHub](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/universal/cloudbase-uniapp-template)
+- **适用场景**：跨端应用开发（H5、微信小程序）
 
 ### AI 规则通用云开发模板
 

@@ -5,7 +5,8 @@
     "web/cloudbase-react-template",
     "web/cloudbase-vue-template",
     "web/cloudbase-project",
-    "miniprogram/cloudbase-miniprogram-template"
+    "miniprogram/cloudbase-miniprogram-template",
+    "universal/cloudbase-uniapp-template"
   ],
   "excludePatterns": [
     ".git",
