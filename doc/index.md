@@ -8,7 +8,7 @@
 
 </div>
 
-当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
+当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Claude Code**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
 
 :::tip 🌟 开源项目
 - **GitHub 仓库**: [TencentCloudBase/CloudBase-AI-ToolKit](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit) - 欢迎 Star 和贡献代码
@@ -47,6 +47,7 @@
 | [CodeBuddy](https://copilot.tencent.com/) | VS Code、JetBrains、微信开发者工具插件 |
 | [CLINE](https://cline.so/) | VS Code 插件 |
 | [GitHub Copilot](https://github.com/features/copilot) | VS Code 插件 |
+| [Claude Code](https://www.anthropic.com/claude-code) | 独立 IDE |
 | [Trae](https://www.trae.ai/) | 独立 IDE |
 | [通义灵码](https://tongyi.aliyun.com/lingma) | 独立 IDE，VS Code、 JetBrains插件 |
 | [RooCode](https://roocode.com/) | VS Code插件 |
