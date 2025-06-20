@@ -140,13 +140,12 @@ npx -y clear-npx-cache
 | [CodeBuddy](https://copilot.tencent.com/) | VS Code、JetBrains、微信开发者工具插件 |
 | [CLINE](https://cline.so/) | VS Code 插件 |
 | [GitHub Copilot](https://github.com/features/copilot) | VS Code 插件 |
-| [Claude Code](https://www.anthropic.com/claude-code) | 独立 IDE |
 | [Trae](https://www.trae.ai/) | 独立 IDE |
 | [通义灵码](https://tongyi.aliyun.com/lingma) | 独立 IDE，VS Code、 JetBrains插件 |
 | [RooCode](https://roocode.com/) | VS Code插件 |
 | [文心快码](https://comate.baidu.com/) | VS Code、JetBrains插件|
 | [Augment Code](https://www.augmentcode.com/) | VS Code、JetBrains 插件 |
-
+| [Claude Code](https://www.anthropic.com/claude-code) | 命令行工具 |
 
 <details>
 <summary><strong>🔧 Cursor 配置</strong></summary>
