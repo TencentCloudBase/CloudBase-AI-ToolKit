@@ -63,6 +63,39 @@ AI 会自动下载并更新最新的规则配置到你的项目目录。
 - 如果遇到缓存问题，可以完全重启 AI IDE 后重新启用 MCP
 - 建议定期检查更新以获得最新功能和修复
 
+### 如何全局安装 CloudBase AI ToolKit？
+
+如果你希望全局安装 CloudBase AI ToolKit 以避免每次使用 npx 下载，可以使用以下方法：
+
+**1. 全局安装**
+```bash
+npm i @cloudbase/cloudbase-mcp@latest -g
+```
+
+**2. 更新 MCP 配置**
+安装完成后，将 MCP 配置中的 `command` 从 `npx` 改为直接使用命令：
+
+```json
+{
+  "mcpServers": {
+    "cloudbase": {
+      "command": "cloudbase-mcp"
+    }
+  }
+}
+```
+
+**优势：**
+- 启动速度更快，无需每次下载
+- 避免网络问题导致的启动失败
+- 减少 npx 缓存相关问题
+
+**注意事项：**
+- 需要手动更新：`npm update @cloudbase/cloudbase-mcp -g`
+- 确保全局安装的版本是最新的
+
+---
+
 ### MCP 显示工具数量为 0 怎么办？
 
 如果在 AI 开发工具的 MCP 列表中看到 cloudbase-mcp 显示工具数量为 0，可以按以下步骤排查：
@@ -88,6 +121,9 @@ AI 会自动下载并更新最新的规则配置到你的项目目录。
 **4. 手动重新安装**
 - 如果上述方法无效，可以删除 MCP 配置后重新添加
 - 确保使用最新的配置格式
+
+**5. 尝试全局安装**
+- 如果 npx 方式持续有问题，可以尝试[全局安装方式](#如何全局安装-cloudbase-ai-toolkit)
 
 一般情况下，在 MCP 列表中重新启用或刷新即可正常安装并显示工具。
 
