@@ -1,0 +1,1417 @@
+{
+  "name": "cloudbase-mcp",
+  "version": "1.8.1",
+  "description": "腾讯云开发 MCP Server，支持静态托管/环境查询/云函数/云数据库等功能",
+  "tools": [
+    {
+      "name": "login",
+      "description": "登录云开发环境并选择要使用的环境",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "forceUpdate": {
+            "type": "boolean",
+            "description": "是否强制重新选择环境"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "logout",
+      "description": "退出云开发环境",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "confirm": {
+            "type": "string",
+            "const": "yes",
+            "description": "确认操作，默认传 yes"
+          }
+        },
+        "required": [
+          "confirm"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "listEnvs",
+      "description": "获取所有云开发环境信息",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "confirm": {
+            "type": "string",
+            "const": "yes",
+            "description": "确认操作，默认传 yes"
+          }
+        },
+        "required": [
+          "confirm"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "getEnvAuthDomains",
+      "description": "获取云开发环境的合法域名列表",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "confirm": {
+            "type": "string",
+            "const": "yes",
+            "description": "确认操作，默认传 yes"
+          }
+        },
+        "required": [
+          "confirm"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "createEnvDomain",
+      "description": "为云开发环境添加安全域名",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "domains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "安全域名数组"
+          }
+        },
+        "required": [
+          "domains"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "deleteEnvDomain",
+      "description": "删除云开发环境的指定安全域名",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "domains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "安全域名数组"
+          }
+        },
+        "required": [
+          "domains"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "getEnvInfo",
+      "description": "获取当前云开发环境信息",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "confirm": {
+            "type": "string",
+            "const": "yes",
+            "description": "确认操作，默认传 yes"
+          }
+        },
+        "required": [
+          "confirm"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "updateEnvInfo",
+      "description": "修改云开发环境别名",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "type": "string",
+            "description": "环境别名"
+          }
+        },
+        "required": [
+          "alias"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "searchKnowledgeBase",
+      "description": "云开发知识库智能检索工具，支持云开发与云函数知识的向量查询",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "threshold": {
+            "type": "number",
+            "default": 0.5,
+            "description": "相似性检索阈值"
+          },
+          "id": {
+            "type": "string",
+            "enum": [
+              "cloudbase",
+              "scf",
+              "miniprogram"
+            ],
+            "description": "知识库范围，cloudbase=云开发全量知识，scf=云开发的云函数知识, miniprogram=小程序知识（不包含云开发与云函数知识）"
+          },
+          "content": {
+            "type": "string",
+            "description": "检索内容"
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "chunkExpand": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2,
+                "default": [
+                  3,
+                  3
+                ],
+                "description": "指定返回的文档内容的展开长度,例如 [3,3]代表前后展开长度"
+              }
+            },
+            "additionalProperties": false,
+            "description": "其他选项"
+          },
+          "limit": {
+            "type": "number",
+            "default": 5,
+            "description": "指定返回最相似的 Top K 的 K 的值"
+          }
+        },
+        "required": [
+          "id",
+          "content"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "createCollection",
+      "description": "创建一个新的云开发数据库集合",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "collectionName": {
+            "type": "string",
+            "description": "云开发数据库集合名称"
+          }
+        },
+        "required": [
+          "collectionName"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "checkCollectionExists",
+      "description": "检查云开发数据库集合是否存在",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "collectionName": {
+            "type": "string",
+            "description": "云开发数据库集合名称"
+          }
+        },
+        "required": [
+          "collectionName"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "updateCollection",
+      "description": "更新云开发数据库集合配置（创建或删除索引）",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "collectionName": {
+            "type": "string",
+            "description": "云开发数据库集合名称"
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "CreateIndexes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "IndexName": {
+                      "type": "string"
+                    },
+                    "MgoKeySchema": {
+                      "type": "object",
+                      "properties": {
+                        "MgoIsUnique": {
+                          "type": "boolean"
+                        },
+                        "MgoIndexKeys": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "Name": {
+                                "type": "string"
+                              },
+                              "Direction": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "Name",
+                              "Direction"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "MgoIsUnique",
+                        "MgoIndexKeys"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "IndexName",
+                    "MgoKeySchema"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "DropIndexes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "IndexName": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "IndexName"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false,
+            "description": "更新选项，支持创建和删除索引"
+          }
+        },
+        "required": [
+          "collectionName",
+          "options"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "describeCollection",
+      "description": "获取云开发数据库集合的详细信息",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "collectionName": {
+            "type": "string",
+            "description": "云开发数据库集合名称"
+          }
+        },
+        "required": [
+          "collectionName"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "listCollections",
+      "description": "获取云开发数据库集合列表",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "number",
+            "description": "偏移量"
+          },
+          "limit": {
+            "type": "number",
+            "description": "返回数量限制"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "checkIndexExists",
+      "description": "检查索引是否存在",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "collectionName": {
+            "type": "string",
+            "description": "云开发数据库集合名称"
+          },
+          "indexName": {
+            "type": "string",
+            "description": "索引名称"
+          }
+        },
+        "required": [
+          "collectionName",
+          "indexName"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "distribution",
+      "description": "查询数据库中云开发数据库集合的数据分布情况",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "insertDocuments",
+      "description": "向云开发数据库集合中插入一个或多个文档",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "collectionName": {
+            "type": "string",
+            "description": "云开发数据库集合名称"
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "要插入的文档JSON 字符串数组，每个文档都是 JSON字符串，注意不是JSON对象"
+          }
+        },
+        "required": [
+          "collectionName",
+          "documents"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "queryDocuments",
+      "description": "查询云开发数据库集合中的文档",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "collectionName": {
+            "type": "string",
+            "description": "云开发数据库集合名称"
+          },
+          "query": {
+            "type": "string",
+            "description": "查询条件（JSON字符串）"
+          },
+          "projection": {
+            "type": "string",
+            "description": "返回字段投影（JSON字符串）"
+          },
+          "sort": {
+            "type": "string",
+            "description": "排序条件（JSON字符串）"
+          },
+          "limit": {
+            "type": "number",
+            "description": "返回数量限制"
+          },
+          "offset": {
+            "type": "number",
+            "description": "跳过的记录数"
+          }
+        },
+        "required": [
+          "collectionName"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "updateDocuments",
+      "description": "更新云开发数据库集合中的文档",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "collectionName": {
+            "type": "string",
+            "description": "云开发数据库集合名称"
+          },
+          "query": {
+            "type": "string",
+            "description": "查询条件（JSON字符串）"
+          },
+          "update": {
+            "type": "string",
+            "description": "更新内容（JSON字符串）"
+          },
+          "isMulti": {
+            "type": "boolean",
+            "description": "是否更新多条记录"
+          },
+          "upsert": {
+            "type": "boolean",
+            "description": "是否在不存在时插入"
+          }
+        },
+        "required": [
+          "collectionName",
+          "query",
+          "update"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "deleteDocuments",
+      "description": "删除云开发数据库集合中的文档",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "collectionName": {
+            "type": "string",
+            "description": "云开发数据库集合名称"
+          },
+          "query": {
+            "type": "string",
+            "description": "查询条件（JSON字符串）"
+          },
+          "isMulti": {
+            "type": "boolean",
+            "description": "是否删除多条记录"
+          }
+        },
+        "required": [
+          "collectionName",
+          "query"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "manageDataModel",
+      "description": "数据模型查询工具，支持查询和列表数据模型（只读操作）。list操作返回基础信息（不含Schema），get操作返回详细信息（含简化的Schema，包括字段列表、格式、关联关系等），docs操作生成SDK使用文档",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "get",
+              "list",
+              "docs"
+            ],
+            "description": "操作类型：get=查询单个模型（含Schema字段列表、格式、关联关系），list=获取模型列表（不含Schema），docs=生成SDK使用文档"
+          },
+          "name": {
+            "type": "string",
+            "description": "模型名称（get操作时必填）"
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "模型名称数组（list操作时可选，用于过滤）"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "uploadFiles",
+      "description": "上传文件到静态网站托管",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "localPath": {
+            "type": "string",
+            "description": "本地文件或文件夹路径，需要是绝对路径，例如 /tmp/files/data.txt"
+          },
+          "cloudPath": {
+            "type": "string",
+            "description": "云端文件或文件夹路径，例如files/data.txt"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "localPath": {
+                  "type": "string"
+                },
+                "cloudPath": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "localPath",
+                "cloudPath"
+              ],
+              "additionalProperties": false
+            },
+            "default": [],
+            "description": "多文件上传配置"
+          },
+          "ignore": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "忽略文件模式"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "listFiles",
+      "description": "获取静态网站托管的文件列表",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "confirm": {
+            "type": "string",
+            "const": "yes",
+            "description": "确认操作，默认传 yes"
+          }
+        },
+        "required": [
+          "confirm"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "deleteFiles",
+      "description": "删除静态网站托管的文件或文件夹",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "cloudPath": {
+            "type": "string",
+            "description": "云端文件或文件夹路径"
+          },
+          "isDir": {
+            "type": "boolean",
+            "default": false,
+            "description": "是否为文件夹"
+          }
+        },
+        "required": [
+          "cloudPath"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "findFiles",
+      "description": "搜索静态网站托管的文件",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "prefix": {
+            "type": "string",
+            "description": "匹配前缀"
+          },
+          "marker": {
+            "type": "string",
+            "description": "起始对象键标记"
+          },
+          "maxKeys": {
+            "type": "number",
+            "description": "单次返回最大条目数"
+          }
+        },
+        "required": [
+          "prefix"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "domainManagement",
+      "description": "统一的域名管理工具，支持绑定、解绑、查询和修改域名配置",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "create",
+              "delete",
+              "check",
+              "modify"
+            ],
+            "description": "操作类型: create=绑定域名, delete=解绑域名, check=查询域名配置, modify=修改域名配置"
+          },
+          "domain": {
+            "type": "string",
+            "description": "域名"
+          },
+          "certId": {
+            "type": "string",
+            "description": "证书ID（绑定域名时必需）"
+          },
+          "domains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "域名列表（查询配置时使用）"
+          },
+          "domainId": {
+            "type": "number",
+            "description": "域名ID（修改配置时必需）"
+          },
+          "domainConfig": {
+            "type": "object",
+            "properties": {
+              "Refer": {
+                "type": "object",
+                "properties": {
+                  "Switch": {
+                    "type": "string"
+                  },
+                  "RefererRules": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "RefererType": {
+                          "type": "string"
+                        },
+                        "Referers": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "AllowEmpty": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "RefererType",
+                        "Referers",
+                        "AllowEmpty"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "Switch"
+                ],
+                "additionalProperties": false
+              },
+              "Cache": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "RuleType": {
+                      "type": "string"
+                    },
+                    "RuleValue": {
+                      "type": "string"
+                    },
+                    "CacheTtl": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "RuleType",
+                    "RuleValue",
+                    "CacheTtl"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "IpFilter": {
+                "type": "object",
+                "properties": {
+                  "Switch": {
+                    "type": "string"
+                  },
+                  "FilterType": {
+                    "type": "string"
+                  },
+                  "Filters": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "Switch"
+                ],
+                "additionalProperties": false
+              },
+              "IpFreqLimit": {
+                "type": "object",
+                "properties": {
+                  "Switch": {
+                    "type": "string"
+                  },
+                  "Qps": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "Switch"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "description": "域名配置（修改配置时使用）"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "getWebsiteConfig",
+      "description": "获取静态网站配置",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "confirm": {
+            "type": "string",
+            "const": "yes",
+            "description": "确认操作，默认传 yes"
+          }
+        },
+        "required": [
+          "confirm"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "getFunctionList",
+      "description": "获取云函数列表",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "number",
+            "description": "范围"
+          },
+          "offset": {
+            "type": "number",
+            "description": "偏移"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "createFunction",
+      "description": "创建云函数",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "func": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "函数名称"
+              },
+              "timeout": {
+                "type": "number",
+                "description": "函数超时时间"
+              },
+              "envVariables": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "环境变量"
+              },
+              "vpc": {
+                "type": "object",
+                "properties": {
+                  "vpcId": {
+                    "type": "string"
+                  },
+                  "subnetId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "vpcId",
+                  "subnetId"
+                ],
+                "additionalProperties": false,
+                "description": "私有网络配置"
+              },
+              "runtime": {
+                "type": "string",
+                "description": "运行时环境,建议指定为 'Nodejs 18.15'，其他可选值：Nodejs18.15，Nodejs16.13，Nodejs14.18，Nodejs12.16，Nodejs10.15，Nodejs8.9"
+              },
+              "installDependency": {
+                "type": "boolean",
+                "description": "是否安装依赖，建议传 true"
+              },
+              "triggers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "config": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "type",
+                    "config"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "触发器配置"
+              },
+              "handler": {
+                "type": "string",
+                "description": "函数入口"
+              },
+              "ignore": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "description": "忽略文件"
+              },
+              "isWaitInstall": {
+                "type": "boolean",
+                "description": "是否等待依赖安装"
+              },
+              "layers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "version"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Layer配置"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false,
+            "description": "函数配置"
+          },
+          "functionRootPath": {
+            "type": "string",
+            "description": "函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，注意：不要包含函数名本身，例如函数名为 'hello'，应传入 '/path/to/cloudfunctions'，而不是 '/path/to/cloudfunctions/hello'"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "是否覆盖"
+          }
+        },
+        "required": [
+          "func",
+          "force"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "updateFunctionCode",
+      "description": "更新云函数代码",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "func": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "函数名称"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false,
+            "description": "函数配置"
+          },
+          "functionRootPath": {
+            "type": "string",
+            "description": "函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，注意：不要包含函数名本身，例如函数名为 'hello'，应传入 '/path/to/cloudfunctions'，而不是 '/path/to/cloudfunctions/hello'"
+          }
+        },
+        "required": [
+          "func"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "updateFunctionConfig",
+      "description": "更新云函数配置",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "funcParam": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "函数名称"
+              },
+              "timeout": {
+                "type": "number",
+                "description": "超时时间"
+              },
+              "envVariables": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "环境变量"
+              },
+              "vpc": {
+                "type": "object",
+                "properties": {
+                  "vpcId": {
+                    "type": "string"
+                  },
+                  "subnetId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "vpcId",
+                  "subnetId"
+                ],
+                "additionalProperties": false,
+                "description": "VPC配置"
+              },
+              "runtime": {
+                "type": "string",
+                "description": "运行时（可选值：Nodejs18.15，Nodejs16.13，Nodejs14.18，Nodejs12.16，Nodejs10.15，Nodejs8.9，默认 Nodejs 18.15)"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false,
+            "description": "函数配置"
+          }
+        },
+        "required": [
+          "funcParam"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "getFunctionDetail",
+      "description": "获取云函数详情",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "函数名称"
+          },
+          "codeSecret": {
+            "type": "string",
+            "description": "代码保护密钥"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "invokeFunction",
+      "description": "调用云函数",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "函数名称"
+          },
+          "params": {
+            "type": "object",
+            "additionalProperties": {},
+            "description": "调用参数"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "getFunctionLogs",
+      "description": "获取云函数日志",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "options": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "函数名称"
+              },
+              "offset": {
+                "type": "number",
+                "description": "偏移量"
+              },
+              "limit": {
+                "type": "number",
+                "description": "返回数量"
+              },
+              "order": {
+                "type": "string",
+                "description": "排序方式"
+              },
+              "orderBy": {
+                "type": "string",
+                "description": "排序字段"
+              },
+              "startTime": {
+                "type": "string",
+                "description": "开始时间"
+              },
+              "endTime": {
+                "type": "string",
+                "description": "结束时间"
+              },
+              "requestId": {
+                "type": "string",
+                "description": "请求ID"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false,
+            "description": "日志查询选项"
+          }
+        },
+        "required": [
+          "options"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "createFunctionTriggers",
+      "description": "创建云函数触发器",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "函数名"
+          },
+          "triggers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "触发器名称"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "触发器类型"
+                },
+                "config": {
+                  "type": "string",
+                  "description": "触发器配置"
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "config"
+              ],
+              "additionalProperties": false
+            },
+            "description": "触发器配置数组"
+          }
+        },
+        "required": [
+          "name",
+          "triggers"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "deleteFunctionTrigger",
+      "description": "删除云函数触发器",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "函数名"
+          },
+          "triggerName": {
+            "type": "string",
+            "description": "触发器名称"
+          }
+        },
+        "required": [
+          "name",
+          "triggerName"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "downloadRemoteFile",
+      "description": "下载远程文件到本地临时文件，返回一个系统的绝对路径",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "远程文件的 URL 地址"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "uploadFile",
+      "description": "上传文件到云存储（区别于静态网站托管，云存储更适合存储业务数据文件）",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "localPath": {
+            "type": "string",
+            "description": "本地文件路径，建议传入绝对路径，例如 /tmp/files/data.txt"
+          },
+          "cloudPath": {
+            "type": "string",
+            "description": "云端文件路径，例如 files/data.txt"
+          }
+        },
+        "required": [
+          "localPath",
+          "cloudPath"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "downloadTemplate",
+      "description": "自动下载并部署CloudBase项目模板。\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n工具会自动下载模板到临时目录，解压后如果检测到WORKSPACE_FOLDER_PATHS环境变量，则复制到项目目录。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "template": {
+            "type": "string",
+            "enum": [
+              "react",
+              "vue",
+              "miniprogram",
+              "uniapp",
+              "rules"
+            ],
+            "description": "要下载的模板类型"
+          },
+          "overwrite": {
+            "type": "boolean",
+            "description": "是否覆盖已存在的文件，默认为false（不覆盖）"
+          }
+        },
+        "required": [
+          "template"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "interactiveDialog",
+      "description": "统一的交互式对话工具，支持需求澄清和任务确认，当需要和用户确认下一步的操作的时候，可以调用这个工具的clarify，如果有敏感的操作，需要用户确认，可以调用这个工具的confirm",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "clarify",
+              "confirm"
+            ],
+            "description": "交互类型: clarify=需求澄清, confirm=任务确认"
+          },
+          "message": {
+            "type": "string",
+            "description": "对话消息内容"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "可选的预设选项"
+          },
+          "forceUpdate": {
+            "type": "boolean",
+            "description": "是否强制更新环境ID配置"
+          },
+          "risks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "操作风险提示"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "createFunctionHTTPAccess",
+      "description": "创建云函数的 HTTP 访问",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "函数名"
+          },
+          "path": {
+            "type": "string",
+            "description": "HTTP 访问路径"
+          }
+        },
+        "required": [
+          "name",
+          "path"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    }
+  ]
+}
