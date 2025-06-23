@@ -764,3 +764,4 @@ graph TD
 
 ⭐ 如果这个项目对你有帮助，请给我们一个 Star！
 
+[![Star History Chart](https://api.star-history.com/svg?repos=TencentCloudBase/CloudBase-AI-ToolKit&type=Timeline)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
