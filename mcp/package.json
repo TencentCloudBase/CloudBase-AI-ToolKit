@@ -1,6 +1,6 @@
 {
   "name": "@cloudbase/cloudbase-mcp",
-  "version": "1.7.10",
+  "version": "1.8.1",
   "description": "腾讯云开发 MCP Server，支持静态托管/环境查询/",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
   "homepage": "https://github.com/TencentCloudBase/CloudBase-AI-ToolKit",
