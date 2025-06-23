@@ -11,6 +11,12 @@ import { registerSetupTools } from "./tools/setup.js";
 import { registerInteractiveTools } from "./tools/interactive.js";
 import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
 import { registerGatewayTools } from "./tools/gateway.js";
+import { CloudBaseOptions } from "./types.js";
+
+// 扩展 McpServer 类型以包含 cloudBaseOptions
+export interface ExtendedMcpServer extends McpServer {
+  cloudBaseOptions?: CloudBaseOptions;
+}
 
 /**
  * Create and configure a CloudBase MCP Server instance
@@ -21,11 +27,13 @@ export function createCloudBaseMcpServer(options?: {
   name?: string;
   version?: string;
   enableTelemetry?: boolean;
-}): McpServer {
+  cloudBaseOptions?: CloudBaseOptions;
+}): ExtendedMcpServer {
   const {
     name = "cloudbase-mcp",
     version = "1.0.0",
-    enableTelemetry = true
+    enableTelemetry = true,
+    cloudBaseOptions
   } = options ?? {};
 
   // Create server instance
@@ -36,7 +44,12 @@ export function createCloudBaseMcpServer(options?: {
       resources: {},
       tools: {},
     },
-  });
+  }) as ExtendedMcpServer;
+
+  // Store cloudBaseOptions in server instance for tools to access
+  if (cloudBaseOptions) {
+    server.cloudBaseOptions = cloudBaseOptions;
+  }
 
   // Enable telemetry if requested
   if (enableTelemetry) {
@@ -62,7 +75,7 @@ export function createCloudBaseMcpServer(options?: {
 /**
  * Get the default configured CloudBase MCP Server
  */
-export function getDefaultServer(): McpServer {
+export function getDefaultServer(): ExtendedMcpServer {
   return createCloudBaseMcpServer();
 }
 

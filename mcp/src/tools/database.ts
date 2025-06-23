@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getCloudBaseManager, getEnvId } from '../cloudbase-manager.js'
+import { ExtendedMcpServer } from '../server.js';
 
 
 // 云开发数据库集合相关的类型定义
@@ -25,8 +25,8 @@ type UpdateCollectionOption = {
 };
 
 // 获取数据库实例ID
-async function getDatabaseInstanceId() {
-  const cloudbase = await getCloudBaseManager()
+async function getDatabaseInstanceId(getManager: () => Promise<any>) {
+  const cloudbase = await getManager()
   const { EnvInfo } = await cloudbase.env.getEnvInfo();
   if (!EnvInfo?.Databases?.[0]?.InstanceId) {
     throw new Error("无法获取数据库实例ID");
@@ -391,7 +391,12 @@ ${relations.length > 0 ? '- [关联关系](https://docs.cloudbase.net/model/rela
 `;
 }
 
-export function registerDatabaseTools(server: McpServer) {
+export function registerDatabaseTools(server: ExtendedMcpServer) {
+  // 获取 cloudBaseOptions，如果没有则为 undefined
+  const cloudBaseOptions = server.cloudBaseOptions;
+
+  // 创建闭包函数来获取 CloudBase Manager
+  const getManager = () => getCloudBaseManager({ cloudBaseOptions });
   // 创建云开发数据库集合
   server.tool(
     "createCollection",
@@ -401,7 +406,7 @@ export function registerDatabaseTools(server: McpServer) {
     },
     async ({ collectionName }) => {
       try {
-        const cloudbase = await getCloudBaseManager()
+        const cloudbase = await getManager()
         const result = await cloudbase.database.createCollection(collectionName);
         return {
           content: [
@@ -441,7 +446,7 @@ export function registerDatabaseTools(server: McpServer) {
     },
     async ({ collectionName }) => {
       try {
-        const cloudbase = await getCloudBaseManager()
+        const cloudbase = await getManager()
         const result = await cloudbase.database.checkCollectionExists(collectionName);
         return {
           content: [
@@ -537,7 +542,7 @@ export function registerDatabaseTools(server: McpServer) {
     },
     async ({ collectionName, options }) => {
       try {
-        const cloudbase = await getCloudBaseManager()
+        const cloudbase = await getManager()
         const result = await cloudbase.database.updateCollection(collectionName, options);
         return {
           content: [
@@ -577,7 +582,7 @@ export function registerDatabaseTools(server: McpServer) {
     },
     async ({ collectionName }) => {
       try {
-        const cloudbase = await getCloudBaseManager()
+        const cloudbase = await getManager()
         const result = await cloudbase.database.describeCollection(collectionName);
         return {
           content: [
@@ -620,7 +625,7 @@ export function registerDatabaseTools(server: McpServer) {
     },
     async ({ offset, limit }) => {
       try {
-        const cloudbase = await getCloudBaseManager()
+        const cloudbase = await getManager()
         const result = await cloudbase.database.listCollections({
           MgoOffset: offset,
           MgoLimit: limit
@@ -666,7 +671,7 @@ export function registerDatabaseTools(server: McpServer) {
     },
     async ({ collectionName, indexName }) => {
       try {
-        const cloudbase = await getCloudBaseManager()
+        const cloudbase = await getManager()
         const result = await cloudbase.database.checkIndexExists(collectionName, indexName);
         return {
           content: [
@@ -849,7 +854,7 @@ export function registerDatabaseTools(server: McpServer) {
     {},
     async () => {
       try {
-        const cloudbase = await getCloudBaseManager()
+        const cloudbase = await getManager()
         const result = await cloudbase.database.distribution();
         return {
           content: [
@@ -891,8 +896,8 @@ export function registerDatabaseTools(server: McpServer) {
     },
     async ({ collectionName, documents }) => {
       try {
-        const cloudbase = await getCloudBaseManager()
-        const instanceId = await getDatabaseInstanceId();
+        const cloudbase = await getManager()
+        const instanceId = await getDatabaseInstanceId(getManager);
 
         const result = await cloudbase.commonService('flexdb').call({
           Action: 'PutItem',
@@ -947,8 +952,8 @@ export function registerDatabaseTools(server: McpServer) {
     },
     async ({ collectionName, query, projection, sort, limit, offset }) => {
       try {
-        const cloudbase = await getCloudBaseManager()
-        const instanceId = await getDatabaseInstanceId();
+        const cloudbase = await getManager()
+        const instanceId = await getDatabaseInstanceId(getManager);
 
         const result = await cloudbase.commonService('flexdb').call({
           Action: 'Query',
@@ -1007,8 +1012,8 @@ export function registerDatabaseTools(server: McpServer) {
     },
     async ({ collectionName, query, update, isMulti, upsert }) => {
       try {
-        const cloudbase = await getCloudBaseManager()
-        const instanceId = await getDatabaseInstanceId();
+        const cloudbase = await getManager()
+        const instanceId = await getDatabaseInstanceId(getManager);
 
         const result = await cloudbase.commonService('flexdb').call({
           Action: 'UpdateItem',
@@ -1065,8 +1070,8 @@ export function registerDatabaseTools(server: McpServer) {
     },
     async ({ collectionName, query, isMulti }) => {
       try {
-        const cloudbase = await getCloudBaseManager()
-        const instanceId = await getDatabaseInstanceId();
+        const cloudbase = await getManager()
+        const instanceId = await getDatabaseInstanceId(getManager);
 
         const result = await cloudbase.commonService('flexdb').call({
           Action: 'DeleteItem',
@@ -1119,8 +1124,8 @@ export function registerDatabaseTools(server: McpServer) {
     },
     async ({ action, name, names }) => {
       try {
-        const cloudbase = await getCloudBaseManager();
-        let currentEnvId = await getEnvId();
+        const cloudbase = await getManager();
+        let currentEnvId = await getEnvId(cloudBaseOptions);
 
         let result;
 

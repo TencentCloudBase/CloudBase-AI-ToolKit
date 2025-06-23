@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { ExtendedMcpServer } from '../server.js';
 
 // 1. 枚举定义
 const KnowledgeBaseEnum = z.enum(["cloudbase", "scf", "miniprogram"]);
@@ -35,7 +35,7 @@ function safeStringify(obj: any) {
   }
 }
 
-export function registerRagTools(server: McpServer) {
+export function registerRagTools(server: ExtendedMcpServer) {
     // 知识库检索
     server.tool(
         'searchKnowledgeBase', 

@@ -1,8 +1,13 @@
 import { z } from "zod";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getCloudBaseManager } from '../cloudbase-manager.js'
+import { ExtendedMcpServer } from '../server.js';
 
-export function registerStorageTools(server: McpServer) {
+export function registerStorageTools(server: ExtendedMcpServer) {
+  // 获取 cloudBaseOptions，如果没有则为 undefined
+  const cloudBaseOptions = server.cloudBaseOptions;
+
+  // 创建闭包函数来获取 CloudBase Manager
+  const getManager = () => getCloudBaseManager({ cloudBaseOptions });
   // uploadFile - 上传文件到云存储
   server.tool(
     "uploadFile",
@@ -12,7 +17,7 @@ export function registerStorageTools(server: McpServer) {
       cloudPath: z.string().describe("云端文件路径，例如 files/data.txt"),
     },
     async ({ localPath, cloudPath }) => {
-      const cloudbase = await getCloudBaseManager()
+      const cloudbase = await getManager()
       // 上传文件
       await cloudbase.storage.uploadFile({
         localPath,

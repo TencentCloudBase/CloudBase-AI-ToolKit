@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getInteractiveServer } from "../interactive-server.js";
 import { getCloudBaseManager } from '../cloudbase-manager.js';
 import { getLoginState } from '../auth.js';
@@ -7,8 +6,9 @@ import { debug, info, warn, error } from '../utils/logger.js';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
+import { ExtendedMcpServer } from '../server.js';
 
-export function registerInteractiveTools(server: McpServer) {
+export function registerInteractiveTools(server: ExtendedMcpServer) {
   // 统一的交互式对话工具
   server.tool(
     "interactiveDialog",

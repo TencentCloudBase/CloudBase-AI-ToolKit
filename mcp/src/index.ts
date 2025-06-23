@@ -5,6 +5,7 @@ export {
   createCloudBaseMcpServer,
   getDefaultServer,
   type McpServer,
+  type ExtendedMcpServer,
   StdioServerTransport,
   telemetryReporter,
   reportToolkitLifecycle,
@@ -22,11 +23,17 @@ export type {
   ToolResponse,
   DataModelField,
   DataModelSchema,
-  DataModel
+  DataModel,
+  CloudBaseOptions
 } from "./types.js";
 
 // Re-export auth utilities
 export { getLoginState, logout } from "./auth.js";
 
 // Re-export CloudBase manager
-export { getCloudBaseManager, getEnvId, resetCloudBaseManagerCache } from "./cloudbase-manager.js";
+export {
+  getCloudBaseManager,
+  getEnvId,
+  resetCloudBaseManagerCache,
+  createCloudBaseManagerWithOptions
+} from "./cloudbase-manager.js";

@@ -2,6 +2,7 @@ import { getLoginState } from './auth.js'
 import { loadEnvIdFromUserConfig, saveEnvIdToUserConfig, autoSetupEnvironmentId } from './tools/interactive.js'
 import CloudBase from "@cloudbase/manager-node";
 import { debug, error } from './utils/logger.js';
+import { CloudBaseOptions } from './types.js';
 const ENV_ID_TIMEOUT = 300000; // 300 seconds
 
 // 统一的环境ID管理类
@@ -102,7 +103,14 @@ class EnvironmentManager {
 const envManager = new EnvironmentManager();
 
 // 导出环境ID获取函数
-export async function getEnvId() {
+export async function getEnvId(cloudBaseOptions?: CloudBaseOptions): Promise<string> {
+    // 如果传入了 cloudBaseOptions 且包含 envId，直接返回
+    if (cloudBaseOptions?.envId) {
+        debug('使用传入的 envId:', cloudBaseOptions.envId);
+        return cloudBaseOptions.envId;
+    }
+
+    // 否则使用默认逻辑
     return envManager.getEnvId();
 }
 
@@ -111,15 +119,22 @@ export function resetCloudBaseManagerCache() {
     envManager.reset();
 }
 
-interface GetManagerOptions {
+export interface GetManagerOptions {
     requireEnvId?: boolean;
+    cloudBaseOptions?: CloudBaseOptions;
 }
 
 /**
  * 每次都实时获取最新的 token/secretId/secretKey
  */
 export async function getCloudBaseManager(options: GetManagerOptions = {}): Promise<CloudBase> {
-    const { requireEnvId = true } = options;
+    const { requireEnvId = true, cloudBaseOptions } = options;
+
+    // 如果传入了 cloudBaseOptions，直接使用传入的配置
+    if (cloudBaseOptions) {
+        debug('使用传入的 CloudBase 配置');
+        return createCloudBaseManagerWithOptions(cloudBaseOptions);
+    }
 
     try {
         const loginState = await getLoginState();
@@ -148,6 +163,27 @@ export async function getCloudBaseManager(options: GetManagerOptions = {}): Prom
         error('Failed to initialize CloudBase Manager:', err instanceof Error ? err.message : String(err));
         throw err;
     }
+}
+
+/**
+ * 使用传入的 CloudBase 配置创建 manager，不使用缓存
+ * @param cloudBaseOptions 传入的 CloudBase 配置选项
+ * @returns CloudBase manager 实例
+ */
+export function createCloudBaseManagerWithOptions(cloudBaseOptions: CloudBaseOptions): CloudBase {
+    debug('使用传入的 CloudBase 配置创建 manager:', cloudBaseOptions);
+
+    const manager = new CloudBase({
+        secretId: cloudBaseOptions.secretId,
+        secretKey: cloudBaseOptions.secretKey,
+        envId: cloudBaseOptions.envId,
+        token: cloudBaseOptions.token,
+        proxy: cloudBaseOptions.proxy || process.env.http_proxy,
+        region: cloudBaseOptions.region,
+        envType: cloudBaseOptions.envType
+    });
+
+    return manager;
 }
 
 // 导出环境管理器实例供其他地方使用

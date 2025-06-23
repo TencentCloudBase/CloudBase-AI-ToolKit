@@ -58,3 +58,14 @@ export interface DataModel {
   createdAt?: string;
   updatedAt?: string;
 }
+
+// CloudBase 配置选项
+export interface CloudBaseOptions {
+  secretId?: string;
+  secretKey?: string;
+  token?: string;
+  envId?: string;
+  proxy?: string;
+  region?: string;
+  envType?: string;
+}

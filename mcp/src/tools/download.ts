@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import * as fsPromises from "fs/promises";
 import * as fs from "fs";
 import * as path from "path";
@@ -11,6 +10,7 @@ import { URL } from "url";
 import * as net from "net";
 import * as dns from "dns";
 import { getCloudBaseManager } from '../cloudbase-manager.js'
+import { ExtendedMcpServer } from '../server.js';
 
 // 常量定义
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
@@ -242,7 +242,7 @@ function downloadFile(url: string): Promise<{
   });
 }
 
-export function registerDownloadTools(server: McpServer) {
+export function registerDownloadTools(server: ExtendedMcpServer) {
   server.tool(
     "downloadRemoteFile",
     "下载远程文件到本地临时文件，返回一个系统的绝对路径",

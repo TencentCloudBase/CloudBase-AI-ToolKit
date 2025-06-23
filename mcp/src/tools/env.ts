@@ -1,11 +1,16 @@
 import { z } from "zod";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getCloudBaseManager, resetCloudBaseManagerCache } from '../cloudbase-manager.js'
 import { logout } from '../auth.js'
 import { clearUserEnvId, _promptAndSetEnvironmentId } from './interactive.js'
 import { debug } from '../utils/logger.js'
+import { ExtendedMcpServer } from '../server.js';
 
-export function registerEnvTools(server: McpServer) {
+export function registerEnvTools(server: ExtendedMcpServer) {
+  // 获取 cloudBaseOptions，如果没有则为 undefined
+  const cloudBaseOptions = server.cloudBaseOptions;
+
+  const getManager = () => getCloudBaseManager({ cloudBaseOptions });
+
   // login - 登录云开发环境
   server.tool(
     "login",
@@ -92,7 +97,7 @@ export function registerEnvTools(server: McpServer) {
       confirm: z.literal("yes").describe("确认操作，默认传 yes")
     },
     async () => {
-      const cloudbase = await getCloudBaseManager({ requireEnvId: false })
+      const cloudbase = await getCloudBaseManager({ cloudBaseOptions, requireEnvId: false })
       const result = await cloudbase.env.listEnvs();
       return {
         content: [
@@ -113,7 +118,7 @@ export function registerEnvTools(server: McpServer) {
       confirm: z.literal("yes").describe("确认操作，默认传 yes")
     },
     async () => {
-      const cloudbase = await getCloudBaseManager()
+      const cloudbase = await getManager()
       const result = await cloudbase.env.getEnvAuthDomains();
       return {
         content: [
@@ -134,7 +139,7 @@ export function registerEnvTools(server: McpServer) {
       domains: z.array(z.string()).describe("安全域名数组")
     },
     async ({ domains }) => {
-      const cloudbase = await getCloudBaseManager()
+      const cloudbase = await getManager()
       const result = await cloudbase.env.createEnvDomain(domains);
       return {
         content: [
@@ -155,7 +160,7 @@ export function registerEnvTools(server: McpServer) {
       domains: z.array(z.string()).describe("安全域名数组")
     },
     async ({ domains }) => {
-      const cloudbase = await getCloudBaseManager()
+      const cloudbase = await getManager()
       const result = await cloudbase.env.deleteEnvDomain(domains);
       return {
         content: [
@@ -176,7 +181,7 @@ export function registerEnvTools(server: McpServer) {
       confirm: z.literal("yes").describe("确认操作，默认传 yes")
     },
     async () => {
-      const cloudbase = await getCloudBaseManager()
+      const cloudbase = await getManager()
       const result = await cloudbase.env.getEnvInfo();
       return {
         content: [
@@ -197,7 +202,7 @@ export function registerEnvTools(server: McpServer) {
       alias: z.string().describe("环境别名")
     },
     async ({ alias }) => {
-      const cloudbase = await getCloudBaseManager()
+      const cloudbase = await getManager()
       const result = await cloudbase.env.updateEnvInfo(alias);
       return {
         content: [

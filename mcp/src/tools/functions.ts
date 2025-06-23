@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getCloudBaseManager } from '../cloudbase-manager.js'
+import { ExtendedMcpServer } from '../server.js';
 import path from 'path';
 
 // 支持的 Node.js 运行时列表
@@ -36,7 +36,13 @@ function processFunctionRootPath(functionRootPath: string | undefined, functionN
   return functionRootPath;
 }
 
-export function registerFunctionTools(server: McpServer) {
+export function registerFunctionTools(server: ExtendedMcpServer) {
+  // 获取 cloudBaseOptions，如果没有则为 undefined
+  const cloudBaseOptions = server.cloudBaseOptions;
+
+  // 创建闭包函数来获取 CloudBase Manager
+  const getManager = () => getCloudBaseManager({ cloudBaseOptions });
+
   // getFunctionList - 获取云函数列表(推荐)
   server.tool(
     "getFunctionList",
@@ -46,7 +52,8 @@ export function registerFunctionTools(server: McpServer) {
       offset: z.number().optional().describe("偏移")
     },
     async ({ limit, offset }) => {
-      const cloudbase = await getCloudBaseManager()
+      // 使用闭包中的 cloudBaseOptions
+      const cloudbase = await getManager();
       const result = await cloudbase.functions.getFunctionList(limit, offset);
       return {
         content: [
@@ -95,11 +102,12 @@ export function registerFunctionTools(server: McpServer) {
       if (!func.runtime) {
         func.runtime = DEFAULT_NODEJS_RUNTIME;
       }
-      
+
       // 处理函数根目录路径，确保不包含函数名
       const processedRootPath = processFunctionRootPath(functionRootPath, func.name);
-      
-      const cloudbase = await getCloudBaseManager()
+
+      // 使用闭包中的 cloudBaseOptions
+      const cloudbase = await getManager();
       const result = await cloudbase.functions.createFunction({
         func,
         functionRootPath: processedRootPath,
@@ -129,8 +137,9 @@ export function registerFunctionTools(server: McpServer) {
     async ({ func, functionRootPath }) => {
       // 处理函数根目录路径，确保不包含函数名
       const processedRootPath = processFunctionRootPath(functionRootPath, func.name);
-      
-      const cloudbase = await getCloudBaseManager()
+
+      // 使用闭包中的 cloudBaseOptions
+      const cloudbase = await getManager();
       const result = await cloudbase.functions.updateFunctionCode({
         func: {
           ...func,
@@ -170,7 +179,8 @@ export function registerFunctionTools(server: McpServer) {
       if (!funcParam.runtime) {
         funcParam.runtime = DEFAULT_NODEJS_RUNTIME;
       }
-      const cloudbase = await getCloudBaseManager()
+      // 使用闭包中的 cloudBaseOptions
+      const cloudbase = await getManager();
       const result = await cloudbase.functions.updateFunctionConfig(funcParam);
       return {
         content: [
@@ -192,7 +202,8 @@ export function registerFunctionTools(server: McpServer) {
       codeSecret: z.string().optional().describe("代码保护密钥")
     },
     async ({ name, codeSecret }) => {
-      const cloudbase = await getCloudBaseManager()
+      // 使用闭包中的 cloudBaseOptions
+      const cloudbase = await getManager();
       const result = await cloudbase.functions.getFunctionDetail(name, codeSecret);
       return {
         content: [
@@ -214,7 +225,8 @@ export function registerFunctionTools(server: McpServer) {
       params: z.record(z.any()).optional().describe("调用参数")
     },
     async ({ name, params }) => {
-      const cloudbase = await getCloudBaseManager()
+      // 使用闭包中的 cloudBaseOptions
+      const cloudbase = await getManager();
       const result = await cloudbase.functions.invokeFunction(name, params);
       return {
         content: [
@@ -244,7 +256,8 @@ export function registerFunctionTools(server: McpServer) {
       }).describe("日志查询选项")
     },
     async ({ options }) => {
-      const cloudbase = await getCloudBaseManager()
+      // 使用闭包中的 cloudBaseOptions
+      const cloudbase = await getManager();
       const result = await cloudbase.functions.getFunctionLogs(options);
       return {
         content: [
@@ -270,7 +283,8 @@ export function registerFunctionTools(server: McpServer) {
       })).describe("触发器配置数组")
     },
     async ({ name, triggers }) => {
-      const cloudbase = await getCloudBaseManager()
+      // 使用闭包中的 cloudBaseOptions
+      const cloudbase = await getManager();
       const result = await cloudbase.functions.createFunctionTriggers(name, triggers);
       return {
         content: [
@@ -292,7 +306,8 @@ export function registerFunctionTools(server: McpServer) {
       triggerName: z.string().describe("触发器名称")
     },
     async ({ name, triggerName }) => {
-      const cloudbase = await getCloudBaseManager()
+      // 使用闭包中的 cloudBaseOptions
+      const cloudbase = await getCloudBaseManager({ cloudBaseOptions });
       const result = await cloudbase.functions.deleteFunctionTrigger(name, triggerName);
       return {
         content: [

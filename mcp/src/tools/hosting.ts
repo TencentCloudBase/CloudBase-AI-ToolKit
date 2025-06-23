@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getCloudBaseManager } from '../cloudbase-manager.js'
+import { ExtendedMcpServer } from '../server.js';
 
 // 定义扩展的EnvInfo接口，包含StaticStorages属性
 interface ExtendedEnvInfo {
@@ -14,7 +14,13 @@ interface ExtendedEnvInfo {
   [key: string]: any;
 }
 
-export function registerHostingTools(server: McpServer) {
+export function registerHostingTools(server: ExtendedMcpServer) {
+  // 获取 cloudBaseOptions，如果没有则为 undefined
+  const cloudBaseOptions = server.cloudBaseOptions;
+
+  // 创建闭包函数来获取 CloudBase Manager
+  const getManager = () => getCloudBaseManager({ cloudBaseOptions });
+
   // uploadFiles - 上传文件到静态网站托管
   server.tool(
     "uploadFiles",
@@ -29,7 +35,7 @@ export function registerHostingTools(server: McpServer) {
       ignore: z.union([z.string(), z.array(z.string())]).optional().describe("忽略文件模式")
     },
     async ({ localPath, cloudPath, files, ignore }) => {
-      const cloudbase = await getCloudBaseManager()
+      const cloudbase = await getManager()
       const result = await cloudbase.hosting.uploadFiles({
         localPath,
         cloudPath,
@@ -72,7 +78,7 @@ export function registerHostingTools(server: McpServer) {
       confirm: z.literal("yes").describe("确认操作，默认传 yes")
     },
     async () => {
-      const cloudbase = await getCloudBaseManager()
+      const cloudbase = await getManager()
       const result = await cloudbase.hosting.listFiles();
       return {
         content: [
@@ -94,7 +100,7 @@ export function registerHostingTools(server: McpServer) {
       isDir: z.boolean().default(false).describe("是否为文件夹")
     },
     async ({ cloudPath, isDir }) => {
-      const cloudbase = await getCloudBaseManager()
+      const cloudbase = await getManager()
       const result = await cloudbase.hosting.deleteFiles({
         cloudPath,
         isDir
@@ -120,7 +126,7 @@ export function registerHostingTools(server: McpServer) {
       maxKeys: z.number().optional().describe("单次返回最大条目数")
     },
     async ({ prefix, marker, maxKeys }) => {
-      const cloudbase = await getCloudBaseManager()
+      const cloudbase = await getManager()
       const result = await cloudbase.hosting.findFiles({
         prefix,
         marker,
@@ -176,7 +182,7 @@ export function registerHostingTools(server: McpServer) {
       }).optional().describe("域名配置（修改配置时使用）")
     },
     async ({ action, domain, certId, domains, domainId, domainConfig }) => {
-      const cloudbase = await getCloudBaseManager()
+      const cloudbase = await getManager()
       let result;
 
       switch (action) {
@@ -245,7 +251,7 @@ export function registerHostingTools(server: McpServer) {
       confirm: z.literal("yes").describe("确认操作，默认传 yes")
     },
     async () => {
-      const cloudbase = await getCloudBaseManager()
+      const cloudbase = await getManager()
       const result = await cloudbase.hosting.getWebsiteConfig();
       return {
         content: [

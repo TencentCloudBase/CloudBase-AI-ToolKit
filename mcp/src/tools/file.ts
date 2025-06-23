@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import * as fs from "fs/promises";
 import * as path from "path";
 import * as os from "os";
 import * as crypto from "crypto";
 import { getCloudBaseManager } from '../cloudbase-manager.js'
+import { ExtendedMcpServer } from '../server.js';
 
 // 常量定义
 const MAX_FILE_SIZE = 100 * 1024; // 100KB in bytes
@@ -36,7 +36,7 @@ function isInTempDir(filePath: string): boolean {
   return normalizedPath.startsWith(normalizedTempDir);
 }
 
-export function registerFileTools(server: McpServer) {
+export function registerFileTools(server: ExtendedMcpServer) {
   // 创建文件
   server.tool(
     "createTempFile",

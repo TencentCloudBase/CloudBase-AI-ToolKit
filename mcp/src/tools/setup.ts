@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import * as fs from "fs";
 import * as fsPromises from "fs/promises";
 import * as path from "path";
@@ -8,6 +7,7 @@ import * as https from "https";
 import * as http from "http";
 import { execSync } from "child_process";
 import * as unzipper from "unzipper";
+import { ExtendedMcpServer } from '../server.js';
 
 // CloudBase 模板配置
 const TEMPLATES = {
@@ -138,7 +138,7 @@ async function copyFile(src: string, dest: string, overwrite: boolean = false): 
   }
 }
 
-export function registerSetupTools(server: McpServer) {
+export function registerSetupTools(server: ExtendedMcpServer) {
   server.tool(
     "downloadTemplate",
     `自动下载并部署CloudBase项目模板。
