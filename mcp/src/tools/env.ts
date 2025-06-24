@@ -12,13 +12,22 @@ export function registerEnvTools(server: ExtendedMcpServer) {
   const getManager = () => getCloudBaseManager({ cloudBaseOptions });
 
   // login - 登录云开发环境
-  server.tool(
+  server.registerTool?.(
     "login",
-    "登录云开发环境并选择要使用的环境",
     {
-      forceUpdate: z.boolean().optional().describe("是否强制重新选择环境")
+      title: "登录云开发",
+      description: "登录云开发环境并选择要使用的环境",
+      inputSchema: {
+        forceUpdate: z.boolean().optional().describe("是否强制重新选择环境")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ forceUpdate = false }) => {
+    async ({ forceUpdate = false }: { forceUpdate?: boolean }) => {
       try {
         const { selectedEnvId, cancelled, error, noEnvs } = await _promptAndSetEnvironmentId(forceUpdate);
 
@@ -58,11 +67,20 @@ export function registerEnvTools(server: ExtendedMcpServer) {
   );
 
   // logout - 退出云开发环境
-  server.tool(
+  server.registerTool?.(
     "logout",
-    "退出云开发环境",
     {
-      confirm: z.literal("yes").describe("确认操作，默认传 yes")
+      title: "退出登录",
+      description: "退出云开发环境",
+      inputSchema: {
+        confirm: z.literal("yes").describe("确认操作，默认传 yes")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false
+      }
     },
     async () => {
       try {
@@ -90,11 +108,18 @@ export function registerEnvTools(server: ExtendedMcpServer) {
   );
 
   // listEnvs
-  server.tool(
+  server.registerTool?.(
     "listEnvs",
-    "获取所有云开发环境信息",
     {
-      confirm: z.literal("yes").describe("确认操作，默认传 yes")
+      title: "查询环境列表", 
+      description: "获取所有云开发环境信息",
+      inputSchema: {
+        confirm: z.literal("yes").describe("确认操作，默认传 yes")
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
     async () => {
       const cloudbase = await getCloudBaseManager({ cloudBaseOptions, requireEnvId: false })
@@ -111,11 +136,18 @@ export function registerEnvTools(server: ExtendedMcpServer) {
   );
 
   // getEnvAuthDomains
-  server.tool(
+  server.registerTool?.(
     "getEnvAuthDomains",
-    "获取云开发环境的合法域名列表",
     {
-      confirm: z.literal("yes").describe("确认操作，默认传 yes")
+      title: "查询安全域名",
+      description: "获取云开发环境的合法域名列表",
+      inputSchema: {
+        confirm: z.literal("yes").describe("确认操作，默认传 yes")
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
     async () => {
       const cloudbase = await getManager()
@@ -132,13 +164,22 @@ export function registerEnvTools(server: ExtendedMcpServer) {
   );
 
   // createEnvDomain
-  server.tool(
+  server.registerTool?.(
     "createEnvDomain",
-    "为云开发环境添加安全域名",
     {
-      domains: z.array(z.string()).describe("安全域名数组")
+      title: "添加安全域名",
+      description: "为云开发环境添加安全域名",
+      inputSchema: {
+        domains: z.array(z.string()).describe("安全域名数组")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ domains }) => {
+    async ({ domains }: { domains: string[] }) => {
       const cloudbase = await getManager()
       const result = await cloudbase.env.createEnvDomain(domains);
       return {
@@ -153,13 +194,22 @@ export function registerEnvTools(server: ExtendedMcpServer) {
   );
 
   // deleteEnvDomain
-  server.tool(
+  server.registerTool?.(
     "deleteEnvDomain",
-    "删除云开发环境的指定安全域名",
     {
-      domains: z.array(z.string()).describe("安全域名数组")
+      title: "删除安全域名",
+      description: "删除云开发环境的指定安全域名",
+      inputSchema: {
+        domains: z.array(z.string()).describe("安全域名数组")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ domains }) => {
+    async ({ domains }: { domains: string[] }) => {
       const cloudbase = await getManager()
       const result = await cloudbase.env.deleteEnvDomain(domains);
       return {
@@ -174,11 +224,18 @@ export function registerEnvTools(server: ExtendedMcpServer) {
   );
 
   // getEnvInfo
-  server.tool(
-    "getEnvInfo",
-    "获取当前云开发环境信息",
+  server.registerTool?.(
+    "getEnvInfo", 
     {
-      confirm: z.literal("yes").describe("确认操作，默认传 yes")
+      title: "查询环境信息",
+      description: "获取当前云开发环境信息",
+      inputSchema: {
+        confirm: z.literal("yes").describe("确认操作，默认传 yes")
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
     async () => {
       const cloudbase = await getManager()
@@ -195,13 +252,22 @@ export function registerEnvTools(server: ExtendedMcpServer) {
   );
 
   // updateEnvInfo
-  server.tool(
+  server.registerTool?.(
     "updateEnvInfo",
-    "修改云开发环境别名",
     {
-      alias: z.string().describe("环境别名")
+      title: "更新环境信息",
+      description: "更新云开发环境信息",
+      inputSchema: {
+        alias: z.string().describe("环境别名")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ alias }) => {
+    async ({ alias }: { alias: string }) => {
       const cloudbase = await getManager()
       const result = await cloudbase.env.updateEnvInfo(alias);
       return {

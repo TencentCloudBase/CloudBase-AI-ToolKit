@@ -8,15 +8,25 @@ export function registerStorageTools(server: ExtendedMcpServer) {
 
   // 创建闭包函数来获取 CloudBase Manager
   const getManager = () => getCloudBaseManager({ cloudBaseOptions });
+  
   // uploadFile - 上传文件到云存储
-  server.tool(
+  server.registerTool?.(
     "uploadFile",
-    "上传文件到云存储（区别于静态网站托管，云存储更适合存储业务数据文件）",
     {
-      localPath: z.string().describe("本地文件路径，建议传入绝对路径，例如 /tmp/files/data.txt"),
-      cloudPath: z.string().describe("云端文件路径，例如 files/data.txt"),
+      title: "上传文件到云存储",
+      description: "上传文件到云存储（区别于静态网站托管，云存储更适合存储业务数据文件）",
+      inputSchema: {
+        localPath: z.string().describe("本地文件路径，建议传入绝对路径，例如 /tmp/files/data.txt"),
+        cloudPath: z.string().describe("云端文件路径，例如 files/data.txt")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ localPath, cloudPath }) => {
+    async ({ localPath, cloudPath }: { localPath: string; cloudPath: string }) => {
       const cloudbase = await getManager()
       // 上传文件
       await cloudbase.storage.uploadFile({

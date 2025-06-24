@@ -44,14 +44,21 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
   const getManager = () => getCloudBaseManager({ cloudBaseOptions });
 
   // getFunctionList - 获取云函数列表(推荐)
-  server.tool(
+  server.registerTool?.(
     "getFunctionList",
-    "获取云函数列表",
     {
-      limit: z.number().optional().describe("范围"),
-      offset: z.number().optional().describe("偏移")
+      title: "查询云函数列表",
+      description: "获取云函数列表",
+      inputSchema: {
+        limit: z.number().optional().describe("范围"),
+        offset: z.number().optional().describe("偏移")
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ limit, offset }) => {
+    async ({ limit, offset }: { limit?: number; offset?: number }) => {
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
       const result = await cloudbase.functions.getFunctionList(limit, offset);
@@ -67,37 +74,50 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
   );
 
   // createFunction - 创建云函数
-  server.tool(
+  server.registerTool?.(
     "createFunction",
-    "创建云函数",
     {
-      func: z.object({
-        name: z.string().describe("函数名称"),
-        timeout: z.number().optional().describe("函数超时时间"),
-        envVariables: z.record(z.string()).optional().describe("环境变量"),
-        vpc: z.object({
-          vpcId: z.string(),
-          subnetId: z.string()
-        }).optional().describe("私有网络配置"),
-        runtime: z.string().optional().describe("运行时环境,建议指定为 'Nodejs 18.15'，其他可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，')),
-        installDependency: z.boolean().optional().describe("是否安装依赖，建议传 true"),
-        triggers: z.array(z.object({
-          name: z.string(),
-          type: z.string(),
-          config: z.string()
-        })).optional().describe("触发器配置"),
-        handler: z.string().optional().describe("函数入口"),
-        ignore: z.union([z.string(), z.array(z.string())]).optional().describe("忽略文件"),
-        isWaitInstall: z.boolean().optional().describe("是否等待依赖安装"),
-        layers: z.array(z.object({
-          name: z.string(),
-          version: z.number()
-        })).optional().describe("Layer配置")
-      }).describe("函数配置"),
-      functionRootPath: z.string().optional().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，注意：不要包含函数名本身，例如函数名为 'hello'，应传入 '/path/to/cloudfunctions'，而不是 '/path/to/cloudfunctions/hello'"),
-      force: z.boolean().describe("是否覆盖")
+      title: "创建云函数",
+      description: "创建云函数",
+      inputSchema: {
+        func: z.object({
+          name: z.string().describe("函数名称"),
+          timeout: z.number().optional().describe("函数超时时间"),
+          envVariables: z.record(z.string()).optional().describe("环境变量"),
+          vpc: z.object({
+            vpcId: z.string(),
+            subnetId: z.string()
+          }).optional().describe("私有网络配置"),
+          runtime: z.string().optional().describe("运行时环境,建议指定为 'Nodejs 18.15'，其他可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，')),
+          installDependency: z.boolean().optional().describe("是否安装依赖，建议传 true"),
+          triggers: z.array(z.object({
+            name: z.string(),
+            type: z.string(),
+            config: z.string()
+          })).optional().describe("触发器配置"),
+          handler: z.string().optional().describe("函数入口"),
+          ignore: z.union([z.string(), z.array(z.string())]).optional().describe("忽略文件"),
+          isWaitInstall: z.boolean().optional().describe("是否等待依赖安装"),
+          layers: z.array(z.object({
+            name: z.string(),
+            version: z.number()
+          })).optional().describe("Layer配置")
+        }).describe("函数配置"),
+        functionRootPath: z.string().optional().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，注意：不要包含函数名本身，例如函数名为 'hello'，应传入 '/path/to/cloudfunctions'，而不是 '/path/to/cloudfunctions/hello'"),
+        force: z.boolean().describe("是否覆盖")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ func, functionRootPath, force }) => {
+    async ({ func, functionRootPath, force }: {
+      func: any;
+      functionRootPath?: string;
+      force: boolean;
+    }) => {
       // 自动填充默认 runtime
       if (!func.runtime) {
         func.runtime = DEFAULT_NODEJS_RUNTIME;
@@ -125,27 +145,49 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
   );
 
   // updateFunctionCode - 更新函数代码
-  server.tool(
+  server.registerTool?.(
     "updateFunctionCode",
-    "更新云函数代码",
     {
-      func: z.object({
-        name: z.string().describe("函数名称")
-      }).describe("函数配置"),
-      functionRootPath: z.string().optional().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，注意：不要包含函数名本身，例如函数名为 'hello'，应传入 '/path/to/cloudfunctions'，而不是 '/path/to/cloudfunctions/hello'")
+      title: "更新云函数代码",
+      description: "更新函数代码",
+      inputSchema: {
+        name: z.string().describe("函数名称"),
+        functionRootPath: z.string().optional().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径"),
+        zipFile: z.string().optional().describe("Base64编码的函数包"),
+        handler: z.string().optional().describe("函数入口"),
+        runtime: z.string().optional().describe("运行时（可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，') + "，默认 Nodejs 18.15)"),
+        installDependency: z.boolean().optional().describe("是否安装依赖")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ func, functionRootPath }) => {
+    async ({ name, functionRootPath, zipFile, handler, runtime, installDependency }: {
+      name: string;
+      functionRootPath?: string;
+      zipFile?: string;
+      handler?: string;
+      runtime?: string;
+      installDependency?: boolean;
+    }) => {
+      // 自动填充默认 runtime
+      if (!runtime) {
+        runtime = DEFAULT_NODEJS_RUNTIME;
+      }
+
       // 处理函数根目录路径，确保不包含函数名
-      const processedRootPath = processFunctionRootPath(functionRootPath, func.name);
+      const processedRootPath = processFunctionRootPath(functionRootPath, name);
 
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
       const result = await cloudbase.functions.updateFunctionCode({
         func: {
-          ...func,
-          installDependency: true // 默认安装依赖
+          name
         },
-        functionRootPath: processedRootPath,
+        functionRootPath: processedRootPath
       });
       return {
         content: [
@@ -159,22 +201,31 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
   );
 
   // updateFunctionConfig - 更新函数配置
-  server.tool(
+  server.registerTool?.(
     "updateFunctionConfig",
-    "更新云函数配置",
     {
-      funcParam: z.object({
-        name: z.string().describe("函数名称"),
-        timeout: z.number().optional().describe("超时时间"),
-        envVariables: z.record(z.string()).optional().describe("环境变量"),
-        vpc: z.object({
-          vpcId: z.string(),
-          subnetId: z.string()
-        }).optional().describe("VPC配置"),
-        runtime: z.string().optional().describe("运行时（可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，') + "，默认 Nodejs 18.15)")
-      }).describe("函数配置")
+      title: "更新云函数配置",
+      description: "更新云函数配置",
+      inputSchema: {
+        funcParam: z.object({
+          name: z.string().describe("函数名称"),
+          timeout: z.number().optional().describe("超时时间"),
+          envVariables: z.record(z.string()).optional().describe("环境变量"),
+          vpc: z.object({
+            vpcId: z.string(),
+            subnetId: z.string()
+          }).optional().describe("VPC配置"),
+          runtime: z.string().optional().describe("运行时（可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，') + "，默认 Nodejs 18.15)")
+        }).describe("函数配置")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ funcParam }) => {
+    async ({ funcParam }: { funcParam: any }) => {
       // 自动填充默认 runtime
       if (!funcParam.runtime) {
         funcParam.runtime = DEFAULT_NODEJS_RUNTIME;
@@ -194,14 +245,21 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
   );
 
   // getFunctionDetail - 获取函数详情
-  server.tool(
+  server.registerTool?.(
     "getFunctionDetail",
-    "获取云函数详情",
     {
-      name: z.string().describe("函数名称"),
-      codeSecret: z.string().optional().describe("代码保护密钥")
+      title: "获取云函数详情",
+      description: "获取云函数详情",
+      inputSchema: {
+        name: z.string().describe("函数名称"),
+        codeSecret: z.string().optional().describe("代码保护密钥")
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ name, codeSecret }) => {
+    async ({ name, codeSecret }: { name: string; codeSecret?: string }) => {
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
       const result = await cloudbase.functions.getFunctionDetail(name, codeSecret);
@@ -217,14 +275,23 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
   );
 
   // invokeFunction - 调用函数
-  server.tool(
+  server.registerTool?.(
     "invokeFunction",
-    "调用云函数",
     {
-      name: z.string().describe("函数名称"),
-      params: z.record(z.any()).optional().describe("调用参数")
+      title: "调用云函数",
+      description: "调用云函数",
+      inputSchema: {
+        name: z.string().describe("函数名称"),
+        params: z.record(z.any()).optional().describe("调用参数")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ name, params }) => {
+    async ({ name, params }: { name: string; params?: Record<string, any> }) => {
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
       const result = await cloudbase.functions.invokeFunction(name, params);
@@ -240,22 +307,29 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
   );
 
   // getFunctionLogs - 获取函数日志
-  server.tool(
+  server.registerTool?.(
     "getFunctionLogs",
-    "获取云函数日志",
     {
-      options: z.object({
-        name: z.string().describe("函数名称"),
-        offset: z.number().optional().describe("偏移量"),
-        limit: z.number().optional().describe("返回数量"),
-        order: z.string().optional().describe("排序方式"),
-        orderBy: z.string().optional().describe("排序字段"),
-        startTime: z.string().optional().describe("开始时间"),
-        endTime: z.string().optional().describe("结束时间"),
-        requestId: z.string().optional().describe("请求ID")
-      }).describe("日志查询选项")
+      title: "获取云函数日志",
+      description: "获取云函数日志",
+      inputSchema: {
+        options: z.object({
+          name: z.string().describe("函数名称"),
+          offset: z.number().optional().describe("偏移量"),
+          limit: z.number().optional().describe("返回数量"),
+          order: z.string().optional().describe("排序方式"),
+          orderBy: z.string().optional().describe("排序字段"),
+          startTime: z.string().optional().describe("开始时间"),
+          endTime: z.string().optional().describe("结束时间"),
+          requestId: z.string().optional().describe("请求ID")
+        }).describe("日志查询选项")
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ options }) => {
+    async ({ options }: { options: any }) => {
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
       const result = await cloudbase.functions.getFunctionLogs(options);
@@ -271,18 +345,27 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
   );
 
   // createFunctionTriggers - 创建函数触发器
-  server.tool(
+  server.registerTool?.(
     "createFunctionTriggers",
-    "创建云函数触发器",
     {
-      name: z.string().describe("函数名"),
-      triggers: z.array(z.object({
-        name: z.string().describe("触发器名称"),
-        type: z.string().describe("触发器类型"),
-        config: z.string().describe("触发器配置")
-      })).describe("触发器配置数组")
+      title: "创建云函数触发器",
+      description: "创建云函数触发器",
+      inputSchema: {
+        name: z.string().describe("函数名"),
+        triggers: z.array(z.object({
+          name: z.string().describe("触发器名称"),
+          type: z.string().describe("触发器类型"),
+          config: z.string().describe("触发器配置")
+        })).describe("触发器配置数组")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ name, triggers }) => {
+    async ({ name, triggers }: { name: string; triggers: any[] }) => {
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
       const result = await cloudbase.functions.createFunctionTriggers(name, triggers);
@@ -298,14 +381,23 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
   );
 
   // deleteFunctionTrigger - 删除函数触发器
-  server.tool(
+  server.registerTool?.(
     "deleteFunctionTrigger",
-    "删除云函数触发器",
     {
-      name: z.string().describe("函数名"),
-      triggerName: z.string().describe("触发器名称")
+      title: "删除云函数触发器",
+      description: "删除云函数触发器",
+      inputSchema: {
+        name: z.string().describe("函数名"),
+        triggerName: z.string().describe("触发器名称")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ name, triggerName }) => {
+    async ({ name, triggerName }: { name: string; triggerName: string }) => {
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getCloudBaseManager({ cloudBaseOptions });
       const result = await cloudbase.functions.deleteFunctionTrigger(name, triggerName);

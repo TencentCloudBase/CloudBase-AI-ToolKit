@@ -243,13 +243,22 @@ function downloadFile(url: string): Promise<{
 }
 
 export function registerDownloadTools(server: ExtendedMcpServer) {
-  server.tool(
+  server.registerTool?.(
     "downloadRemoteFile",
-    "下载远程文件到本地临时文件，返回一个系统的绝对路径",
     {
-      url: z.string().describe("远程文件的 URL 地址"),
+      title: "下载远程文件",
+      description: "下载远程文件到本地临时文件，返回一个系统的绝对路径",
+      inputSchema: {
+        url: z.string().describe("远程文件的 URL 地址")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ url }) => {
+    async ({ url }: { url: string }) => {
       try {
         const result = await downloadFile(url);
         

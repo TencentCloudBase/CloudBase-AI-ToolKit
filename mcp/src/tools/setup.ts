@@ -139,9 +139,11 @@ async function copyFile(src: string, dest: string, overwrite: boolean = false): 
 }
 
 export function registerSetupTools(server: ExtendedMcpServer) {
-  server.tool(
+  server.registerTool?.(
     "downloadTemplate",
-    `自动下载并部署CloudBase项目模板。
+    {
+      title: "下载项目模板",
+      description: `自动下载并部署CloudBase项目模板。
 
 支持的模板:
 - react: React + CloudBase 全栈应用模板
@@ -151,11 +153,18 @@ export function registerSetupTools(server: ExtendedMcpServer) {
 - rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置
 
 工具会自动下载模板到临时目录，解压后如果检测到WORKSPACE_FOLDER_PATHS环境变量，则复制到项目目录。`,
-    {
-      template: z.enum(["react", "vue", "miniprogram", "uniapp", "rules"]).describe("要下载的模板类型"),
-      overwrite: z.boolean().optional().describe("是否覆盖已存在的文件，默认为false（不覆盖）")
+      inputSchema: {
+        template: z.enum(["react", "vue", "miniprogram", "uniapp", "rules"]).describe("要下载的模板类型"),
+        overwrite: z.boolean().optional().describe("是否覆盖已存在的文件，默认为false（不覆盖）")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ template, overwrite = false }) => {
+    async ({ template, overwrite = false }: { template: "react" | "vue" | "miniprogram" | "uniapp" | "rules"; overwrite?: boolean }) => {
       try {
         const templateConfig = TEMPLATES[template];
         if (!templateConfig) {

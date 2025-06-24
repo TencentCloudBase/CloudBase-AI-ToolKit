@@ -9,14 +9,23 @@ export function registerGatewayTools(server: ExtendedMcpServer) {
   // 创建闭包函数来获取 CloudBase Manager
   const getManager = () => getCloudBaseManager({ cloudBaseOptions });
 
-  server.tool(
+  server.registerTool?.(
     "createFunctionHTTPAccess",
-    "创建云函数的 HTTP 访问",
     {
-      name: z.string().describe("函数名"),
-      path: z.string().describe("HTTP 访问路径"),
+      title: "创建云函数HTTP访问",
+      description: "创建云函数的 HTTP 访问",
+      inputSchema: {
+        name: z.string().describe("函数名"),
+        path: z.string().describe("HTTP 访问路径")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ name, path }) => {
+    async ({ name, path }: { name: string; path: string }) => {
       const cloudbase = await getManager()
 
       const result = await cloudbase.access.createAccess({

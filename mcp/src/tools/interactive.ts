@@ -10,17 +10,32 @@ import { ExtendedMcpServer } from '../server.js';
 
 export function registerInteractiveTools(server: ExtendedMcpServer) {
   // 统一的交互式对话工具
-  server.tool(
+  server.registerTool?.(
     "interactiveDialog",
-    "统一的交互式对话工具，支持需求澄清和任务确认，当需要和用户确认下一步的操作的时候，可以调用这个工具的clarify，如果有敏感的操作，需要用户确认，可以调用这个工具的confirm",
     {
-      type: z.enum(['clarify', 'confirm']).describe("交互类型: clarify=需求澄清, confirm=任务确认"),  
-      message: z.string().optional().describe("对话消息内容"),
-      options: z.array(z.string()).optional().describe("可选的预设选项"),
-      forceUpdate: z.boolean().optional().describe("是否强制更新环境ID配置"),
-      risks: z.array(z.string()).optional().describe("操作风险提示")
+      title: "交互式对话",
+      description: "统一的交互式对话工具，支持需求澄清和任务确认，当需要和用户确认下一步的操作的时候，可以调用这个工具的clarify，如果有敏感的操作，需要用户确认，可以调用这个工具的confirm",
+      inputSchema: {
+        type: z.enum(['clarify', 'confirm']).describe("交互类型: clarify=需求澄清, confirm=任务确认"),  
+        message: z.string().optional().describe("对话消息内容"),
+        options: z.array(z.string()).optional().describe("可选的预设选项"),
+        forceUpdate: z.boolean().optional().describe("是否强制更新环境ID配置"),
+        risks: z.array(z.string()).optional().describe("操作风险提示")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: false
+      }
     },
-    async ({ type, message, options, forceUpdate = false, risks }) => {
+    async ({ type, message, options, forceUpdate = false, risks }: {
+      type: 'clarify' | 'confirm';
+      message?: string;
+      options?: string[];
+      forceUpdate?: boolean;
+      risks?: string[];
+    }) => {
       try {
         switch (type) {
           case 'clarify': {
@@ -72,6 +87,9 @@ export function registerInteractiveTools(server: ExtendedMcpServer) {
               }]
             };
           }
+
+          default:
+            throw new Error(`不支持的交互类型: ${type}`);
         }
       } catch (error) {
         return {

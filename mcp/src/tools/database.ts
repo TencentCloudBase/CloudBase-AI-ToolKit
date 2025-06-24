@@ -398,13 +398,22 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
   // 创建闭包函数来获取 CloudBase Manager
   const getManager = () => getCloudBaseManager({ cloudBaseOptions });
   // 创建云开发数据库集合
-  server.tool(
+  server.registerTool?.(
     "createCollection",
-    "创建一个新的云开发数据库集合",
     {
-      collectionName: z.string().describe("云开发数据库集合名称")
+      title: "创建数据库集合",
+      description: "创建一个新的云开发数据库集合",
+      inputSchema: {
+        collectionName: z.string().describe("云开发数据库集合名称")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ collectionName }) => {
+    async ({ collectionName }: { collectionName: string }) => {
       try {
         const cloudbase = await getManager()
         const result = await cloudbase.database.createCollection(collectionName);
@@ -438,13 +447,20 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
   );
 
   // 检查云开发数据库集合是否存在
-  server.tool(
+  server.registerTool?.(
     "checkCollectionExists",
-    "检查云开发数据库集合是否存在",
     {
-      collectionName: z.string().describe("云开发数据库集合名称")
+      title: "检查集合是否存在",
+      description: "检查云开发数据库集合是否存在",
+      inputSchema: {
+        collectionName: z.string().describe("云开发数据库集合名称")
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ collectionName }) => {
+    async ({ collectionName }: { collectionName: string }) => {
       try {
         const cloudbase = await getManager()
         const result = await cloudbase.database.checkCollectionExists(collectionName);
@@ -519,28 +535,37 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
   // );
 
   // 更新云开发数据库集合（创建/删除索引）
-  server.tool(
+  server.registerTool?.(
     "updateCollection",
-    "更新云开发数据库集合配置（创建或删除索引）",
     {
-      collectionName: z.string().describe("云开发数据库集合名称"),
-      options: z.object({
-        CreateIndexes: z.array(z.object({
-          IndexName: z.string(),
-          MgoKeySchema: z.object({
-            MgoIsUnique: z.boolean(),
-            MgoIndexKeys: z.array(z.object({
-              Name: z.string(),
-              Direction: z.string()
-            }))
-          })
-        })).optional(),
-        DropIndexes: z.array(z.object({
-          IndexName: z.string()
-        })).optional()
-      }).describe("更新选项，支持创建和删除索引")
+      title: "更新数据库集合",
+      description: "更新云开发数据库集合配置（创建或删除索引）",
+      inputSchema: {
+        collectionName: z.string().describe("云开发数据库集合名称"),
+        options: z.object({
+          CreateIndexes: z.array(z.object({
+            IndexName: z.string(),
+            MgoKeySchema: z.object({
+              MgoIsUnique: z.boolean(),
+              MgoIndexKeys: z.array(z.object({
+                Name: z.string(),
+                Direction: z.string()
+              }))
+            })
+          })).optional(),
+          DropIndexes: z.array(z.object({
+            IndexName: z.string()
+          })).optional()
+        }).describe("更新选项，支持创建和删除索引")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ collectionName, options }) => {
+    async ({ collectionName, options }: { collectionName: string; options: any }) => {
       try {
         const cloudbase = await getManager()
         const result = await cloudbase.database.updateCollection(collectionName, options);
@@ -574,13 +599,20 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
   );
 
   // 查询云开发数据库集合详情
-  server.tool(
+  server.registerTool?.(
     "describeCollection",
-    "获取云开发数据库集合的详细信息",
     {
-      collectionName: z.string().describe("云开发数据库集合名称")
+      title: "查询集合详情",
+      description: "获取云开发数据库集合的详细信息",
+      inputSchema: {
+        collectionName: z.string().describe("云开发数据库集合名称")
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ collectionName }) => {
+    async ({ collectionName }: { collectionName: string }) => {
       try {
         const cloudbase = await getManager()
         const result = await cloudbase.database.describeCollection(collectionName);
@@ -616,14 +648,21 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
   );
 
   // 获取云开发数据库集合列表
-  server.tool(
+  server.registerTool?.(
     "listCollections",
-    "获取云开发数据库集合列表",
     {
-      offset: z.number().optional().describe("偏移量"),
-      limit: z.number().optional().describe("返回数量限制")
+      title: "获取集合列表",
+      description: "获取云开发数据库集合列表",
+      inputSchema: {
+        offset: z.number().optional().describe("偏移量"),
+        limit: z.number().optional().describe("返回数量限制")
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ offset, limit }) => {
+    async ({ offset, limit }: { offset?: number; limit?: number }) => {
       try {
         const cloudbase = await getManager()
         const result = await cloudbase.database.listCollections({
@@ -662,14 +701,21 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
   );
 
   // 检查索引是否存在
-  server.tool(
+  server.registerTool?.(
     "checkIndexExists",
-    "检查索引是否存在",
     {
-      collectionName: z.string().describe("云开发数据库集合名称"),
-      indexName: z.string().describe("索引名称")
+      title: "检查索引是否存在",
+      description: "检查索引是否存在",
+      inputSchema: {
+        collectionName: z.string().describe("云开发数据库集合名称"),
+        indexName: z.string().describe("索引名称")
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ collectionName, indexName }) => {
+    async ({ collectionName, indexName }: { collectionName: string; indexName: string }) => {
       try {
         const cloudbase = await getManager()
         const result = await cloudbase.database.checkIndexExists(collectionName, indexName);
@@ -848,10 +894,17 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
   // );
 
   // 查询数据分布
-  server.tool(
+  server.registerTool?.(
     "distribution",
-    "查询数据库中云开发数据库集合的数据分布情况",
-    {},
+    {
+      title: "查询数据分布",
+      description: "查询数据库中云开发数据库集合的数据分布情况",
+      inputSchema: {},
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
+    },
     async () => {
       try {
         const cloudbase = await getManager()
@@ -887,14 +940,23 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
   );
 
   // 插入文档
-  server.tool(
+  server.registerTool?.(
     "insertDocuments",
-    "向云开发数据库集合中插入一个或多个文档",
     {
-      collectionName: z.string().describe("云开发数据库集合名称"),
-      documents: z.array(z.string()).describe("要插入的文档JSON 字符串数组，每个文档都是 JSON字符串，注意不是JSON对象")
+      title: "插入文档",
+      description: "向云开发数据库集合中插入一个或多个文档",
+      inputSchema: {
+        collectionName: z.string().describe("云开发数据库集合名称"),
+        documents: z.array(z.string()).describe("要插入的文档JSON 字符串数组，每个文档都是 JSON字符串，注意不是JSON对象")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ collectionName, documents }) => {
+    async ({ collectionName, documents }: { collectionName: string; documents: string[] }) => {
       try {
         const cloudbase = await getManager()
         const instanceId = await getDatabaseInstanceId(getManager);
@@ -939,18 +1001,32 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
   );
 
   // 查询文档
-  server.tool(
+  server.registerTool?.(
     "queryDocuments",
-    "查询云开发数据库集合中的文档",
     {
-      collectionName: z.string().describe("云开发数据库集合名称"),
-      query: z.string().optional().describe("查询条件（JSON字符串）"),
-      projection: z.string().optional().describe("返回字段投影（JSON字符串）"),
-      sort: z.string().optional().describe("排序条件（JSON字符串）"),
-      limit: z.number().optional().describe("返回数量限制"),
-      offset: z.number().optional().describe("跳过的记录数")
+      title: "查询文档",
+      description: "查询云开发数据库集合中的文档",
+      inputSchema: {
+        collectionName: z.string().describe("云开发数据库集合名称"),
+        query: z.string().optional().describe("查询条件（JSON字符串）"),
+        projection: z.string().optional().describe("返回字段投影（JSON字符串）"),
+        sort: z.string().optional().describe("排序条件（JSON字符串）"),
+        limit: z.number().optional().describe("返回数量限制"),
+        offset: z.number().optional().describe("跳过的记录数")
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ collectionName, query, projection, sort, limit, offset }) => {
+    async ({ collectionName, query, projection, sort, limit, offset }: { 
+      collectionName: string; 
+      query?: string; 
+      projection?: string; 
+      sort?: string; 
+      limit?: number; 
+      offset?: number 
+    }) => {
       try {
         const cloudbase = await getManager()
         const instanceId = await getDatabaseInstanceId(getManager);
@@ -1000,17 +1076,32 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
   );
 
   // 更新文档
-  server.tool(
+  server.registerTool?.(
     "updateDocuments",
-    "更新云开发数据库集合中的文档",
     {
-      collectionName: z.string().describe("云开发数据库集合名称"),
-      query: z.string().describe("查询条件（JSON字符串）"),
-      update: z.string().describe("更新内容（JSON字符串）"),
-      isMulti: z.boolean().optional().describe("是否更新多条记录"),
-      upsert: z.boolean().optional().describe("是否在不存在时插入")
+      title: "更新文档",
+      description: "更新云开发数据库集合中的文档",
+      inputSchema: {
+        collectionName: z.string().describe("云开发数据库集合名称"),
+        query: z.string().describe("查询条件（JSON字符串）"),
+        update: z.string().describe("更新内容（JSON字符串）"),
+        isMulti: z.boolean().optional().describe("是否更新多条记录"),
+        upsert: z.boolean().optional().describe("是否在不存在时插入")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ collectionName, query, update, isMulti, upsert }) => {
+    async ({ collectionName, query, update, isMulti, upsert }: { 
+      collectionName: string; 
+      query: string; 
+      update: string; 
+      isMulti?: boolean; 
+      upsert?: boolean 
+    }) => {
       try {
         const cloudbase = await getManager()
         const instanceId = await getDatabaseInstanceId(getManager);
@@ -1060,15 +1151,24 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
   );
 
   // 删除文档
-  server.tool(
+  server.registerTool?.(
     "deleteDocuments",
-    "删除云开发数据库集合中的文档",
     {
-      collectionName: z.string().describe("云开发数据库集合名称"),
-      query: z.string().describe("查询条件（JSON字符串）"),
-      isMulti: z.boolean().optional().describe("是否删除多条记录")
+      title: "删除文档",
+      description: "删除云开发数据库集合中的文档",
+      inputSchema: {
+        collectionName: z.string().describe("云开发数据库集合名称"),
+        query: z.string().describe("查询条件（JSON字符串）"),
+        isMulti: z.boolean().optional().describe("是否删除多条记录")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ collectionName, query, isMulti }) => {
+    async ({ collectionName, query, isMulti }: { collectionName: string; query: string; isMulti?: boolean }) => {
       try {
         const cloudbase = await getManager()
         const instanceId = await getDatabaseInstanceId(getManager);
@@ -1114,15 +1214,22 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
   );
 
   // 数据模型查询工具
-  server.tool(
+  server.registerTool?.(
     "manageDataModel",
-    "数据模型查询工具，支持查询和列表数据模型（只读操作）。list操作返回基础信息（不含Schema），get操作返回详细信息（含简化的Schema，包括字段列表、格式、关联关系等），docs操作生成SDK使用文档",
     {
-      action: z.enum(["get", "list", "docs"]).describe("操作类型：get=查询单个模型（含Schema字段列表、格式、关联关系），list=获取模型列表（不含Schema），docs=生成SDK使用文档"),
-      name: z.string().optional().describe("模型名称（get操作时必填）"),
-      names: z.array(z.string()).optional().describe("模型名称数组（list操作时可选，用于过滤）")
+      title: "数据模型管理",
+      description: "数据模型查询工具，支持查询和列表数据模型（只读操作）。list操作返回基础信息（不含Schema），get操作返回详细信息（含简化的Schema，包括字段列表、格式、关联关系等），docs操作生成SDK使用文档",
+      inputSchema: {
+        action: z.enum(["get", "list", "docs"]).describe("操作类型：get=查询单个模型（含Schema字段列表、格式、关联关系），list=获取模型列表（不含Schema），docs=生成SDK使用文档"),
+        name: z.string().optional().describe("模型名称（get操作时必填）"),
+        names: z.array(z.string()).optional().describe("模型名称数组（list操作时可选，用于过滤）")
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ action, name, names }) => {
+    async ({ action, name, names }: { action: "get" | "list" | "docs"; name?: string; names?: string[] }) => {
       try {
         const cloudbase = await getManager();
         let currentEnvId = await getEnvId(cloudBaseOptions);

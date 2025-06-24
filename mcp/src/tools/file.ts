@@ -38,15 +38,24 @@ function isInTempDir(filePath: string): boolean {
 
 export function registerFileTools(server: ExtendedMcpServer) {
   // 创建文件
-  server.tool(
+  server.registerTool?.(
     "createTempFile",
-    "在云开发 MCP 服务的临时目录创建文件，支持文本内容或 base64 编码的二进制内容（最大 100KB）",
     {
-      content: z.string().describe("文件内容，可以是普通文本或 base64 编码的二进制内容"),
-      isBase64: z.boolean().default(false).describe("是否为 base64 编码的内容"),
-      extension: z.string().optional().describe("文件扩展名，例如 .txt, .png 等")
+      title: "创建临时文件",
+      description: "在云开发 MCP 服务的临时目录创建文件，支持文本内容或 base64 编码的二进制内容（最大 100KB）",
+      inputSchema: {
+        content: z.string().describe("文件内容，可以是普通文本或 base64 编码的二进制内容"),
+        isBase64: z.boolean().default(false).describe("是否为 base64 编码的内容"),
+        extension: z.string().optional().describe("文件扩展名，例如 .txt, .png 等")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: false
+      }
     },
-    async ({ content, isBase64 = false, extension = '' }) => {
+    async ({ content, isBase64 = false, extension = '' }: { content: string; isBase64?: boolean; extension?: string }) => {
       try {
         // 如果是 base64 内容，先检查大小
         if (isBase64) {
@@ -109,14 +118,21 @@ export function registerFileTools(server: ExtendedMcpServer) {
   );
 
   // 读取文件
-  server.tool(
+  server.registerTool?.(
     "readTempFile",
-    "读取临时目录中的文件，支持文本和二进制文件（二进制文件将以 base64 格式返回）",
     {
-      filePath: z.string().describe("要读取的文件路径"),
-      asBase64: z.boolean().default(false).describe("是否以 base64 格式返回内容（用于二进制文件）")
+      title: "读取临时文件",
+      description: "读取临时目录中的文件，支持文本和二进制文件（二进制文件将以 base64 格式返回）",
+      inputSchema: {
+        filePath: z.string().describe("要读取的文件路径"),
+        asBase64: z.boolean().default(false).describe("是否以 base64 格式返回内容（用于二进制文件）")
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: false
+      }
     },
-    async ({ filePath, asBase64 = false }) => {
+    async ({ filePath, asBase64 = false }: { filePath: string; asBase64?: boolean }) => {
       try {
         // 安全检查：确保文件路径在临时目录中
         if (!isInTempDir(filePath)) {

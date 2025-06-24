@@ -22,19 +22,33 @@ export function registerHostingTools(server: ExtendedMcpServer) {
   const getManager = () => getCloudBaseManager({ cloudBaseOptions });
 
   // uploadFiles - 上传文件到静态网站托管
-  server.tool(
+  server.registerTool?.(
     "uploadFiles",
-    "上传文件到静态网站托管",
     {
-      localPath: z.string().optional().describe("本地文件或文件夹路径，需要是绝对路径，例如 /tmp/files/data.txt"),
-      cloudPath: z.string().optional().describe("云端文件或文件夹路径，例如files/data.txt"),
-      files: z.array(z.object({
-        localPath: z.string(),
-        cloudPath: z.string()
-      })).default([]).describe("多文件上传配置"),
-      ignore: z.union([z.string(), z.array(z.string())]).optional().describe("忽略文件模式")
+      title: "上传静态文件",
+      description: "上传文件到静态网站托管",
+      inputSchema: {
+        localPath: z.string().optional().describe("本地文件或文件夹路径，需要是绝对路径，例如 /tmp/files/data.txt"),
+        cloudPath: z.string().optional().describe("云端文件或文件夹路径，例如files/data.txt"),
+        files: z.array(z.object({
+          localPath: z.string(),
+          cloudPath: z.string()
+        })).default([]).describe("多文件上传配置"),
+        ignore: z.union([z.string(), z.array(z.string())]).optional().describe("忽略文件模式")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ localPath, cloudPath, files, ignore }) => {
+    async ({ localPath, cloudPath, files = [], ignore }: { 
+      localPath?: string; 
+      cloudPath?: string; 
+      files?: Array<{localPath: string; cloudPath: string}>; 
+      ignore?: string | string[] 
+    }) => {
       const cloudbase = await getManager()
       const result = await cloudbase.hosting.uploadFiles({
         localPath,
@@ -45,24 +59,17 @@ export function registerHostingTools(server: ExtendedMcpServer) {
       
       // 获取环境信息
       const envInfo = await cloudbase.env.getEnvInfo() as ExtendedEnvInfo;
-      
-      // 获取静态网站地址
-      let staticDomain = "";
-      if (envInfo?.EnvInfo?.StaticStorages && envInfo.EnvInfo.StaticStorages.length > 0) {
-        staticDomain = envInfo.EnvInfo.StaticStorages[0].StaticDomain;
-      }
+      const staticDomain = envInfo.EnvInfo?.StaticStorages?.[0]?.StaticDomain;
       
       return {
         content: [
           {
             type: "text",
             text: JSON.stringify({
-              uploadResult: result?.files.map((item: { Key: any; }) => {
-                return item.Key
-              }),
-              staticWebsiteUrl: staticDomain ? `https://${staticDomain}` : "",
-              // 返回文件的完整访问URL
-              fileUrl: staticDomain && cloudPath ? `https://${staticDomain}/${cloudPath}` : ""
+              ...result,
+              staticDomain,
+              message: "文件上传成功",
+              accessUrl: staticDomain ? `https://${staticDomain}/${cloudPath || ''}` : "请检查静态托管配置"
             }, null, 2)
           }
         ]
@@ -70,16 +77,21 @@ export function registerHostingTools(server: ExtendedMcpServer) {
     }
   );
 
-  // listFiles - 获取文件列表
-  server.tool(
-    "listFiles",
-    "获取静态网站托管的文件列表",
+  // getWebsiteConfig - 获取静态网站托管配置
+  server.registerTool?.(
+    "getWebsiteConfig",
     {
-      confirm: z.literal("yes").describe("确认操作，默认传 yes")
+      title: "查询静态托管配置",
+      description: "获取静态网站托管配置",
+      inputSchema: {},
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
     async () => {
       const cloudbase = await getManager()
-      const result = await cloudbase.hosting.listFiles();
+      const result = await cloudbase.hosting.getWebsiteConfig();
       return {
         content: [
           {
@@ -91,15 +103,24 @@ export function registerHostingTools(server: ExtendedMcpServer) {
     }
   );
 
-  // deleteFiles - 删除文件
-  server.tool(
+  // deleteFiles - 删除静态网站托管文件
+  server.registerTool?.(
     "deleteFiles",
-    "删除静态网站托管的文件或文件夹",
     {
-      cloudPath: z.string().describe("云端文件或文件夹路径"),
-      isDir: z.boolean().default(false).describe("是否为文件夹")
+      title: "删除静态文件",
+      description: "删除静态网站托管的文件或文件夹",
+      inputSchema: {
+        cloudPath: z.string().describe("云端文件或文件夹路径"),
+        isDir: z.boolean().default(false).describe("是否为文件夹")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ cloudPath, isDir }) => {
+    async ({ cloudPath, isDir = false }: { cloudPath: string; isDir?: boolean }) => {
       const cloudbase = await getManager()
       const result = await cloudbase.hosting.deleteFiles({
         cloudPath,
@@ -117,15 +138,22 @@ export function registerHostingTools(server: ExtendedMcpServer) {
   );
 
   // findFiles - 搜索文件
-  server.tool(
+  server.registerTool?.(
     "findFiles",
-    "搜索静态网站托管的文件",
     {
-      prefix: z.string().describe("匹配前缀"),
-      marker: z.string().optional().describe("起始对象键标记"),
-      maxKeys: z.number().optional().describe("单次返回最大条目数")
+      title: "搜索静态文件",
+      description: "搜索静态网站托管的文件",
+      inputSchema: {
+        prefix: z.string().describe("匹配前缀"),
+        marker: z.string().optional().describe("起始对象键标记"),
+        maxKeys: z.number().optional().describe("单次返回最大条目数")
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
-    async ({ prefix, marker, maxKeys }) => {
+    async ({ prefix, marker, maxKeys }: { prefix: string; marker?: string; maxKeys?: number }) => {
       const cloudbase = await getManager()
       const result = await cloudbase.hosting.findFiles({
         prefix,
@@ -144,44 +172,60 @@ export function registerHostingTools(server: ExtendedMcpServer) {
   );
 
   // domainManagement - 统一的域名管理工具
-  server.tool(
+  server.registerTool?.(
     "domainManagement",
-    "统一的域名管理工具，支持绑定、解绑、查询和修改域名配置",
     {
-      action: z.enum(["create", "delete", "check", "modify"]).describe("操作类型: create=绑定域名, delete=解绑域名, check=查询域名配置, modify=修改域名配置"),
-      // 绑定域名参数
-      domain: z.string().optional().describe("域名"),
-      certId: z.string().optional().describe("证书ID（绑定域名时必需）"),
-      // 查询域名参数
-      domains: z.array(z.string()).optional().describe("域名列表（查询配置时使用）"),
-      // 修改域名参数
-      domainId: z.number().optional().describe("域名ID（修改配置时必需）"),
-      domainConfig: z.object({
-        Refer: z.object({
-          Switch: z.string(),
-          RefererRules: z.array(z.object({
-            RefererType: z.string(),
-            Referers: z.array(z.string()),
-            AllowEmpty: z.boolean()
-          })).optional()
-        }).optional(),
-        Cache: z.array(z.object({
-          RuleType: z.string(),
-          RuleValue: z.string(),
-          CacheTtl: z.number()
-        })).optional(),
-        IpFilter: z.object({
-          Switch: z.string(),
-          FilterType: z.string().optional(),
-          Filters: z.array(z.string()).optional()
-        }).optional(),
-        IpFreqLimit: z.object({
-          Switch: z.string(),
-          Qps: z.number().optional()
-        }).optional()
-      }).optional().describe("域名配置（修改配置时使用）")
+      title: "静态托管域名管理",
+      description: "统一的域名管理工具，支持绑定、解绑、查询和修改域名配置",
+      inputSchema: {
+        action: z.enum(["create", "delete", "check", "modify"]).describe("操作类型: create=绑定域名, delete=解绑域名, check=查询域名配置, modify=修改域名配置"),
+        // 绑定域名参数
+        domain: z.string().optional().describe("域名"),
+        certId: z.string().optional().describe("证书ID（绑定域名时必需）"),
+        
+        domains: z.array(z.string()).optional().describe("域名列表（查询配置时使用）"),
+        // 修改域名参数
+        domainId: z.number().optional().describe("域名ID（修改配置时必需）"),
+        domainConfig: z.object({
+          Refer: z.object({
+            Switch: z.string(),
+            RefererRules: z.array(z.object({
+              RefererType: z.string(),
+              Referers: z.array(z.string()),
+              AllowEmpty: z.boolean()
+            })).optional()
+          }).optional(),
+          Cache: z.array(z.object({
+            RuleType: z.string(),
+            RuleValue: z.string(),
+            CacheTtl: z.number()
+          })).optional(),
+          IpFilter: z.object({
+            Switch: z.string(),
+            FilterType: z.string().optional(),
+            Filters: z.array(z.string()).optional()
+          }).optional(),
+          IpFreqLimit: z.object({
+            Switch: z.string(),
+            Qps: z.number().optional()
+          }).optional()
+        }).optional().describe("域名配置（修改配置时使用）")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true
+      }
     },
-    async ({ action, domain, certId, domains, domainId, domainConfig }) => {
+    async ({ action, domain, certId, domains, domainId, domainConfig }: {
+      action: "create" | "delete" | "check" | "modify";
+      domain?: string;
+      certId?: string;
+      domains?: string[];
+      domainId?: number;
+      domainConfig?: any;
+    }) => {
       const cloudbase = await getManager()
       let result;
 
@@ -229,30 +273,6 @@ export function registerHostingTools(server: ExtendedMcpServer) {
           throw new Error(`不支持的操作类型: ${action}`);
       }
 
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify({
-              action,
-              result
-            }, null, 2)
-          }
-        ]
-      };
-    }
-  );
-
-  // getWebsiteConfig - 获取静态网站配置
-  server.tool(
-    "getWebsiteConfig",
-    "获取静态网站配置",
-    {
-      confirm: z.literal("yes").describe("确认操作，默认传 yes")
-    },
-    async () => {
-      const cloudbase = await getManager()
-      const result = await cloudbase.hosting.getWebsiteConfig();
       return {
         content: [
           {
