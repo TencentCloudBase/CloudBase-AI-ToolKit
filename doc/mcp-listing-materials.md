@@ -4,7 +4,7 @@
 
 ## Basic Information
 
-- **Name**: Tencent CloudBase
+- **Name**: CloudBase AI ToolKit
 - **Package**: `@cloudbase/cloudbase-mcp`
 - **Description**: One-stop backend services for WeChat Mini-Programs and full-stack apps
 - **Category**: Cloud Development & Deployment
@@ -72,7 +72,7 @@ cloudbase, tencent-cloud, wechat, mini-programs, serverless, deployment, china, 
 
 ## Project Highlights
 
-### Why Choose CloudBase MCP
+### Why Choose CloudBase AI ToolKit
 
 - Access to China's largest mobile platform (WeChat)
 - Complete serverless backend without infrastructure management

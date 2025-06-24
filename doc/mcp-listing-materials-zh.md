@@ -4,7 +4,7 @@
 
 ## 基本信息
 
-- **名称**: Tencent CloudBase（腾讯云开发）
+- **名称**: CloudBase AI ToolKit
 - **描述**: 为微信小程序和全栈应用提供一站式后端服务
 - **分类**: 云开发与部署
 - **提供商**: Tencent CloudBase
@@ -67,7 +67,7 @@ cloudbase, tencent-cloud, wechat, mini-programs, serverless, deployment, china, 
 
 ## 项目亮点
 
-### 为什么选择CloudBase MCP
+### 为什么选择CloudBase AI ToolKit
 
 - 接入中国最大的移动平台（微信）
 - 完整的无服务器后端，无需基础设施管理
