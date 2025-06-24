@@ -255,7 +255,8 @@ export function registerDownloadTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "download"
       }
     },
     async ({ url }: { url: string }) => {

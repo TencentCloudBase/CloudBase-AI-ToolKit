@@ -26,7 +26,8 @@ export function registerInteractiveTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: false
+        openWorldHint: false,
+        category: "interactive"
       }
     },
     async ({ type, message, options, forceUpdate = false, risks }: {

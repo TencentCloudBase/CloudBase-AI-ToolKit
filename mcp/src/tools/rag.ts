@@ -53,7 +53,8 @@ export function registerRagTools(server: ExtendedMcpServer) {
             },
             annotations: {
                 readOnlyHint: true,
-                openWorldHint: true
+                openWorldHint: true,
+                category: "rag"
             }
         },
         async ({

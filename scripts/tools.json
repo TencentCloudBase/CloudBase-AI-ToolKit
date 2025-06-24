@@ -138,7 +138,7 @@
     },
     {
       "name": "updateEnvInfo",
-      "description": "修改云开发环境别名",
+      "description": "更新云开发环境信息",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -623,20 +623,11 @@
       }
     },
     {
-      "name": "listFiles",
-      "description": "获取静态网站托管的文件列表",
+      "name": "getWebsiteConfig",
+      "description": "获取静态网站托管配置",
       "inputSchema": {
         "type": "object",
-        "properties": {
-          "confirm": {
-            "type": "string",
-            "const": "yes",
-            "description": "确认操作，默认传 yes"
-          }
-        },
-        "required": [
-          "confirm"
-        ],
+        "properties": {},
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"
       }
@@ -838,25 +829,6 @@
       }
     },
     {
-      "name": "getWebsiteConfig",
-      "description": "获取静态网站配置",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "confirm": {
-            "type": "string",
-            "const": "yes",
-            "description": "确认操作，默认传 yes"
-          }
-        },
-        "required": [
-          "confirm"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
       "name": "getFunctionList",
       "description": "获取云函数列表",
       "inputSchema": {
@@ -1016,31 +988,37 @@
     },
     {
       "name": "updateFunctionCode",
-      "description": "更新云函数代码",
+      "description": "更新函数代码",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "func": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "函数名称"
-              }
-            },
-            "required": [
-              "name"
-            ],
-            "additionalProperties": false,
-            "description": "函数配置"
+          "name": {
+            "type": "string",
+            "description": "函数名称"
           },
           "functionRootPath": {
             "type": "string",
-            "description": "函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，注意：不要包含函数名本身，例如函数名为 'hello'，应传入 '/path/to/cloudfunctions'，而不是 '/path/to/cloudfunctions/hello'"
+            "description": "函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径"
+          },
+          "zipFile": {
+            "type": "string",
+            "description": "Base64编码的函数包"
+          },
+          "handler": {
+            "type": "string",
+            "description": "函数入口"
+          },
+          "runtime": {
+            "type": "string",
+            "description": "运行时（可选值：Nodejs18.15，Nodejs16.13，Nodejs14.18，Nodejs12.16，Nodejs10.15，Nodejs8.9，默认 Nodejs 18.15)"
+          },
+          "installDependency": {
+            "type": "boolean",
+            "description": "是否安装依赖"
           }
         },
         "required": [
-          "func"
+          "name"
         ],
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"

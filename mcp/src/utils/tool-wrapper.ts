@@ -19,6 +19,8 @@ export interface ToolAnnotations {
     idempotentHint?: boolean;
     /** 如果为true，工具可能与外部实体交互 */
     openWorldHint?: boolean;
+    /** 工具分类，用于工具组织和管理 */
+    category?: string;
 }
 
 // 工具配置接口

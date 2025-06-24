@@ -52,7 +52,8 @@ export function registerFileTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: false
+        openWorldHint: false,
+        category: "file"
       }
     },
     async ({ content, isBase64 = false, extension = '' }: { content: string; isBase64?: boolean; extension?: string }) => {
@@ -129,7 +130,8 @@ export function registerFileTools(server: ExtendedMcpServer) {
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: false
+        openWorldHint: false,
+        category: "file"
       }
     },
     async ({ filePath, asBase64 = false }: { filePath: string; asBase64?: boolean }) => {

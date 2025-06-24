@@ -161,7 +161,8 @@ export function registerSetupTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "setup"
       }
     },
     async ({ template, overwrite = false }: { template: "react" | "vue" | "miniprogram" | "uniapp" | "rules"; overwrite?: boolean }) => {

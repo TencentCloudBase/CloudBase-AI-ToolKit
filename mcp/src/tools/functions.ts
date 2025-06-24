@@ -55,7 +55,8 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "functions"
       }
     },
     async ({ limit, offset }: { limit?: number; offset?: number }) => {
@@ -110,7 +111,8 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "functions"
       }
     },
     async ({ func, functionRootPath, force }: {
@@ -162,7 +164,8 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "functions"
       }
     },
     async ({ name, functionRootPath, zipFile, handler, runtime, installDependency }: {
@@ -222,7 +225,8 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "functions"
       }
     },
     async ({ funcParam }: { funcParam: any }) => {
@@ -256,7 +260,8 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "functions"
       }
     },
     async ({ name, codeSecret }: { name: string; codeSecret?: string }) => {
@@ -288,7 +293,8 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "functions"
       }
     },
     async ({ name, params }: { name: string; params?: Record<string, any> }) => {
@@ -326,7 +332,8 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "functions"
       }
     },
     async ({ options }: { options: any }) => {
@@ -362,7 +369,8 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "functions"
       }
     },
     async ({ name, triggers }: { name: string; triggers: any[] }) => {
@@ -394,7 +402,8 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: true,
         idempotentHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "functions"
       }
     },
     async ({ name, triggerName }: { name: string; triggerName: string }) => {

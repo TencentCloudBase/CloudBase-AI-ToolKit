@@ -55,15 +55,23 @@ npx -y clear-npx-cache
 
 选择适合你的模板，一键初始化：
 
-- **React Web 应用 + 云开发模板**  
-  [下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
 
 - **微信小程序 + 云开发模板**  
   [下载代码包](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
 
-- **AI 规则通用云开发模板**：不限定语言和框架，内置 CloudBase AI 规则和MCP，适用于任意云开发项目
+- **React Web 应用 + 云开发模板**  
+  [下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
+
+- **Vue Web 应用 + 云开发模板**  
+  [下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-vue-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-vue-template)
+
+- **UniApp 跨端应用 + 云开发模板**  
+  [下载代码包](https://static.cloudbase.net/cloudbase-examples/universal-cloudbase-uniapp-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/universal/cloudbase-uniapp-template)
+
+- **AI 规则通用云开发模板** ：不限定语言和框架，内置 CloudBase AI 规则和MCP，适用于任意云开发项目
 
   [下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-project.zip) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-project)
+
 
 ### 🛠️ 已有项目增强
 
@@ -73,7 +81,7 @@ npx -y clear-npx-cache
 
 CloudBase AI ToolKit 支持多种 AI 开发工具，查看 [支持的 AI 开发工具列表](/ai/cloudbase-ai-toolkit/#-支持的-ai-开发工具) 选择合适的工具。
 
-> 📖 **详细配置说明**：查看 [IDE配置指南](../ide-setup/cursor) 了解如何配置你的开发工具
+> 📖 **详细配置说明**：查看 [IDE配置指南](./ide-setup/cursor) 了解如何配置你的开发工具
 
 ## 3. 开始开发
 

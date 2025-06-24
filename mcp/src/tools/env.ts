@@ -24,7 +24,8 @@ export function registerEnvTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "env"
       }
     },
     async ({ forceUpdate = false }: { forceUpdate?: boolean }) => {
@@ -79,7 +80,8 @@ export function registerEnvTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: true,
-        openWorldHint: false
+        openWorldHint: false,
+        category: "env"
       }
     },
     async () => {
@@ -118,7 +120,8 @@ export function registerEnvTools(server: ExtendedMcpServer) {
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "env"
       }
     },
     async () => {
@@ -146,7 +149,8 @@ export function registerEnvTools(server: ExtendedMcpServer) {
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "env"
       }
     },
     async () => {
@@ -176,7 +180,8 @@ export function registerEnvTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "env"
       }
     },
     async ({ domains }: { domains: string[] }) => {
@@ -206,7 +211,8 @@ export function registerEnvTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: true,
         idempotentHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "env"
       }
     },
     async ({ domains }: { domains: string[] }) => {
@@ -234,7 +240,8 @@ export function registerEnvTools(server: ExtendedMcpServer) {
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "env"
       }
     },
     async () => {
@@ -264,7 +271,8 @@ export function registerEnvTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "env"
       }
     },
     async ({ alias }: { alias: string }) => {

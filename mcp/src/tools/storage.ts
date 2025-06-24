@@ -23,7 +23,8 @@ export function registerStorageTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "storage"
       }
     },
     async ({ localPath, cloudPath }: { localPath: string; cloudPath: string }) => {

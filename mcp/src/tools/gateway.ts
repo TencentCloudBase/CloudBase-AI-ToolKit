@@ -22,7 +22,8 @@ export function registerGatewayTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "gateway"
       }
     },
     async ({ name, path }: { name: string; path: string }) => {

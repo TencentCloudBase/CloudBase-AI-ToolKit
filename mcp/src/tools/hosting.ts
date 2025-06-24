@@ -40,7 +40,8 @@ export function registerHostingTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "hosting"
       }
     },
     async ({ localPath, cloudPath, files = [], ignore }: { 
@@ -86,7 +87,8 @@ export function registerHostingTools(server: ExtendedMcpServer) {
       inputSchema: {},
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "hosting"
       }
     },
     async () => {
@@ -117,7 +119,8 @@ export function registerHostingTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: true,
         idempotentHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "hosting"
       }
     },
     async ({ cloudPath, isDir = false }: { cloudPath: string; isDir?: boolean }) => {
@@ -150,7 +153,8 @@ export function registerHostingTools(server: ExtendedMcpServer) {
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "hosting"
       }
     },
     async ({ prefix, marker, maxKeys }: { prefix: string; marker?: string; maxKeys?: number }) => {
@@ -215,7 +219,8 @@ export function registerHostingTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "hosting"
       }
     },
     async ({ action, domain, certId, domains, domainId, domainConfig }: {

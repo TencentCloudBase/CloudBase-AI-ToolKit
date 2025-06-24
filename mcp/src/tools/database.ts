@@ -410,7 +410,8 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "database"
       }
     },
     async ({ collectionName }: { collectionName: string }) => {
@@ -457,7 +458,8 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "database"
       }
     },
     async ({ collectionName }: { collectionName: string }) => {
@@ -562,7 +564,8 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "database"
       }
     },
     async ({ collectionName, options }: { collectionName: string; options: any }) => {
@@ -609,7 +612,8 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "database"
       }
     },
     async ({ collectionName }: { collectionName: string }) => {
@@ -659,7 +663,8 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "database"
       }
     },
     async ({ offset, limit }: { offset?: number; limit?: number }) => {
@@ -712,7 +717,8 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "database"
       }
     },
     async ({ collectionName, indexName }: { collectionName: string; indexName: string }) => {
@@ -902,7 +908,8 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
       inputSchema: {},
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "database"
       }
     },
     async () => {
@@ -953,7 +960,8 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "database"
       }
     },
     async ({ collectionName, documents }: { collectionName: string; documents: string[] }) => {
@@ -1016,7 +1024,8 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "database"
       }
     },
     async ({ collectionName, query, projection, sort, limit, offset }: { 
@@ -1092,7 +1101,8 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "database"
       }
     },
     async ({ collectionName, query, update, isMulti, upsert }: { 
@@ -1165,7 +1175,8 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
         readOnlyHint: false,
         destructiveHint: true,
         idempotentHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "database"
       }
     },
     async ({ collectionName, query, isMulti }: { collectionName: string; query: string; isMulti?: boolean }) => {
@@ -1226,7 +1237,8 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true
+        openWorldHint: true,
+        category: "database"
       }
     },
     async ({ action, name, names }: { action: "get" | "list" | "docs"; name?: string; names?: string[] }) => {
