@@ -698,7 +698,7 @@ AI 会自动：
 | 🌐 **静态托管** | 5 个 | 文件上传管理、域名配置、网站部署 |
 | 📁 **文件操作** | 2 个 | 远程文件下载、云存储上传 |
 | 🛠️ **工具支持** | 3 个 | 项目模板、知识库搜索、交互对话 |
-| 🔌 **API 网关** | 1 个 | HTTP 函数访问配置 |
+| 🔌 **HTTP访问** | 1 个 | HTTP 函数访问配置 |
 
 ### 🌟 核心工具亮点
 
@@ -713,11 +713,7 @@ AI 会自动：
 
 ### 💡 工具优化说明
 
-我们将原来 40 个工具优化为 35 个，通过合并相关功能提供更好的使用体验：
-
-- ✅ **envQuery**: 合并了 `listEnvs` + `getEnvInfo` + `getEnvAuthDomains`
-- ✅ **envDomainManagement**: 合并了 `createEnvDomain` + `deleteEnvDomain`
-- ✅ **collectionQuery**: 合并了 `checkCollectionExists` + `describeCollection` + `listCollections`
+我们将原来 40 个工具优化为 35 个，通过合并相关功能提供更好的使用体验
 
 🔗 **想了解每个工具的详细功能？** 请查看 [MCP 工具完整文档](doc/mcp-tools.md)
 
