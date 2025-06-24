@@ -65,7 +65,7 @@ export function createCloudBaseMcpServer(options?: {
   // Register all tools
   registerEnvTools(server);
   registerRagTools(server);
-  registerFileTools(server);
+  // registerFileTools(server);
   registerDatabaseTools(server);
   registerHostingTools(server);
   registerFunctionTools(server);

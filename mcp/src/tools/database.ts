@@ -409,7 +409,7 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,
-        idempotentHint: true,
+        idempotentHint: false,
         openWorldHint: true
       }
     },
