@@ -1,6 +1,6 @@
 {
   "name": "@cloudbase/cloudbase-mcp",
-  "version": "1.8.1",
+  "version": "1.8.3",
   "description": "腾讯云开发 MCP Server，支持静态托管/环境查询/",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -43,7 +43,7 @@
     "@cloudbase/manager-node": "^4.2.10",
     "@cloudbase/mcp": "^1.0.0-beta.25",
     "@cloudbase/toolbox": "^0.7.5",
-    "@modelcontextprotocol/sdk": "1.9.0",
+    "@modelcontextprotocol/sdk": "1.13.1",
     "@types/unzipper": "^0.10.11",
     "cors": "^2.8.5",
     "express": "^5.1.0",

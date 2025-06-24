@@ -9,19 +9,13 @@ import { registerStorageTools } from "./tools/storage.js";
 import { registerRagTools } from './tools/rag.js';
 import { registerSetupTools } from "./tools/setup.js";
 import { registerInteractiveTools } from "./tools/interactive.js";
-import { wrapServerWithTelemetry, ToolConfig } from "./utils/tool-wrapper.js";
+import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
 import { registerGatewayTools } from "./tools/gateway.js";
 import { CloudBaseOptions } from "./types.js";
 
 // 扩展 McpServer 类型以包含 cloudBaseOptions 和新的registerTool方法
 export interface ExtendedMcpServer extends McpServer {
   cloudBaseOptions?: CloudBaseOptions;
-  // 添加registerTool方法
-  registerTool?: (
-    name: string,
-    config: ToolConfig,
-    handler: any
-  ) => void;
 }
 
 /**

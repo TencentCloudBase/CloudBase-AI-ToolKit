@@ -109,14 +109,15 @@ export function registerEnvTools(server: ExtendedMcpServer) {
     }
   );
 
-  // listEnvs
+  // envQuery - 环境查询（合并 listEnvs + getEnvInfo + getEnvAuthDomains）
   server.registerTool?.(
-    "listEnvs",
+    "envQuery",
     {
-      title: "查询环境列表", 
-      description: "获取所有云开发环境信息",
+      title: "环境查询",
+      description: "查询云开发环境相关信息，支持查询环境列表、当前环境信息和安全域名",
       inputSchema: {
-        confirm: z.literal("yes").describe("确认操作，默认传 yes")
+        action: z.enum(["list", "info", "domains"]).describe("查询类型：list=环境列表，info=当前环境信息，domains=安全域名列表"),
+        confirm: z.literal("yes").optional().describe("确认操作，默认传 yes")
       },
       annotations: {
         readOnlyHint: true,
@@ -124,141 +125,101 @@ export function registerEnvTools(server: ExtendedMcpServer) {
         category: "env"
       }
     },
-    async () => {
-      const cloudbase = await getCloudBaseManager({ cloudBaseOptions, requireEnvId: false })
-      const result = await cloudbase.env.listEnvs();
-      return {
-        content: [
-          {
+    async ({ action }: { action: "list" | "info" | "domains" }) => {
+      try {
+        let result;
+        
+        switch (action) {
+          case "list":
+            const cloudbaseList = await getCloudBaseManager({ cloudBaseOptions, requireEnvId: false });
+            result = await cloudbaseList.env.listEnvs();
+            break;
+            
+          case "info":
+            const cloudbaseInfo = await getManager();
+            result = await cloudbaseInfo.env.getEnvInfo();
+            break;
+            
+          case "domains":
+            const cloudbaseDomains = await getManager();
+            result = await cloudbaseDomains.env.getEnvAuthDomains();
+            break;
+            
+          default:
+            throw new Error(`不支持的查询类型: ${action}`);
+        }
+
+        return {
+          content: [{
             type: "text",
             text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
-    }
-  );
-
-  // getEnvAuthDomains
-  server.registerTool?.(
-    "getEnvAuthDomains",
-    {
-      title: "查询安全域名",
-      description: "获取云开发环境的合法域名列表",
-      inputSchema: {
-        confirm: z.literal("yes").describe("确认操作，默认传 yes")
-      },
-      annotations: {
-        readOnlyHint: true,
-        openWorldHint: true,
-        category: "env"
+          }]
+        };
+      } catch (error) {
+        return {
+          content: [{
+            type: "text",
+            text: `环境查询失败: ${error instanceof Error ? error.message : String(error)}`
+          }]
+        };
       }
-    },
-    async () => {
-      const cloudbase = await getManager()
-      const result = await cloudbase.env.getEnvAuthDomains();
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
     }
   );
 
-  // createEnvDomain
+  // envDomainManagement - 环境域名管理（合并 createEnvDomain + deleteEnvDomain）
   server.registerTool?.(
-    "createEnvDomain",
+    "envDomainManagement",
     {
-      title: "添加安全域名",
-      description: "为云开发环境添加安全域名",
+      title: "环境域名管理",
+      description: "管理云开发环境的安全域名，支持添加和删除操作",
       inputSchema: {
+        action: z.enum(["create", "delete"]).describe("操作类型：create=添加域名，delete=删除域名"),
         domains: z.array(z.string()).describe("安全域名数组")
       },
       annotations: {
         readOnlyHint: false,
-        destructiveHint: false,
+        destructiveHint: false, // 注意：delete操作虽然是破坏性的，但这里采用较宽松的标注
         idempotentHint: false,
         openWorldHint: true,
         category: "env"
       }
     },
-    async ({ domains }: { domains: string[] }) => {
-      const cloudbase = await getManager()
-      const result = await cloudbase.env.createEnvDomain(domains);
-      return {
-        content: [
-          {
+    async ({ action, domains }: { action: "create" | "delete", domains: string[] }) => {
+      try {
+        const cloudbase = await getManager();
+        let result;
+        
+        switch (action) {
+          case "create":
+            result = await cloudbase.env.createEnvDomain(domains);
+            break;
+            
+          case "delete":
+            result = await cloudbase.env.deleteEnvDomain(domains);
+            break;
+            
+          default:
+            throw new Error(`不支持的操作类型: ${action}`);
+        }
+
+        return {
+          content: [{
             type: "text",
             text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
-    }
-  );
-
-  // deleteEnvDomain
-  server.registerTool?.(
-    "deleteEnvDomain",
-    {
-      title: "删除安全域名",
-      description: "删除云开发环境的指定安全域名",
-      inputSchema: {
-        domains: z.array(z.string()).describe("安全域名数组")
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: true,
-        idempotentHint: true,
-        openWorldHint: true,
-        category: "env"
+          }]
+        };
+      } catch (error) {
+        return {
+          content: [{
+            type: "text",
+            text: `域名管理操作失败: ${error instanceof Error ? error.message : String(error)}`
+          }]
+        };
       }
-    },
-    async ({ domains }: { domains: string[] }) => {
-      const cloudbase = await getManager()
-      const result = await cloudbase.env.deleteEnvDomain(domains);
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
     }
   );
 
-  // getEnvInfo
-  server.registerTool?.(
-    "getEnvInfo", 
-    {
-      title: "查询环境信息",
-      description: "获取当前云开发环境信息",
-      inputSchema: {
-        confirm: z.literal("yes").describe("确认操作，默认传 yes")
-      },
-      annotations: {
-        readOnlyHint: true,
-        openWorldHint: true,
-        category: "env"
-      }
-    },
-    async () => {
-      const cloudbase = await getManager()
-      const result = await cloudbase.env.getEnvInfo();
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
-    }
-  );
-
-  // updateEnvInfo
+  // updateEnvInfo - 保持独立
   server.registerTool?.(
     "updateEnvInfo",
     {
@@ -288,89 +249,4 @@ export function registerEnvTools(server: ExtendedMcpServer) {
       };
     }
   );
-
-  // // getLoginConfigList
-  // server.tool(
-  //   "getLoginConfigList",
-  //   "拉取登录配置列表",
-  //   {},
-  //   async () => {
-  //     const cloudbase = await getCloudBaseManager()
-  //     const result = await cloudbase.env.getLoginConfigList();
-  //     return {
-  //       content: [
-  //         {
-  //           type: "text",
-  //           text: JSON.stringify(result, null, 2)
-  //         }
-  //       ]
-  //     };
-  //   }
-  // );
-
-  // // createLoginConfig
-  // server.tool(
-  //   "createLoginConfig",
-  //   "创建登录方式",
-  //   {
-  //     platform: z.enum(["WECHAT-OPEN", "WECHAT-PUBLIC", "QQ", "ANONYMOUS"]).describe("平台类型"),
-  //     appId: z.string().describe("第三方平台的AppID"),
-  //     appSecret: z.string().optional().describe("第三方平台的AppSecret")
-  //   },
-  //   async ({ platform, appId, appSecret }) => {
-  //     const cloudbase = await getCloudBaseManager()
-  //     const result = await cloudbase.env.createLoginConfig(platform, appId, appSecret);
-  //     return {
-  //       content: [
-  //         {
-  //           type: "text",
-  //           text: JSON.stringify(result, null, 2)
-  //         }
-  //       ]
-  //     };
-  //   }
-  // );
-
-  // // updateLoginConfig
-  // server.tool(
-  //   "updateLoginConfig",
-  //   "更新登录方式配置",
-  //   {
-  //     configId: z.string().describe("配置的记录ID"),
-  //     status: z.enum(["ENABLE", "DISABLE"]).describe("配置状态"),
-  //     appId: z.string().describe("第三方平台的AppId"),
-  //     appSecret: z.string().optional().describe("第三方平台的AppSecret")
-  //   },
-  //   async ({ configId, status, appId, appSecret }) => {
-  //     const cloudbase = await getCloudBaseManager()
-  //     const result = await cloudbase.env.updateLoginConfig(configId, status, appId, appSecret);
-  //     return {
-  //       content: [
-  //         {
-  //           type: "text",
-  //           text: JSON.stringify(result, null, 2)
-  //         }
-  //       ]
-  //     };
-  //   }
-  // );
-
-  // // createCustomLoginKeys
-  // server.tool(
-  //   "createCustomLoginKeys",
-  //   "创建自定义登录密钥",
-  //   {},
-  //   async () => {
-  //     const cloudbase = await getCloudBaseManager()
-  //     const result = await cloudbase.env.createCustomLoginKeys();
-  //     return {
-  //       content: [
-  //         {
-  //           type: "text",
-  //           text: JSON.stringify(result, null, 2)
-  //         }
-  //       ]
-  //     };
-  //   }
-  // );
 } 

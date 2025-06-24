@@ -1,4 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { ToolAnnotations, Tool } from "@modelcontextprotocol/sdk/types.js";
 import { reportToolCall } from './telemetry.js';
 import { debug } from './logger.js';
 
@@ -7,36 +8,8 @@ import { debug } from './logger.js';
  * 自动记录工具调用的成功/失败状态、执行时长等信息
  */
 
-// 工具注解接口，基于MCP规范
-export interface ToolAnnotations {
-    /** 人类可读的工具标题 */
-    title?: string;
-    /** 如果为true，表示工具不修改环境 */
-    readOnlyHint?: boolean;
-    /** 如果为true，工具可能执行破坏性更新（仅在readOnlyHint为false时有意义） */
-    destructiveHint?: boolean;
-    /** 如果为true，重复调用相同参数没有额外效果（仅在readOnlyHint为false时有意义） */
-    idempotentHint?: boolean;
-    /** 如果为true，工具可能与外部实体交互 */
-    openWorldHint?: boolean;
-    /** 工具分类，用于工具组织和管理 */
-    category?: string;
-}
-
-// 工具配置接口
-export interface ToolConfig {
-    /** 工具标题 */
-    title?: string;
-    /** 工具描述 */
-    description?: string;
-    /** 输入参数schema */
-    inputSchema?: any;
-    /** 工具注解 */
-    annotations?: ToolAnnotations;
-}
-
-// 原始 tool 方法的类型
-type OriginalToolMethod = McpServer['tool'];
+// 重新导出 MCP SDK 的类型，方便其他模块使用
+export type { ToolAnnotations, Tool } from "@modelcontextprotocol/sdk/types.js";
 
 /**
  * 创建包装后的处理函数，添加数据上报功能
@@ -83,59 +56,27 @@ function createWrappedHandler(name: string, handler: any) {
 }
 
 /**
- * 包装 MCP Server 的 tool 方法，添加数据上报功能
+ * 包装 MCP Server 的 registerTool 方法，添加数据上报功能
  * @param server MCP Server 实例
  */
 export function wrapServerWithTelemetry(server: McpServer): void {
-    // 保存原始的 tool 方法
-    const originalTool = server.tool.bind(server);
+    // 保存原始的 registerTool 方法
+    const originalRegisterTool = server.registerTool.bind(server);
 
-    /**
-     * 注册工具的新API - 内部实现
-     */
-    function registerTool(
-        name: string,
-        config: ToolConfig,
-        handler: any
-    ): void {
-        const {
-            title,
-            description = title || name,
-            inputSchema = {},
-            annotations = {}
-        } = config;
-
-        // 合并title和annotations，title优先级更高
-        const finalAnnotations = {
-            ...annotations,
-            ...(title ? { title } : {})
-        };
-
+    // 重写 registerTool 方法，添加数据上报功能
+    server.registerTool = function(toolName: string, toolConfig: any, handler: any) {
+        
         // 记录工具注册信息
-        debug(`注册工具: ${name}`, { 
-            title,
-            description,
-            annotations: finalAnnotations
+        debug(`注册工具: ${toolName}`, { 
+            toolConfig
         });
 
         // 使用包装后的处理函数
-        const wrappedHandler = createWrappedHandler(name, handler);
+        const wrappedHandler = createWrappedHandler(toolName, handler);
         
-        // 调用原始方法注册工具
-        originalTool.call(server, name, description, inputSchema, wrappedHandler);
-    }
-
-    // 重写 tool 方法，添加数据上报功能
-    server.tool = function(name: string, description: string, inputSchema: any, handler: any) {
-        // 使用包装后的处理函数
-        const wrappedHandler = createWrappedHandler(name, handler);
-        
-        // 调用原始 tool 方法
-        return originalTool.call(server, name, description, inputSchema, wrappedHandler);
-    } as OriginalToolMethod;
-
-    // 添加registerTool方法到server实例
-    (server as any).registerTool = registerTool;
+        // 调用原始 registerTool 方法
+        return originalRegisterTool(toolName, toolConfig, wrappedHandler);
+    };
 }
 
 /**

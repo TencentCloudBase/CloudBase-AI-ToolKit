@@ -447,14 +447,17 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
     }
   );
 
-  // 检查云开发数据库集合是否存在
+  // collectionQuery - 集合查询（合并 checkCollectionExists + describeCollection + listCollections）
   server.registerTool?.(
-    "checkCollectionExists",
+    "collectionQuery",
     {
-      title: "检查集合是否存在",
-      description: "检查云开发数据库集合是否存在",
+      title: "集合查询",
+      description: "数据库集合的查询操作，支持检查存在性、查看详情和列表查询",
       inputSchema: {
-        collectionName: z.string().describe("云开发数据库集合名称")
+        action: z.enum(["check", "describe", "list"]).describe("操作类型：check=检查是否存在，describe=查看详情，list=列表查询"),
+        collectionName: z.string().optional().describe("集合名称（check、describe操作时必填）"),
+        limit: z.number().optional().describe("返回数量限制（list操作时可选）"),
+        offset: z.number().optional().describe("偏移量（list操作时可选）")
       },
       annotations: {
         readOnlyHint: true,
@@ -462,35 +465,83 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
         category: "database"
       }
     },
-    async ({ collectionName }: { collectionName: string }) => {
+    async ({ action, collectionName, limit, offset }: { 
+      action: "check" | "describe" | "list", 
+      collectionName?: string, 
+      limit?: number, 
+      offset?: number 
+    }) => {
       try {
-        const cloudbase = await getManager()
-        const result = await cloudbase.database.checkCollectionExists(collectionName);
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify({
-                success: true,
-                exists: result.Exists,
-                requestId: result.RequestId,
-                message: result.Exists ? "云开发数据库集合已存在" : "云开发数据库集合不存在"
-              }, null, 2)
+        const cloudbase = await getManager();
+        let result;
+
+        switch (action) {
+          case "check":
+            if (!collectionName) {
+              throw new Error("检查集合时必须提供 collectionName");
             }
-          ]
-        };
+            result = await cloudbase.database.checkCollectionExists(collectionName);
+            return {
+              content: [{
+                type: "text",
+                text: JSON.stringify({
+                  success: true,
+                  exists: result.Exists,
+                  requestId: result.RequestId,
+                  message: result.Exists ? "云开发数据库集合已存在" : "云开发数据库集合不存在"
+                }, null, 2)
+              }]
+            };
+
+          case "describe":
+            if (!collectionName) {
+              throw new Error("查看集合详情时必须提供 collectionName");
+            }
+            result = await cloudbase.database.describeCollection(collectionName);
+            return {
+              content: [{
+                type: "text",
+                text: JSON.stringify({
+                  success: true,
+                  requestId: result.RequestId,
+                  indexNum: result.IndexNum,
+                  indexes: result.Indexes,
+                  message: "获取云开发数据库集合信息成功"
+                }, null, 2)
+              }]
+            };
+
+          case "list":
+            result = await cloudbase.database.listCollections({
+              MgoOffset: offset,
+              MgoLimit: limit
+            });
+            return {
+              content: [{
+                type: "text",
+                text: JSON.stringify({
+                  success: true,
+                  requestId: result.RequestId,
+                  collections: result.Collections,
+                  pager: result.Pager,
+                  message: "获取云开发数据库集合列表成功"
+                }, null, 2)
+              }]
+            };
+
+          default:
+            throw new Error(`不支持的操作类型: ${action}`);
+        }
       } catch (error: any) {
         return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify({
-                success: false,
-                error: error.message,
-                message: "检查云开发数据库集合失败"
-              }, null, 2)
-            }
-          ]
+          content: [{
+            type: "text",
+            text: JSON.stringify({
+              success: false,
+              error: error.message,
+              message: `集合查询失败: ${action}`
+            }, null, 2)
+          }]
         };
       }
     }
@@ -601,109 +652,7 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
     }
   );
 
-  // 查询云开发数据库集合详情
-  server.registerTool?.(
-    "describeCollection",
-    {
-      title: "查询集合详情",
-      description: "获取云开发数据库集合的详细信息",
-      inputSchema: {
-        collectionName: z.string().describe("云开发数据库集合名称")
-      },
-      annotations: {
-        readOnlyHint: true,
-        openWorldHint: true,
-        category: "database"
-      }
-    },
-    async ({ collectionName }: { collectionName: string }) => {
-      try {
-        const cloudbase = await getManager()
-        const result = await cloudbase.database.describeCollection(collectionName);
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify({
-                success: true,
-                requestId: result.RequestId,
-                indexNum: result.IndexNum,
-                indexes: result.Indexes,
-                message: "获取云开发数据库集合信息成功"
-              }, null, 2)
-            }
-          ]
-        };
-      } catch (error: any) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify({
-                success: false,
-                error: error.message,
-                message: "获取云开发数据库集合信息失败"
-              }, null, 2)
-            }
-          ]
-        };
-      }
-    }
-  );
 
-  // 获取云开发数据库集合列表
-  server.registerTool?.(
-    "listCollections",
-    {
-      title: "获取集合列表",
-      description: "获取云开发数据库集合列表",
-      inputSchema: {
-        offset: z.number().optional().describe("偏移量"),
-        limit: z.number().optional().describe("返回数量限制")
-      },
-      annotations: {
-        readOnlyHint: true,
-        openWorldHint: true,
-        category: "database"
-      }
-    },
-    async ({ offset, limit }: { offset?: number; limit?: number }) => {
-      try {
-        const cloudbase = await getManager()
-        const result = await cloudbase.database.listCollections({
-          MgoOffset: offset,
-          MgoLimit: limit
-        });
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify({
-                success: true,
-                requestId: result.RequestId,
-                collections: result.Collections,
-                pager: result.Pager,
-                message: "获取云开发数据库集合列表成功"
-              }, null, 2)
-            }
-          ]
-        };
-      } catch (error: any) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify({
-                success: false,
-                error: error.message,
-                message: "获取云开发数据库集合列表失败"
-              }, null, 2)
-            }
-          ]
-        };
-      }
-    }
-  );
 
   // 检查索引是否存在
   server.registerTool?.(

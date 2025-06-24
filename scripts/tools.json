@@ -38,11 +38,20 @@
       }
     },
     {
-      "name": "listEnvs",
-      "description": "获取所有云开发环境信息",
+      "name": "envQuery",
+      "description": "查询云开发环境相关信息，支持查询环境列表、当前环境信息和安全域名",
       "inputSchema": {
         "type": "object",
         "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "list",
+              "info",
+              "domains"
+            ],
+            "description": "查询类型：list=环境列表，info=当前环境信息，domains=安全域名列表"
+          },
           "confirm": {
             "type": "string",
             "const": "yes",
@@ -50,37 +59,26 @@
           }
         },
         "required": [
-          "confirm"
+          "action"
         ],
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"
       }
     },
     {
-      "name": "getEnvAuthDomains",
-      "description": "获取云开发环境的合法域名列表",
+      "name": "envDomainManagement",
+      "description": "管理云开发环境的安全域名，支持添加和删除操作",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "confirm": {
+          "action": {
             "type": "string",
-            "const": "yes",
-            "description": "确认操作，默认传 yes"
-          }
-        },
-        "required": [
-          "confirm"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "createEnvDomain",
-      "description": "为云开发环境添加安全域名",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
+            "enum": [
+              "create",
+              "delete"
+            ],
+            "description": "操作类型：create=添加域名，delete=删除域名"
+          },
           "domains": {
             "type": "array",
             "items": {
@@ -90,47 +88,8 @@
           }
         },
         "required": [
+          "action",
           "domains"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "deleteEnvDomain",
-      "description": "删除云开发环境的指定安全域名",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "domains": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "安全域名数组"
-          }
-        },
-        "required": [
-          "domains"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "getEnvInfo",
-      "description": "获取当前云开发环境信息",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "confirm": {
-            "type": "string",
-            "const": "yes",
-            "description": "确认操作，默认传 yes"
-          }
-        },
-        "required": [
-          "confirm"
         ],
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"
@@ -231,18 +190,35 @@
       }
     },
     {
-      "name": "checkCollectionExists",
-      "description": "检查云开发数据库集合是否存在",
+      "name": "collectionQuery",
+      "description": "数据库集合的查询操作，支持检查存在性、查看详情和列表查询",
       "inputSchema": {
         "type": "object",
         "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "check",
+              "describe",
+              "list"
+            ],
+            "description": "操作类型：check=检查是否存在，describe=查看详情，list=列表查询"
+          },
           "collectionName": {
             "type": "string",
-            "description": "云开发数据库集合名称"
+            "description": "集合名称（check、describe操作时必填）"
+          },
+          "limit": {
+            "type": "number",
+            "description": "返回数量限制（list操作时可选）"
+          },
+          "offset": {
+            "type": "number",
+            "description": "偏移量（list操作时可选）"
           }
         },
         "required": [
-          "collectionName"
+          "action"
         ],
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"
@@ -333,43 +309,6 @@
           "collectionName",
           "options"
         ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "describeCollection",
-      "description": "获取云开发数据库集合的详细信息",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "collectionName": {
-            "type": "string",
-            "description": "云开发数据库集合名称"
-          }
-        },
-        "required": [
-          "collectionName"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "listCollections",
-      "description": "获取云开发数据库集合列表",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "offset": {
-            "type": "number",
-            "description": "偏移量"
-          },
-          "limit": {
-            "type": "number",
-            "description": "返回数量限制"
-          }
-        },
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"
       }
