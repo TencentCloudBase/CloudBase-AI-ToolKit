@@ -9,8 +9,8 @@
 **🌍 Languages:** [中文](README.md) | **English**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![npm version](https://badge.fury.io/js/%40cloudbase%2Fcloudbase-mcp.svg)](https://badge.fury.io/js/%40cloudbase%2Fcloudbase-mcp)
-![NPM Downloads](https://img.shields.io/npm/dw/%40cloudbase%2Fcloudbase-mcp)
+[![npm version](https://badge.fury.io/js/%40cloudbase%2Fcloudbase-mcp.svg)](https://www.npmjs.com/package/@cloudbase/cloudbase-mcp)
+[![NPM Downloads](https://img.shields.io/npm/dw/%40cloudbase%2Fcloudbase-mcp)](https://www.npmjs.com/package/@cloudbase/cloudbase-mcp)
 [![GitHub stars](https://img.shields.io/github/stars/TencentCloudBase/CloudBase-AI-ToolKit?style=social&v=1)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/TencentCloudBase/CloudBase-AI-ToolKit?style=social&v=1)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/network/members)
 
@@ -18,60 +18,98 @@
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/pulls)
 [![GitHub last commit](https://img.shields.io/github/last-commit/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commits)
 [![GitHub contributors](https://img.shields.io/github/contributors/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/graphs/contributors)
+[![CNB Mirror](https://img.shields.io/badge/CNB-CloudBase--AI--ToolKit-blue?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHJ4PSIyIiBmaWxsPSIjM0I4MkY2Ii8+PHBhdGggZD0iTTUgM0g3VjVINSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNNSA3SDdWOUg1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==)](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/TencentCloudBase/CloudBase-AI-ToolKit)
 
-Turn your ideas into deployable full-stack applications with just a prompt. Works seamlessly with **Cursor, VSCode GitHub Copilot, WindSurf, CodeBuddy** and other AI IDEs, automatically generating and deploying web apps, mini-programs, and backend services to Tencent CloudBase.
+When coding in AI programming tools like **Cursor/VSCode GitHub Copilot/WindSurf/CodeBuddy/Augment Code/Claude Code**, it automatically helps you generate deployable full-stack applications + mini-programs and publish them to Tencent CloudBase with one-click.
 
-<a href="https://www.producthunt.com/posts/cloudbase-ai-tookit?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-cloudbase&#0045;ai&#0045;tookit" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=971451&theme=light&t=1748519563832" alt="CloudBase&#0032;AI&#0032;Tookit - Prompt&#0032;to&#0032;Production&#0058;&#0032;Full&#0045;stack&#0044;&#0032;DB&#0032;&#0038;&#0032;functions—zero&#0032;setup&#0046; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+**📹 Complete Video Demo ⬇️**
 
-### 🚀 Three Core Capabilities
+<a href="https://www.bilibili.com/video/BV1hpjvzGESg/" target="_blank">
+  <img style="max-width:  min(600px, 100%); height: auto;" src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/video-banner.png" alt="Video Demo" />
+</a>
 
-**🤖 AI-Powered Development**: AI auto-generates code and architecture<br>**☁️ Cloud Integration**: One-click access to database, cloud functions, static hosting<br>**⚡ Rapid Deployment**: Full-stack apps online in minutes
-
-### 🛠️ Supported Platforms
-
-**Web Apps**: Modern frontend + static hosting<br>**WeChat Mini-Programs**: Cloud-native mini-program solutions<br>**Backend Services**: Cloud database + serverless functions + cloud hosting
-
-**Full Video Demo**
-
-https://github.com/user-attachments/assets/2b402fa6-c5c4-495a-b85b-f5d4a25daa4a
+| 🚀 **Core Capabilities** | 🛠️ **Supported Platforms** |
+|---|---|
+| 🤖 **AI-Powered Development**: AI auto-generates code and architecture<br>☁️ **Cloud Integration**: One-click access to database, cloud functions, static hosting<br>⚡ **Rapid Deployment**: Full-stack apps online in minutes | **Web Apps**: Modern frontend + static hosting<br>**WeChat Mini-Programs**: Cloud-native mini-program solutions<br>**Backend Services**: Cloud database + serverless functions + cloud hosting |
 
 </div> 
 
 ## ✨ Key Features
 
-| Feature | Description | Advantage |
-|---------|-------------|-----------|
-| **🤖 AI-Native** | Rule library designed for AI programming tools | Code follows CloudBase best practices |
-| **🚀 One-Click Deploy** | MCP automated deployment to Tencent CloudBase | Serverless, no server management |
-| **📱 Full-Stack Support** | Web + Mini-programs + Database + Backend | Supports various app types, backend hosting, and database |
-| **🔧 Smart Debugging** | AI reviews logs and fixes issues | Lower ops cost |
-| **⚡ Lightning Fast** | China CDN acceleration | Faster than overseas platforms |
-| **📚 Smart Knowledge Base** | Built-in vector search for CloudBase, WeChat Mini-Program docs |
+- **🤖 AI-Native** - Rule library designed for AI programming tools, generates code following CloudBase best practices
+- **🚀 One-Click Deploy** - MCP automated deployment to Tencent CloudBase platform, Serverless architecture without server management
+- **📱 Full-Stack Apps** - Web + Mini-programs + Database + Backend integration, supports multiple app types and backend hosting
+- **🔧 Smart Debugging** - AI automatically reviews logs and fixes issues, reducing operational costs
+- **⚡ Lightning Fast** - Domestic CDN acceleration, faster access than overseas platforms
+- **📚 Knowledge Retrieval** - Built-in intelligent vector search for CloudBase and WeChat Mini-Program professional knowledge bases
 
 ## 🚀 Quick Start
 
 ### 0. Prerequisites
 
-#### Install AI Development Tools
-Such as [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) etc.
+<details>
+<summary>Install AI Development Tools</summary>
 
-#### Set Up CloudBase Environment and Get Environment ID
-1. Visit [Tencent CloudBase Console](https://tcb.cloud.tencent.com/dev) to create an environment. New users can start for free.
-2. Get your **Environment ID** from the "Overview" page in the console (needed for deployment)
+Such as [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) etc. Click to see [list of supported AI development tools](#2-configure-your-ai-ide)
 
-### 1. Initialize or Enhance Your Project
+</details>
 
-We provide templates with CloudBase best practices and AI IDE rules. Two recommended ways:
+<details>
+<summary>Set Up CloudBase Environment</summary>
+
+Visit [Tencent CloudBase Console](https://tcb.cloud.tencent.com/dev) to create an environment. New users can start for free.
+
+</details>
+
+<details>
+<summary>Install Node.js v18 or Higher</summary>
+
+Make sure Node.js v18 or higher is installed on your computer. You can download and install the latest version from [Node.js official website](https://nodejs.org/).
+
+</details>
+
+<details>
+<summary>Optional: Set npm Registry</summary>
+
+To improve dependency download speed, it's recommended to set npm registry to Tencent mirror. You can run the following command in **terminal**:
+
+```bash
+npm config set registry https://mirrors.cloud.tencent.com/npm/
+```
+
+This speeds up dependency downloads, especially in mainland China.
+</details>
+
+<details>
+<summary>Optional: Clear npx Cache</summary>
+Due to a caching bug in npx itself, it may cause CloudBase AI ToolKit installation issues. You can try clearing the npx cache.
+
+Run the following command in **terminal**:
+```
+npx -y clear-npx-cache 
+```
+</details>
+
+### 1. Quick Initialize or Enhance Your Project
+
+We've prepared project templates with built-in CloudBase best practices and AI IDE rules. Two recommended approaches:
 
 #### 🚀 For New Projects
 
-Choose a template and initialize with one click:
+Choose a suitable template and initialize with one click:
+
+- **WeChat Mini-Program + CloudBase Template**  
+  [Download Package](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
 
 - **React Web App + CloudBase Template**  
   [Download Package](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
 
-- **WeChat Mini-Program + CloudBase Template**  
-  [Download Package](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
+- **Vue Web App + CloudBase Template**  
+  [Download Package](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-vue-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-vue-template)
+
+- **UniApp Cross-Platform + CloudBase Template**  
+  [Download Package](https://static.cloudbase.net/cloudbase-examples/universal-cloudbase-uniapp-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/universal/cloudbase-uniapp-template)
 
 - **AI Rules Universal CloudBase Template**: Language and framework agnostic, includes CloudBase AI rules and MCP, suitable for any CloudBase project
 
@@ -79,17 +117,18 @@ Choose a template and initialize with one click:
 
 #### 🛠️ Enhance Existing Projects
 
-If you already have a project, after configuring MCP, just tell the AI "Download CloudBase AI rules in the current project" to instantly add and configure AI editor rules in your project directory—no manual steps needed.
+If you already have a project, after configuring MCP, simply tell the AI "Download CloudBase AI rules in the current project" to instantly download and configure AI editor rules in your project directory—no manual operations needed.
 
 ### 2. Configure Your AI IDE
 
-> 💡 **Tip:** If you enable auto-run in tools like Cursor, add sensitive commands to the "Command denylist" to avoid accidental execution (e.g., data deletion). By default, manual confirmation is required for safety.
+> [!TIP]
+> Tip: If you're using a template project, all configurations are pre-configured. Please follow the guide to check and enable tools. If not starting from a template, you need to manually add the corresponding configurations according to the specific instructions:
 
-Supported tools:
+The following tools all support CloudBase AI ToolKit. Choose the appropriate tool and configure according to instructions:
 
 | Tool | Platform |
 |------|----------|
-| [Cursor](https://cursor.com/) | Standalone IDE |
+| [Cursor](https://cursor.com/) | Standalone IDE|
 | [WindSurf](https://windsurf.com/editor) | Standalone IDE, VSCode, JetBrains plugin |
 | [CodeBuddy](https://copilot.tencent.com/) | VS Code, JetBrains, WeChat DevTools plugin |
 | [CLINE](https://cline.so/) | VS Code plugin |
@@ -98,68 +137,60 @@ Supported tools:
 | [Tongyi Lingma](https://tongyi.aliyun.com/lingma) | Standalone IDE, VS Code, JetBrains plugin |
 | [RooCode](https://roocode.com/) | VS Code plugin |
 | [Baidu Comate](https://comate.baidu.com/) | VS Code, JetBrains plugin|
-
-Follow the configuration guide for your tool below. Each tool requires your CloudBase environment ID for MCP features. If you don't have an environment, [create one first](#0-prerequisites).
+| [Augment Code](https://www.augmentcode.com/) | VS Code, JetBrains plugin |
+| [Claude Code](https://www.anthropic.com/claude-code) | Command line tool |
 
 <details>
 <summary><strong>🔧 Cursor Configuration</strong></summary>
 
-#### Step 1: Auto-Apply AI Rules
+#### Step 1: Use AI Rules
 
-Templates include `.cursor/rules/` directory, AI will auto-detect CloudBase best practices.
+Template includes `.cursor/rules/` directory, AI will automatically recognize CloudBase best practices. If not starting from template, you can ask AI to help download CloudBase rules.
 
 #### Step 2: Configure MCP
 
-Templates include MCP config. If not using a template, click below to install in Cursor:
+If using template project, MCP configuration is pre-configured. If not starting from template, click the button below to install in Cursor:
 
-[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=CloudBase&config=eyJjb21tYW5kIjoibnB4IEBjbG91ZGJhc2UvY2xvdWRiYXNlLW1jcEBsYXRlc3QiLCJlbnYiOnsiQ0xPVURCQVNFX0VOVl9JRCI6IllPVVJfRU5WX0lEIn0sImRpc2FibGVkIjpmYWxzZX0%3D)
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=CloudBase&config=eyJjb21tYW5kIjoibnB4IEBjbG91ZGJhc2UvY2xvdWRiYXNlLW1jcEBsYXRlc3QiLCJkaXNhYmxlZCI6ZmFsc2V9)
 
-1. Edit `.cursor/mcp.json` in your project, set your CloudBase environment ID:
+Or manually add configuration to `.cursor/mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_ENV_ID": "your-cloudbase-env-id"
-      }
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
 ```
 
-2. Enable CloudBase MCP Server
-
-Click the ⚙️ icon in Cursor, go to "MCP", find cloudbase and enable it.
+Then click the ⚙️ icon in the top-right corner of Cursor client, go to "MCP" settings, find cloudbase and enable it.
 
 #### Step 3: Switch to Agent Mode
 
-Use Agent mode in chat for code generation and automation.
+Use Agent mode in the chat window for code generation and automation.
 
 </details>
 
 <details>
 <summary><strong>🌊 Codeium/WindSurf Configuration</strong></summary>
 
-#### Step 1: Auto-Apply AI Rules
+#### Step 1: Use AI Rules
 
-Templates include `.windsurf/` directory with WindSurf-optimized configurations.
+Template's `.windsurf/` directory contains configurations optimized for WindSurf. If not starting from template, you can ask AI to help download CloudBase rules.
 
 #### Step 2: Configure MCP
 
-Click WindSurf's Plugins icon, click "View raw config", add cloudbase-mcp and set environment ID
+If using template project, MCP configuration is pre-configured. If not starting from template, add in WindSurf's Plugins configuration:
 
 ```json
 {
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_ENV_ID": "your-cloudbase-env-id"
-      }
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -174,25 +205,20 @@ Switch to Write mode in chat for intelligent generation.
 <details>
 <summary><strong>👥 CodeBuddy Configuration</strong></summary>
 
-#### Step 1: Auto-Apply AI Rules
+#### Step 1: Use AI Rules
 
-Templates include `.rules/` directory, CodeBuddy will automatically recognize CloudBase best practices.
+Template includes `.rules/` directory, CodeBuddy will automatically recognize CloudBase best practices. If not starting from template, you can ask AI to help download CloudBase rules.
 
 #### Step 2: Configure MCP
 
-Click the MCP icon in the top-right corner of CodeBuddy, then click the + button to modify MCP configuration.
-
-Set CLOUDBASE_ENV_ID to your CloudBase environment ID
+Click the MCP button in the top-right corner of CodeBuddy, click add on the right, and add CloudBase MCP in the MCP configuration:
 
 ```json
 {
   "mcpServers": {
-    "cloudbase-mcp": {
+    "cloudbase": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_ENV_ID": "your-cloudbase-env-id"
-      }
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -200,24 +226,20 @@ Set CLOUDBASE_ENV_ID to your CloudBase environment ID
 
 #### Step 3: Switch to Craft Agent
 
-Switch to Craft mode in the chat window for intelligent project generation.
-
-Note: In CodeBuddy's Craft mode, disable the confirmation plan feature in the right-side settings for better tool execution.
+Switch to Craft mode in the chat window. It's recommended to disable the confirm plan feature in the right settings for a smoother experience.
 
 </details>
 
 <details>
 <summary><strong>🤖 CLINE Configuration</strong></summary>
 
-#### Step 1: Auto-Apply AI Rules
+#### Step 1: Use AI Rules
 
-Templates include `.clinerules/` directory, AI will automatically recognize CloudBase best practices.
+Template includes `.clinerules/` directory, AI will automatically recognize CloudBase best practices. If not starting from template, you can ask AI to help download CloudBase rules.
 
 #### Step 2: Configure MCP
 
-Find the MCP Server icon in Cline's panel, click the ⚙️ settings icon, then click Configure MCP Servers
-
-Add the following content, replace CLOUDBASE_ENV_ID with your CloudBase environment ID
+If using template project, MCP configuration is pre-configured. If not starting from template, add in MCP Server configuration:
 
 ```json
 {
@@ -229,9 +251,6 @@ Add the following content, replace CLOUDBASE_ENV_ID with your CloudBase environm
       "args": [
         "@cloudbase/cloudbase-mcp@latest"
       ],
-      "env": {
-        "CLOUDBASE_ENV_ID": "your-cloudbase-env-id"
-      },
       "transportType": "stdio",
       "disabled": false
     }
@@ -241,22 +260,20 @@ Add the following content, replace CLOUDBASE_ENV_ID with your CloudBase environm
 
 #### Step 3: Use AI Chat
 
-Return to the chat interface, recommend using models with good code generation capabilities and function call support.
+It's recommended to use models that support code generation and function calls.
 
 </details>
 
 <details>
 <summary><strong>🐙 GitHub Copilot Configuration</strong></summary>
 
-#### Step 1: Auto-Apply AI Rules
+#### Step 1: Use AI Rules
 
-Templates include `.github/` directory with Copilot-optimized configurations.
+Template's `.github/` directory contains Copilot optimized configurations. If not starting from template, you can ask AI to help download CloudBase rules.
 
-#### Step 2: Enable CloudBase MCP
+#### Step 2: Configure MCP
 
-Templates include `.vscode/mcp.json` with CloudBase MCP configuration
-
-Modify the environment ID to your CloudBase environment ID
+If using template project, MCP configuration is pre-configured. If not starting from template, add in `.vscode/mcp.json`:
 
 ```json
 {
@@ -265,10 +282,7 @@ Modify the environment ID to your CloudBase environment ID
             "command": "npx",
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
-            ],
-            "env": {
-                "CLOUDBASE_ENV_ID": "your-cloudbase-env-id"
-            }
+            ]
         }
     }
 }
@@ -283,62 +297,50 @@ Switch to Agent mode in the bottom-left corner of the chat window.
 <details>
 <summary><strong>🎯 Trae Configuration</strong></summary>
 
-This guide supports both Trae International and Trae CN versions. Recommend using Claude/DeepSeek V3 0324 models for testing.
+This guide supports both Trae international and Trae CN versions. It's recommended to test with Claude/DeepSeek V3 0324 models.
 
-#### Step 1: Auto-Apply AI Rules
+#### Step 1: Use AI Rules
 
-Templates include `.trae/rules` directory with Trae-specific CloudBase rule configurations that AI will auto-apply.
+Template's `.trae/rules` directory contains CloudBase rule configurations for Trae. If not starting from template, you can ask AI to help download CloudBase rules.
 
-#### Step 2: Enable CloudBase MCP
+#### Step 2: Configure MCP
 
-Click the ⚙️ settings icon in Trae's top-right corner, enter MCP, click manual configuration in settings, and paste the following:
-
-Replace CLOUDBASE_ENV_ID with your CloudBase environment ID
+If using template project, MCP configuration is pre-configured. If not starting from template, add in MCP configuration:
 
 ```json
 {
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"], 
-      "env": {
-        "CLOUDBASE_ENV_ID": "your-cloudbase-env-id"  
-      }
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
 ```
 
-#### Step 3: Use Builder with MCP
+#### Step 3: Use Builder with MCP Chat
 
-Return to chat window, select Builder with MCP in agents.
+Select Builder with MCP in the agent for chat.
 
 </details>
 
 <details>
 <summary><strong>🧩 Tongyi Lingma Configuration</strong></summary>
 
-#### Step 1: Auto-Apply AI Rules
+#### Step 1: Use AI Rules
 
-Templates include `.lingma/` directory, Tongyi Lingma will automatically recognize CloudBase best practices.
+Template includes `.lingma/` directory, Tongyi Lingma will automatically recognize CloudBase best practices. If not starting from template, you can ask AI to help download CloudBase rules.
 
 #### Step 2: Configure MCP
 
-Click your avatar in Tongyi Lingma's top-right corner, select personal settings, enter MCP settings.
-
-Click the open configuration file button on the right, modify MCP configuration in the opened file.
-
-Set CLOUDBASE_ENV_ID to your CloudBase environment ID
+If using template project, MCP configuration is pre-configured. If not starting from template, add in MCP configuration:
 
 ```json
 {
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_ENV_ID": "your-cloudbase-env-id"
-      }
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -350,103 +352,268 @@ Switch to agent mode in the bottom-left corner of the chat window.
 
 </details>
 
-### 3. Start Developing
+<details>
+<summary><strong>🤖 RooCode Configuration</strong></summary>
 
-Make sure AI is connected to CloudBase:
+#### Step 1: Use AI Rules
+
+Template includes `.roo/rules` directory, RooCode will automatically recognize CloudBase best practices. If not starting from template, you can ask AI to help download CloudBase rules.
+
+#### Step 2: Configure MCP
+
+If using template project, MCP configuration is pre-configured. If not starting from template, add in MCP configuration:
+
+```json
+{
+    "mcpServers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ],
+            "disabled": false
+        }
+    }
+}
+```
+
+#### Step 3: Use AI Chat
+
+Use the chat window for code generation and automation.
+
+</details>
+
+<details>
+<summary><strong>🤖 Baidu Comate Configuration</strong></summary>
+
+#### Step 1: Use AI Rules
+
+Template includes `.comate/rules` directory, Baidu Comate will automatically recognize CloudBase best practices. If not starting from template, you can ask AI to help download CloudBase rules.
+
+#### Step 2: Configure MCP
+
+If using template project, MCP configuration is pre-configured. If not starting from template, add in MCP configuration:
+
+```json
+{
+    "mcpServers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ],
+            "disabled": false
+        }
+    }
+}
+```
+
+#### Step 3: Use AI Chat
+
+Switch to Zulu mode in the chat window for operations.
+
+</details>
+
+<details>
+<summary><strong>🚀 Augment Code Configuration</strong></summary>
+
+#### Step 1: Use AI Rules
+
+Template includes `.augment-guidelines` file, Augment Code will automatically recognize CloudBase best practices. If not starting from template, you can ask AI to help download CloudBase rules.
+
+#### Step 2: Configure MCP
+
+If using template project, MCP configuration is pre-configured (built into `.vscode/settings.json`). If not starting from template, add CloudBase MCP in Augment's MCP configuration, [refer to documentation](https://docs.augmentcode.com/setup-augment/mcp):
+
+```json
+{
+  "augment.advanced": {
+     "mcpServers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ]
+        }
+    }
+  }
+}
+```
+
+#### Step 3: Use Agent Mode
+
+Use Agent mode in the chat window for intelligent code generation and automation.
+
+</details>
+
+<details>
+<summary><strong>🤖 Claude Code Configuration</strong></summary>
+
+#### Step 1: Use AI Rules
+
+Template includes `CLAUDE.md` file, Claude Code will automatically recognize CloudBase best practices. If not starting from template, you can ask AI to help download CloudBase rules.
+
+#### Step 2: Configure MCP
+
+If using template project, MCP configuration is pre-configured. If not starting from template, create `.mcp.json` file in project root:
+
+```json
+{
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@cloudbase/cloudbase-mcp@latest"
+      ]
+    }
+  }
+}
+```
+
+#### Step 3: Use AI Chat
+
+Chat directly with AI in Claude Code for intelligent code generation and automation.
+
+</details>
+
+<details>
+<summary><strong>🔄 Update CloudBase AI ToolKit</strong></summary>
+
+**Update AI Rules**
+
+If you want to update to the latest CloudBase AI rules in an existing project, simply tell the AI:
 
 ```
-Query current CloudBase environment info
+Download CloudBase AI rules
 ```
 
-Describe your needs to the AI, e.g.:
+AI will automatically download and update the latest rule configurations to your project directory.
+
+**Update MCP Tools**
+
+When new versions of MCP tools are released, you can update through:
+
+1. **Auto Update (Recommended)**: In your AI development tool's MCP list, find cloudbase-mcp and re-enable or refresh the MCP list to automatically install the latest version
+
+2. **Manual Update**: If auto update doesn't work, you can disable and re-enable cloudbase-mcp, or restart your AI IDE
+
+Since the MCP configuration uses the `@latest` tag, it usually automatically gets the latest version.
+
+</details>
+
+### 3. Start Development
+
+Before starting, simply tell the AI:
 
 ```
-Build a two-player online Gomoku game, support online battle, then deploy
+Login to CloudBase
+```
+AI will automatically open the Tencent Cloud login interface and CloudBase environment selection.
+
+If you need to switch environments later, you can say:
+
+```
+Logout from CloudBase
+```
+
+AI will clean up local configurations, and you can then ask AI to login to CloudBase again for re-login.
+
+After successful login, you can confirm AI is connected to CloudBase:
+
+```
+Query current CloudBase environment information
+```
+
+Describe your requirements to AI for development:
+
+```
+Create a two-player online Gomoku website with multiplayer battles, then deploy it
 ```
 
 AI will automatically:
-- 📝 Generate frontend & backend code
+- 📝 Generate frontend and backend code  
 - 🚀 Deploy to CloudBase
 - 🔗 Return online access link
 
-If you encounter errors, send the error message to AI for troubleshooting:
+If you encounter errors during development, you can send the error information to AI for troubleshooting:
 
 ```
-Error: xxxx
+Got an error, the error is xxxx
 ```
 
 You can also ask AI to debug and modify code using cloud function logs:
 
 ```
-Cloud function code doesn't meet requirements: xxx. Please check logs and data, debug and fix.
+Cloud function code doesn't meet requirements, requirement is xxx, please check logs and data for debugging and fixing
 ```
 
 ## 🎯 Use Cases
 
 ### Case 1: Two-Player Online Gomoku
 
-**Process:**
-1. Input: "Build a two-player online Gomoku game, support online battle"
+**Development Process:**
+1. Input requirement: "Create a two-player online Gomoku website with multiplayer battles"
 2. AI generates: Web app + cloud database + real-time data push
-3. Auto-deploy and get access link
+3. Auto deploy and get access link
 
-👉 **Try it:** [Gomoku Game](https://cloud1-5g39elugeec5ba0f-1300855855.tcloudbaseapp.com/gobang/#/)
+👉 **Experience**: [Gomoku Game](https://cloud1-5g39elugeec5ba0f-1300855855.tcloudbaseapp.com/gobang/#/)
 
 <details>
-<summary>📸 See development screenshots</summary>
+<summary>📸 View Development Screenshots</summary>
 
-| Development | Final Result |
-|-------------|-------------|
-| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-001.png" width="400" alt="Dev Screenshot 1"> | <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-004.png" width="400" alt="Gomoku Result"> |
-| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-002.png" width="400" alt="Dev Screenshot 2"> | Supports two-player online battle<br>Real-time board sync |
+| Development Process | Final Result |
+|---------|---------|
+| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-001.png" width="400" alt="Development Process Screenshot 1"> | <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-004.png" width="400" alt="Gomoku Game Effect"> |
+| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-002.png" width="400" alt="Development Process Screenshot 2"> | Supports two-player online battles<br>Real-time game synchronization |
 
 </details>
 
-### Case 2: AI Pet Mini-Program
+### Case 2: AI Pet Raising Mini-Program
 
-**Process:**
-1. Input: "Build a pet-raising mini-program, use AI for enhanced interaction"
-2. AI generates: Mini-program + cloud database + AI cloud function
-3. Import to WeChat DevTools to publish
+**Development Process:**
+1. Input: "Develop a Pokemon pet raising wechat mini-program with AI-enhanced interactions"
+2. AI generates: Mini-program + cloud database + AI cloud functions
+3. Import into WeChat DevTools for publishing
 
 <details>
-<summary>📸 See dev screenshots & preview</summary>
+<summary>📸 View Development Screenshots and Mini-Program Preview</summary>
 
 <table>
 <tr>
 <td width="50%">
-<b>🖥️ Dev Screenshots</b><br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-005.png" width="100%" alt="AI Pet Mini-Program Dev Screenshot">
+<b>🖥️ Development Screenshots</b><br>
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-005.png" width="100%" alt="AI Pet Mini-Program Development Screenshot">
 <br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-003.png" width="100%" alt="Mini-Program Dev Process">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-003.png" width="100%" alt="Mini-Program Development Process">
 </td>
 <td width="50%">
 <b>📱 Mini-Program Preview</b><br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-006.png" width="200" alt="Mini-Program UI 1">
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-007.png" width="200" alt="Mini-Program UI 2">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-006.png" width="200" alt="Mini-Program Interface 1">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-007.png" width="200" alt="Mini-Program Interface 2">
 <br><br>
 <b>📲 Experience QR Code</b><br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-008.png" width="150" alt="Mini-Program QR Code">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-008.png" width="150" alt="Mini-Program Experience QR Code">
 </td>
 </tr>
 </table>
 
 </details>
 
-### Case 3: Smart Issue Diagnosis
+### Case 3: Intelligent Problem Diagnosis
 
-When issues occur:
-1. AI checks cloud function logs
-2. Analyzes errors and generates fix code
-3. Auto-redeploys
+When applications have issues:
+1. AI automatically checks cloud function logs
+2. Analyzes error causes and generates fix code  
+3. Auto redeploy
 
 <details>
-<summary>📸 See smart diagnosis process</summary>
+<summary>📸 View Intelligent Diagnosis Process</summary>
 
 <div align="center">
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-009.png" width="600" alt="Smart Diagnosis Process">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-009.png" width="600" alt="Intelligent Problem Diagnosis Process">
 <br>
-<i>AI auto-analyzes logs and generates fixes</i>
+<i>AI automatically analyzes logs and generates fix solutions</i>
 </div>
 
 </details>
@@ -455,112 +622,111 @@ When issues occur:
 
 ## 🌟 Why Choose CloudBase?
 
-- **⚡ Fast Deployment**: China nodes, faster than overseas
-- **🛡️ Reliable**: Trusted by 3.3M+ developers
-- **🔧 Dev-Friendly**: Full-stack platform for the AI era
-- **💰 Cost-Effective**: Serverless, free for new users during development
+- **⚡ Lightning Deploy**: Domestic nodes, faster access than overseas
+- **🛡️ Stable & Reliable**: Serverless platform chosen by 3.3 million developers
+- **🔧 Developer Friendly**: Full-stack platform designed for AI era, supports auto environment configuration
+- **💰 Cost Optimized**: Serverless architecture more elastic, new users can experience for free during development
 
 ## 📋 FAQ
 
-For migration, integration, and more, see [FAQ](./FAQ.md).
+For common questions about migration, integration, etc., please check [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq).
 
-## 💬 Community
+## 💬 Tech Community
 
-Need help or want to connect? Join our tech community!
+Having issues or want to share experiences? Join our tech community!
 
-### 🔥 WeChat Group
+### 🔥 WeChat Community
 
 <div align="center">
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/toolkit-qrcode.png" width="200" alt="WeChat Group QR">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/toolkit-qrcode.png" width="200" alt="WeChat Group QR Code">
 <br>
-<i>Scan to join the WeChat tech group</i>
+<i>Scan to join WeChat tech community</i>
 </div>
 
 **In the group you can:**
 - 💡 Share your AI + CloudBase projects
-- 🤝 Tech exchange and Q&A
-- 📢 Get latest updates and best practices
-- 🎯 Join product discussions and suggestions
+- 🤝 Tech discussions and development Q&A
+- 📢 Get latest feature updates and best practices
+- 🎯 Participate in product feature discussions and suggestions
 
-### 📱 Other Channels
+### 📱 Other Communication Channels
 
 | Platform | Link | Description |
-|---------|------|-------------|
-| **Docs** | [📖 Docs](https://docs.cloudbase.net/) | Full CloudBase docs |
-| **Issue** | [🐛 Submit Issue](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues) | Bug reports & feature requests |
+|------|------|------|
+| **Official Docs** | [📖 View Docs](https://docs.cloudbase.net/) | Complete CloudBase documentation |
+| **Issue Feedback** | [🐛 Submit Issues](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues) | Bug reports and feature requests |
 
-### 🎉 Community Events
+### 🎉 Community Activities
 
-- **Weekly Tech Sharing**: Best practices for AI + CloudBase
-- **Project Showcases**: Share your AI-powered projects
-- **Q&A**: Tencent CloudBase team online support
-- **Feature Previews**: Try new features first
+- **Weekly Tech Sharing**: Regular sharing of AI + CloudBase best practices in the group
+- **Project Showcase**: Show off your amazing AI-developed projects
+- **Q&A Sessions**: Tencent CloudBase team members answer questions online
+- **Feature Preview**: First access to latest features
 
 ## 🛠️ CloudBase MCP Tools Overview
 
-| Tool | Description |
-|------|-------------|
-| logout | Log out current CloudBase account |
-| downloadTemplate | Download CloudBase project templates (React, Mini-Program, AI editor config, etc.) |
-| listEnvs | Get all CloudBase environments |
-| getEnvAuthDomains | Get valid domain list for environment |
-| createEnvDomain | Add safe domain to environment |
-| deleteEnvDomain | Remove domain from environment |
-| getEnvInfo | Get current environment info |
-| updateEnvInfo | Update environment alias |
-| createCollection | Create new DB collection |
-| checkCollectionExists | Check if DB collection exists |
-| updateCollection | Update DB collection config (create/delete index) |
-| describeCollection | Get DB collection details |
-| listCollections | List DB collections |
-| checkIndexExists | Check if index exists |
-| distribution | Query data distribution in collection |
-| insertDocuments | Insert docs into collection |
-| queryDocuments | Query docs in collection |
-| updateDocuments | Update docs in collection |
-| deleteDocuments | Delete docs in collection |
-| uploadFiles | Upload files to static hosting |
-| listFiles | List static hosting files |
-| deleteFiles | Delete static hosting files/folders |
-| findFiles | Search static hosting files |
-| createHostingDomain | Bind custom domain |
-| deleteHostingDomain | Unbind custom domain |
-| getWebsiteConfig | Get static website config |
-| tcbCheckResource | Get domain config |
-| tcbModifyAttribute | Modify domain config |
-| getFunctionList | Get cloud function list |
-| createFunction | Create cloud function |
-| updateFunctionCode | Update cloud function code |
-| updateFunctionConfig | Update cloud function config |
-| getFunctionDetail | Get cloud function details |
-| invokeFunction | Invoke cloud function |
-| getFunctionLogs | Get cloud function logs |
-| createFunctionTriggers | Create function trigger |
-| deleteFunctionTrigger | Delete function trigger |
-| downloadRemoteFile | Download remote file to local temp |
-| uploadFile | Upload file to cloud storage (for business data) |
-| searchKnowledgeBase | Smart search for CloudBase knowledge base (vector search for docs/answers) |
+Currently includes **35 tools** covering environment management, database operations, cloud function management, static hosting, and other core functions.
 
-## 🏗️ Architecture
+📋 **Complete Tool Documentation**: [View MCP Tools Detailed Documentation](doc/mcp-tools.md) | [View Tool Specifications JSON](scripts/tools.json)
+
+### 🔧 Tool Categories Overview
+
+| Category | Tool Count | Main Functions |
+|------|----------|----------|
+| 🌍 **Environment Management** | 4 | Login authentication, environment info query, domain management |
+| 🗄️ **Database Operations** | 11 | Collection management, document CRUD, index operations, data models |
+| ⚡ **Cloud Functions** | 9 | Function creation, updates, invocation, logs, triggers |
+| 🌐 **Static Hosting** | 5 | File upload management, domain configuration, website deployment |
+| 📁 **File Operations** | 2 | Remote file download, cloud storage upload |
+| 🛠️ **Tool Support** | 3 | Project templates, knowledge base search, interactive dialog |
+| 🔌 **HTTP Access** | 1 | HTTP function access configuration |
+
+### 🌟 Core Tool Highlights
+
+| Tool Type | Tool Name | Feature Highlights |
+|----------|----------|----------|
+| 🔐 **Authentication** | `login` / `logout` | One-click CloudBase login, auto environment selection |
+| 📊 **Environment Query** | `envQuery` | **🔄 Merged Tool** - Environment list, info, domains unified query |
+| 🗄️ **Database** | `collectionQuery` | **🔄 Merged Tool** - Collection existence, details, list unified management |
+| ⚡ **Cloud Functions** | `createFunction` | Supports complete configuration, auto dependency installation, trigger setup |
+| 🌐 **Static Hosting** | `uploadFiles` | Batch file upload, smart ignore rules, CDN acceleration |
+| 🧠 **AI Enhancement** | `searchKnowledgeBase` | Vector search CloudBase knowledge base, intelligent Q&A support |
+
+### 💡 Tool Optimization Notes
+
+We optimized from 40 tools to 35 by merging related functions for better user experience.
+
+🔗 **Want to learn about each tool's detailed functions?** Please check [Complete MCP Tools Documentation](doc/mcp-tools.md)
+
+## 🏗️ Architecture Principles
 
 ```mermaid
 graph TD
     A[Developer] --> B[AI IDE]
-    B -->|Use| C[CloudBase AI Rules]
+    B -->|Uses| C[CloudBase AI Rules]
     C --> D[Generate Code]
-    B -->|Call| E[CloudBase MCP]
-    E --> F{Check Deploy}
+    B -->|Calls| E[CloudBase MCP]
+    E --> F{Detect Deployment}
     F -->|Success| G[CloudBase Platform]
     F -->|Fail| H[Return Logs]
     H --> I[AI Fix]
     I --> E
-    G --> J[Online App]
+    G --> J[Online Application]
     J --> K[Web/Mini-Program/API]
 ```
 
+## 🔒 Data Statistics Notice
+
+To improve product experience, CloudBase AI ToolKit collects anonymous usage statistics:
+
+- **Collection Content**: Tool usage, basic environment info (OS, Node.js version, etc.)
+- **Privacy Protection**: No code content, file paths, or sensitive info collected, only for product improvement
+
+You can disable data statistics by setting environment variable `CLOUDBASE_MCP_TELEMETRY_DISABLED` to `true`
+
 ## 🤝 Contributing
 
-PRs and issues welcome! See our [Contributing Guide](CONTRIBUTING.md) for how to get involved.
+Welcome to submit Issues and Pull Requests! Please check our [Contributing Guide](CONTRIBUTING.md) to learn how to participate in project development.
 
 ## 📄 License
 
@@ -568,4 +734,6 @@ PRs and issues welcome! See our [Contributing Guide](CONTRIBUTING.md) for how to
 
 ---
 
-⭐ If you find this project helpful, please give us a Star! 
+⭐ If this project helps you, please give us a Star!
+
+[![Star History Chart](https://api.star-history.com/svg?repos=TencentCloudBase/CloudBase-AI-ToolKit&type=Timeline)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit) 

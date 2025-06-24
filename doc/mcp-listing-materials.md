@@ -1,0 +1,85 @@
+# CloudBase MCP - Listing Materials
+
+> Materials for listing CloudBase MCP in third-party directories
+
+## Basic Information
+
+- **Name**: Tencent CloudBase
+- **Package**: `@cloudbase/cloudbase-mcp`
+- **Description**: One-stop backend services for WeChat Mini-Programs and full-stack apps
+- **Category**: Cloud Development & Deployment
+- **Provider**: Tencent CloudBase
+
+## Logo
+
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/cloudbase-logo.svg"  width="300"/>
+
+## Links
+
+- **Homepage**: https://github.com/TencentCloudBase/CloudBase-AI-ToolKit
+- **NPM**: https://www.npmjs.com/package/@cloudbase/cloudbase-mcp
+- **Documentation**: https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/blob/main/README.md
+- **License**: MIT
+
+## Installation
+
+### NPM Command
+```bash
+npx @cloudbase/cloudbase-mcp@latest
+```
+
+### MCP Configuration
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_ENV_ID": "your-env-id"
+      }
+    }
+  }
+}
+```
+
+
+
+## Key Features
+
+- WeChat Mini-Program development and deployment
+- Serverless cloud functions and databases  
+- One-click deployment to production
+- China market access with WeChat ecosystem
+- Built-in cloud development knowledge base
+- 34 specialized MCP tools
+
+## Tags
+
+```
+cloudbase, tencent-cloud, wechat, mini-programs, serverless, deployment, china, full-stack
+```
+
+## Technical Specs
+
+- **Node.js**: 18+
+- **Platform**: Cross-platform
+- **Tools Count**: 34
+- **Transport**: stdio, http, sse
+- **Authentication**: Environment ID required
+
+
+
+## Project Highlights
+
+### Why Choose CloudBase MCP
+
+- Access to China's largest mobile platform (WeChat)
+- Complete serverless backend without infrastructure management
+- AI-native tools designed for modern development workflows
+- Official Tencent Cloud support and reliability
+
+## Contact
+
+- **GitHub Issues**: https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues
+- **Provider**: Tencent CloudBase Team 

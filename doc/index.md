@@ -62,6 +62,8 @@
 - [开发指南](./development) - 深入了解开发最佳实践
 - [使用案例](./examples) - 查看实际应用案例
 - [MCP工具](./mcp-tools) - 了解所有可用工具
+- [MCP上架材料](./mcp-listing-materials.md) - 第三方市场上架材料（英文）
+- [MCP上架材料](./mcp-listing-materials-zh.md) - 第三方市场上架材料（中文）
 - [常见问题](./troubleshooting) - 解决开发中的问题
 - [FAQ](./faq) - 查看常见问题解答
 
