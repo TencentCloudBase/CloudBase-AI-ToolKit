@@ -22,8 +22,9 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commits)
 [![GitHub contributors](https://img.shields.io/github/contributors/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/graphs/contributors)
 [![CNB 镜像](https://img.shields.io/badge/CNB-CloudBase--AI--ToolKit-blue?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHJ4PSIyIiBmaWxsPSIjM0I4MkY2Ii8+PHBhdGggZD0iTTUgM0g3VjVINSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNNSA3SDdWOUg1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==)](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/TencentCloudBase/CloudBase-AI-ToolKit)
 
-当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
+当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Claude Code**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
 
 
 **📹 完整视频演示 ⬇️**
@@ -114,6 +115,9 @@ npx -y clear-npx-cache
 - **Vue Web 应用 + 云开发模板**  
   [下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-vue-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-vue-template)
 
+- **UniApp 跨端应用 + 云开发模板**  
+  [下载代码包](https://static.cloudbase.net/cloudbase-examples/universal-cloudbase-uniapp-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/universal/cloudbase-uniapp-template)
+
 - **AI 规则通用云开发模板** ：不限定语言和框架，内置 CloudBase AI 规则和MCP，适用于任意云开发项目
 
   [下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-project.zip) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-project)
@@ -142,7 +146,7 @@ npx -y clear-npx-cache
 | [RooCode](https://roocode.com/) | VS Code插件 |
 | [文心快码](https://comate.baidu.com/) | VS Code、JetBrains插件|
 | [Augment Code](https://www.augmentcode.com/) | VS Code、JetBrains 插件 |
-
+| [Claude Code](https://www.anthropic.com/claude-code) | 命令行工具 |
 
 <details>
 <summary><strong>🔧 Cursor 配置</strong></summary>
@@ -455,6 +459,37 @@ npx -y clear-npx-cache
 </details>
 
 <details>
+<summary><strong>🤖 Claude Code 配置</strong></summary>
+
+#### 步骤1：使用 AI 规则
+
+模板中已包含 `CLAUDE.md` 文件，Claude Code 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则
+
+#### 步骤2：配置 MCP
+
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在项目根目录创建 `.mcp.json` 文件：
+
+```json
+{
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@cloudbase/cloudbase-mcp@latest"
+      ]
+    }
+  }
+}
+```
+
+#### 步骤3：使用 AI 对话
+
+在 Claude Code 中直接与 AI 对话进行智能代码生成和自动化操作。
+
+</details>
+
+<details>
 <summary><strong>🔄 更新 CloudBase AI ToolKit</strong></summary>
 
 **更新 AI 规则**
@@ -649,48 +684,38 @@ AI 会自动：
 
 ## 🛠️ 云开发 MCP 工具一览
 
-| 工具名称 | 功能简介 |
-|----------|----------|
-| login | 登录并自动配置云开发环境 |
-| logout | 登出当前云开发账户 |
-| downloadTemplate | 下载CloudBase项目模板（React、小程序、AI编辑器配置等） |
-| listEnvs | 获取所有云开发环境信息 |
-| getEnvAuthDomains | 获取云开发环境的合法域名列表 |
-| createEnvDomain | 为云开发环境添加安全域名 |
-| deleteEnvDomain | 删除云开发环境的指定安全域名 |
-| getEnvInfo | 获取当前云开发环境信息 |
-| updateEnvInfo | 修改云开发环境别名 |
-| createCollection | 创建一个新的云开发数据库集合 |
-| checkCollectionExists | 检查云开发数据库集合是否存在 |
-| updateCollection | 更新云开发数据库集合配置（创建或删除索引） |
-| describeCollection | 获取云开发数据库集合的详细信息 |
-| listCollections | 获取云开发数据库集合列表 |
-| checkIndexExists | 检查索引是否存在 |
-| distribution | 查询数据库中集合的数据分布情况 |
-| insertDocuments | 向集合中插入文档 |
-| queryDocuments | 查询集合中的文档 |
-| updateDocuments | 更新集合中的文档 |
-| deleteDocuments | 删除集合中的文档 |
-| manageDataModel | 数据模型查询工具，支持查询和列表数据模型（只读操作）。list操作返回基础信息，get操作返回详细信息含Schema（字段列表、格式、关联关系等），docs操作生成SDK使用文档 |
-| uploadFiles | 上传文件到静态网站托管 |
-| listFiles | 获取静态网站托管的文件列表 |
-| deleteFiles | 删除静态网站托管的文件或文件夹 |
-| findFiles | 搜索静态网站托管的文件 |
-| domainManagement | 统一的域名管理工具，支持绑定、解绑、查询和修改域名配置 |
-| getWebsiteConfig | 获取静态网站配置 |
-| getFunctionList | 获取云函数列表 |
-| createFunction | 创建云函数 |
-| updateFunctionCode | 更新云函数代码 |
-| updateFunctionConfig | 更新云函数配置 |
-| getFunctionDetail | 获取云函数详情 |
-| invokeFunction | 调用云函数 |
-| getFunctionLogs | 获取云函数日志 |
-| createFunctionTriggers | 创建云函数触发器 |
-| deleteFunctionTrigger | 删除云函数触发器 |
-| downloadRemoteFile | 下载远程文件到本地临时文件 |
-| uploadFile | 上传文件到云存储（适合存储业务数据文件） |
-| searchKnowledgeBase | 智能检索云开发知识库（支持云开发与云函数以及小程序知识），通过向量搜索快速获取专业文档与答案。|
-| interactiveDialog | 统一的交互式对话工具，支持需求澄清和任务确认 |
+目前共有 **35 个工具**，涵盖环境管理、数据库操作、云函数管理、静态托管等核心功能。
+
+📋 **完整工具文档**: [查看 MCP 工具详细说明](doc/mcp-tools.md) | [查看工具规格 JSON](scripts/tools.json)
+
+### 🔧 工具分类概览
+
+| 分类 | 工具数量 | 主要功能 |
+|------|----------|----------|
+| 🌍 **环境管理** | 4 个 | 登录认证、环境信息查询、域名管理 |
+| 🗄️ **数据库操作** | 11 个 | 集合管理、文档 CRUD、索引操作、数据模型 |
+| ⚡ **云函数管理** | 9 个 | 函数创建、更新、调用、日志、触发器 |
+| 🌐 **静态托管** | 5 个 | 文件上传管理、域名配置、网站部署 |
+| 📁 **文件操作** | 2 个 | 远程文件下载、云存储上传 |
+| 🛠️ **工具支持** | 3 个 | 项目模板、知识库搜索、交互对话 |
+| 🔌 **HTTP访问** | 1 个 | HTTP 函数访问配置 |
+
+### 🌟 核心工具亮点
+
+| 工具类型 | 工具名称 | 功能亮点 |
+|----------|----------|----------|
+| 🔐 **身份认证** | `login` / `logout` | 一键登录云开发，自动环境选择 |
+| 📊 **环境查询** | `envQuery` | **🔄 合并工具** - 环境列表、信息、域名一体化查询 |
+| 🗄️ **数据库** | `collectionQuery` | **🔄 合并工具** - 集合存在性、详情、列表统一管理 |
+| ⚡ **云函数** | `createFunction` | 支持完整配置、自动依赖安装、触发器设置 |
+| 🌐 **静态托管** | `uploadFiles` | 批量文件上传、智能忽略规则、CDN 加速 |
+| 🧠 **AI 增强** | `searchKnowledgeBase` | 向量搜索云开发知识库，智能问答支持 |
+
+### 💡 工具优化说明
+
+我们将原来 40 个工具优化为 35 个，通过合并相关功能提供更好的使用体验
+
+🔗 **想了解每个工具的详细功能？** 请查看 [MCP 工具完整文档](doc/mcp-tools.md)
 
 ## 🏗️ 架构原理
 
@@ -730,3 +755,6 @@ graph TD
 
 ⭐ 如果这个项目对你有帮助，请给我们一个 Star！
 
+[![Star History Chart](https://api.star-history.com/svg?repos=TencentCloudBase/CloudBase-AI-ToolKit&type=Timeline)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+
+![Alt](https://repobeats.axiom.co/api/embed/60598d4f0cad83043b6317528e0fa0691122003d.svg "Repobeats analytics image")

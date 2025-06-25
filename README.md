@@ -756,3 +756,5 @@ graph TD
 ⭐ 如果这个项目对你有帮助，请给我们一个 Star！
 
 [![Star History Chart](https://api.star-history.com/svg?repos=TencentCloudBase/CloudBase-AI-ToolKit&type=Timeline)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+
+![Alt](https://repobeats.axiom.co/api/embed/60598d4f0cad83043b6317528e0fa0691122003d.svg "Repobeats analytics image")

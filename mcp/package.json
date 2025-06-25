@@ -1,8 +1,9 @@
 {
   "name": "@cloudbase/cloudbase-mcp",
-  "version": "1.8.3",
+  "version": "1.8.4",
   "description": "腾讯云开发 MCP Server，支持静态托管/环境查询/",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
   "bin": {
@@ -10,8 +11,14 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
       "default": "./dist/index.js"
     }
   },
@@ -23,7 +30,8 @@
   "scripts": {
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
-    "build": "tsc && chmod 755 dist/cli.js",
+    "build": "tsup src/index.ts src/cli.ts --format cjs,esm --dts --clean --sourcemap --splitting=false",
+    "build:legacy": "tsc && chmod 755 dist/cli.js",
     "test": "npm run build && npx @modelcontextprotocol/inspector node ./dist/cli.js",
     "prepublishOnly": "npm run build"
   },
@@ -56,6 +64,7 @@
     "@types/express": "^5.0.3",
     "@types/node": "^22.14.1",
     "@types/ws": "^8.18.1",
+    "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   }
 }

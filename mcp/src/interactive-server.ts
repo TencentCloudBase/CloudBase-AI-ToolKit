@@ -6,7 +6,17 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { debug, info, warn, error, getLogs, getLoggerStatus, clearLogs } from './utils/logger.js';
 
-const __filename = fileURLToPath(import.meta.url);
+const getFilename = (): string => {
+  if (typeof import.meta !== 'undefined' && import.meta.url) {
+    return fileURLToPath(import.meta.url);
+  }
+  if (typeof (globalThis as any).__filename === 'string') {
+    return (globalThis as any).__filename;
+  }
+  return require.main?.filename || process.cwd() + '/interactive-server.js';
+};
+
+const __filename = getFilename();
 const __dirname = path.dirname(__filename);
 
 export interface InteractiveResult {
@@ -24,7 +34,6 @@ export class InteractiveServer {
   private currentResolver: ((result: InteractiveResult) => void) | null = null;
   private sessionData: Map<string, any> = new Map();
   
-  // 固定端口配置
   private readonly DEFAULT_PORT = 3721;
   private readonly FALLBACK_PORTS = [3722, 3723, 3724, 3725, 3726, 3727, 3728, 3729, 3730, 3731, 3732, 3733, 3734, 3735];
 
@@ -36,7 +45,6 @@ export class InteractiveServer {
     this.setupExpress();
     this.setupWebSocket();
     
-    // 确保进程退出时清理资源
     process.on('exit', () => this.cleanup());
     process.on('SIGINT', () => this.cleanup());
     process.on('SIGTERM', () => this.cleanup());
@@ -55,7 +63,6 @@ export class InteractiveServer {
     this.app.use(express.json());
     this.app.use(express.static(path.join(__dirname, '../static')));
 
-    // 环境ID收集页面
     this.app.get('/env-setup/:sessionId', (req, res) => {
       const { sessionId } = req.params;
       const sessionData = this.sessionData.get(sessionId);
@@ -68,7 +75,6 @@ export class InteractiveServer {
       res.send(this.getEnvSetupHTML(sessionData.envs));
     });
 
-    // 需求澄清页面
     this.app.get('/clarification/:sessionId', (req, res) => {
       const { sessionId } = req.params;
       const sessionData = this.sessionData.get(sessionId);
@@ -81,7 +87,6 @@ export class InteractiveServer {
       res.send(this.getClarificationHTML(sessionData.message, sessionData.options));
     });
 
-    // 日志查看页面
     this.app.get('/debug/logs', async (req, res) => {
       try {
         const logs = await getLogs(1000);
@@ -92,7 +97,6 @@ export class InteractiveServer {
       }
     });
 
-    // 日志API
     this.app.get('/api/logs', async (req, res) => {
       try {
         const maxLines = parseInt(req.query.maxLines as string) || 1000;
@@ -113,29 +117,18 @@ export class InteractiveServer {
       }
     });
 
-    // API接口
     this.app.post('/api/submit', (req, res) => {
       const { type, data } = req.body;
-      debug('🔥 === /api/submit 收到请求 ===');
-      debug('🔥 请求体 req.body:', JSON.stringify(req.body, null, 2));
-      debug('🔥 解析后 type:', type);
-      debug('🔥 解析后 data:', data);
-      debug('🔥 当前 currentResolver 状态:', this.currentResolver ? '有' : '无');
-      
       debug('Received submit request', { type, data });
       
       if (this.currentResolver) {
         info('Resolving with user data');
-        debug('🔥 调用 currentResolver，参数:', { type, data });
         this.currentResolver({ type, data });
         this.currentResolver = null;
-        debug('🔥 已清空 currentResolver');
       } else {
         warn('No resolver waiting for response');
-        debug('🔥 ❌ 没有等待响应的resolver！');
       }
       
-      debug('🔥 返回成功响应');
       res.json({ success: true });
     });
 

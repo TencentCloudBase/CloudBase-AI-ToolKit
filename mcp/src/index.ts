@@ -1,6 +1,4 @@
 // CloudBase MCP Server Library
-// This is the main entry point for using CloudBase MCP as a library
-
 export {
   createCloudBaseMcpServer,
   getDefaultServer,
@@ -14,7 +12,6 @@ export {
   warn
 } from "./server.js";
 
-// Re-export important types
 export type {
   UploadFileParams,
   ListFilesParams,
@@ -27,13 +24,25 @@ export type {
   CloudBaseOptions
 } from "./types.js";
 
-// Re-export auth utilities
 export { getLoginState, logout } from "./auth.js";
 
-// Re-export CloudBase manager
 export {
   getCloudBaseManager,
   getEnvId,
   resetCloudBaseManagerCache,
   createCloudBaseManagerWithOptions
 } from "./cloudbase-manager.js";
+
+export type { InteractiveResult } from "./interactive-server.js";
+
+/**
+ * Get interactive server instance (CommonJS compatible)
+ */
+export async function getInteractiveServerAsync() {
+  if (typeof require !== 'undefined' && typeof import.meta === 'undefined') {
+    throw new Error('Interactive server requires ESM environment or dynamic import. Please use: const { getInteractiveServer } = await import("@cloudbase/cloudbase-mcp")');
+  }
+  
+  const { getInteractiveServer } = await import("./interactive-server.js");
+  return getInteractiveServer();
+}
