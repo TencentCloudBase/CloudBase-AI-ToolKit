@@ -61,6 +61,7 @@
 - [项目模板](./templates) - 选择合适的项目模板
 - [开发指南](./development) - 深入了解开发最佳实践
 - [使用案例](./examples) - 查看实际应用案例
+- [教程](./tutorials) - 编程实战、AI Coding组合、应用项目和视频教程
 - [MCP工具](./mcp-tools) - 了解所有可用工具
 - [MCP上架材料](./mcp-listing-materials.md) - 第三方市场上架材料（英文）
 - [MCP上架材料](./mcp-listing-materials-zh.md) - 第三方市场上架材料（中文）

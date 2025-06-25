@@ -615,6 +615,20 @@ AI 会自动：
 
 
 
+## 📚 教程
+
+### 📄 文章
+- [1小时开发微信小游戏《我的早餐店》——基于CloudBase AI Toolkit](https://cloud.tencent.com/developer/article/2532595)
+- [AI Coding宝藏组合：Cursor + Cloudbase-AI-Toolkit 开发游戏实战](https://juejin.cn/post/7518783423277695028#comment)
+
+### 📱 应用项目
+- [简历助手小程序](https://gitcode.com/qq_33681891/resume_template)
+
+### 🎥 视频教程
+- [云开发CloudBase：用AI开发一款分手厨房小游戏](https://www.bilibili.com/video/BV1v5KAzwEf9/)
+
+---
+
 ## 🎯 使用案例
 
 ### 案例1：双人在线对战五子棋
