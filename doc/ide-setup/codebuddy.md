@@ -1,4 +1,4 @@
-# CloudBase AI Toolkit + CodeBuddy - AI 驱动的全栈云开发解决方案
+# CloudBase AI Toolkit + CodeBuddy
 
 <div align="center">
 
@@ -56,7 +56,12 @@
 
 ### 步骤 2：配置 CloudBase MCP
 
-点开 CodeBuddy 右上角的 MCP 按钮，点击右侧的添加，在 MCP 配置中添加：
+
+>[!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
+1. 可以在 点开 CodeBuddy 右上角的 MCP 按钮，在 MCP 市场中搜索 CloudBase，然后点击安装即可。
+2. 也可以选择手动安装，点开 CodeBuddy 右上角的 MCP 按钮，点击右侧的添加，在 MCP 配置中添加：
 
 ```json
 {

@@ -157,7 +157,11 @@ npx -y clear-npx-cache
 
 #### 步骤2：配置 MCP
 
-如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，可以点击下方按钮安装到 Cursor 中：
+
+>[!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
+如果使用模板项目，MCP 配置已经预置完成，请点击左下角的弹出的窗口启用MCP。如果不是从模板开始，可以点击下方按钮安装到 Cursor 中：
 
 [![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=CloudBase&config=eyJjb21tYW5kIjoibnB4IEBjbG91ZGJhc2UvY2xvdWRiYXNlLW1jcEBsYXRlc3QiLCJkaXNhYmxlZCI6ZmFsc2V9)
 
@@ -191,6 +195,9 @@ npx -y clear-npx-cache
 
 #### 步骤2：配置 MCP
 
+>[!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
 如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 WindSurf 的 Plugins 配置中添加：
 
 ```json
@@ -203,6 +210,9 @@ npx -y clear-npx-cache
   }
 }
 ```
+
+
+
 
 #### 步骤3：切换到 Write 模式
 
@@ -219,7 +229,12 @@ npx -y clear-npx-cache
 
 #### 步骤2：配置 MCP
 
-点开 CodeBuddy 右上角的 MCP 按钮，点击右侧的添加，在 MCP 配置中添加云开发的 MCP
+
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
+1. 可以在 点开 CodeBuddy 右上角的 MCP 按钮，在 MCP 市场中搜索 CloudBase，然后点击安装即可。
+
+2. 也可以手动添加，点开 CodeBuddy 右上角的 MCP 按钮，点击右侧的添加，在 MCP 配置中添加云开发的 MCP
 
 ```json
 {
@@ -231,6 +246,9 @@ npx -y clear-npx-cache
   }
 }
 ```
+
+
+
 
 #### 步骤3：切换到 Craft 智能体
 
@@ -246,6 +264,10 @@ npx -y clear-npx-cache
 模板中已包含 `.clinerules/` 目录，AI 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
 #### 步骤2：配置 MCP
+
+
+>[!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
 如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP Server 配置中添加：
 
@@ -281,6 +303,10 @@ npx -y clear-npx-cache
 
 #### 步骤2：配置 MCP
 
+
+>[!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
 如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 `.vscode/mcp.json` 中添加：
 
 ```json
@@ -313,7 +339,11 @@ npx -y clear-npx-cache
 
 #### 步骤2：配置 MCP
 
-如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
+
+>[!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
+需要在 Trae 的MCP 配置中添加：
 
 ```json
 {
@@ -340,6 +370,10 @@ npx -y clear-npx-cache
 模板中已包含 `.lingma/` 目录，通义灵码会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
 #### 步骤2：配置 MCP
+
+
+>[!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
 如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
@@ -368,6 +402,10 @@ npx -y clear-npx-cache
 模板中已包含 `.roo/rules` 目录，RooCode 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
 #### 步骤2：配置 MCP
+
+
+>[!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
 如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
@@ -399,6 +437,10 @@ npx -y clear-npx-cache
 模板中已包含 `.comate/rules` 目录，文心快码会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
 #### 步骤2：配置 MCP
+
+
+>[!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
 如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
@@ -435,6 +477,10 @@ npx -y clear-npx-cache
 
 #### 步骤2：配置 MCP
 
+
+>[!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
 如果使用模板项目，MCP 配置已经预置完成(内置在`.vscode/settings.json`中)。如果不是从模板开始，需要在 Augment的 MCP 配置中添加云开发 MCP，[参考文档](https://docs.augmentcode.com/setup-augment/mcp)：
 
 ```json
@@ -466,6 +512,10 @@ npx -y clear-npx-cache
 模板中已包含 `CLAUDE.md` 文件，Claude Code 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则
 
 #### 步骤2：配置 MCP
+
+
+>[!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
 如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在项目根目录创建 `.mcp.json` 文件：
 

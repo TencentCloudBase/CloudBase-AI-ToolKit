@@ -1,4 +1,4 @@
-# CloudBase AI Toolkit + CLINE - AI 驱动的全栈云开发解决方案
+# CloudBase AI Toolkit + CLINE
 
 <div align="center">
 
@@ -53,6 +53,10 @@
 3. 点击安装 CLINE 插件
 
 ### 步骤 2：配置 CloudBase MCP
+
+
+>[!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
 创建 `.clinerules/mcp.json` 文件：
 

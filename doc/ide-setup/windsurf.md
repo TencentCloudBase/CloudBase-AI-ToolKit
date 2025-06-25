@@ -1,4 +1,4 @@
-# CloudBase AI Toolkit + WindSurf - AI 驱动的全栈云开发解决方案
+# CloudBase AI Toolkit + WindSurf
 
 <div align="center">
 
@@ -51,6 +51,10 @@
 从 [WindSurf 官网](https://windsurf.com/editor) 下载并安装 WindSurf 编辑器。
 
 ### 步骤 2：配置 CloudBase MCP
+
+
+>[!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
 在 WindSurf 的 Plugins 配置中添加：
 
