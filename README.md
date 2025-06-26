@@ -37,6 +37,8 @@
 |---|---|
 | 🤖 **AI智能开发**: AI自动生成代码和架构设计<br>☁️ **云开发集成**: 一键接入数据库、云函数、静态托管<br>⚡ **快速部署**: 几分钟内完成全栈应用上线 | **Web应用**: 现代化前端 + 静态托管<br>**微信小程序**: 云开发小程序解决方案<br>**后端服务**: 云数据库 + 无服务器函数+云托管 |
 
+📚 [快速开始](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/getting-started) | 🛠️ [IDE配置](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/) | 🎨 [项目模板](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates) | 📖 [开发指南](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/development) | 🎮 [使用案例](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/examples) | 🎓 [教程](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials) | 🔧 [MCP工具](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/mcp-tools) | ❓ [常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)
+
 
 </div> 
 
