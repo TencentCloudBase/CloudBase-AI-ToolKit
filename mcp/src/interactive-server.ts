@@ -1,10 +1,21 @@
 import express from 'express';
 import http from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
-import open from 'open';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { debug, info, warn, error, getLogs, getLoggerStatus, clearLogs } from './utils/logger.js';
+
+// 动态导入 open 模块，兼容 ESM/CJS 环境
+async function openUrl(url: string, options?: any) {
+  try {
+    const openModule = await import('open');
+    const open = openModule.default || openModule;
+    return await open(url, options);
+  } catch (err) {
+    error('Failed to import or use open module', err);
+    warn(`Please manually open: ${url}`);
+  }
+}
 
 const getFilename = (): string => {
   if (typeof import.meta !== 'undefined' && import.meta.url) {
@@ -13,7 +24,11 @@ const getFilename = (): string => {
   if (typeof (globalThis as any).__filename === 'string') {
     return (globalThis as any).__filename;
   }
-  return require.main?.filename || process.cwd() + '/interactive-server.js';
+  // 更安全的降级方案
+  if (typeof require !== 'undefined' && require.main && require.main.filename) {
+    return require.main.filename;
+  }
+  return path.join(process.cwd(), 'interactive-server.js');
 };
 
 const __filename = getFilename();
@@ -314,7 +329,7 @@ export class InteractiveServer {
       
       try {
         // 使用默认浏览器打开一个新窗口
-        await open(url, { wait: false });
+        await openUrl(url, { wait: false });
         info('Browser opened successfully');
       } catch (browserError) {
         error('Failed to open browser', browserError);
@@ -355,7 +370,7 @@ export class InteractiveServer {
     const url = `http://localhost:${port}/clarification/${sessionId}`;
     
     // 打开浏览器
-    await open(url);
+    await openUrl(url);
 
     return new Promise((resolve) => {
       this.currentResolver = resolve;

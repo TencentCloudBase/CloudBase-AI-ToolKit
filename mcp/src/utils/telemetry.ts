@@ -67,8 +67,20 @@ class TelemetryReporter {
 
             // 如果环境变量不可用，直接读取package.json文件
             if (!mcpVersion) {
-                const __filename = fileURLToPath(import.meta.url);
-                const __dirname = dirname(__filename);
+                let __dirname: string;
+                
+                // 兼容 ESM 和 CJS 环境
+                if (typeof import.meta !== 'undefined' && import.meta.url) {
+                    const __filename = fileURLToPath(import.meta.url);
+                    __dirname = dirname(__filename);
+                } else if (typeof (globalThis as any).__filename !== 'undefined') {
+                    // CJS 环境中，__filename 是全局变量
+                    __dirname = dirname((globalThis as any).__filename);
+                } else {
+                    // 降级方案
+                    __dirname = process.cwd();
+                }
+                
                 // 从当前文件位置向上查找package.json
                 const packageJsonPath = join(__dirname, '../../package.json');
                 const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));

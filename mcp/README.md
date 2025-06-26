@@ -37,6 +37,8 @@
 |---|---|
 | 🤖 **AI智能开发**: AI自动生成代码和架构设计<br>☁️ **云开发集成**: 一键接入数据库、云函数、静态托管<br>⚡ **快速部署**: 几分钟内完成全栈应用上线 | **Web应用**: 现代化前端 + 静态托管<br>**微信小程序**: 云开发小程序解决方案<br>**后端服务**: 云数据库 + 无服务器函数+云托管 |
 
+📚 [快速开始](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/getting-started) | 🛠️ [IDE配置](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/) | 🎨 [项目模板](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates) | 📖 [开发指南](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/development) | 🎮 [使用案例](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/examples) | 🎓 [教程](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials) | 🔧 [MCP工具](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/mcp-tools) | ❓ [常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)
+
 
 </div> 
 
@@ -147,6 +149,7 @@ npx -y clear-npx-cache
 | [文心快码](https://comate.baidu.com/) | VS Code、JetBrains插件|
 | [Augment Code](https://www.augmentcode.com/) | VS Code、JetBrains 插件 |
 | [Claude Code](https://www.anthropic.com/claude-code) | 命令行工具 |
+| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | 命令行工具 |
 
 <details>
 <summary><strong>🔧 Cursor 配置</strong></summary>
@@ -157,7 +160,11 @@ npx -y clear-npx-cache
 
 #### 步骤2：配置 MCP
 
-如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，可以点击下方按钮安装到 Cursor 中：
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
+如果使用模板项目，MCP 配置已经预置完成，请点击左下角的弹出的窗口启用MCP。如果不是从模板开始，可以点击下方按钮安装到 Cursor 中：
 
 [![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=CloudBase&config=eyJjb21tYW5kIjoibnB4IEBjbG91ZGJhc2UvY2xvdWRiYXNlLW1jcEBsYXRlc3QiLCJkaXNhYmxlZCI6ZmFsc2V9)
 
@@ -191,6 +198,9 @@ npx -y clear-npx-cache
 
 #### 步骤2：配置 MCP
 
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
 如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 WindSurf 的 Plugins 配置中添加：
 
 ```json
@@ -203,6 +213,9 @@ npx -y clear-npx-cache
   }
 }
 ```
+
+
+
 
 #### 步骤3：切换到 Write 模式
 
@@ -219,7 +232,12 @@ npx -y clear-npx-cache
 
 #### 步骤2：配置 MCP
 
-点开 CodeBuddy 右上角的 MCP 按钮，点击右侧的添加，在 MCP 配置中添加云开发的 MCP
+
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
+1. 可以在 点开 CodeBuddy 右上角的 MCP 按钮，在 MCP 市场中搜索 CloudBase，然后点击安装即可。
+
+2. 也可以手动添加，点开 CodeBuddy 右上角的 MCP 按钮，点击右侧的添加，在 MCP 配置中添加云开发的 MCP
 
 ```json
 {
@@ -231,6 +249,9 @@ npx -y clear-npx-cache
   }
 }
 ```
+
+
+
 
 #### 步骤3：切换到 Craft 智能体
 
@@ -246,6 +267,10 @@ npx -y clear-npx-cache
 模板中已包含 `.clinerules/` 目录，AI 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
 #### 步骤2：配置 MCP
+
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
 如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP Server 配置中添加：
 
@@ -281,6 +306,10 @@ npx -y clear-npx-cache
 
 #### 步骤2：配置 MCP
 
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
 如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 `.vscode/mcp.json` 中添加：
 
 ```json
@@ -313,7 +342,11 @@ npx -y clear-npx-cache
 
 #### 步骤2：配置 MCP
 
-如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
+需要在 Trae 的MCP 配置中添加：
 
 ```json
 {
@@ -340,6 +373,10 @@ npx -y clear-npx-cache
 模板中已包含 `.lingma/` 目录，通义灵码会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
 #### 步骤2：配置 MCP
+
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
 如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
@@ -368,6 +405,10 @@ npx -y clear-npx-cache
 模板中已包含 `.roo/rules` 目录，RooCode 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
 #### 步骤2：配置 MCP
+
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
 如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
@@ -399,6 +440,10 @@ npx -y clear-npx-cache
 模板中已包含 `.comate/rules` 目录，文心快码会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
 
 #### 步骤2：配置 MCP
+
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
 如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在 MCP 配置中添加：
 
@@ -435,6 +480,10 @@ npx -y clear-npx-cache
 
 #### 步骤2：配置 MCP
 
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
 如果使用模板项目，MCP 配置已经预置完成(内置在`.vscode/settings.json`中)。如果不是从模板开始，需要在 Augment的 MCP 配置中添加云开发 MCP，[参考文档](https://docs.augmentcode.com/setup-augment/mcp)：
 
 ```json
@@ -467,6 +516,10 @@ npx -y clear-npx-cache
 
 #### 步骤2：配置 MCP
 
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
 如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，需要在项目根目录创建 `.mcp.json` 文件：
 
 ```json
@@ -486,6 +539,79 @@ npx -y clear-npx-cache
 #### 步骤3：使用 AI 对话
 
 在 Claude Code 中直接与 AI 对话进行智能代码生成和自动化操作。
+
+</details>
+
+<details>
+<summary><strong>🔹 Gemini CLI 配置</strong></summary>
+
+#### 步骤1：安装 Gemini CLI
+
+确保安装 Node.js 18+，然后全局安装 Gemini CLI：
+
+```bash
+npm install -g @google/gemini-cli
+```
+
+或直接运行：
+
+```bash
+npx @google/gemini-cli
+```
+
+首次运行时，使用个人 Google 账户登录即可获得免费额度（每分钟 60 次请求，每天 1000 次请求）。
+
+#### 步骤2：配置 MCP
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
+
+如果使用模板项目，MCP 配置已经预置完成。
+
+如果不是从模板开始，可以在用户主目录（`~`）或项目目录中创建 `.gemini/settings.json` 文件：
+
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+    }
+  }
+}
+```
+
+#### 步骤3：启用 AI 规则
+
+
+模板项目根目录已经包含 `GEMINI.md` 文件，包含 CloudBase 开发规则。
+
+如果是现有项目，在 Gemini CLI 中对 AI 说：
+
+```
+在当前项目中下载云开发 AI 规则
+```
+
+#### 步骤4：开始开发
+
+启动 Gemini CLI：
+
+```bash
+gemini
+```
+
+然后对 AI 说：
+
+```
+登录云开发
+```
+
+**常用命令：**
+- `/tools` - 查看可用工具
+- `/mcp` - 查看 MCP 服务器状态
+- `/memory show` - 查看当前规则
+- `!command` - 执行 Shell 命令
 
 </details>
 
@@ -564,6 +690,20 @@ AI 会自动：
 ```
 
 
+
+## 📚 教程
+
+### 📄 文章
+- [1小时开发微信小游戏《我的早餐店》——基于CloudBase AI Toolkit](https://cloud.tencent.com/developer/article/2532595)
+- [AI Coding宝藏组合：Cursor + Cloudbase-AI-Toolkit 开发游戏实战](https://juejin.cn/post/7518783423277695028#comment)
+
+### 📱 应用项目
+- [简历助手小程序](https://gitcode.com/qq_33681891/resume_template)
+
+### 🎥 视频教程
+- [云开发CloudBase：用AI开发一款分手厨房小游戏](https://www.bilibili.com/video/BV1v5KAzwEf9/)
+
+---
 
 ## 🎯 使用案例
 
