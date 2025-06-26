@@ -114,10 +114,9 @@ export function registerEnvTools(server: ExtendedMcpServer) {
     "envQuery",
     {
       title: "环境查询",
-      description: "查询云开发环境相关信息，支持查询环境列表、当前环境信息和安全域名",
+      description: "查询云开发环境相关信息，支持查询环境列表、当前环境信息和安全域名。（原工具名：listEnvs/getEnvInfo/getEnvAuthDomains，为兼容旧AI规则可继续使用这些名称）",
       inputSchema: {
-        action: z.enum(["list", "info", "domains"]).describe("查询类型：list=环境列表，info=当前环境信息，domains=安全域名列表"),
-        confirm: z.literal("yes").optional().describe("确认操作，默认传 yes")
+        action: z.enum(["list", "info", "domains"]).describe("查询类型：list=环境列表，info=当前环境信息，domains=安全域名列表")
       },
       annotations: {
         readOnlyHint: true,
@@ -171,7 +170,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
     "envDomainManagement",
     {
       title: "环境域名管理",
-      description: "管理云开发环境的安全域名，支持添加和删除操作",
+      description: "管理云开发环境的安全域名，支持添加和删除操作。（原工具名：createEnvDomain/deleteEnvDomain，为兼容旧AI规则可继续使用这些名称）",
       inputSchema: {
         action: z.enum(["create", "delete"]).describe("操作类型：create=添加域名，delete=删除域名"),
         domains: z.array(z.string()).describe("安全域名数组")

@@ -452,7 +452,7 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
     "collectionQuery",
     {
       title: "集合查询",
-      description: "数据库集合的查询操作，支持检查存在性、查看详情和列表查询",
+      description: "数据库集合的查询操作，支持检查存在性、查看详情和列表查询。（原工具名：checkCollectionExists/describeCollection/listCollections，为兼容旧AI规则可继续使用这些名称）",
       inputSchema: {
         action: z.enum(["check", "describe", "list"]).describe("操作类型：check=检查是否存在，describe=查看详情，list=列表查询"),
         collectionName: z.string().optional().describe("集合名称（check、describe操作时必填）"),
