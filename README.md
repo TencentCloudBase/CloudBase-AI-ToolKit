@@ -147,6 +147,7 @@ npx -y clear-npx-cache
 | [文心快码](https://comate.baidu.com/) | VS Code、JetBrains插件|
 | [Augment Code](https://www.augmentcode.com/) | VS Code、JetBrains 插件 |
 | [Claude Code](https://www.anthropic.com/claude-code) | 命令行工具 |
+| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | 命令行工具 |
 
 <details>
 <summary><strong>🔧 Cursor 配置</strong></summary>
@@ -536,6 +537,79 @@ npx -y clear-npx-cache
 #### 步骤3：使用 AI 对话
 
 在 Claude Code 中直接与 AI 对话进行智能代码生成和自动化操作。
+
+</details>
+
+<details>
+<summary><strong>🔹 Gemini CLI 配置</strong></summary>
+
+#### 步骤1：安装 Gemini CLI
+
+确保安装 Node.js 18+，然后全局安装 Gemini CLI：
+
+```bash
+npm install -g @google/gemini-cli
+```
+
+或直接运行：
+
+```bash
+npx @google/gemini-cli
+```
+
+首次运行时，使用个人 Google 账户登录即可获得免费额度（每分钟 60 次请求，每天 1000 次请求）。
+
+#### 步骤2：配置 MCP
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
+
+如果使用模板项目，MCP 配置已经预置完成。
+
+如果不是从模板开始，可以在用户主目录（`~`）或项目目录中创建 `.gemini/settings.json` 文件：
+
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+    }
+  }
+}
+```
+
+#### 步骤3：启用 AI 规则
+
+
+模板项目根目录已经包含 `GEMINI.md` 文件，包含 CloudBase 开发规则。
+
+如果是现有项目，在 Gemini CLI 中对 AI 说：
+
+```
+在当前项目中下载云开发 AI 规则
+```
+
+#### 步骤4：开始开发
+
+启动 Gemini CLI：
+
+```bash
+gemini
+```
+
+然后对 AI 说：
+
+```
+登录云开发
+```
+
+**常用命令：**
+- `/tools` - 查看可用工具
+- `/mcp` - 查看 MCP 服务器状态
+- `/memory show` - 查看当前规则
+- `!command` - 执行 Shell 命令
 
 </details>
 

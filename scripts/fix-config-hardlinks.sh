@@ -27,6 +27,7 @@ TARGET_FILES=(
     "config/.comate/rules/cloudbaase-rules.mdr"
     "config/.augment-guidelines"
     "config/CLAUDE.md"
+    "config/.gemini/GEMINI.md"
 )
 
 echo -e "${BLUE}🔧 CloudBase AI 配置文件硬链接修复工具${NC}"

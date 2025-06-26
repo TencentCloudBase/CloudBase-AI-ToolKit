@@ -42,17 +42,18 @@
 
 | 工具 | 支持平台 |
 |------|----------|
-| [Cursor](https://cursor.com/) | 独立 IDE|
-| [WindSurf](https://windsurf.com/editor) | 独立 IDE, VSCode、JetBrains 插件 |
-| [CodeBuddy](https://copilot.tencent.com/) | VS Code、JetBrains、微信开发者工具插件 |
-| [CLINE](https://cline.so/) | VS Code 插件 |
-| [GitHub Copilot](https://github.com/features/copilot) | VS Code 插件 |
-| [Trae](https://www.trae.ai/) | 独立 IDE |
-| [通义灵码](https://tongyi.aliyun.com/lingma) | 独立 IDE，VS Code、 JetBrains插件 |
-| [RooCode](https://roocode.com/) | VS Code插件 |
-| [文心快码](https://comate.baidu.com/) | VS Code、JetBrains插件|
-| [Augment Code](https://www.augmentcode.com/) | VS Code、JetBrains 插件 |
-| [Claude Code](https://www.anthropic.com/claude-code) | 命令行工具 |
+| [Cursor](./ide-setup/cursor) | 独立 IDE|
+| [WindSurf](./ide-setup/windsurf) | 独立 IDE, VSCode、JetBrains 插件 |
+| [CodeBuddy](./ide-setup/codebuddy) | VS Code、JetBrains、微信开发者工具插件 |
+| [CLINE](./ide-setup/cline) | VS Code 插件 |
+| [GitHub Copilot](./ide-setup/github-copilot) | VS Code 插件 |
+| [Trae](./ide-setup/trae) | 独立 IDE |
+| [通义灵码](./ide-setup/tongyi-lingma) | 独立 IDE，VS Code、 JetBrains插件 |
+| [RooCode](./ide-setup/roocode) | VS Code插件 |
+| [文心快码](./ide-setup/baidu-comate) | VS Code、JetBrains插件|
+| [Augment Code](./ide-setup/augment-code) | VS Code、JetBrains 插件 |
+| [Claude Code](./ide-setup/claude-code) | 命令行工具 |
+| [Gemini CLI](./ide-setup/gemini-cli) | 命令行工具 |
 
 ## 🎯 快速导航
 
