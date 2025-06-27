@@ -2,7 +2,6 @@
 
 <div align="center">
 
-![CloudBase AI Toolkit](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/cloudbase-ai-toolkit.png)
 
 **🚀 Cursor + 云开发 = 几分钟内从想法到上线的全栈应用**
 

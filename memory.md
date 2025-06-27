@@ -10,3 +10,6 @@
 5. 更新 `README.md`、`doc/index.md`、`doc/faq.md` 中的 AI IDE 支持列表,README 中注意 detail 中的内容也要填写
 6. 验证硬链接状态和文档完整性
 </add_aiide>
+
+
+<>

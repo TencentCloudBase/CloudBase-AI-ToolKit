@@ -33,10 +33,7 @@ npx @cloudbase/cloudbase-mcp@latest
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_ENV_ID": "your-env-id"
-      }
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }

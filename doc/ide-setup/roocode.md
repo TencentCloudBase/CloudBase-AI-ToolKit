@@ -2,8 +2,6 @@
 
 <div align="center">
 
-![CloudBase AI Toolkit](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/cloudbase-ai-toolkit.png)
-
 **🚀 RooCode + 云开发 = 几分钟内从想法到上线的全栈应用**
 
 [![GitHub Stars](https://img.shields.io/github/stars/TencentCloudBase/CloudBase-AI-ToolKit?style=social)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
