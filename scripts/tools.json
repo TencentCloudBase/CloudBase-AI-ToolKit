@@ -39,7 +39,7 @@
     },
     {
       "name": "envQuery",
-      "description": "查询云开发环境相关信息，支持查询环境列表、当前环境信息和安全域名",
+      "description": "查询云开发环境相关信息，支持查询环境列表、当前环境信息和安全域名。（原工具名：listEnvs/getEnvInfo/getEnvAuthDomains，为兼容旧AI规则可继续使用这些名称）",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -51,11 +51,6 @@
               "domains"
             ],
             "description": "查询类型：list=环境列表，info=当前环境信息，domains=安全域名列表"
-          },
-          "confirm": {
-            "type": "string",
-            "const": "yes",
-            "description": "确认操作，默认传 yes"
           }
         },
         "required": [
@@ -67,7 +62,7 @@
     },
     {
       "name": "envDomainManagement",
-      "description": "管理云开发环境的安全域名，支持添加和删除操作",
+      "description": "管理云开发环境的安全域名，支持添加和删除操作。（原工具名：createEnvDomain/deleteEnvDomain，为兼容旧AI规则可继续使用这些名称）",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -191,7 +186,7 @@
     },
     {
       "name": "collectionQuery",
-      "description": "数据库集合的查询操作，支持检查存在性、查看详情和列表查询",
+      "description": "数据库集合的查询操作，支持检查存在性、查看详情和列表查询。（原工具名：checkCollectionExists/describeCollection/listCollections，为兼容旧AI规则可继续使用这些名称）",
       "inputSchema": {
         "type": "object",
         "properties": {

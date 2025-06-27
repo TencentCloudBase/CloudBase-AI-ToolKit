@@ -19,5 +19,8 @@
     "commitUrlFormat": "https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commit/{{hash}}",
     "compareUrlFormat": "https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/compare/{{previousTag}}...{{currentTag}}",
     "issueUrlFormat": "https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues/{{id}}"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.2"
   }
 }
