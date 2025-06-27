@@ -116,25 +116,24 @@ export function registerRagTools(server: ExtendedMcpServer) {
                 throw new Error(result.message)
             }
 
-            // 过滤掉相似度低于阈值的结果
-            const filteredResults = result.data.filter((item: any) => item.score >= threshold);
-
             return {
-                content: [
-                    {
-                        type: "text",
-                        text: JSON.stringify({
-                            success: true,
-                            total: filteredResults.length,
-                            threshold,
-                            results: filteredResults.map((item: any) => ({
-                                content: item.content,
+                content: [{
+                    type: "text",
+                    text: safeStringify(result.data.documents
+                        .filter((item: any) => item.score >= threshold)
+                        .map((item: any) => {
+                            return {
                                 score: item.score,
-                                metadata: item.metadata || {}
-                            }))
-                        }, null, 2)
-                    }
-                ]
+                                fileTile: item.documentSet.fileTitle,
+                                url: safeParse(item.documentSet.fileMetaData).url,
+                                paragraphTitle: item.data.paragraphTitle,
+                                text:`${item.data.pre?.join('\n') || ''}
+    ${item.data.text}
+    ${item.data.next?.join('\n') || ''}`,
+                            }
+                        })
+                    )
+                }]
             }
         }
     );
