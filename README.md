@@ -699,9 +699,15 @@ AI 会自动：
 
 ### 📱 应用项目
 - [简历助手小程序](https://gitcode.com/qq_33681891/resume_template)
+- [五子棋联机游戏](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/gomoku-game)
+- [分手厨房联机游戏](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/overcooked-game)
+- [电商管理后台](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/ecommerce-management-backend)
+- [短视频小程序](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-ai-video)
+- [约会小程序](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/dating)
 
 ### 🎥 视频教程
 - [云开发CloudBase：用AI开发一款分手厨房小游戏](https://www.bilibili.com/video/BV1v5KAzwEf9/)
+- [软件3.0：AI 编程新时代的最佳拍档 CloudBase AI ToolKit，以开发微信小程序为例](https://www.bilibili.com/video/BV15gKdz1E5N/)
 
 ---
 

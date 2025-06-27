@@ -12,4 +12,9 @@
 </add_aiide>
 
 
-<>
+<add_example>
+# CloudBase AI Toolkit - 新增用户案例/视频/文章工作流
+0. 注意标题尽量用原标题，不用加额外的描述信息
+1. 更新 README.md
+2. 更新 doc/tutorials.md
+</add_example>
