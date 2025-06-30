@@ -4,7 +4,13 @@
 
 ![CloudBase AI ToolKit](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/cloudbase-ai-toolkit.png)
 
-**通过AI提示词和MCP协议+云开发，让开发更智能、更高效**
+**
+🪐 用 AI IDE 一键生成、部署和托管你的全栈 Web 应用与小程序、数据库和后端服务，无需运维，极速上线你的创意 💫**
+
+
+
+[![GitHub Stars](https://img.shields.io/github/stars/TencentCloudBase/CloudBase-AI-ToolKit?style=social)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+[![CNB Community](https://img.shields.io/badge/CNB-开源社区-blue?style=flat-square)](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit)
 
 </div>
 

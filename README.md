@@ -6,7 +6,7 @@
 
 # 🌟 CloudBase AI ToolKit
 
-**通过AI提示词和MCP协议+云开发，让开发更智能、更高效**
+**🪐 用 AI IDE 一键生成、部署和托管你的全栈 Web 应用与小程序、数据库和后端服务，无需运维，极速上线你的创意 💫**
 
 **🌍 Languages:** **中文** | [English](README-EN.md)
 
