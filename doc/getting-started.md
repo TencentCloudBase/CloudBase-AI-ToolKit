@@ -50,7 +50,7 @@
   "mcpServers": {
     "cloudbase": {
       "command": "npx",
-      "args": ["@cloudbase/ai-toolkit@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
