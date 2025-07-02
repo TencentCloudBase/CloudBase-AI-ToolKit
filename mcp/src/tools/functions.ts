@@ -90,7 +90,6 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
             subnetId: z.string()
           }).optional().describe("私有网络配置"),
           runtime: z.string().optional().describe("运行时环境,建议指定为 'Nodejs 18.15'，其他可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，')),
-          installDependency: z.boolean().optional().describe("是否安装依赖，建议传 true"),
           triggers: z.array(z.object({
             name: z.string(),
             type: z.string(),
@@ -124,6 +123,9 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
       if (!func.runtime) {
         func.runtime = DEFAULT_NODEJS_RUNTIME;
       }
+      
+      // 强制设置 installDependency 为 true（不暴露给AI）
+      func.installDependency = true;
 
       // 处理函数根目录路径，确保不包含函数名
       const processedRootPath = processFunctionRootPath(functionRootPath, func.name);
@@ -157,8 +159,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         functionRootPath: z.string().optional().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径"),
         zipFile: z.string().optional().describe("Base64编码的函数包"),
         handler: z.string().optional().describe("函数入口"),
-        runtime: z.string().optional().describe("运行时（可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，') + "，默认 Nodejs 18.15)"),
-        installDependency: z.boolean().optional().describe("是否安装依赖")
+        runtime: z.string().optional().describe("运行时（可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，') + "，默认 Nodejs 18.15)")
       },
       annotations: {
         readOnlyHint: false,
@@ -168,13 +169,12 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         category: "functions"
       }
     },
-    async ({ name, functionRootPath, zipFile, handler, runtime, installDependency }: {
+    async ({ name, functionRootPath, zipFile, handler, runtime }: {
       name: string;
       functionRootPath?: string;
       zipFile?: string;
       handler?: string;
       runtime?: string;
-      installDependency?: boolean;
     }) => {
       // 自动填充默认 runtime
       if (!runtime) {
@@ -184,14 +184,25 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
       // 处理函数根目录路径，确保不包含函数名
       const processedRootPath = processFunctionRootPath(functionRootPath, name);
 
-      // 使用闭包中的 cloudBaseOptions
-      const cloudbase = await getManager();
-      const result = await cloudbase.functions.updateFunctionCode({
+      // 构建更新参数，强制设置 installDependency 为 true（不暴露给AI）
+      const updateParams: any = {
         func: {
-          name
+          name,
+          installDependency: true,
+          ...(handler && { handler }),
+          ...(runtime && { runtime })
         },
         functionRootPath: processedRootPath
-      });
+      };
+      
+      // 如果提供了zipFile，则添加到参数中
+      if (zipFile) {
+        updateParams.zipFile = zipFile;
+      }
+
+      // 使用闭包中的 cloudBaseOptions
+      const cloudbase = await getManager();
+      const result = await cloudbase.functions.updateFunctionCode(updateParams);
       return {
         content: [
           {
