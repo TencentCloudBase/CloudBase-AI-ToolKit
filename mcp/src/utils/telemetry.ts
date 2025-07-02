@@ -2,10 +2,11 @@ import os from 'os';
 import crypto from 'crypto';
 import https from 'https';
 import http from 'http';
-import { readFileSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 import { debug } from './logger.js';
+
+const require = createRequire(import.meta.url);
+const packageJson = require('../../package.json');
 
 /**
  * 数据上报类
@@ -60,36 +61,7 @@ class TelemetryReporter {
         const arch = os.arch(); // 系统架构
 
         // 从package.json获取MCP版本信息
-        let mcpVersion = 'unknown';
-        try {
-            // 首先尝试从环境变量获取（npm scripts运行时可用）
-            mcpVersion = process.env.npm_package_version || '';
-
-            // 如果环境变量不可用，直接读取package.json文件
-            if (!mcpVersion) {
-                let __dirname: string;
-                
-                // 兼容 ESM 和 CJS 环境
-                if (typeof import.meta !== 'undefined' && import.meta.url) {
-                    const __filename = fileURLToPath(import.meta.url);
-                    __dirname = dirname(__filename);
-                } else if (typeof (globalThis as any).__filename !== 'undefined') {
-                    // CJS 环境中，__filename 是全局变量
-                    __dirname = dirname((globalThis as any).__filename);
-                } else {
-                    // 降级方案
-                    __dirname = process.cwd();
-                }
-                
-                // 从当前文件位置向上查找package.json
-                const packageJsonPath = join(__dirname, '../../package.json');
-                const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
-                mcpVersion = packageJson.version || 'unknown';
-            }
-        } catch (err) {
-            // 忽略错误，使用默认值
-            mcpVersion = 'unknown';
-        }
+        const mcpVersion = process.env.npm_package_version || packageJson.version || 'unknown';
 
         return {
             userAgent: `${osType} ${osRelease} ${arch} ${nodeVersion} CloudBase-MCP/${mcpVersion}`,
