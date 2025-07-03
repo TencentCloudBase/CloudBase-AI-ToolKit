@@ -41,7 +41,6 @@ export function createCloudBaseMcpServer(options?: {
     name,
     version,
     capabilities: {
-      resources: {},
       tools: {},
     },
   }) as ExtendedMcpServer;

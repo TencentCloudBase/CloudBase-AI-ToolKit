@@ -6,7 +6,7 @@ import * as os from "os";
 import * as https from "https";
 import * as http from "http";
 import { execSync } from "child_process";
-import * as unzipper from "unzipper";
+import AdmZip from "adm-zip";
 import { ExtendedMcpServer } from '../server.js';
 
 // CloudBase 模板配置
@@ -67,10 +67,9 @@ async function extractZip(zipPath: string, extractPath: string): Promise<void> {
     // 创建解压目录
     await fsPromises.mkdir(extractPath, { recursive: true });
 
-    // 使用 unzipper 库进行解压，兼容性更好
-    await fs.createReadStream(zipPath)
-      .pipe(unzipper.Extract({ path: extractPath }))
-      .promise();
+    // 使用 adm-zip 库进行解压
+    const zip = new AdmZip(zipPath);
+    zip.extractAllTo(extractPath, true);
 
   } catch (error) {
     throw new Error(`解压失败: ${error instanceof Error ? error.message : '未知错误'}`);

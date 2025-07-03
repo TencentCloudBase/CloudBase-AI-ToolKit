@@ -1,6 +1,6 @@
 {
   "name": "@cloudbase/cloudbase-mcp",
-  "version": "1.8.8",
+  "version": "1.8.9",
   "description": "腾讯云开发 MCP Server，支持静态托管/环境查询/",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -30,9 +30,13 @@
   "scripts": {
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
-    "build": "tsup src/index.ts src/cli.ts --format cjs,esm --dts --clean --sourcemap --splitting=false",
+    "build": "rollup -c",
     "build:legacy": "tsc && chmod 755 dist/cli.js",
-    "test": "npm run build && npx @modelcontextprotocol/inspector node ./dist/cli.js",
+    "test": "npm run build && vitest run",
+    "test:watch": "npm run build && vitest",
+    "test:ui": "npm run build && vitest --ui",
+    "test:coverage": "npm run build && vitest run --coverage",
+    "test:inspector": "npm run build && npx @modelcontextprotocol/inspector node ./dist/cli.js",
     "prepublishOnly": "npm run build",
     "postpublish": "dxt pack"
   },
@@ -53,19 +57,32 @@
     "@cloudbase/mcp": "^1.0.0-beta.25",
     "@cloudbase/toolbox": "^0.7.5",
     "@modelcontextprotocol/sdk": "1.13.1",
-    "@types/unzipper": "^0.10.11",
+    "@types/adm-zip": "^0.5.7",
+    "adm-zip": "^0.5.16",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "open": "^10.1.2",
-    "unzipper": "^0.12.3",
     "ws": "^8.18.2",
     "zod": "^3.24.3"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.1",
+    "@rollup/plugin-inject": "^5.0.5",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-typescript": "^12.1.2",
     "@types/express": "^5.0.3",
-    "@types/node": "^22.14.1",
-    "@types/ws": "^8.18.1",
-    "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "@types/jest": "^30.0.0",
+    "@types/node": "^22.10.2",
+    "@types/ws": "^8.5.12",
+    "buffer": "^6.0.3",
+    "process": "^0.11.10",
+    "rollup": "^4.27.4",
+    "rollup-plugin-dts": "^6.1.1",
+    "rollup-plugin-node-polyfills": "^0.2.1",
+    "tslib": "^2.8.1",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8",
+    "@modelcontextprotocol/sdk": "^1.13.3"
   }
 }

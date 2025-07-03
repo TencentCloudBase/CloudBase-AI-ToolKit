@@ -1,0 +1,47 @@
+name: Publish MCP Package to pkg.pr.new
+
+on:
+  # 在推送和PR时触发
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  # 也支持手动触发
+  workflow_dispatch:
+
+jobs:
+  # 构建和发布到pkg.pr.new
+  build-and-publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Enable corepack
+        run: corepack enable
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'mcp/package-lock.json'
+          
+      - name: Install dependencies
+        run: |
+          cd mcp
+          npm ci
+
+      - name: Build package
+        run: |
+          cd mcp
+          npm run build
+          npm run test
+          
+      - name: Publish to pkg.pr.new
+        run: |
+          cd mcp
+          npx pkg-pr-new publish --comment=off 

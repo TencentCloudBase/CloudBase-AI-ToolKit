@@ -4,6 +4,7 @@ import https from 'https';
 import http from 'http';
 import { createRequire } from 'module';
 import { debug } from './logger.js';
+import {loadEnvIdFromUserConfig  } from '../tools/interactive.js';
 
 const require = createRequire(import.meta.url);
 const packageJson = require('../../package.json');
@@ -239,7 +240,6 @@ export const reportToolCall =  async (params: {
         envId = process.env.CLOUDBASE_ENV_ID || undefined;
         if (!envId) {
             // 尝试从配置文件读取，但不触发交互式设置
-            const { loadEnvIdFromUserConfig } = await import('../tools/interactive.js');
             envId = await loadEnvIdFromUserConfig() || undefined;
         }
     } catch (err) {
@@ -301,7 +301,6 @@ export const reportToolkitLifecycle = async (params: {
         envId = process.env.CLOUDBASE_ENV_ID || undefined;
         if (!envId) {
             // 尝试从配置文件读取，但不触发交互式设置
-            const { loadEnvIdFromUserConfig } = await import('../tools/interactive.js');
             envId = await loadEnvIdFromUserConfig() || undefined;
         }
     } catch (err) {
