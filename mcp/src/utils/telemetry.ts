@@ -2,12 +2,11 @@ import os from 'os';
 import crypto from 'crypto';
 import https from 'https';
 import http from 'http';
-import { createRequire } from 'module';
 import { debug } from './logger.js';
 import {loadEnvIdFromUserConfig  } from '../tools/interactive.js';
 
-const require = createRequire(import.meta.url);
-const packageJson = require('../../package.json');
+// 构建时注入的版本号
+declare const __MCP_VERSION__: string;
 
 /**
  * 数据上报类
@@ -61,8 +60,8 @@ class TelemetryReporter {
         const nodeVersion = process.version; // Node.js版本
         const arch = os.arch(); // 系统架构
 
-        // 从package.json获取MCP版本信息
-        const mcpVersion = process.env.npm_package_version || packageJson.version || 'unknown';
+        // 从构建时注入的版本号获取MCP版本信息
+        const mcpVersion = process.env.npm_package_version || __MCP_VERSION__ || 'unknown';
 
         return {
             userAgent: `${osType} ${osRelease} ${arch} ${nodeVersion} CloudBase-MCP/${mcpVersion}`,

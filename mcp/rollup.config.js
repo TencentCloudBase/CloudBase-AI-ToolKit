@@ -4,6 +4,12 @@ import typescript from '@rollup/plugin-typescript';
 import json from '@rollup/plugin-json';
 import dts from 'rollup-plugin-dts';
 import terser from '@rollup/plugin-terser';
+import replace from '@rollup/plugin-replace';
+import { readFileSync } from 'fs';
+
+// 读取 package.json 获取版本号
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf-8'));
+const version = packageJson.version;
 
 // 只将 Node.js 内置模块设为外部依赖，npm 依赖都打包进最终产物
 const external = [
@@ -128,6 +134,13 @@ const baseConfig = {
     unknownGlobalSideEffects: false
   },
   plugins: [
+    // 版本号注入，需要在 typescript 插件之前
+    replace({
+      preventAssignment: true,
+      values: {
+        '__MCP_VERSION__': JSON.stringify(version)
+      }
+    }),
     resolve({
       preferBuiltins: true,
       exportConditions: ['node'],
