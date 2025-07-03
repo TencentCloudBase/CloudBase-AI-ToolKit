@@ -94,23 +94,25 @@ test('MCP server basic functionality test', async () => {
     
     console.log(`✅ Server exposes ${toolsResult.tools.length} tools`);
 
-    // Test a simple tool call (envQuery should always be available)
-    const envTool = toolsResult.tools.find(t => t.name === 'envQuery');
-    if (envTool) {
-      console.log('Testing envQuery tool...');
+    // Test a simple tool call (searchKnowledgeBase should always be available)
+    const knowledgeTool = toolsResult.tools.find(t => t.name === 'searchKnowledgeBase');
+    if (knowledgeTool) {
+      console.log('Testing searchKnowledgeBase tool...');
       
-      const envResult = await client.callTool({
-        name: 'envQuery',
+      const knowledgeResult = await client.callTool({
+        name: 'searchKnowledgeBase',
         arguments: {
-          action: 'list'  // 添加必需的 action 参数
+          id: 'cloudbase',     // 知识库范围
+          content: 'test',     // 检索内容
+          limit: 1             // 返回结果数量
         }
       });
       
-      expect(envResult).toBeDefined();
-      expect(envResult.content).toBeDefined();
-      expect(Array.isArray(envResult.content)).toBe(true);
+      expect(knowledgeResult).toBeDefined();
+      expect(knowledgeResult.content).toBeDefined();
+      expect(Array.isArray(knowledgeResult.content)).toBe(true);
       
-      console.log('✅ envQuery tool executed successfully');
+      console.log('✅ searchKnowledgeBase tool executed successfully');
     }
 
     // Note: We're not testing listResources() and listPrompts() since our server 
@@ -198,7 +200,7 @@ test('Tool consistency between multiple client connections', async () => {
     expect(toolNames1).toEqual(toolNames2);
 
     // Check for specific expected tools
-    const expectedTools = ['searchKnowledgeBase', 'envQuery'];
+    const expectedTools = ['searchKnowledgeBase'];
     for (const toolName of expectedTools) {
       expect(toolNames1).toContain(toolName);
       expect(toolNames2).toContain(toolName);
