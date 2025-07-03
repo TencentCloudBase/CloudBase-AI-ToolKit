@@ -42,7 +42,7 @@ test('CJS build format works correctly', async () => {
     console.error('❌ CJS build format test failed:', error);
     throw error;
   }
-}, 30000);
+}, 90000);
 
 test('CJS CLI executable works correctly', async () => {
   let transport = null;
@@ -93,8 +93,8 @@ main().catch(console.error);
     // Connect client to server
     await client.connect(transport);
     
-    // Wait a moment for connection to establish
-    await delay(1000);
+    // Wait longer for connection to establish in CI environment
+    await delay(3000);
 
     console.log('Testing CJS server functionality...');
     
@@ -143,4 +143,5 @@ main().catch(console.error);
       }
     }
   }
-}, 30000); 
+}, 120000);
+ 

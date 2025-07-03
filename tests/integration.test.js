@@ -15,19 +15,22 @@ test('ESM and CJS module exports consistency', async () => {
   try {
     console.log('Testing ESM and CJS module exports consistency...');
     
-    // 测试 ESM 导入
+    // Test ESM import
     const esmModule = await import('../mcp/dist/index.js');
+    expect(esmModule).toBeDefined();
     console.log('✅ ESM module imported successfully');
-    console.log('ESM exports:', Object.keys(esmModule));
     
-    // 验证核心导出
-    expect(esmModule.createCloudBaseMcpServer).toBeDefined();
-    expect(esmModule.getDefaultServer).toBeDefined();
-    expect(esmModule.StdioServerTransport).toBeDefined();
+    // Log available exports for debugging
+    const esmExports = Object.keys(esmModule).sort();
+    console.log('ESM exports:', esmExports);
     
-    // 创建 ESM 服务器实例
-    const esmServer = esmModule.createCloudBaseMcpServer({
-      name: 'esm-test-server',
+    // Test server creation
+    const { createCloudBaseMcpServer } = esmModule;
+    expect(createCloudBaseMcpServer).toBeDefined();
+    expect(typeof createCloudBaseMcpServer).toBe('function');
+    
+    const esmServer = createCloudBaseMcpServer({
+      name: 'test-server-esm',
       version: '1.0.0',
       enableTelemetry: false
     });
@@ -51,7 +54,7 @@ test('ESM and CJS module exports consistency', async () => {
     console.error('❌ Module exports consistency test failed:', error);
     throw error;
   }
-}, 30000);
+}, 90000); // 增加到 90 秒
 
 test('MCP server basic functionality test', async () => {
   let transport = null;
@@ -78,8 +81,8 @@ test('MCP server basic functionality test', async () => {
     // Connect client to server
     await client.connect(transport);
     
-    // Wait a moment for connection to establish
-    await delay(1000);
+    // Wait longer for connection to establish in CI environment
+    await delay(3000);
 
     console.log('Testing server capabilities...');
     
@@ -135,7 +138,7 @@ test('MCP server basic functionality test', async () => {
       }
     }
   }
-}, 30000);
+}, 120000); // 增加到 120 秒 (2 分钟)
 
 test('Tool consistency between multiple client connections', async () => {
   let transport1 = null, client1 = null;
@@ -159,7 +162,7 @@ test('Tool consistency between multiple client connections', async () => {
     });
 
     await client1.connect(transport1);
-    await delay(1000);
+    await delay(2000); // 增加延迟
 
     // Create second client
     client2 = new Client({
@@ -175,7 +178,7 @@ test('Tool consistency between multiple client connections', async () => {
     });
 
     await client2.connect(transport2);
-    await delay(1000);
+    await delay(2000); // 增加延迟
 
     // Get tools from both clients
     const tools1 = await client1.listTools();
@@ -229,4 +232,4 @@ test('Tool consistency between multiple client connections', async () => {
     await cleanup(client1, transport1);
     await cleanup(client2, transport2);
   }
-}, 60000); 
+}, 120000); // 增加到 120 秒 

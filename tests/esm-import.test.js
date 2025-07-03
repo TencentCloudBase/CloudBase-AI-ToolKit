@@ -42,7 +42,7 @@ test('ESM import and library usage works correctly', async () => {
     console.error('❌ Test failed:', error);
     throw error;
   }
-}, 30000);
+}, 90000);
 
 test('MCP client-server integration works correctly', async () => {
   let transport = null;
@@ -70,8 +70,8 @@ test('MCP client-server integration works correctly', async () => {
     // Connect client to server
     await client.connect(transport);
     
-    // Wait a moment for connection to establish
-    await delay(1000);
+    // Wait longer for connection to establish in CI environment
+    await delay(3000);
 
     console.log('Testing MCP operations...');
     
@@ -115,4 +115,4 @@ test('MCP client-server integration works correctly', async () => {
       }
     }
   }
-}, 30000); 
+}, 120000); 

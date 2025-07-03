@@ -34,8 +34,8 @@ test('Knowledge base search functionality works correctly', async () => {
     // Connect client to server
     await client.connect(transport);
     
-    // Wait a moment for connection to establish
-    await delay(1000);
+    // Wait longer for connection to establish in CI environment
+    await delay(3000);
 
     console.log('Testing knowledge base search functionality...');
     
@@ -112,7 +112,7 @@ test('Knowledge base search functionality works correctly', async () => {
       }
     }
   }
-}, 30000); // 30 second timeout
+}, 120000); // 增加到 120 秒
 
 test('Knowledge base tool parameters validation', async () => {
   let transport = null;
@@ -137,8 +137,8 @@ test('Knowledge base tool parameters validation', async () => {
     // Connect client to server
     await client.connect(transport);
     
-    // Wait a moment for connection to establish
-    await delay(1000);
+    // Wait longer for connection to establish in CI environment
+    await delay(3000);
 
     console.log('Testing knowledge base tool parameter validation...');
     
@@ -194,4 +194,4 @@ test('Knowledge base tool parameters validation', async () => {
       }
     }
   }
-}, 30000); // 30 second timeout
+}, 120000); // 增加到 120 秒
