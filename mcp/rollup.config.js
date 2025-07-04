@@ -5,6 +5,7 @@ import json from '@rollup/plugin-json';
 import dts from 'rollup-plugin-dts';
 import terser from '@rollup/plugin-terser';
 import replace from '@rollup/plugin-replace';
+import ignore from 'rollup-plugin-ignore';
 import { readFileSync } from 'fs';
 
 // 读取 package.json 获取版本号
@@ -134,6 +135,8 @@ const baseConfig = {
     unknownGlobalSideEffects: false
   },
   plugins: [
+    // 忽略可选的 AWS SDK 依赖
+    ignore(['@aws-sdk/client-s3']),
     // 版本号注入，需要在 typescript 插件之前
     replace({
       preventAssignment: true,

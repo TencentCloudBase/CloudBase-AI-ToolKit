@@ -1,7 +1,7 @@
 {
   "name": "@cloudbase/cloudbase-mcp",
-  "version": "1.8.11",
-  "description": "腾讯云开发 MCP Server，支持静态托管/环境查询/",
+  "version": "1.8.13",
+  "description": "腾讯云开发 MCP Server，通过AI提示词和MCP协议+云开发，让开发更智能、更高效,当你在Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Claude Code等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -83,6 +83,7 @@
     "process": "^0.11.10",
     "rollup": "^4.27.4",
     "rollup-plugin-dts": "^6.1.1",
+    "rollup-plugin-ignore": "^1.0.10",
     "rollup-plugin-node-polyfills": "^0.2.1",
     "tslib": "^2.8.1",
     "typescript": "^5.7.2",
