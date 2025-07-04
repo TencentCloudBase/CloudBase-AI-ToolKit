@@ -66,6 +66,7 @@ jobs:
             },
           }
           EOF
+          echo $HOME/.claude-code-router/config.json
         shell: bash
 
       - name: Start Claude Code Router
