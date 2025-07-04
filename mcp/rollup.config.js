@@ -60,13 +60,13 @@ const __dirname = getDirname(__filename);
   }
 });
 
-// Terser 配置 - 积极的压缩设置
+// Terser 配置 - 更保守的压缩设置，避免破坏 Node.js 内置模块
 const terserConfig = {
   compress: {
     drop_console: false, // 保留 console，因为这是一个开发工具
     drop_debugger: true,
     pure_funcs: ['console.debug'], // 移除 debug 调用
-    passes: 2, // 多次压缩以获得更好的结果
+    passes: 1, // 减少压缩次数，避免过度优化
     unsafe: false, // 保持安全的压缩
     unsafe_comps: false,
     unsafe_math: false,
@@ -75,7 +75,7 @@ const terserConfig = {
     unsafe_undefined: false,
     // 移除无用的代码
     dead_code: true,
-    unused: true,
+    unused: false, // 关闭未使用代码删除，避免删除必要的 Node.js 模块代码
     // 优化条件表达式
     conditionals: true,
     // 优化比较操作
@@ -84,28 +84,28 @@ const terserConfig = {
     booleans: true,
     // 优化 if 语句
     if_return: true,
-    // 内联函数
-    inline: 1,
+    // 内联函数 - 设置为更保守的值
+    inline: false, // 关闭内联，避免破坏模块结构
     // 合并变量
-    join_vars: true,
+    join_vars: false, // 关闭变量合并，避免破坏 stream 相关变量
     // 优化循环
     loops: true,
     // 减少变量名长度
-    reduce_vars: true,
+    reduce_vars: false, // 关闭变量优化，避免破坏 Node.js 内置模块变量
     // 压缩序列
-    sequences: true,
+    sequences: false, // 关闭序列压缩，避免破坏初始化顺序
     // 消除无用的代码块
-    side_effects: true
+    side_effects: false // 关闭副作用消除，保留所有可能的副作用代码
   },
   mangle: {
-    // 不混淆的标识符
-    reserved: ['__dirname', '__filename'],
+    // 不混淆的标识符 - 添加更多保护
+    reserved: ['__dirname', '__filename', 'needReadable', 'readable', 'stream', 'Stream', 'Readable', 'Writable', 'Transform', 'Duplex'],
     // 混淆属性名（谨慎使用）
     properties: false,
     // 保持类名
     keep_classnames: true,
     // 保持函数名（对于调试有用）
-    keep_fnames: false
+    keep_fnames: true // 改为 true，保留函数名避免破坏内置模块
   },
   format: {
     // 移除注释
@@ -120,19 +120,19 @@ const terserConfig = {
 // 基础配置
 const baseConfig = {
   external,
-  // 启用 tree shaking
+  // 启用 tree shaking - 使用更保守的配置避免删除必要的初始化代码
   treeshake: {
-    preset: 'recommended',
-    // 更积极的 tree shaking
-    moduleSideEffects: false,
-    // 纯净的外部模块（可以被 tree shake）
-    pureExternalModules: true,
-    // 不要保留未使用的导入
-    tryCatchDeoptimization: false,
-    // 分析函数副作用
-    propertyReadSideEffects: false,
-    // 未知的全局变量处理
-    unknownGlobalSideEffects: false
+    preset: 'safest', // 从 'recommended' 改为 'safest'
+    // 保守的 tree shaking 配置
+    moduleSideEffects: true, // 保留所有副作用，避免删除 stream 初始化代码
+    // 不假设外部模块是纯净的
+    pureExternalModules: false,
+    // 保守处理 try-catch，避免删除错误处理代码
+    tryCatchDeoptimization: true,
+    // 保留属性读取副作用，避免删除 needReadable 等属性设置
+    propertyReadSideEffects: true,
+    // 保留未知的全局副作用
+    unknownGlobalSideEffects: true
   },
   plugins: [
     // 忽略可选的 AWS SDK 依赖
@@ -166,7 +166,7 @@ const baseConfig = {
       declarationMap: false
     }),
     json(),
-    // 添加代码压缩
+    // 添加代码压缩 
     terser(terserConfig)
   ]
 };

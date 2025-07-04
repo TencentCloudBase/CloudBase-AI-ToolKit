@@ -296,6 +296,32 @@ MCP 工具通过以下配置添加到你的 AI IDE 中：
 }
 ```
 
+## 云端 MCP 配置说明
+
+如果在云端环境中使用 MCP 时，需要配置腾讯云密钥等环境变量
+
+环境变量
+- 需要将 TENCENTCLOUD_SECRETID 和 TENCENTCLOUD_SECRETKEY 配置在腾讯云控制台获取的 SecretId 和 SecretKey [获取腾讯云密钥](https://console.cloud.tencent.com/cam/capi)
+- 需要将 CLOUDBASE_ENV_ID 配置为您在云开发控制台获取的环境 ID [获取云开发环境 ID](https://tcb.cloud.tencent.com/dev#/overview)
+
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp"],
+      "env": {
+        "TENCENTCLOUD_SECRETID": "腾讯云 SecretId",
+        "TENCENTCLOUD_SECRETKEY": "腾讯云 SecretKey",
+        "CLOUDBASE_ENV_ID": "云开发环境 ID"
+      }
+    }
+  }
+}
+```
+
+
+
 ## 🔄 工具优化
 
 为了提供更好的使用体验，我们将原来 40 个工具优化为 35 个：

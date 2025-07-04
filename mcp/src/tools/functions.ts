@@ -156,10 +156,10 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
       description: "更新函数代码",
       inputSchema: {
         name: z.string().describe("函数名称"),
-        functionRootPath: z.string().optional().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径"),
-        zipFile: z.string().optional().describe("Base64编码的函数包"),
-        handler: z.string().optional().describe("函数入口"),
-        runtime: z.string().optional().describe("运行时（可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，') + "，默认 Nodejs 18.15)")
+        functionRootPath: z.string().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径"),
+        // zipFile: z.string().optional().describe("Base64编码的函数包"),
+        // handler: z.string().optional().describe("函数入口"),
+        // runtime: z.string().optional().describe("运行时（可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，') + "，默认 Nodejs 18.15)")
       },
       annotations: {
         readOnlyHint: false,
@@ -229,7 +229,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
             vpcId: z.string(),
             subnetId: z.string()
           }).optional().describe("VPC配置"),
-          runtime: z.string().optional().describe("运行时（可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，') + "，默认 Nodejs 18.15)")
+          // runtime: z.string().optional().describe("运行时（可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，') + "，默认 Nodejs 18.15)")
         }).describe("函数配置")
       },
       annotations: {
@@ -242,9 +242,9 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
     },
     async ({ funcParam }: { funcParam: any }) => {
       // 自动填充默认 runtime
-      if (!funcParam.runtime) {
-        funcParam.runtime = DEFAULT_NODEJS_RUNTIME;
-      }
+      // if (!funcParam.runtime) {
+      //   funcParam.runtime = DEFAULT_NODEJS_RUNTIME;
+      // }
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
       const result = await cloudbase.functions.updateFunctionConfig(funcParam);
