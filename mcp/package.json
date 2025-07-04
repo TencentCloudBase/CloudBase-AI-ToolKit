@@ -1,6 +1,6 @@
 {
   "name": "@cloudbase/cloudbase-mcp",
-  "version": "1.8.10",
+  "version": "1.8.11",
   "description": "腾讯云开发 MCP Server，支持静态托管/环境查询/",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -53,7 +53,7 @@
   "author": "TencentCloudBase",
   "license": "MIT",
   "dependencies": {
-    "@cloudbase/manager-node": "^4.2.10",
+    "@cloudbase/manager-node": "^4.3.2",
     "@cloudbase/mcp": "^1.0.0-beta.25",
     "@cloudbase/toolbox": "^0.7.5",
     "@modelcontextprotocol/sdk": "1.13.1",
@@ -62,6 +62,7 @@
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "open": "^10.1.2",
+    "punycode": "^2.3.1",
     "ws": "^8.18.2",
     "zod": "^3.24.3"
   },
@@ -86,5 +87,8 @@
     "tslib": "^2.8.1",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
+  },
+  "overrides": {
+    "tough-cookie": "^4.1.3"
   }
 }

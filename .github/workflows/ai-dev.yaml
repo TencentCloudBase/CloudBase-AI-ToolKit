@@ -60,8 +60,8 @@ jobs:
               }
             ],
             "Router": {
-              "background": "deepseek-api,deepseek-chat",
-              "think": "deepseek-api,deepseek-reasoner",
+              "background": "deepseek,deepseek-v3-0324",
+              "think": "deepseek,deepseek-r1-0528",
               "longContext": "hunyuan,hunyuan-turbos-longtext-128k-20250325"
             },
           }
