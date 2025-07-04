@@ -39,7 +39,6 @@ jobs:
         run: |
           cd mcp
           npm run build
-          rm -rf node_modules
           npm run test
           
       - name: Publish to pkg.pr.new
