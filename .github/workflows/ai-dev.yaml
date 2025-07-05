@@ -71,7 +71,7 @@ jobs:
               "default": "deepseek-api,deepseek-chat",
               "background": "deepseek-api,deepseek-chat",
               "think": "deepseek-api,deepseek-reasoner",
-              "longContext": "hunyuan,hunyuan-turbos-longtext-128k-20250325",
+              "longContext": "hunyuan,hunyuan-turbos-longtext-128k-20250325"
             }
           }
           EOF
