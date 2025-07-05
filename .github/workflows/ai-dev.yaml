@@ -35,31 +35,40 @@ jobs:
           mkdir -p $HOME/.claude-code-router
           cat << 'EOF' > $HOME/.claude-code-router/config.json
           {
-            "log": true,
-            "OPENAI_API_KEY": "${{ secrets.OPENAI_API_KEY }}",
-            "OPENAI_BASE_URL": "${{ secrets.OPENAI_BASE_URL }}",
-            "OPENAI_MODEL": "${{ secrets.OPENAI_MODEL }}",
             "Providers": [
               {
                 "name": "deepseek",
-                "api_base_url": "${{ secrets.DEEPSEEK_BASE_URL }}",
+                "api_base_url": "${{ secrets.DEEPSEEK_BASE_URL }}/chat/completions",
                 "api_key": "${{ secrets.DEEPSEEK_API_KEY }}",
-                "models": ["deepseek-r1-0528", "deepseek-v3-0324"]
+                "models": ["deepseek-r1-0528", "deepseek-v3-0324"],
+                "transformer": {
+                  "use": ["deepseek"],
+                  "deepseek-v3-0324": {
+                    "use": ["tooluse"]
+                  }
+                }
               },
               {
                 "name": "deepseek-api",
-                "api_base_url": "${{ secrets.OPENAI_BASE_URL }}",
+                "api_base_url": "${{ secrets.OPENAI_BASE_URL }}/chat/completions",
                 "api_key": "${{ secrets.OPENAI_API_KEY }}",
-                "models": ["deepseek-chat", "deepseek-reasoner"]
+                "models": ["deepseek-chat", "deepseek-reasoner"],
+                "transformer": {
+                  "use": ["deepseek"],
+                  "deepseek-chat": {
+                    "use": ["tooluse"]
+                  }
+                }
               },
               {
                 "name": "hunyuan",
-                "api_base_url": "${{ secrets.HUNYUAN_BASE_URL }}",
+                "api_base_url": "${{ secrets.HUNYUAN_BASE_URL }}/chat/completions",
                 "api_key": "${{ secrets.HUNYUAN_API_KEY }}",
                 "models": ["hunyuan-standard-256K", "hunyuan-turbos-longtext-128k-20250325"]
               }
             ],
             "Router": {
+              "default": "deepseek,deepseek-v3-0324",
               "background": "deepseek,deepseek-v3-0324",
               "think": "deepseek,deepseek-r1-0528",
               "longContext": "hunyuan,hunyuan-turbos-longtext-128k-20250325"
