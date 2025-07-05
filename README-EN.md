@@ -4,7 +4,7 @@
 
 # 🌟 CloudBase AI ToolKit
 
-**Smarter, faster development with AI prompts, MCP protocol, and CloudBase.**
+**🪐 Generate, deploy, and host your full-stack Web applications, mini-programs, databases, and backend services with AI IDE in one click—no DevOps required, launch your ideas at lightning speed 💫**
 
 **🌍 Languages:** [中文](README.md) | **English**
 
@@ -22,6 +22,8 @@
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/TencentCloudBase/CloudBase-AI-ToolKit)
 
 When coding in AI programming tools like **Cursor/VSCode GitHub Copilot/WindSurf/CodeBuddy/Augment Code/Claude Code**, it automatically helps you generate deployable full-stack applications + mini-programs and publish them to Tencent CloudBase with one-click.
+
+📚 [Quick Start](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/getting-started) | 🛠️ [IDE Setup](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/) | 🎨 [Project Templates](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates) | 📖 [Development Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/development) | 🎮 [Use Cases](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/examples) | 🎓 [Tutorials](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials) | 🔧 [MCP Tools](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/mcp-tools) | ❓ [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)
 
 **📹 Complete Video Demo ⬇️**
 
@@ -149,7 +151,10 @@ Template includes `.cursor/rules/` directory, AI will automatically recognize Cl
 
 #### Step 2: Configure MCP
 
-If using template project, MCP configuration is pre-configured. If not starting from template, click the button below to install in Cursor:
+> [!TIP] 
+> If the tool count remains 0 after installation, please refer to [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-displays-0-tools-what-to-do)
+
+If using template project, MCP configuration is pre-configured. Please click the popup window at the bottom left to enable MCP. If not starting from template, click the button below to install in Cursor:
 
 [![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=CloudBase&config=eyJjb21tYW5kIjoibnB4IEBjbG91ZGJhc2UvY2xvdWRiYXNlLW1jcEBsYXRlc3QiLCJkaXNhYmxlZCI6ZmFsc2V9)
 
@@ -183,6 +188,9 @@ Template's `.windsurf/` directory contains configurations optimized for WindSurf
 
 #### Step 2: Configure MCP
 
+> [!TIP] 
+> If the tool count remains 0 after installation, please refer to [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-displays-0-tools-what-to-do)
+
 If using template project, MCP configuration is pre-configured. If not starting from template, add in WindSurf's Plugins configuration:
 
 ```json
@@ -211,7 +219,12 @@ Template includes `.rules/` directory, CodeBuddy will automatically recognize Cl
 
 #### Step 2: Configure MCP
 
-Click the MCP button in the top-right corner of CodeBuddy, click add on the right, and add CloudBase MCP in the MCP configuration:
+> [!TIP] 
+> If the tool count remains 0 after installation, please refer to [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-displays-0-tools-what-to-do)
+
+1. You can click the MCP button in the top-right corner of CodeBuddy, search for CloudBase in the MCP marketplace, and click install.
+
+2. Or manually add: click the MCP button in the top-right corner of CodeBuddy, click add on the right, and add CloudBase MCP in the MCP configuration:
 
 ```json
 {
@@ -238,6 +251,9 @@ Switch to Craft mode in the chat window. It's recommended to disable the confirm
 Template includes `.clinerules/` directory, AI will automatically recognize CloudBase best practices. If not starting from template, you can ask AI to help download CloudBase rules.
 
 #### Step 2: Configure MCP
+
+> [!TIP] 
+> If the tool count remains 0 after installation, please refer to [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-displays-0-tools-what-to-do)
 
 If using template project, MCP configuration is pre-configured. If not starting from template, add in MCP Server configuration:
 
@@ -273,6 +289,9 @@ Template's `.github/` directory contains Copilot optimized configurations. If no
 
 #### Step 2: Configure MCP
 
+> [!TIP] 
+> If the tool count remains 0 after installation, please refer to [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-displays-0-tools-what-to-do)
+
 If using template project, MCP configuration is pre-configured. If not starting from template, add in `.vscode/mcp.json`:
 
 ```json
@@ -305,7 +324,10 @@ Template's `.trae/rules` directory contains CloudBase rule configurations for Tr
 
 #### Step 2: Configure MCP
 
-If using template project, MCP configuration is pre-configured. If not starting from template, add in MCP configuration:
+> [!TIP] 
+> If the tool count remains 0 after installation, please refer to [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-displays-0-tools-what-to-do)
+
+Add in Trae's MCP configuration:
 
 ```json
 {
@@ -332,6 +354,9 @@ Select Builder with MCP in the agent for chat.
 Template includes `.lingma/` directory, Tongyi Lingma will automatically recognize CloudBase best practices. If not starting from template, you can ask AI to help download CloudBase rules.
 
 #### Step 2: Configure MCP
+
+> [!TIP] 
+> If the tool count remains 0 after installation, please refer to [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-displays-0-tools-what-to-do)
 
 If using template project, MCP configuration is pre-configured. If not starting from template, add in MCP configuration:
 
@@ -360,6 +385,9 @@ Switch to agent mode in the bottom-left corner of the chat window.
 Template includes `.roo/rules` directory, RooCode will automatically recognize CloudBase best practices. If not starting from template, you can ask AI to help download CloudBase rules.
 
 #### Step 2: Configure MCP
+
+> [!TIP] 
+> If the tool count remains 0 after installation, please refer to [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-displays-0-tools-what-to-do)
 
 If using template project, MCP configuration is pre-configured. If not starting from template, add in MCP configuration:
 
@@ -392,6 +420,9 @@ Template includes `.comate/rules` directory, Baidu Comate will automatically rec
 
 #### Step 2: Configure MCP
 
+> [!TIP] 
+> If the tool count remains 0 after installation, please refer to [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-displays-0-tools-what-to-do)
+
 If using template project, MCP configuration is pre-configured. If not starting from template, add in MCP configuration:
 
 ```json
@@ -408,9 +439,9 @@ If using template project, MCP configuration is pre-configured. If not starting 
 }
 ```
 
-#### Step 3: Use AI Chat
+#### Step 3: Use Agent Mode
 
-Switch to Zulu mode in the chat window for operations.
+Use Agent mode in the chat window for intelligent code generation and automation.
 
 </details>
 
@@ -455,6 +486,9 @@ Template includes `CLAUDE.md` file, Claude Code will automatically recognize Clo
 
 #### Step 2: Configure MCP
 
+> [!TIP] 
+> If the tool count remains 0 after installation, please refer to [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-displays-0-tools-what-to-do)
+
 If using template project, MCP configuration is pre-configured. If not starting from template, create `.mcp.json` file in project root:
 
 ```json
@@ -474,6 +508,77 @@ If using template project, MCP configuration is pre-configured. If not starting 
 #### Step 3: Use AI Chat
 
 Chat directly with AI in Claude Code for intelligent code generation and automation.
+
+</details>
+
+<details>
+<summary><strong>🔹 Gemini CLI Configuration</strong></summary>
+
+#### Step 1: Install Gemini CLI
+
+Make sure Node.js 18+ is installed, then install Gemini CLI globally:
+
+```bash
+npm install -g @google/gemini-cli
+```
+
+Or run directly:
+
+```bash
+npx @google/gemini-cli
+```
+
+On first run, log in with your personal Google account to get free quota (60 requests per minute, 1000 requests per day).
+
+#### Step 2: Configure MCP
+
+> [!TIP] 
+> If the tool count remains 0 after installation, please refer to [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-displays-0-tools-what-to-do)
+
+If using template project, MCP configuration is pre-configured.
+
+If not starting from template, create `.gemini/settings.json` file in user home directory (`~`) or project directory:
+
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+    }
+  }
+}
+```
+
+#### Step 3: Enable AI Rules
+
+Template project root already includes `GEMINI.md` file with CloudBase development rules.
+
+If it's an existing project, tell the AI in Gemini CLI:
+
+```
+Download CloudBase AI rules in current project
+```
+
+#### Step 4: Start Development
+
+Launch Gemini CLI:
+
+```bash
+gemini
+```
+
+Then tell the AI:
+
+```
+Login to CloudBase
+```
+
+**Common Commands:**
+- `/tools` - View available tools
+- `/mcp` - View MCP server status
+- `/memory show` - View current rules
+- `!command` - Execute Shell command
 
 </details>
 
