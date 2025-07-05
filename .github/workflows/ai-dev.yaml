@@ -50,8 +50,8 @@ jobs:
               },
               {
                 "name": "deepseek-api",
-                "api_base_url": "${{ secrets.OPENAI_BASE_URL }}/chat/completions",
-                "api_key": "${{ secrets.OPENAI_API_KEY }}",
+                "api_base_url": "https://api.deepseek.com/chat/completions",
+                "api_key": "${{ secrets.DEEPSEEK_API_API_KEY }}",
                 "models": ["deepseek-chat", "deepseek-reasoner"],
                 "transformer": {
                   "use": ["deepseek"],
@@ -68,7 +68,7 @@ jobs:
               }
             ],
             "Router": {
-              "default": "deepseek-api,deepseek-reasoner",
+              "default": "deepseek-api,deepseek-chat",
               "background": "deepseek-api,deepseek-chat",
               "think": "deepseek-api,deepseek-reasoner",
               "longContext": "hunyuan,hunyuan-turbos-longtext-128k-20250325",
