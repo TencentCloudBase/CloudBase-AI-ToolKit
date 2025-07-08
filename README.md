@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/tencentcloudbase-cloudbase-ai-toolkit-badge.png)](https://mseep.ai/app/tencentcloudbase-cloudbase-ai-toolkit)
+
 <div align="center">
 
 
