@@ -28,72 +28,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
-
-      - name: Prepare Environment
-        run: |
-          curl -fsSL https://bun.sh/install | bash
-          mkdir -p $HOME/.claude-code-router
-          cat << 'EOF' > $HOME/.claude-code-router/config.json
-          {
-            "Providers": [
-              {
-                "name": "deepseek",
-                "api_base_url": "${{ secrets.DEEPSEEK_BASE_URL }}/chat/completions",
-                "api_key": "${{ secrets.DEEPSEEK_API_KEY }}",
-                "models": ["deepseek-r1-0528", "deepseek-v3-0324"],
-                "transformer": {
-                  "use": ["deepseek"],
-                  "deepseek-v3-0324": {
-                    "use": ["tooluse"]
-                  }
-                }
-              },
-              {
-                "name": "deepseek-api",
-                "api_base_url": "https://api.deepseek.com/chat/completions",
-                "api_key": "${{ secrets.DEEPSEEK_API_API_KEY }}",
-                "models": ["deepseek-chat", "deepseek-reasoner"],
-                "transformer": {
-                  "use": ["deepseek"],
-                  "deepseek-chat": {
-                    "use": ["tooluse"]
-                  }
-                }
-              },
-              {
-                "name": "hunyuan",
-                "api_base_url": "${{ secrets.HUNYUAN_BASE_URL }}/chat/completions",
-                "api_key": "${{ secrets.HUNYUAN_API_KEY }}",
-                "models": ["hunyuan-standard-256K", "hunyuan-turbos-longtext-128k-20250325"]
-              }
-            ],
-            "Router": {
-              "default": "deepseek-api,deepseek-chat",
-              "background": "deepseek-api,deepseek-chat",
-              "think": "deepseek-api,deepseek-reasoner",
-              "longContext": "hunyuan,hunyuan-turbos-longtext-128k-20250325"
-            }
-          }
-          EOF
-        shell: bash
-
-      - name: Verify Configuration
-        run: |
-          echo "Config file created at: $HOME/.claude-code-router/config.json"
-          echo "--- Configuration Content ---"
-          cat $HOME/.claude-code-router/config.json
-          echo "--- End Configuration ---"
-        shell: bash
-
-      - name: Start Claude Code Router
-        run: |
-          nohup ~/.bun/bin/bunx @musistudio/claude-code-router@1.0.14 start &
-        shell: bash
-
       - name: Run Claude Code
         id: claude
         uses: anthropics/claude-code-action@beta
         env:
-          ANTHROPIC_BASE_URL: http://localhost:3456
+          ANTHROPIC_BASE_URL: "${{ secrets.ANTHROPIC_BASE_URL }}"
         with:
-          anthropic_api_key: "test"
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}"
