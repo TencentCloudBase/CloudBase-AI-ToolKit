@@ -28,6 +28,7 @@ TARGET_FILES=(
     "config/.augment-guidelines"
     "config/CLAUDE.md"
     "config/.gemini/GEMINI.md"
+    "config/AGENTS.md"
 )
 
 echo -e "${BLUE}🔧 CloudBase AI 配置文件硬链接修复工具${NC}"
