@@ -13,6 +13,56 @@ import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
 import { registerGatewayTools } from "./tools/gateway.js";
 import { CloudBaseOptions } from "./types.js";
 
+// 插件定义
+interface PluginDefinition {
+  name: string;
+  register: (server: ExtendedMcpServer) => void;
+}
+
+// 默认插件列表
+const DEFAULT_PLUGINS = ['env', 'database', 'functions', 'hosting', 'storage', 'setup', 'interactive'];
+
+// 可用插件映射
+const AVAILABLE_PLUGINS: Record<string, PluginDefinition> = {
+  env: { name: 'env', register: registerEnvTools },
+  database: { name: 'database', register: registerDatabaseTools },
+  functions: { name: 'functions', register: registerFunctionTools },
+  hosting: { name: 'hosting', register: registerHostingTools },
+  storage: { name: 'storage', register: registerStorageTools },
+  setup: { name: 'setup', register: registerSetupTools },
+  interactive: { name: 'interactive', register: registerInteractiveTools },
+  rag: { name: 'rag', register: registerRagTools },
+  download: { name: 'download', register: registerDownloadTools },
+  gateway: { name: 'gateway', register: registerGatewayTools },
+  file: { name: 'file', register: registerFileTools },
+};
+
+/**
+ * 解析启用的插件列表
+ */
+function parseEnabledPlugins(): string[] {
+  const enabledEnv = process.env.CLOUDBASE_MCP_PLUGINS_ENABLED;
+  const disabledEnv = process.env.CLOUDBASE_MCP_PLUGINS_DISABLED;
+  
+  let enabledPlugins: string[];
+  
+  if (enabledEnv) {
+    // 如果指定了启用的插件，使用指定的插件
+    enabledPlugins = enabledEnv.split(',').map(p => p.trim());
+  } else {
+    // 否则使用默认插件
+    enabledPlugins = [...DEFAULT_PLUGINS];
+  }
+  
+  if (disabledEnv) {
+    // 从启用列表中移除禁用的插件
+    const disabledPlugins = disabledEnv.split(',').map(p => p.trim());
+    enabledPlugins = enabledPlugins.filter(p => !disabledPlugins.includes(p));
+  }
+  
+  return enabledPlugins;
+}
+
 // 扩展 McpServer 类型以包含 cloudBaseOptions 和新的registerTool方法
 export interface ExtendedMcpServer extends McpServer {
   cloudBaseOptions?: CloudBaseOptions;
@@ -55,18 +105,15 @@ export function createCloudBaseMcpServer(options?: {
     wrapServerWithTelemetry(server);
   }
 
-  // Register all tools
-  registerEnvTools(server);
-  registerRagTools(server);
-  // registerFileTools(server);
-  registerDatabaseTools(server);
-  registerHostingTools(server);
-  registerFunctionTools(server);
-  registerDownloadTools(server);
-  registerStorageTools(server);
-  registerSetupTools(server);
-  registerInteractiveTools(server);
-  registerGatewayTools(server);
+  // 根据配置注册插件
+  const enabledPlugins = parseEnabledPlugins();
+  
+  for (const pluginName of enabledPlugins) {
+    const plugin = AVAILABLE_PLUGINS[pluginName];
+    if (plugin) {
+      plugin.register(server);
+    }
+  }
 
   return server;
 }

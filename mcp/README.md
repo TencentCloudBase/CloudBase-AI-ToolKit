@@ -42,7 +42,7 @@
 
 </div> 
 
-## ✨ 核心特性
+## 🌟 核心特性
 
 - **🤖 AI 原生** - 专为 AI 编程工具设计的规则库，生成代码符合云开发最佳实践
 - **🚀 一键部署** - MCP 自动化部署到腾讯云开发 CloudBase 平台，Serverless 架构无需购买服务器
@@ -50,6 +50,93 @@
 - **🔧 智能修复** - AI 自动查看日志并修复问题，降低运维成本
 - **⚡ 极速体验** - 国内 CDN 加速，比海外平台访问速度更快
 - **📚 知识检索** - 内置云开发、微信小程序等专业知识库的智能向量检索
+- **🔌 插件化架构** - 支持按需启用工具插件，解决 MCP 工具数量限制问题
+
+## 🔌 插件系统
+
+CloudBase MCP 采用插件化架构，支持按需启用工具模块，解决部分 MCP 客户端的工具数量限制问题。
+
+### 插件分类
+
+**默认插件** (开箱即用):
+- `env` - 环境管理 (登录、退出、环境查询)
+- `database` - 数据库操作 (集合、文档、索引管理)
+- `functions` - 云函数管理 (创建、更新、调用、日志)
+- `hosting` - 静态托管 (文件上传、域名配置)
+- `storage` - 云存储管理 (文件存储、CDN)
+- `setup` - 项目初始化 (模板下载、配置)
+- `interactive` - 交互对话 (用户确认、选择)
+
+**可选插件** (按需启用):
+- `rag` - 知识库搜索 (AI 增强问答)
+- `download` - 远程文件下载
+- `gateway` - API 网关管理
+- `file` - 文件操作
+
+### 插件配置
+
+#### 方式1：指定启用的插件
+
+在 MCP 配置文件中添加环境变量：
+
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+      }
+    }
+  }
+}
+```
+
+#### 方式2：禁用特定插件
+
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_DISABLED": "rag,download,gateway"
+      }
+    }
+  }
+}
+```
+
+### 常用配置示例
+
+**基础开发环境** (适用于大多数项目):
+```json
+{
+  "env": {
+    "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+  }
+}
+```
+
+**完整开发环境** (包含所有功能):
+```json
+{
+  "env": {
+    "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive,rag,download,gateway"
+  }
+}
+```
+
+**纯后端开发** (无前端托管):
+```json
+{
+  "env": {
+    "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions"
+  }
+}
+```
 
 
 ## 🚀 快速开始
@@ -175,7 +262,25 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
+      }
+    }
+  }
+}
+```
+
+**插件配置示例：**
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+      }
     }
   }
 }
@@ -208,7 +313,25 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
+      }
+    }
+  }
+}
+```
+
+**插件配置示例：**
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+      }
     }
   }
 }
@@ -244,7 +367,25 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
+      }
+    }
+  }
+}
+```
+
+**插件配置示例：**
+```json
+{
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+      }
     }
   }
 }
@@ -285,7 +426,31 @@ npx -y clear-npx-cache
         "@cloudbase/cloudbase-mcp@latest"
       ],
       "transportType": "stdio",
-      "disabled": false
+      "disabled": false,
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
+      }
+    }
+  }
+}
+```
+
+**插件配置示例：**
+```json
+{
+  "mcpServers": {
+    "cloudbase": {
+      "autoApprove": [],
+      "timeout": 60,
+      "command": "npx",
+      "args": [
+        "@cloudbase/cloudbase-mcp@latest"
+      ],
+      "transportType": "stdio",
+      "disabled": false,
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+      }
     }
   }
 }
@@ -319,7 +484,27 @@ npx -y clear-npx-cache
             "command": "npx",
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
-            ]
+            ],
+            "env": {
+                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
+            }
+        }
+    }
+}
+```
+
+**插件配置示例：**
+```json
+{
+    "servers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ],
+            "env": {
+                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+            }
         }
     }
 }
@@ -353,7 +538,25 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
+      }
+    }
+  }
+}
+```
+
+**插件配置示例：**
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+      }
     }
   }
 }
@@ -385,7 +588,25 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
+      }
+    }
+  }
+}
+```
+
+**插件配置示例：**
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+      }
     }
   }
 }
@@ -420,7 +641,28 @@ npx -y clear-npx-cache
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
             ],
-            "disabled": false
+            "disabled": false,
+            "env": {
+                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
+            }
+        }
+    }
+}
+```
+
+**插件配置示例：**
+```json
+{
+    "mcpServers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ],
+            "disabled": false,
+            "env": {
+                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+            }
         }
     }
 }
@@ -455,7 +697,28 @@ npx -y clear-npx-cache
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
             ],
-            "disabled": false
+            "disabled": false,
+            "env": {
+                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
+            }
+        }
+    }
+}
+```
+
+**插件配置示例：**
+```json
+{
+    "mcpServers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ],
+            "disabled": false,
+            "env": {
+                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+            }
         }
     }
 }
@@ -494,7 +757,29 @@ npx -y clear-npx-cache
             "command": "npx",
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
-            ]
+            ],
+            "env": {
+                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
+            }
+        }
+    }
+  }
+}
+```
+
+**插件配置示例：**
+```json
+{
+  "augment.advanced": {
+     "mcpServers": {
+        "cloudbase": {
+            "command": "npx",
+            "args": [
+                "@cloudbase/cloudbase-mcp@latest"
+            ],
+            "env": {
+                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+            }
         }
     }
   }
@@ -530,7 +815,28 @@ npx -y clear-npx-cache
       "args": [
         "-y",
         "@cloudbase/cloudbase-mcp@latest"
-      ]
+      ],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
+      }
+    }
+  }
+}
+```
+
+**插件配置示例：**
+```json
+{
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@cloudbase/cloudbase-mcp@latest"
+      ],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+      }
     }
   }
 }
@@ -576,7 +882,25 @@ npx @google/gemini-cli
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
+      }
+    }
+  }
+}
+```
+
+**插件配置示例：**
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+      }
     }
   }
 }
