@@ -136,6 +136,17 @@ for await (let str of res.textStream) {
    - 使用 manageDataModel 工具的 docs 方法获取具体 SDK 用法
 </cloudbase_knowledge>
 
+<console_management>
+创建/部署资源后，提供对应的控制台管理页面链接：
+
+1. 静态托管：https://console.cloud.tencent.com/tcb/hosting
+2. 云函数：https://tcb.cloud.tencent.com/dev?envId=${envId}#/scf/detail?id=${functionName}&NameSpace=${envId}
+3. 数据库集合：https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/doc/collection/${collectionName}
+4. 数据模型：https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/doc/model/${modelName}
+
+使用方式：创建对应资源后，将变量替换为实际值，提供给用户进行管理操作。
+</console_management>
+
 <cloudbase_db_notes>
 1. CloudBase数据库doc(id).get()返回的data是数组，需用data[0]获取文档内容
 2. 更新文档时，避免直接存储复杂对象，应提取和保存简单值

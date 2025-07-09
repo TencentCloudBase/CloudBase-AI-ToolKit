@@ -47,275 +47,128 @@ const app = cloudbase.init({
   env: 'xxxx-yyy'; // 可以通过 envQuery 工具来查询环境 id
 });
 const auth = app.auth();
-const db = app.database();
-const functions = app.functions();
-```
-8. 如果是小程序项目，并且需要用到数据库，云函数等功能，则需要在小程序引入 @cloudbase/js-sdk@latest
-```js
-import '@cloudbase/js-sdk/dist/web'
-const app = cloudbase.init({
-  env: 'xxxx-yyy'; // 可以通过 envQuery 工具来查询环境 id
-});
-const auth = app.auth();
-const db = app.database();
-const functions = app.functions();
-```
-9. 如果是微信小程序项目，项目初始化的时候需要选择云开发模板，并且需要配置 project.config.json 文件来设置云开发AppID等信息
-10. 如果是web 项目，需要配置跨域访问，可以在云函数中添加跨域头，或者在云开发控制台配置跨域
-11. 如果涉及到图片处理，文件上传等功能，可以使用云开发的云存储功能
-12. 如果涉及到后端数据库或者云函数等，需要在项目中引入相应的SDK，并在代码中初始化
+
+// 检查当前登录状态
+let loginState = await auth.getLoginState();
+
+if (loginState && loginState.isLoggedIn) {
+  // 已登录
+} else {
+  // 未登录
+  // 如果是游客类型，需要用下方的方式
+  // 重要 2.x的 jssdk 匿名登录必须采用下方的方式
+  // await auth.signInAnonymously();
+  // 如果需要登录，可以用下方的方式
+  // await auth.toDefaultLoginPage()
+}
 </web_rules>
 
-<wechat_miniprogram_rules>
-1. 微信小程序项目的默认入口文件是 app.js，主要配置在 app.json 中
-2. 微信小程序页面由 .wxml（结构）、.wxss（样式）、.js（逻辑）、.json（配置）四个文件组成
-3. 微信小程序可以使用云开发能力，通过 wx.cloud.init() 初始化云开发环境
-4. 微信小程序使用 wx.cloud.callFunction() 调用云函数
-5. 微信小程序使用 wx.cloud.database() 操作云数据库
-6. 微信小程序使用 wx.cloud.uploadFile() 上传文件到云存储
-7. 微信小程序页面跳转使用 wx.navigateTo()、wx.redirectTo()、wx.switchTab() 等API
-8. 微信小程序生命周期包括 onLoad、onShow、onReady、onHide、onUnload 等
-9. 微信小程序组件包括 view、text、button、image、input、scroll-view 等
-10. 微信小程序样式使用 rpx 单位，750rpx = 屏幕宽度
-11. 微信小程序可以使用 wx.request() 进行网络请求
-12. 微信小程序支持自定义组件，通过 Component() 构造器创建
-13. 微信小程序支持模板消息、订阅消息等功能
-14. 微信小程序支持支付功能，通过 wx.requestPayment() 调用
-15. 微信小程序支持分享功能，通过 onShareAppMessage() 和 onShareTimeline() 处理
-16. 微信小程序支持获取用户信息，通过 wx.getUserProfile() 获取
-17. 微信小程序支持获取位置信息，通过 wx.getLocation() 获取
-18. 微信小程序支持扫码功能，通过 wx.scanCode() 调用
-19. 微信小程序支持多媒体功能，如录音、拍照、选择图片等
-20. 微信小程序支持设备API，如蓝牙、WiFi、NFC等
-21. 微信小程序支持开放接口，如登录、支付、分享等
-22. 微信小程序支持插件功能，可以引入第三方插件
-23. 微信小程序支持云开发，包括云函数、云数据库、云存储等
-24. 微信小程序支持实时数据库，可以监听数据变化
-25. 微信小程序支持云调用，可以直接调用微信开放接口
-26. 微信小程序支持定时触发器，可以定时执行云函数
-27. 微信小程序支持HTTP API，可以通过HTTP请求调用云函数
-28. 微信小程序支持静态网站托管，可以部署H5页面
-29. 微信小程序支持内容管理，可以管理小程序内容
-30. 微信小程序支持数据分析，可以查看小程序使用数据
-</wechat_miniprogram_rules>
+<miniprogram_rules>
+1. 如果用户需要开发小程序，你会使用微信云开发的各种能力来开发项目，小程序的基础库直接用 latest 即可
+2. 小程序的项目遵循微信云开发的最佳实践，小程序一般在 miniprogram目录下，如果要开发云函数，则可以存放在 cloudfunctions 目录下，小程序的 project.config.json 需要指定miniprogramRoot这些
+3. 生成小程序页面的时候，必须包含页面的配置文件例如index.json等，要符合规范，避免编译出错
+4. 小程序 wx.cloud 的时候，需要指定环境 Id，环境 id 可以通过 envQuery 工具来查询
+5. 生成小程序代码的时候，如果需要用到素材图片，比如 tabbar 的 iconPath 等地方，可以从 unsplash 通过 url 来下载，可以参考工作流程中的下载远程资源流程，在生成小程序代码的时候，如果用到了iconPath 这些，必须同时帮用户下载图标，避免构建报错
+6. 小程序中基础库 3.7.1版本以上已经支持直接调用大模型
+```js
+// 创建模型实例，这里我们使用 DeepSeek 大模型
+const model = wx.cloud.extend.AI.createModel("deepseek");
 
-<cloudbase_rules>
-1. 云开发环境需要在腾讯云控制台创建，获取环境ID
-2. 云函数需要在 cloudfunctions 目录下创建，每个云函数一个文件夹
-3. 云函数的入口文件是 index.js，导出 main 函数
-4. 云函数可以使用 npm 安装依赖，需要在函数目录下运行 npm install
-5. 云函数支持多种触发器：HTTP触发器、定时触发器、COS触发器等
-6. 云数据库是文档型数据库，支持 MongoDB 语法
-7. 云数据库支持索引、聚合、事务等高级功能
-8. 云存储支持文件上传、下载、删除等操作
-9. 云存储支持CDN加速，可以设置自定义域名
-10. 静态网站托管支持部署HTML、CSS、JS等静态文件
-11. 静态网站托管支持自定义域名和HTTPS
-12. 云开发支持多环境管理，可以创建开发、测试、生产环境
-13. 云开发支持权限管理，可以设置用户权限和角色
-14. 云开发支持监控和日志，可以查看函数执行情况
-15. 云开发支持备份和恢复，可以定期备份数据
-16. 云开发支持扩展能力，可以接入第三方服务
-17. 云开发支持小程序云开发和Web云开发
-18. 云开发支持实时数据库，可以实时同步数据
-19. 云开发支持云调用，可以直接调用微信开放接口
-20. 云开发支持内容管理，可以管理应用内容
-</cloudbase_rules>
+// 我们先设定好 AI 的系统提示词，这里以七言绝句生成为例
+const systemPrompt =
+  "请严格按照七言绝句或七言律诗的格律要求创作，平仄需符合规则，押韵要和谐自然，韵脚字需在同一韵部。创作内容围绕用户给定的主题，七言绝句共四句，每句七个字；七言律诗共八句，每句七个字，颔联和颈联需对仗工整。同时，要融入生动的意象、丰富的情感与优美的意境，展现出古诗词的韵味与美感。";
 
-<database_rules>
-1. 云数据库使用 collection 和 document 概念，类似关系数据库的表和记录
-2. 云数据库支持 CRUD 操作：add、remove、update、get
-3. 云数据库支持条件查询：where、limit、skip、orderBy
-4. 云数据库支持聚合查询：aggregate、group、sum、avg等
-5. 云数据库支持地理位置查询：geoNear、geoWithin等
-6. 云数据库支持全文检索：text search
-7. 云数据库支持事务操作：transaction
-8. 云数据库支持索引优化：createIndex、dropIndex
-9. 云数据库支持数据导入导出：import、export
-10. 云数据库支持数据备份恢复：backup、restore
-11. 云数据库支持权限控制：read、write权限
-12. 云数据库支持实时监听：watch
-13. 云数据库支持批量操作：batchAdd、batchUpdate、batchRemove
-14. 云数据库支持关联查询：lookup
-15. 云数据库支持数据校验：validate
-16. 云数据库支持数据加密：encrypt、decrypt
-17. 云数据库支持数据压缩：compress
-18. 云数据库支持数据同步：sync
-19. 云数据库支持数据迁移：migrate
-20. 云数据库支持数据统计：count、distinct
-</database_rules>
+// 用户的自然语言输入，如'帮我写一首赞美玉龙雪山的诗'
+const userInput = "帮我写一首赞美玉龙雪山的诗";
 
-<function_rules>
-1. 云函数使用 Node.js 运行时，支持 ES6+ 语法
-2. 云函数的入口函数是 exports.main，接收 event 和 context 参数
-3. 云函数支持异步操作，可以使用 async/await 或 Promise
-4. 云函数支持环境变量，可以在控制台设置
-5. 云函数支持日志输出，使用 console.log 输出日志
-6. 云函数支持错误处理，使用 try/catch 捕获错误
-7. 云函数支持依赖管理，可以使用 npm 安装依赖
-8. 云函数支持HTTP触发器，可以处理HTTP请求
-9. 云函数支持定时触发器，可以定时执行函数
-10. 云函数支持COS触发器，可以响应文件上传事件
-11. 云函数支持数据库触发器，可以响应数据变化
-12. 云函数支持调用其他云函数
-13. 云函数支持调用数据库操作
-14. 云函数支持调用云存储操作
-15. 云函数支持调用第三方API
-16. 云函数支持微信开放接口调用
-17. 云函数支持邮件发送
-18. 云函数支持短信发送
-19. 云函数支持图片处理
-20. 云函数支持文件处理
-</function_rules>
+// 将系统提示词和用户输入，传入大模型
+const res = await model.streamText({
+  data: {
+    model: "deepseek-v3", // 指定具体的模型
+    messages: [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userInput },
+    ],
+  },
+});
 
-<storage_rules>
-1. 云存储支持文件上传、下载、删除操作
-2. 云存储支持多种文件格式：图片、视频、文档等
-3. 云存储支持文件压缩和格式转换
-4. 云存储支持CDN加速，提高访问速度
-5. 云存储支持自定义域名
-6. 云存储支持HTTPS访问
-7. 云存储支持跨域访问设置
-8. 云存储支持文件权限控制
-9. 云存储支持文件版本管理
-10. 云存储支持文件生命周期管理
-11. 云存储支持文件审核功能
-12. 云存储支持文件水印功能
-13. 云存储支持文件缩略图生成
-14. 云存储支持文件元数据管理
-15. 云存储支持文件检索功能
-16. 云存储支持文件分享功能
-17. 云存储支持文件同步功能
-18. 云存储支持文件备份功能
-19. 云存储支持文件监控功能
-20. 云存储支持文件统计功能
-</storage_rules>
+// 接收大模型的响应
+// 由于大模型的返回结果是流式的，所以我们这里需要循环接收完整的响应文本。
+for await (let str of res.textStream) {
+  console.log(str);
+}
+// 输出结果：
+// "# 咏玉龙雪山\n"
+// "皑皑峻岭入云巅，玉骨冰肌傲九天。\n"
+// "雪影岚光添胜景，神山圣境韵绵绵。\n"
+```
+可见，仅需几行小程序代码，就可以通过云开发直接调用大模型的文本生成能力。
+7. **微信步数获取必须使用CloudID方式（基础库2.7.0+）**：
+   - 前端：`wx.getWeRunData()` 获取cloudID，使用 `wx.cloud.CloudID(cloudID)` 传递给云函数
+   - 云函数：直接使用 `weRunData.data` 获取解密后的步数数据，检查 `weRunData.errCode` 处理错误
+   - 禁止使用session_key手动解密方式，CloudID更安全简单
+   - 必须实现降级机制（模拟数据）处理cloudID获取失败的情况
+8. **云函数部署和权限注意事项**：
+   - AI自动部署云函数后，可能缺少云调用等特殊权限
+   - 建议用户在微信开发者工具中右键选择云函数，选择"云端安装依赖"
+   - 对于需要云调用权限的函数（如微信步数解密），建议通过开发者工具手动部署一次以获取完整权限
+   - 如遇到权限问题，提示用户检查云函数的服务授权和API权限配置
 
-<hosting_rules>
-1. 静态网站托管支持HTML、CSS、JS等静态文件
-2. 静态网站托管支持SPA（单页应用）部署
-3. 静态网站托管支持自定义域名
-4. 静态网站托管支持HTTPS证书
-5. 静态网站托管支持CDN加速
-6. 静态网站托管支持缓存控制
-7. 静态网站托管支持Gzip压缩
-8. 静态网站托管支持访问日志
-9. 静态网站托管支持错误页面配置
-10. 静态网站托管支持重定向规则
-11. 静态网站托管支持访问控制
-12. 静态网站托管支持版本管理
-13. 静态网站托管支持回滚功能
-14. 静态网站托管支持预览功能
-15. 静态网站托管支持A/B测试
-16. 静态网站托管支持访问统计
-17. 静态网站托管支持SEO优化
-18. 静态网站托管支持PWA支持
-19. 静态网站托管支持多语言支持
-20. 静态网站托管支持移动端适配
-</hosting_rules>
+</miniprogram_rules>
 
-<security_rules>
-1. 云开发支持身份验证：匿名登录、邮箱登录、手机号登录
-2. 云开发支持自定义登录：可以接入第三方登录
-3. 云开发支持权限管理：可以设置用户权限和角色
-4. 云开发支持数据安全：支持数据加密和访问控制
-5. 云开发支持API安全：支持API密钥和访问限制
-6. 云开发支持网络安全：支持HTTPS和防火墙
-7. 云开发支持审计日志：记录所有操作日志
-8. 云开发支持备份恢复：定期备份数据
-9. 云开发支持监控告警：实时监控系统状态
-10. 云开发支持合规认证：符合相关法规要求
-</security_rules>
+<cloudbase_knowledge>
+1. 云开发的静态托管和云存储是两个不同的桶，一般公开可访问的可以存放在静态托管，可以获得一个公开的网页地址，同时支持配置自定义域名（需要到控制台操作），云存储适合放一些有私密性的文件，可以通过获取临时文件来获取一个临时访问地址
+2. 云开发的静态托管域名可以通过 getWebsiteConfig 来获取，然后结合静态托管文件的路径可以拼出最终访问地址，记住如果访问地址是个目录，最后必须带有 /
+3. 云开发的 SDK 初始化时都需要填写环境 id，可以通过 envQuery 工具来查询环境 id，然后进行登录，例如使用匿名登录
+4. Node.js 的云函数中需要包含package.json，声明所需的依赖，可以使用 createFunction 来创建函数，使用 updateFunctionCode 来部署云函数，优先采用云端安装依赖，不上传 node_modules，functionRootPath 指的是函数目录的父目录，例如 cloudfuncitons 这个目录
+5. 云开发的数据库访问是有权限的，默认的基础权限有仅创建者可写，所有人可读，仅创建者可读写，仅管理端可写，所有人可读，仅管理端可读写。如果直接从 web 端或者小程序端请求数据库，需要考虑配置合适的数据库权限，在云函数中，默认没有权限控制
+6. 如用户无特殊要求，涉及到跨数据库集合的操作必须通过云函数实现
+7. 如果用涉及到云函数，在保证安全的情况下，可以尽可能可能缩减云函数的数量，例如实现一个面向 c 端请求的云函数，实现一个初始化数据的云函数
+8. 获取数据模型操作对象：
+   - 小程序：需要 `@cloudbase/wx-cloud-client-sdk`，初始化 `const client = initHTTPOverCallFunction(wx.cloud)`，使用 `client.models`
+   - 云函数：需要 `@cloudbase/node-sdk@3.10+`，初始化 `const app = cloudbase.init({env})`，使用 `app.models`
+   - Web：需要 `@cloudbase/js-sdk`，初始化 `const app = cloudbase.init({env})`，登录后使用 `app.models`
+9. 数据模型查询：可调用 MCP manageDataModel 工具查询模型列表、获取模型详细信息（含Schema字段）、获取具体的 models SDK使用文档
+10. MySQL 数据模型调用规则
+   - MySQL 数据模型不能使用 collection 方式调用，必须使用数据模型 SDK
+   - 错误：`db.collection('model_name').get()`
+   - 正确：`app.models.model_name.list({ filter: { where: {} } })`
+   - 使用 manageDataModel 工具的 docs 方法获取具体 SDK 用法
+</cloudbase_knowledge>
 
-<best_practices>
-1. 合理设计数据库结构，避免过度嵌套
-2. 使用索引优化查询性能
-3. 合理使用缓存减少数据库访问
-4. 异步处理耗时操作
-5. 使用事务保证数据一致性
-6. 定期备份重要数据
-7. 监控系统性能和资源使用
-8. 使用版本控制管理代码
-9. 编写单元测试保证代码质量
-10. 遵循安全最佳实践
-11. 优化静态资源加载
-12. 使用CDN加速访问
-13. 合理设置缓存策略
-14. 压缩和优化图片
-15. 使用懒加载提高性能
-16. 适配不同设备和屏幕
-17. 优化SEO和可访问性
-18. 定期更新依赖库
-19. 监控和分析用户行为
-20. 持续优化用户体验
-</best_practices>
+<console_management>
+创建/部署资源后，提供对应的控制台管理页面链接：
 
-<troubleshooting>
-1. 函数执行失败：检查函数代码和依赖
-2. 数据库连接失败：检查环境配置和权限
-3. 文件上传失败：检查文件大小和格式
-4. 网站无法访问：检查域名和SSL配置
-5. API调用失败：检查API密钥和权限
-6. 性能问题：检查数据库查询和缓存
-7. 安全问题：检查权限设置和访问控制
-8. 部署失败：检查构建配置和环境
-9. 监控告警：检查系统资源和错误日志
-10. 数据丢失：检查备份和恢复策略
-</troubleshooting>
+1. 静态托管：https://console.cloud.tencent.com/tcb/hosting
+2. 云函数：https://tcb.cloud.tencent.com/dev?envId=${envId}#/scf/detail?id=${functionName}&NameSpace=${envId}
+3. 数据库集合：https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/doc/collection/${collectionName}
+4. 数据模型：https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/doc/model/${modelName}
 
-<monitoring>
-1. 监控函数执行时间和成功率
-2. 监控数据库查询性能
-3. 监控存储使用量和访问量
-4. 监控网站访问量和响应时间
-5. 监控API调用量和错误率
-6. 监控系统资源使用情况
-7. 设置告警规则和通知
-8. 定期查看监控报告
-9. 分析性能瓶颈和优化点
-10. 跟踪用户行为和使用模式
-</monitoring>
+使用方式：创建对应资源后，将变量替换为实际值，提供给用户进行管理操作。
+</console_management>
 
-<optimization>
-1. 优化数据库查询语句
-2. 使用适当的数据结构
-3. 减少不必要的网络请求
-4. 使用缓存提高响应速度
-5. 压缩和优化静态资源
-6. 使用CDN加速访问
-7. 优化图片和媒体文件
-8. 减少包体积和加载时间
-9. 使用懒加载和预加载
-10. 优化移动端体验
-11. 提高可访问性
-12. 优化SEO设置
-13. 使用现代Web技术
-14. 持续性能监控
-15. 定期更新和维护
-</optimization>
+<cloudbase_db_notes>
+1. CloudBase数据库doc(id).get()返回的data是数组，需用data[0]获取文档内容
+2. 更新文档时，避免直接存储复杂对象，应提取和保存简单值
+3. 错误处理应返回error.message而非整个error对象，避免循环引用
+4. 使用new Date()替代db.serverDate()创建时间戳
+5. 对于有数据库归属的情况，检查和更新应通过云函数处理，避免数据库权限问题
+6. 云开发的云数据或者 mongodb不能在null值上创建新的嵌套字段，必要时可以用set()替代update()并删除_id
+</cloudbase_db_notes>
 
-<deployment>
-1. 本地开发和测试
-2. 使用版本控制管理代码
-3. 配置构建和部署流程
-4. 使用环境变量管理配置
-5. 自动化测试和部署
-6. 灰度发布和回滚
-7. 监控部署状态
-8. 记录部署日志
-9. 备份和恢复策略
-10. 多环境管理
-</deployment>
+<readme_rules>
+	1. 你会在生成项目后生成一个 README.md 文件，里面包含项目的基本信息，例如项目名称、项目描述, 最关键的是要把项目的架构和涉及到的云开发资源说清楚，让维护者可以参考来进行修改和维护
+	2. 部署完毕后，如果是 web 可以把正式部署的访问地址也写到文档中
+</readme_rules>
 
-<maintenance>
-1. 定期更新依赖库
-2. 监控系统性能
-3. 备份重要数据
-4. 清理无用文件
-5. 优化数据库性能
-6. 更新安全配置
-7. 检查和修复错误
-8. 用户反馈处理
-9. 功能更新和改进
-10. 文档更新和维护
-</maintenance>
+<cloudbaserc_rules>
+	1. 为了方便其他不使用 AI 的人了解有哪些资源，可以在生成之后，同时生成一个 cloudbaserc.json，并支持使用 @cloudbase/cli来部署，提供 AI 调用 MCP 部署之外的另外一个选项
+</cloudbaserc_rules>
+
+<base_rules>
+你调用mcp服务的时候，需要充分理解所有要调用接口的数据类型，以及返回值的类型，如果你不确定需要调用什么接口，请先查看文档和tools的描述，然后根据文档和tools的描述，确定你需要调用什么接口和参数，不要出现调用的方法参数，或者参数类型错误的情况。
+例如，很多接口都需要传confirm参数，这个参数是boolean类型，如果你不提供这个参数，或者提供错误的数据类型错误，那么接口会返回错误。
+</base_rules>
+
+
+
