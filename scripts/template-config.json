@@ -2,9 +2,16 @@
   "description": "awsome-cloudbase-examples 项目模板路径配置",
   "version": "1.0.0",
   "templates": [
+    "web/art-exhibition",
+    "web/overcooked-game",
+    "web/gomoku-game",
+    "web/ecommerce-management-backend",
+    "web/simple-crm",
     "web/cloudbase-react-template",
     "web/cloudbase-vue-template",
-    "web/cloudbase-project",
+    "miniprogram/tcb-shop-ai-generate",
+    "miniprogram/dating",
+    "miniprogram/cloudbase-ai-video",
     "miniprogram/cloudbase-miniprogram-template",
     "universal/cloudbase-uniapp-template"
   ],
@@ -20,6 +27,6 @@
     "createBackup": false,
     "overwrite": true,
     "autoCommit": true,
-    "commitMessage": "chore: sync config and rules from cloudbase-turbo-deploy"
+    "commitMessage": "chore: 🤣 sync rules from [CloudBase AI Toolkit](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)"
   }
 } 

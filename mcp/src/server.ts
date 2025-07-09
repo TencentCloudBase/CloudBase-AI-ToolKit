@@ -1,6 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { registerEnvTools } from "./tools/env.js";
-import { registerFileTools } from "./tools/file.js";
 import { registerFunctionTools } from "./tools/functions.js";
 import { registerDatabaseTools } from "./tools/database.js";
 import { registerHostingTools } from "./tools/hosting.js";

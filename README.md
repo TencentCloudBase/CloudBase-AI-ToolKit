@@ -37,7 +37,7 @@
 |---|---|
 | 🤖 **AI智能开发**: AI自动生成代码和架构设计<br>☁️ **云开发集成**: 一键接入数据库、云函数、静态托管<br>⚡ **快速部署**: 几分钟内完成全栈应用上线 | **Web应用**: 现代化前端 + 静态托管<br>**微信小程序**: 云开发小程序解决方案<br>**后端服务**: 云数据库 + 无服务器函数+云托管 |
 
-📚 [快速开始](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/getting-started) | 🛠️ [IDE配置](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/) | 🎨 [项目模板](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates) | 📖 [开发指南](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/development) | 🎮 [使用案例](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/examples) | 🎓 [教程](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials) | 🔧 [MCP工具](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/mcp-tools) | ❓ [常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)
+📚 [快速开始](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/getting-started) | 🛠️ [IDE配置](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/) | 🎨 [项目模板](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates) | 📖 [开发指南](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/development) | 🎮 [使用案例](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/examples) | 🎓 [教程](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials) | 🔌 [插件系统](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins) | 🔧 [MCP工具](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/mcp-tools) | ❓ [常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)
 
 
 </div> 
@@ -50,6 +50,7 @@
 - **🔧 智能修复** - AI 自动查看日志并修复问题，降低运维成本
 - **⚡ 极速体验** - 国内 CDN 加速，比海外平台访问速度更快
 - **📚 知识检索** - 内置云开发、微信小程序等专业知识库的智能向量检索
+
 
 
 ## 🚀 快速开始
@@ -136,21 +137,23 @@ npx -y clear-npx-cache
 
 以下工具均支持 CloudBase AI ToolKit，选择合适的工具并按说明配置：
 
-| 工具 | 支持平台 |
-|------|----------|
-| [Cursor](https://cursor.com/) | 独立 IDE|
-| [WindSurf](https://windsurf.com/editor) | 独立 IDE, VSCode、JetBrains 插件 |
-| [CodeBuddy](https://copilot.tencent.com/) | VS Code、JetBrains、微信开发者工具插件 |
-| [CLINE](https://cline.so/) | VS Code 插件 |
-| [GitHub Copilot](https://github.com/features/copilot) | VS Code 插件 |
-| [Trae](https://www.trae.ai/) | 独立 IDE |
-| [通义灵码](https://tongyi.aliyun.com/lingma) | 独立 IDE，VS Code、 JetBrains插件 |
-| [RooCode](https://roocode.com/) | VS Code插件 |
-| [文心快码](https://comate.baidu.com/) | VS Code、JetBrains插件|
-| [Augment Code](https://www.augmentcode.com/) | VS Code、JetBrains 插件 |
-| [Claude Code](https://www.anthropic.com/claude-code) | 命令行工具 |
-| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | 命令行工具 |
-| [OpenAI Codex CLI](https://github.com/openai/codex) | 命令行工具 |
+
+| 工具 | 支持平台 | 查看指引 |
+|------|----------|----------|
+| [Cursor](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) | 独立 IDE| [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) |
+| [WindSurf](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) | 独立 IDE, VSCode、JetBrains 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) |
+| [CodeBuddy](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) | VS Code、JetBrains、微信开发者工具插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) |
+| [CLINE](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) | VS Code 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) |
+| [GitHub Copilot](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) | VS Code 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) |
+| [Trae](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/trae) | 独立 IDE | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/trae) |
+| [通义灵码](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/tongyi-lingma) | 独立 IDE，VS Code、 JetBrains插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/tongyi-lingma) |
+| [RooCode](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/roocode) | VS Code插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/roocode) |
+| [文心快码](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/baidu-comate) | VS Code、JetBrains插件| [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/baidu-comate) |
+| [Augment Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/augment-code) | VS Code、JetBrains 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/augment-code) |
+| [Claude Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/claude-code) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/claude-code) |
+| [Gemini CLI](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/gemini-cli) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/gemini-cli) |
+| [OpenAI Codex CLI](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli) |
+
 
 <details>
 <summary><strong>🔧 Cursor 配置</strong></summary>
@@ -617,6 +620,87 @@ gemini
 </details>
 
 <details>
+<summary><strong>🤖 OpenAI Codex CLI 配置</strong></summary>
+
+#### 步骤1：安装 OpenAI Codex CLI
+
+确保安装 Node.js 18+，然后全局安装 OpenAI Codex CLI：
+
+```bash
+npm install -g @openai/codex
+```
+
+或直接运行：
+
+```bash
+npx @openai/codex
+```
+
+#### 步骤2：配置 MCP
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，有两种配置方式：
+
+**方式一：使用项目配置文件（推荐）**
+
+在项目根目录创建 `.codex/config.toml` 文件：
+
+```toml
+[mcp_servers.cloudbase]
+command = "npx"
+args = ["-y", "@cloudbase/cloudbase-mcp@latest"]
+```
+
+然后启动时指定配置文件：
+
+```bash
+codex --config .codex/config.toml
+```
+
+**方式二：全局配置**
+
+在用户主目录创建 `~/.codex/config.toml` 文件：
+
+```toml
+[mcp_servers.cloudbase]
+command = "npx"
+args = ["-y", "@cloudbase/cloudbase-mcp@latest"]
+```
+
+#### 步骤3：启用 AI 规则
+
+模板中已包含 `AGENTS.md` 文件，OpenAI Codex CLI 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则：
+
+```
+在当前项目中下载云开发 AI 规则
+```
+
+#### 步骤4：开始开发
+
+启动 OpenAI Codex CLI：
+
+```bash
+codex
+```
+
+如果使用项目配置文件：
+
+```bash
+codex --config .codex/config.toml
+```
+
+在 Codex CLI 中与 AI 对话：
+
+```
+登录云开发
+```
+然后就可以进行需求的开发了
+
+</details>
+
+<details>
 <summary><strong>🔄 更新 CloudBase AI ToolKit</strong></summary>
 
 **更新 AI 规则**
@@ -690,6 +774,19 @@ AI 会自动：
 云函数代码运行不符合需求，需求是 xxx，请查看日志和数据进行调试，并进行修复
 ```
 
+## 🔌 插件系统
+
+CloudBase MCP 采用插件化架构，支持按需启用工具模块。[查看详细文档](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins)
+
+### 快速配置
+
+```json
+{
+  "env": {
+    "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+  }
+}
+```
 
 
 ## 📚 教程
