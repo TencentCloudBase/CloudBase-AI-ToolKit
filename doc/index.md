@@ -14,7 +14,7 @@
 
 </div>
 
-当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Claude Code**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
+当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Claude Code/OpenAI Codex CLI**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
 
 :::tip 🌟 开源项目
 - **GitHub 仓库**: [TencentCloudBase/CloudBase-AI-ToolKit](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit) - 欢迎 Star 和贡献代码
@@ -60,6 +60,7 @@
 | [Augment Code](./ide-setup/augment-code) | VS Code、JetBrains 插件 |
 | [Claude Code](./ide-setup/claude-code) | 命令行工具 |
 | [Gemini CLI](./ide-setup/gemini-cli) | 命令行工具 |
+| [OpenAI Codex CLI](./ide-setup/openai-codex-cli) | 命令行工具 |
 
 ## 🎯 快速导航
 
