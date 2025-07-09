@@ -20,3 +20,7 @@
 
 例如 艺术展览预约系统 - 一个完全通过AI 编程开发的艺术展览预约系统, 包含预约功能、管理后台等功能。
 </add_example>
+
+<sync_doc>
+cp -r doc/* {cloudbase-docs dir}/docs/ai/cloudbase-ai-toolkit/
+</sync_doc>

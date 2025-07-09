@@ -1,6 +1,6 @@
 # MCP 工具
 
-CloudBase AI ToolKit 提供了完整的 MCP 工具集，支持云开发的各种操作。目前共有 **35 个工具**，涵盖环境管理、数据库操作、云函数管理、静态托管等核心功能。
+CloudBase AI ToolKit 提供了完整的 MCP 工具集，支持云开发的各种操作。目前共有 **36 个工具**，涵盖环境管理、数据库操作、云函数管理、静态托管等核心功能。
 
 📋 **完整工具规格**: [查看 tools.json](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit/-/git/raw/main/scripts/tools.json)
 
@@ -13,7 +13,7 @@ CloudBase AI ToolKit 提供了完整的 MCP 工具集，支持云开发的各种
 | ⚡ [云函数管理](#云函数管理) | 9 个 | 函数创建、更新、调用、日志 |
 | 🌐 [静态托管](#静态托管) | 6 个 | 文件上传、管理、域名配置 |
 | 📁 [文件操作](#文件操作) | 2 个 | 文件下载、云存储上传 |
-| 🛠️ [工具支持](#工具支持) | 3 个 | 模板下载、知识库搜索、交互对话 |
+| 🛠️ [工具支持](#工具支持) | 4 个 | 模板下载、知识库搜索、联网搜索、交互对话 |
 
 ---
 
@@ -264,6 +264,11 @@ CloudBase AI ToolKit 提供了完整的 MCP 工具集，支持云开发的各种
 - `id` (string): cloudbase/scf/miniprogram
 - `content` (string): 检索内容
 
+#### `searchWeb`
+**功能**: 联网搜索工具，支持查询最新信息和访问网页内容
+**参数**: 
+- `query` (string): 搜索关键词、问题或网址
+
 #### `interactiveDialog`
 **功能**: 统一的交互式对话工具，支持需求澄清和任务确认
 **参数**: 
@@ -324,7 +329,7 @@ MCP 工具通过以下配置添加到你的 AI IDE 中：
 
 ## 🔄 工具优化
 
-为了提供更好的使用体验，我们将原来 40 个工具优化为 35 个：
+为了提供更好的使用体验，我们将原来 40 个工具优化为 36 个：
 
 - ✅ **envQuery**: 合并了 `listEnvs` + `getEnvInfo` + `getEnvAuthDomains`
 - ✅ **envDomainManagement**: 合并了 `createEnvDomain` + `deleteEnvDomain`  
