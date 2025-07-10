@@ -8,11 +8,15 @@ import { info } from "./utils/logger.js";
 // 记录启动时间
 const startTime = Date.now();
 
-// Create server instance with telemetry enabled
+// 在测试环境中禁用遥测，避免网络连接问题
+const isTestEnvironment = process.env.NODE_ENV === 'test' || process.env.VITEST === 'true';
+const enableTelemetry = !isTestEnvironment;
+
+// Create server instance with conditional telemetry
 const server = createCloudBaseMcpServer({
   name: "cloudbase-mcp",
   version: "1.0.0",
-  enableTelemetry: true
+  enableTelemetry
 });
 
 async function main() {

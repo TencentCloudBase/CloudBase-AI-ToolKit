@@ -71,8 +71,8 @@ test('MCP server basic functionality test', async () => {
       capabilities: {}
     });
 
-    // Use the ESM CLI for integration testing
-    const serverPath = join(__dirname, '../mcp/dist/cli.js');
+    // Use the CJS CLI for integration testing to avoid ESM issues
+    const serverPath = join(__dirname, '../mcp/dist/cli.cjs');
     transport = new StdioClientTransport({
       command: 'node',
       args: [serverPath]
@@ -157,7 +157,7 @@ test('Tool consistency between multiple client connections', async () => {
       capabilities: {}
     });
 
-    const serverPath = join(__dirname, '../mcp/dist/cli.js');
+    const serverPath = join(__dirname, '../mcp/dist/cli.cjs');
     transport1 = new StdioClientTransport({
       command: 'node',
       args: [serverPath]

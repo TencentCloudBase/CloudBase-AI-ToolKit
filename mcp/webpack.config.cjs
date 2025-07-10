@@ -15,9 +15,9 @@ const baseConfig = {
       '.js': ['.ts', '.js'],
     },
     fallback: {
-      // 为浏览器环境提供 Node.js polyfills（虽然我们主要是 Node.js 环境）
-      "buffer": require.resolve("buffer/"),
-      "process": require.resolve("process/browser"),
+      // 在 Node.js 环境中我们不需要这些 polyfills
+      "buffer": false,
+      "process": false,
     }
   },
   module: {
@@ -43,10 +43,7 @@ const baseConfig = {
         configFile: path.resolve(__dirname, 'tsconfig.json'),
       }
     }),
-    new webpack.ProvidePlugin({
-      Buffer: ['buffer', 'Buffer'],
-      process: 'process/browser',
-    }),
+    // ProvidePlugin 不需要了，因为我们在 Node.js 环境中运行
     // 忽略有问题的 native 依赖
     new webpack.IgnorePlugin({
       resourceRegExp: /^(fsevents|@swc\/core.*)$/,
@@ -57,14 +54,16 @@ const baseConfig = {
     }),
   ],
   externals: [
-    // 排除 node_modules，但保留需要打包的依赖
+    // 排除所有 node_modules 依赖
     nodeExternals({
-      // 这些依赖需要被打包进来
-      allowlist: [
-        'zod',
-        'punycode'
-      ]
-    })
+      // 只打包特定的依赖
+      allowlist: ['zod']
+    }),
+    // 手动排除可能有问题的模块
+    /^@modelcontextprotocol\/sdk\//,
+    /^@cloudbase\//,
+    /^miniprogram-ci$/,
+    /^open$/
   ],
   optimization: {
     minimize: false, // 保持代码可读性，特别是对于 MCP 服务器

@@ -1,17 +1,29 @@
-export default {
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
   test: {
-    globals: true,
+    // 设置测试环境变量
+    env: {
+      NODE_ENV: 'test',
+      VITEST: 'true',
+      CLOUDBASE_MCP_TELEMETRY_DISABLED: 'true'
+    },
+    // 使用 Node.js 环境进行测试
     environment: 'node',
-    testTimeout: 150000, // 增加到 150 秒（2.5 分钟），适合 CI 环境
-    hookTimeout: 60000, // 60秒 hook 超时
-    teardownTimeout: 30000, // 30秒清理超时
-    include: ['../tests/**/*.test.js'], // 测试文件在上级目录
-    exclude: ['node_modules', 'dist'],
+    // 增加测试超时时间
+    testTimeout: 120000,
+    // 设置并发数
+    threads: false, // 禁用多线程，避免端口冲突
+    // 设置根目录
+    root: process.cwd(),
+    // 包含测试文件
+    include: ['../tests/**/*.test.js'],
+    // 显示详细输出
     reporter: 'verbose',
-    // CI 环境优化
-    maxConcurrency: 1, // 在 CI 中降低并发以减少资源竞争
-    bail: 0, // 不要在第一个失败测试时停止
-    retry: 1, // 重试失败的测试一次
-    slowTestThreshold: 30000, // 标记超过 30 秒的测试为慢测试
+    // 失败时停止
+    bail: 1,
+    // 测试运行前的设置
+    globalSetup: [],
+    setupFiles: []
   }
-}; 
+}); 

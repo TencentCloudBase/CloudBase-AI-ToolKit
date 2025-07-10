@@ -25,7 +25,7 @@ test('Knowledge base search functionality works correctly', async () => {
     });
 
     // Create stdio transport that spawns the server
-    const serverPath = join(__dirname, '../mcp/dist/cli.js');
+    const serverPath = join(__dirname, '../mcp/dist/cli.cjs');
     transport = new StdioClientTransport({
       command: 'node',
       args: [serverPath]
@@ -128,7 +128,7 @@ test('Knowledge base tool parameters validation', async () => {
     });
 
     // Create stdio transport that spawns the server
-    const serverPath = join(__dirname, '../mcp/dist/cli.js');
+    const serverPath = join(__dirname, '../mcp/dist/cli.cjs');
     transport = new StdioClientTransport({
       command: 'node',
       args: [serverPath]

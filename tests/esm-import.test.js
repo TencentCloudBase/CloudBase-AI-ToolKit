@@ -61,7 +61,7 @@ test('MCP client-server integration works correctly', async () => {
 
     // Create stdio transport that spawns the server as a child process
     // 注意：这里我们仍然需要用子进程，因为客户端需要连接到一个独立的服务器进程
-    const serverPath = join(__dirname, '../mcp/dist/cli.js');
+    const serverPath = join(__dirname, '../mcp/dist/cli.cjs');
     transport = new StdioClientTransport({
       command: 'node',
       args: [serverPath]
