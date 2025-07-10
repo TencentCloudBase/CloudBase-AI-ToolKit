@@ -53,6 +53,7 @@ const baseConfig = {
       __MCP_VERSION__: JSON.stringify(require('./package.json').version),
     }),
   ],
+  // 为 CommonJS 构建使用默认的 externals
   externals: [
     // 排除所有 node_modules 依赖
     nodeExternals({
@@ -86,11 +87,36 @@ module.exports = [
       library: {
         type: 'module'
       },
-      chunkFormat: 'module'
+      chunkFormat: 'module',
+      environment: {
+        module: true,
+        dynamicImport: true
+      }
     },
     experiments: {
       outputModule: true
-    }
+    },
+    externalsType: 'module',
+    externals: [
+      // 为 ESM 构建使用 import 语法的 externals
+      nodeExternals({
+        allowlist: ['zod'],
+        importType: 'module'
+      }),
+      // 手动处理关键依赖，强制使用 import
+      (context, request, callback) => {
+        if (/^@modelcontextprotocol\/sdk\//.test(request)) {
+          return callback(null, `import ${JSON.stringify(request)}`);
+        }
+        if (/^@cloudbase\//.test(request)) {
+          return callback(null, `import ${JSON.stringify(request)}`);
+        }
+        if (/^(miniprogram-ci|open)$/.test(request)) {
+          return callback(null, `import ${JSON.stringify(request)}`);
+        }
+        callback();
+      }
+    ]
   },
 
   // CommonJS build for index.cjs  
@@ -107,7 +133,7 @@ module.exports = [
     }
   },
 
-  // CLI build for cli.js
+  // CLI build for cli.js (ESM with proper externals handling)
   {
     ...baseConfig,
     name: 'cli-esm',
@@ -118,11 +144,36 @@ module.exports = [
       library: {
         type: 'module'
       },
-      chunkFormat: 'module'
+      chunkFormat: 'module',
+      environment: {
+        module: true,
+        dynamicImport: true
+      }
     },
     experiments: {
       outputModule: true
     },
+    externalsType: 'module',
+    externals: [
+      // 为 ESM 构建使用 import 语法的 externals
+      nodeExternals({
+        allowlist: ['zod'],
+        importType: 'module'
+      }),
+      // 手动处理关键依赖，强制使用 import
+      (context, request, callback) => {
+        if (/^@modelcontextprotocol\/sdk\//.test(request)) {
+          return callback(null, `import ${JSON.stringify(request)}`);
+        }
+        if (/^@cloudbase\//.test(request)) {
+          return callback(null, `import ${JSON.stringify(request)}`);
+        }
+        if (/^(miniprogram-ci|open)$/.test(request)) {
+          return callback(null, `import ${JSON.stringify(request)}`);
+        }
+        callback();
+      }
+    ],
     plugins: [
       ...baseConfig.plugins,
       // 添加 shebang 到 CLI 文件
