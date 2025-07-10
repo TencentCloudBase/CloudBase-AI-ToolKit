@@ -128,19 +128,21 @@ If you already have a project, after configuring MCP, simply tell the AI "Downlo
 
 The following tools all support CloudBase AI ToolKit. Choose the appropriate tool and configure according to instructions:
 
-| Tool | Platform |
-|------|----------|
-| [Cursor](https://cursor.com/) | Standalone IDE|
-| [WindSurf](https://windsurf.com/editor) | Standalone IDE, VSCode, JetBrains plugin |
-| [CodeBuddy](https://copilot.tencent.com/) | VS Code, JetBrains, WeChat DevTools plugin |
-| [CLINE](https://cline.so/) | VS Code plugin |
-| [GitHub Copilot](https://github.com/features/copilot) | VS Code plugin |
-| [Trae](https://www.trae.ai/) | Standalone IDE |
-| [Tongyi Lingma](https://tongyi.aliyun.com/lingma) | Standalone IDE, VS Code, JetBrains plugin |
-| [RooCode](https://roocode.com/) | VS Code plugin |
-| [Baidu Comate](https://comate.baidu.com/) | VS Code, JetBrains plugin|
-| [Augment Code](https://www.augmentcode.com/) | VS Code, JetBrains plugin |
-| [Claude Code](https://www.anthropic.com/claude-code) | Command line tool |
+| Tool | Platform | View Guide |
+|------|----------|----------|
+| [Cursor](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) | Standalone IDE| [View Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) |
+| [WindSurf](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) | Standalone IDE, VSCode, JetBrains plugin | [View Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) |
+| [CodeBuddy](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) | VS Code, JetBrains, WeChat DevTools plugin | [View Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) |
+| [CLINE](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) | VS Code plugin | [View Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) |
+| [GitHub Copilot](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) | VS Code plugin | [View Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) |
+| [Trae](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/trae) | Standalone IDE | [View Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/trae) |
+| [Tongyi Lingma](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/tongyi-lingma) | Standalone IDE, VS Code, JetBrains plugin | [View Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/tongyi-lingma) |
+| [RooCode](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/roocode) | VS Code plugin | [View Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/roocode) |
+| [Baidu Comate](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/baidu-comate) | VS Code, JetBrains plugin| [View Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/baidu-comate) |
+| [Augment Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/augment-code) | VS Code, JetBrains plugin | [View Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/augment-code) |
+| [Claude Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/claude-code) | Command line tool | [View Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/claude-code) |
+| [Gemini CLI](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/gemini-cli) | Command line tool | [View Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/gemini-cli) |
+| [OpenAI Codex CLI](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli) | Command line tool | [View Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli) |
 
 <details>
 <summary><strong>🔧 Cursor Configuration</strong></summary>
@@ -583,6 +585,87 @@ Login to CloudBase
 </details>
 
 <details>
+<summary><strong>🤖 OpenAI Codex CLI Configuration</strong></summary>
+
+#### Step 1: Install OpenAI Codex CLI
+
+Make sure Node.js 18+ is installed, then install OpenAI Codex CLI globally:
+
+```bash
+npm install -g @openai/codex
+```
+
+Or run directly:
+
+```bash
+npx @openai/codex
+```
+
+#### Step 2: Configure MCP
+
+> [!TIP] 
+> If the tool count remains 0 after installation, please refer to [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-displays-0-tools-what-to-do)
+
+If using template project, MCP configuration is pre-configured. If not starting from template, there are two configuration methods:
+
+**Method 1: Use project configuration file (recommended)**
+
+Create `.codex/config.toml` file in project root:
+
+```toml
+[mcp_servers.cloudbase]
+command = "npx"
+args = ["-y", "@cloudbase/cloudbase-mcp@latest"]
+```
+
+Then start with the specified configuration file:
+
+```bash
+codex --config .codex/config.toml
+```
+
+**Method 2: Global configuration**
+
+Create `~/.codex/config.toml` file in user home directory:
+
+```toml
+[mcp_servers.cloudbase]
+command = "npx"
+args = ["-y", "@cloudbase/cloudbase-mcp@latest"]
+```
+
+#### Step 3: Enable AI Rules
+
+Template includes `AGENTS.md` file, OpenAI Codex CLI will automatically recognize CloudBase best practices. If not starting from template, you can ask AI to help download CloudBase rules:
+
+```
+Download CloudBase AI rules in current project
+```
+
+#### Step 4: Start Development
+
+Launch OpenAI Codex CLI:
+
+```bash
+codex
+```
+
+If using project configuration file:
+
+```bash
+codex --config .codex/config.toml
+```
+
+Chat with AI in Codex CLI:
+
+```
+Login to CloudBase
+```
+Then you can start developing your requirements.
+
+</details>
+
+<details>
 <summary><strong>🔄 Update CloudBase AI ToolKit</strong></summary>
 
 **Update AI Rules**
@@ -652,6 +735,40 @@ You can also ask AI to debug and modify code using cloud function logs:
 ```
 Cloud function code doesn't meet requirements, requirement is xxx, please check logs and data for debugging and fixing
 ```
+
+## 🔌 Plugin System
+
+CloudBase MCP adopts a plugin architecture, supporting on-demand tool module enablement. [View detailed documentation](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins)
+
+### Quick Configuration
+
+```json
+{
+  "env": {
+    "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+  }
+}
+```
+
+## 📚 Tutorials
+
+### 📄 Articles
+- [1-Hour WeChat Mini Game Development "My Breakfast Shop" - Based on CloudBase AI Toolkit](https://cloud.tencent.com/developer/article/2532595)
+- [AI Coding Treasure Combination: Cursor + Cloudbase-AI-Toolkit Game Development Practice](https://juejin.cn/post/7518783423277695028#comment)
+
+### 📱 Application Projects
+- [Resume Assistant Mini Program](https://gitcode.com/qq_33681891/resume_template)
+- [Gomoku Online Game](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/gomoku-game)
+- [Overcooked Online Game](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/overcooked-game)
+- [E-commerce Management Backend](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/ecommerce-management-backend)
+- [Short Video Mini Program](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-ai-video)
+- [Dating Mini Program](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/dating)
+
+### 🎥 Video Tutorials
+- [CloudBase: Developing an Overcooked Mini Game with AI](https://www.bilibili.com/video/BV1v5KAzwEf9/)
+- [Software 3.0: CloudBase AI ToolKit - The Best Partner for AI Programming Era, Taking WeChat Mini Program Development as Example](https://www.bilibili.com/video/BV15gKdz1E5N/)
+
+---
 
 ## 🎯 Use Cases
 
@@ -770,7 +887,7 @@ Having issues or want to share experiences? Join our tech community!
 
 ## 🛠️ CloudBase MCP Tools Overview
 
-Currently includes **35 tools** covering environment management, database operations, cloud function management, static hosting, and other core functions.
+Currently includes **36 tools** covering environment management, database operations, cloud function management, static hosting, and other core functions.
 
 📋 **Complete Tool Documentation**: [View MCP Tools Detailed Documentation](doc/mcp-tools.md) | [View Tool Specifications JSON](scripts/tools.json)
 
@@ -783,7 +900,7 @@ Currently includes **35 tools** covering environment management, database operat
 | ⚡ **Cloud Functions** | 9 | Function creation, updates, invocation, logs, triggers |
 | 🌐 **Static Hosting** | 5 | File upload management, domain configuration, website deployment |
 | 📁 **File Operations** | 2 | Remote file download, cloud storage upload |
-| 🛠️ **Tool Support** | 3 | Project templates, knowledge base search, interactive dialog |
+| 🛠️ **Tool Support** | 4 | Project templates, knowledge base search, network search, interactive dialog |
 | 🔌 **HTTP Access** | 1 | HTTP function access configuration |
 
 ### 🌟 Core Tool Highlights
@@ -799,7 +916,7 @@ Currently includes **35 tools** covering environment management, database operat
 
 ### 💡 Tool Optimization Notes
 
-We optimized from 40 tools to 35 by merging related functions for better user experience.
+We optimized from 40 tools to 36 by merging related functions for better user experience.
 
 🔗 **Want to learn about each tool's detailed functions?** Please check [Complete MCP Tools Documentation](doc/mcp-tools.md)
 

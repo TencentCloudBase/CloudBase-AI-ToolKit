@@ -6,7 +6,7 @@
 
 # 🌟 CloudBase AI ToolKit
 
-**通过AI提示词和MCP协议+云开发，让开发更智能、更高效**
+**🪐 用 AI IDE 一键生成、部署和托管你的全栈 Web 应用与小程序、数据库和后端服务，无需运维，极速上线你的创意 💫**
 
 **🌍 Languages:** **中文** | [English](README-EN.md)
 
@@ -24,7 +24,7 @@
 [![CNB 镜像](https://img.shields.io/badge/CNB-CloudBase--AI--ToolKit-blue?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHJ4PSIyIiBmaWxsPSIjM0I4MkY2Ii8+PHBhdGggZD0iTTUgM0g3VjVINSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNNSA3SDdWOUg1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==)](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/TencentCloudBase/CloudBase-AI-ToolKit)
 
-当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Claude Code**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
+当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Claude Code/OpenAI Codex CLI**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
 
 
 **📹 完整视频演示 ⬇️**
@@ -37,12 +37,12 @@
 |---|---|
 | 🤖 **AI智能开发**: AI自动生成代码和架构设计<br>☁️ **云开发集成**: 一键接入数据库、云函数、静态托管<br>⚡ **快速部署**: 几分钟内完成全栈应用上线 | **Web应用**: 现代化前端 + 静态托管<br>**微信小程序**: 云开发小程序解决方案<br>**后端服务**: 云数据库 + 无服务器函数+云托管 |
 
-📚 [快速开始](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/getting-started) | 🛠️ [IDE配置](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/) | 🎨 [项目模板](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates) | 📖 [开发指南](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/development) | 🎮 [使用案例](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/examples) | 🎓 [教程](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials) | 🔧 [MCP工具](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/mcp-tools) | ❓ [常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)
+📚 [快速开始](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/getting-started) | 🛠️ [IDE配置](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/) | 🎨 [项目模板](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates) | 📖 [开发指南](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/development) | 🎮 [使用案例](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/examples) | 🎓 [教程](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials) | 🔌 [插件系统](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins) | 🔧 [MCP工具](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/mcp-tools) | ❓ [常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)
 
 
 </div> 
 
-## 🌟 核心特性
+## ✨ 核心特性
 
 - **🤖 AI 原生** - 专为 AI 编程工具设计的规则库，生成代码符合云开发最佳实践
 - **🚀 一键部署** - MCP 自动化部署到腾讯云开发 CloudBase 平台，Serverless 架构无需购买服务器
@@ -50,21 +50,7 @@
 - **🔧 智能修复** - AI 自动查看日志并修复问题，降低运维成本
 - **⚡ 极速体验** - 国内 CDN 加速，比海外平台访问速度更快
 - **📚 知识检索** - 内置云开发、微信小程序等专业知识库的智能向量检索
-- **🔌 插件化架构** - 支持按需启用工具插件，解决 MCP 工具数量限制问题
 
-## 🔌 插件系统
-
-CloudBase MCP 采用插件化架构，支持按需启用工具模块。[查看插件详细文档](../doc/plugins.md)
-
-### 快速配置
-
-```json
-{
-  "env": {
-    "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
-  }
-}
-```
 
 
 ## 🚀 快速开始
@@ -151,20 +137,23 @@ npx -y clear-npx-cache
 
 以下工具均支持 CloudBase AI ToolKit，选择合适的工具并按说明配置：
 
-| 工具 | 支持平台 |
-|------|----------|
-| [Cursor](https://cursor.com/) | 独立 IDE|
-| [WindSurf](https://windsurf.com/editor) | 独立 IDE, VSCode、JetBrains 插件 |
-| [CodeBuddy](https://copilot.tencent.com/) | VS Code、JetBrains、微信开发者工具插件 |
-| [CLINE](https://cline.so/) | VS Code 插件 |
-| [GitHub Copilot](https://github.com/features/copilot) | VS Code 插件 |
-| [Trae](https://www.trae.ai/) | 独立 IDE |
-| [通义灵码](https://tongyi.aliyun.com/lingma) | 独立 IDE，VS Code、 JetBrains插件 |
-| [RooCode](https://roocode.com/) | VS Code插件 |
-| [文心快码](https://comate.baidu.com/) | VS Code、JetBrains插件|
-| [Augment Code](https://www.augmentcode.com/) | VS Code、JetBrains 插件 |
-| [Claude Code](https://www.anthropic.com/claude-code) | 命令行工具 |
-| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | 命令行工具 |
+
+| 工具 | 支持平台 | 查看指引 |
+|------|----------|----------|
+| [Cursor](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) | 独立 IDE| [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) |
+| [WindSurf](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) | 独立 IDE, VSCode、JetBrains 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) |
+| [CodeBuddy](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) | VS Code、JetBrains、微信开发者工具插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) |
+| [CLINE](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) | VS Code 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) |
+| [GitHub Copilot](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) | VS Code 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) |
+| [Trae](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/trae) | 独立 IDE | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/trae) |
+| [通义灵码](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/tongyi-lingma) | 独立 IDE，VS Code、 JetBrains插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/tongyi-lingma) |
+| [RooCode](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/roocode) | VS Code插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/roocode) |
+| [文心快码](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/baidu-comate) | VS Code、JetBrains插件| [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/baidu-comate) |
+| [Augment Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/augment-code) | VS Code、JetBrains 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/augment-code) |
+| [Claude Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/claude-code) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/claude-code) |
+| [Gemini CLI](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/gemini-cli) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/gemini-cli) |
+| [OpenAI Codex CLI](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli) |
+
 
 <details>
 <summary><strong>🔧 Cursor 配置</strong></summary>
@@ -190,25 +179,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
-      }
-    }
-  }
-}
-```
-
-**插件配置示例：**
-```json
-{
-  "mcpServers": {
-    "cloudbase-mcp": {
-      "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
-      }
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -241,25 +212,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
-      }
-    }
-  }
-}
-```
-
-**插件配置示例：**
-```json
-{
-  "mcpServers": {
-    "cloudbase-mcp": {
-      "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
-      }
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -295,25 +248,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
-      }
-    }
-  }
-}
-```
-
-**插件配置示例：**
-```json
-{
-  "mcpServers": {
-    "cloudbase": {
-      "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
-      }
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -354,31 +289,7 @@ npx -y clear-npx-cache
         "@cloudbase/cloudbase-mcp@latest"
       ],
       "transportType": "stdio",
-      "disabled": false,
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
-      }
-    }
-  }
-}
-```
-
-**插件配置示例：**
-```json
-{
-  "mcpServers": {
-    "cloudbase": {
-      "autoApprove": [],
-      "timeout": 60,
-      "command": "npx",
-      "args": [
-        "@cloudbase/cloudbase-mcp@latest"
-      ],
-      "transportType": "stdio",
-      "disabled": false,
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
-      }
+      "disabled": false
     }
   }
 }
@@ -412,27 +323,7 @@ npx -y clear-npx-cache
             "command": "npx",
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
-            ],
-            "env": {
-                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
-            }
-        }
-    }
-}
-```
-
-**插件配置示例：**
-```json
-{
-    "servers": {
-        "cloudbase": {
-            "command": "npx",
-            "args": [
-                "@cloudbase/cloudbase-mcp@latest"
-            ],
-            "env": {
-                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
-            }
+            ]
         }
     }
 }
@@ -466,25 +357,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
-      }
-    }
-  }
-}
-```
-
-**插件配置示例：**
-```json
-{
-  "mcpServers": {
-    "cloudbase-mcp": {
-      "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
-      }
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -516,25 +389,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
-      }
-    }
-  }
-}
-```
-
-**插件配置示例：**
-```json
-{
-  "mcpServers": {
-    "cloudbase-mcp": {
-      "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
-      }
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -569,28 +424,7 @@ npx -y clear-npx-cache
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
             ],
-            "disabled": false,
-            "env": {
-                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
-            }
-        }
-    }
-}
-```
-
-**插件配置示例：**
-```json
-{
-    "mcpServers": {
-        "cloudbase": {
-            "command": "npx",
-            "args": [
-                "@cloudbase/cloudbase-mcp@latest"
-            ],
-            "disabled": false,
-            "env": {
-                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
-            }
+            "disabled": false
         }
     }
 }
@@ -625,28 +459,7 @@ npx -y clear-npx-cache
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
             ],
-            "disabled": false,
-            "env": {
-                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
-            }
-        }
-    }
-}
-```
-
-**插件配置示例：**
-```json
-{
-    "mcpServers": {
-        "cloudbase": {
-            "command": "npx",
-            "args": [
-                "@cloudbase/cloudbase-mcp@latest"
-            ],
-            "disabled": false,
-            "env": {
-                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
-            }
+            "disabled": false
         }
     }
 }
@@ -685,29 +498,7 @@ npx -y clear-npx-cache
             "command": "npx",
             "args": [
                 "@cloudbase/cloudbase-mcp@latest"
-            ],
-            "env": {
-                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
-            }
-        }
-    }
-  }
-}
-```
-
-**插件配置示例：**
-```json
-{
-  "augment.advanced": {
-     "mcpServers": {
-        "cloudbase": {
-            "command": "npx",
-            "args": [
-                "@cloudbase/cloudbase-mcp@latest"
-            ],
-            "env": {
-                "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
-            }
+            ]
         }
     }
   }
@@ -743,28 +534,7 @@ npx -y clear-npx-cache
       "args": [
         "-y",
         "@cloudbase/cloudbase-mcp@latest"
-      ],
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
-      }
-    }
-  }
-}
-```
-
-**插件配置示例：**
-```json
-{
-  "mcpServers": {
-    "cloudbase": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@cloudbase/cloudbase-mcp@latest"
-      ],
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
-      }
+      ]
     }
   }
 }
@@ -810,25 +580,7 @@ npx @google/gemini-cli
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive"
-      }
-    }
-  }
-}
-```
-
-**插件配置示例：**
-```json
-{
-  "mcpServers": {
-    "cloudbase-mcp": {
-      "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
-      }
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -864,6 +616,87 @@ gemini
 - `/mcp` - 查看 MCP 服务器状态
 - `/memory show` - 查看当前规则
 - `!command` - 执行 Shell 命令
+
+</details>
+
+<details>
+<summary><strong>🤖 OpenAI Codex CLI 配置</strong></summary>
+
+#### 步骤1：安装 OpenAI Codex CLI
+
+确保安装 Node.js 18+，然后全局安装 OpenAI Codex CLI：
+
+```bash
+npm install -g @openai/codex
+```
+
+或直接运行：
+
+```bash
+npx @openai/codex
+```
+
+#### 步骤2：配置 MCP
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，有两种配置方式：
+
+**方式一：使用项目配置文件（推荐）**
+
+在项目根目录创建 `.codex/config.toml` 文件：
+
+```toml
+[mcp_servers.cloudbase]
+command = "npx"
+args = ["-y", "@cloudbase/cloudbase-mcp@latest"]
+```
+
+然后启动时指定配置文件：
+
+```bash
+codex --config .codex/config.toml
+```
+
+**方式二：全局配置**
+
+在用户主目录创建 `~/.codex/config.toml` 文件：
+
+```toml
+[mcp_servers.cloudbase]
+command = "npx"
+args = ["-y", "@cloudbase/cloudbase-mcp@latest"]
+```
+
+#### 步骤3：启用 AI 规则
+
+模板中已包含 `AGENTS.md` 文件，OpenAI Codex CLI 会自动识别云开发最佳实践。如果不是从模板开始，可以让 AI 帮你下载云开发规则：
+
+```
+在当前项目中下载云开发 AI 规则
+```
+
+#### 步骤4：开始开发
+
+启动 OpenAI Codex CLI：
+
+```bash
+codex
+```
+
+如果使用项目配置文件：
+
+```bash
+codex --config .codex/config.toml
+```
+
+在 Codex CLI 中与 AI 对话：
+
+```
+登录云开发
+```
+然后就可以进行需求的开发了
 
 </details>
 
@@ -941,6 +774,19 @@ AI 会自动：
 云函数代码运行不符合需求，需求是 xxx，请查看日志和数据进行调试，并进行修复
 ```
 
+## 🔌 插件系统
+
+CloudBase MCP 采用插件化架构，支持按需启用工具模块。[查看详细文档](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins)
+
+### 快速配置
+
+```json
+{
+  "env": {
+    "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+  }
+}
+```
 
 
 ## 📚 教程
@@ -951,9 +797,15 @@ AI 会自动：
 
 ### 📱 应用项目
 - [简历助手小程序](https://gitcode.com/qq_33681891/resume_template)
+- [五子棋联机游戏](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/gomoku-game)
+- [分手厨房联机游戏](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/overcooked-game)
+- [电商管理后台](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/ecommerce-management-backend)
+- [短视频小程序](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-ai-video)
+- [约会小程序](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/dating)
 
 ### 🎥 视频教程
 - [云开发CloudBase：用AI开发一款分手厨房小游戏](https://www.bilibili.com/video/BV1v5KAzwEf9/)
+- [软件3.0：AI 编程新时代的最佳拍档 CloudBase AI ToolKit，以开发微信小程序为例](https://www.bilibili.com/video/BV15gKdz1E5N/)
 
 ---
 
@@ -1076,7 +928,7 @@ AI 会自动：
 
 ## 🛠️ 云开发 MCP 工具一览
 
-目前共有 **35 个工具**，涵盖环境管理、数据库操作、云函数管理、静态托管等核心功能。
+目前共有 **36 个工具**，涵盖环境管理、数据库操作、云函数管理、静态托管等核心功能。
 
 📋 **完整工具文档**: [查看 MCP 工具详细说明](doc/mcp-tools.md) | [查看工具规格 JSON](scripts/tools.json)
 
@@ -1089,7 +941,7 @@ AI 会自动：
 | ⚡ **云函数管理** | 9 个 | 函数创建、更新、调用、日志、触发器 |
 | 🌐 **静态托管** | 5 个 | 文件上传管理、域名配置、网站部署 |
 | 📁 **文件操作** | 2 个 | 远程文件下载、云存储上传 |
-| 🛠️ **工具支持** | 3 个 | 项目模板、知识库搜索、交互对话 |
+| 🛠️ **工具支持** | 4 个 | 项目模板、知识库搜索、联网搜索、交互对话 |
 | 🔌 **HTTP访问** | 1 个 | HTTP 函数访问配置 |
 
 ### 🌟 核心工具亮点
@@ -1105,7 +957,7 @@ AI 会自动：
 
 ### 💡 工具优化说明
 
-我们将原来 40 个工具优化为 35 个，通过合并相关功能提供更好的使用体验
+我们将原来 40 个工具优化为 36 个，通过合并相关功能提供更好的使用体验
 
 🔗 **想了解每个工具的详细功能？** 请查看 [MCP 工具完整文档](doc/mcp-tools.md)
 
