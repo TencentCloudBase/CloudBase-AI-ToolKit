@@ -30,7 +30,10 @@
   "scripts": {
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
-    "build": "rollup -c",
+    "build": "npm run build:webpack && npm run build:types && npm run build:permissions",
+    "build:webpack": "webpack --config webpack.config.cjs --mode=production",
+    "build:types": "tsc --emitDeclarationOnly --declaration --declarationMap --outDir dist",
+    "build:permissions": "chmod 755 dist/cli.js dist/cli.cjs",
     "build:legacy": "tsc && chmod 755 dist/cli.js",
     "test": "npm run build && vitest run",
     "test:watch": "npm run build && vitest",
@@ -81,14 +84,20 @@
     "@types/node": "^22.10.2",
     "@types/ws": "^8.5.12",
     "buffer": "^6.0.3",
+    "copy-webpack-plugin": "^13.0.0",
+    "fork-ts-checker-webpack-plugin": "^9.1.0",
     "process": "^0.11.10",
     "rollup": "^4.27.4",
     "rollup-plugin-dts": "^6.1.1",
     "rollup-plugin-ignore": "^1.0.10",
     "rollup-plugin-node-polyfills": "^0.2.1",
+    "ts-loader": "^9.5.2",
     "tslib": "^2.8.1",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "webpack": "^5.100.0",
+    "webpack-cli": "^6.0.1",
+    "webpack-node-externals": "^3.0.0"
   },
   "overrides": {
     "tough-cookie": "^4.1.3"

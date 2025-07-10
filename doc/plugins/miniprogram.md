@@ -83,6 +83,36 @@ export CLOUDBASE_MCP_PLUGINS_ENABLED="env,database,functions,hosting,storage,set
 - `projectPath`: 项目路径
 - `type`: 项目类型 miniProgram/miniGame（可选）
 
+### getMiniprogramSourceMap
+
+获取最近上传版本的 SourceMap，用于生产环境错误调试
+
+**参数：**
+- `appId`: 小程序 appId
+- `projectPath`: 项目路径
+- `robot`: 指定使用哪一个 ci 机器人，1-30
+- `sourceMapSavePath`: SourceMap 保存路径
+- `type`: 项目类型 miniProgram/miniGame（可选）
+
+### checkMiniprogramCodeQuality
+
+检查小程序代码质量，生成质量报告（需要 miniprogram-ci 1.9.11+）
+
+**参数：**
+- `appId`: 小程序 appId
+- `projectPath`: 项目路径
+- `saveReportPath`: 质量报告保存路径
+- `type`: 项目类型 miniProgram/miniGame（可选）
+
+### packMiniprogramNpmManually
+
+自定义 node_modules 位置的小程序 npm 构建，支持复杂项目结构
+
+**参数：**
+- `packageJsonPath`: 希望被构建的 node_modules 对应的 package.json 的路径
+- `miniprogramNpmDistDir`: 被构建 miniprogram_npm 的目标位置
+- `ignores`: 指定需要排除的规则（可选）
+
 ## 使用场景
 
 ### 开发流程
@@ -90,6 +120,7 @@ export CLOUDBASE_MCP_PLUGINS_ENABLED="env,database,functions,hosting,storage,set
 1. **构建依赖**
    ```
    调用 buildMiniprogramNpm 构建 npm 包
+   调用 packMiniprogramNpmManually 自定义构建复杂项目结构
    ```
 
 2. **预览测试**
@@ -100,6 +131,12 @@ export CLOUDBASE_MCP_PLUGINS_ENABLED="env,database,functions,hosting,storage,set
 3. **发布上线**
    ```
    调用 uploadMiniprogramCode 上传代码到微信平台
+   ```
+
+4. **调试优化**
+   ```
+   调用 getMiniprogramSourceMap 获取 SourceMap 进行错误调试
+   调用 checkMiniprogramCodeQuality 检查代码质量并生成报告
    ```
 
 ### 密钥配置
@@ -128,3 +165,12 @@ A: 机器人编号用于区分不同的上传任务，可以设置 1-30 之间�
 
 ### Q: 支持哪些编译设置？
 A: 支持 ES6/ES7 转换、代码压缩、WXSS 压缩等常见编译选项。
+
+### Q: SourceMap 有什么作用？
+A: SourceMap 用于生产环境错误调试，可以将压缩后的代码错误映射回原始代码位置，便于问题定位。
+
+### Q: 代码质量检查包含哪些内容？
+A: 包含代码规范、性能问题、潜在 bug、可优化项等多维度的质量分析，生成详细的质量报告。
+
+### Q: 何时需要使用自定义 npm 构建？
+A: 当项目有特殊的目录结构、需要自定义 node_modules 位置或有特殊的构建需求时使用。

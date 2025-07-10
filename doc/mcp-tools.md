@@ -1,6 +1,6 @@
 # MCP 工具
 
-CloudBase AI ToolKit 提供了完整的 MCP 工具集，支持云开发的各种操作。目前共有 **40 个工具**，涵盖环境管理、数据库操作、云函数管理、静态托管、小程序发布等核心功能。
+CloudBase AI ToolKit 提供了完整的 MCP 工具集，支持云开发的各种操作。目前共有 **43 个工具**，涵盖环境管理、数据库操作、云函数管理、静态托管、小程序发布等核心功能。
 
 📋 **完整工具规格**: [查看 tools.json](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit/-/git/raw/main/scripts/tools.json)
 
@@ -13,7 +13,7 @@ CloudBase AI ToolKit 提供了完整的 MCP 工具集，支持云开发的各种
 | ⚡ [云函数管理](#云函数管理) | 9 个 | 函数创建、更新、调用、日志 |
 | 🌐 [静态托管](#静态托管) | 6 个 | 文件上传、管理、域名配置 |
 | 📁 [文件操作](#文件操作) | 2 个 | 文件下载、云存储上传 |
-| 📱 [小程序发布](#小程序发布) | 4 个 | 小程序上传、预览、构建、配置 |
+| 📱 [小程序发布](#小程序发布) | 7 个 | 小程序上传、预览、构建、配置、调试、质量检查 |
 | 🛠️ [工具支持](#工具支持) | 4 个 | 模板下载、知识库搜索、联网搜索、交互对话 |
 
 ---
@@ -296,6 +296,32 @@ CloudBase AI ToolKit 提供了完整的 MCP 工具集，支持云开发的各种
 - `projectPath` (string): 项目路径
 - `type` (string): 项目类型 miniProgram/miniGame
 
+### 🔍 调试与质量
+
+#### `getMiniprogramSourceMap`
+**功能**: 获取最近上传版本的 SourceMap，用于生产环境错误调试
+**参数**: 
+- `appId` (string): 小程序 appId
+- `projectPath` (string): 项目路径
+- `robot` (number): 指定使用哪一个 ci 机器人，1-30
+- `sourceMapSavePath` (string): SourceMap 保存路径
+- `type` (string): 项目类型 miniProgram/miniGame
+
+#### `checkMiniprogramCodeQuality`
+**功能**: 检查小程序代码质量，生成质量报告（需要 miniprogram-ci 1.9.11+）
+**参数**: 
+- `appId` (string): 小程序 appId
+- `projectPath` (string): 项目路径
+- `saveReportPath` (string): 质量报告保存路径
+- `type` (string): 项目类型 miniProgram/miniGame
+
+#### `packMiniprogramNpmManually`
+**功能**: 自定义 node_modules 位置的小程序 npm 构建，支持复杂项目结构
+**参数**: 
+- `packageJsonPath` (string): 希望被构建的 node_modules 对应的 package.json 的路径
+- `miniprogramNpmDistDir` (string): 被构建 miniprogram_npm 的目标位置
+- `ignores` (array): 指定需要排除的规则
+
 ---
 
 ## 🛠️ 工具支持
@@ -379,11 +405,12 @@ MCP 工具通过以下配置添加到你的 AI IDE 中：
 
 ## 🔄 工具优化
 
-为了提供更好的使用体验，我们将原来的工具优化并新增了小程序发布功能，现在共有 40 个工具：
+为了提供更好的使用体验，我们将原来的工具优化并新增了小程序发布功能，现在共有 43 个工具：
 
 - ✅ **envQuery**: 合并了 `listEnvs` + `getEnvInfo` + `getEnvAuthDomains`
 - ✅ **envDomainManagement**: 合并了 `createEnvDomain` + `deleteEnvDomain`  
 - ✅ **collectionQuery**: 合并了 `checkCollectionExists` + `describeCollection` + `listCollections`
 - ✅ **小程序发布**: 新增了 `uploadMiniprogramCode` + `previewMiniprogramCode` + `buildMiniprogramNpm` + `getMiniprogramProjectConfig`
+- 🆕 **小程序调试**: 新增了 `getMiniprogramSourceMap` + `checkMiniprogramCodeQuality` + `packMiniprogramNpmManually`
 
-通过合并相关功能和新增小程序发布工具，提供了更完整的云开发体验。 
+通过合并相关功能和新增小程序完整工具链，提供了从开发到调试的完整云开发体验。 

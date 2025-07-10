@@ -8,7 +8,7 @@ async function getMiniprogramCi() {
     const ci = await import("miniprogram-ci");
     return ci;
   } catch (err) {
-    throw new Error(`Failed to load miniprogram-ci: ${err}. Please install it with: npm install miniprogram-ci@2.1.14`);
+    throw new Error(`Failed to load miniprogram-ci: ${err}. Please install it with: npm install miniprogram-ci@latest`);
   }
 }
 
@@ -44,33 +44,52 @@ async function createProject(projectPath: string, appId: string, type: "miniProg
 
 export function registerMiniprogramTools(server: ExtendedMcpServer) {
   // 上传小程序代码
-  server.setRequestHandler("tools/call", async (request) => {
-    if (request.params.name === "uploadMiniprogramCode") {
+  server.registerTool?.(
+    "uploadMiniprogramCode",
+    {
+      title: "上传小程序代码",
+      description: "上传小程序代码到微信平台",
+      inputSchema: {
+        appId: z.string().describe("小程序 appId"),
+        projectPath: z.string().describe("项目路径"),
+        version: z.string().describe("版本号"),
+        desc: z.string().optional().describe("版本描述"),
+        setting: z.object({
+          es6: z.boolean().optional().describe("是否启用 ES6 转 ES5"),
+          es7: z.boolean().optional().describe("是否启用 ES7 转 ES5"),
+          minify: z.boolean().optional().describe("是否压缩代码"),
+          minifyWXSS: z.boolean().optional().describe("是否压缩 WXSS"),
+          minifyJS: z.boolean().optional().describe("是否压缩 JS"),
+          autoPrefixWXSS: z.boolean().optional().describe("是否自动补全 WXSS"),
+        }).optional().describe("编译设置"),
+        robot: z.number().optional().describe("机器人编号，1-30"),
+        type: z.enum(["miniProgram", "miniGame"]).optional().describe("项目类型")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true,
+        category: "miniprogram"
+      }
+    },
+    async ({ appId, projectPath, version, desc, setting, robot, type }: {
+      appId: string;
+      projectPath: string;
+      version: string;
+      desc?: string;
+      setting?: any;
+      robot?: number;
+      type?: "miniProgram" | "miniGame";
+    }) => {
       try {
-        const args = z.object({
-          appId: z.string().describe("小程序 appId"),
-          projectPath: z.string().describe("项目路径"),
-          version: z.string().describe("版本号"),
-          desc: z.string().optional().describe("版本描述"),
-          setting: z.object({
-            es6: z.boolean().optional().describe("是否启用 ES6 转 ES5"),
-            es7: z.boolean().optional().describe("是否启用 ES7 转 ES5"),
-            minify: z.boolean().optional().describe("是否压缩代码"),
-            minifyWXSS: z.boolean().optional().describe("是否压缩 WXSS"),
-            minifyJS: z.boolean().optional().describe("是否压缩 JS"),
-            autoPrefixWXSS: z.boolean().optional().describe("是否自动补全 WXSS"),
-          }).optional().describe("编译设置"),
-          robot: z.number().optional().describe("机器人编号，1-30"),
-          type: z.enum(["miniProgram", "miniGame"]).optional().describe("项目类型")
-        }).parse(request.params.arguments);
-
         const ci = await getMiniprogramCi();
-        const project = await createProject(args.projectPath, args.appId, args.type);
+        const project = await createProject(projectPath, appId, type);
         
         const result = await ci.upload({
           project,
-          version: args.version,
-          desc: args.desc || `版本 ${args.version}`,
+          version,
+          desc: desc || `版本 ${version}`,
           setting: {
             es6: true,
             es7: true,
@@ -78,11 +97,11 @@ export function registerMiniprogramTools(server: ExtendedMcpServer) {
             minifyWXSS: true,
             minifyJS: true,
             autoPrefixWXSS: true,
-            ...args.setting
+            ...setting
           },
-          robot: args.robot || 1,
-          onProgressUpdate: (progress) => {
-            info(`上传进度: ${progress}%`);
+          robot: robot || 1,
+          onProgressUpdate: (progress: string | any) => {
+            info(`上传进度: ${typeof progress === 'string' ? progress : JSON.stringify(progress)}`);
           }
         });
 
@@ -113,36 +132,61 @@ export function registerMiniprogramTools(server: ExtendedMcpServer) {
         };
       }
     }
+  );
 
-    // 预览小程序代码
-    if (request.params.name === "previewMiniprogramCode") {
+  // 预览小程序代码
+  server.registerTool?.(
+    "previewMiniprogramCode",
+    {
+      title: "预览小程序代码",
+      description: "预览小程序代码并生成二维码",
+      inputSchema: {
+        appId: z.string().describe("小程序 appId"),
+        projectPath: z.string().describe("项目路径"),
+        desc: z.string().optional().describe("预览描述"),
+        setting: z.object({
+          es6: z.boolean().optional().describe("是否启用 ES6 转 ES5"),
+          es7: z.boolean().optional().describe("是否启用 ES7 转 ES5"),
+          minify: z.boolean().optional().describe("是否压缩代码"),
+          minifyWXSS: z.boolean().optional().describe("是否压缩 WXSS"),
+          minifyJS: z.boolean().optional().describe("是否压缩 JS"),
+          autoPrefixWXSS: z.boolean().optional().describe("是否自动补全 WXSS"),
+        }).optional().describe("编译设置"),
+        robot: z.number().optional().describe("机器人编号，1-30"),
+        type: z.enum(["miniProgram", "miniGame"]).optional().describe("项目类型"),
+        qrcodeFormat: z.enum(["image", "base64", "terminal"]).optional().describe("二维码格式"),
+        qrcodeOutputDest: z.string().optional().describe("二维码输出路径"),
+        pagePath: z.string().optional().describe("预览页面路径"),
+        searchQuery: z.string().optional().describe("预览页面参数")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true,
+        category: "miniprogram"
+      }
+    },
+    async ({ appId, projectPath, desc, setting, robot, type, qrcodeFormat, qrcodeOutputDest, pagePath, searchQuery }: {
+      appId: string;
+      projectPath: string;
+      desc?: string;
+      setting?: any;
+      robot?: number;
+      type?: "miniProgram" | "miniGame";
+      qrcodeFormat?: "image" | "base64" | "terminal";
+      qrcodeOutputDest?: string;
+      pagePath?: string;
+      searchQuery?: string;
+    }) => {
       try {
-        const args = z.object({
-          appId: z.string().describe("小程序 appId"),
-          projectPath: z.string().describe("项目路径"),
-          desc: z.string().optional().describe("预览描述"),
-          setting: z.object({
-            es6: z.boolean().optional().describe("是否启用 ES6 转 ES5"),
-            es7: z.boolean().optional().describe("是否启用 ES7 转 ES5"),
-            minify: z.boolean().optional().describe("是否压缩代码"),
-            minifyWXSS: z.boolean().optional().describe("是否压缩 WXSS"),
-            minifyJS: z.boolean().optional().describe("是否压缩 JS"),
-            autoPrefixWXSS: z.boolean().optional().describe("是否自动补全 WXSS"),
-          }).optional().describe("编译设置"),
-          robot: z.number().optional().describe("机器人编号，1-30"),
-          type: z.enum(["miniProgram", "miniGame"]).optional().describe("项目类型"),
-          qrcodeFormat: z.enum(["image", "base64", "terminal"]).optional().describe("二维码格式"),
-          qrcodeOutputDest: z.string().optional().describe("二维码输出路径"),
-          pagePath: z.string().optional().describe("预览页面路径"),
-          searchQuery: z.string().optional().describe("预览页面参数")
-        }).parse(request.params.arguments);
-
         const ci = await getMiniprogramCi();
-        const project = await createProject(args.projectPath, args.appId, args.type);
+        const project = await createProject(projectPath, appId, type);
         
         const result = await ci.preview({
           project,
-          desc: args.desc || "预览版本",
+          version: "preview",
+          desc: desc || "预览版本",
           setting: {
             es6: true,
             es7: true,
@@ -150,15 +194,15 @@ export function registerMiniprogramTools(server: ExtendedMcpServer) {
             minifyWXSS: true,
             minifyJS: true,
             autoPrefixWXSS: true,
-            ...args.setting
+            ...setting
           },
-          robot: args.robot || 1,
-          qrcodeFormat: args.qrcodeFormat || "terminal",
-          qrcodeOutputDest: args.qrcodeOutputDest,
-          pagePath: args.pagePath,
-          searchQuery: args.searchQuery,
-          onProgressUpdate: (progress) => {
-            info(`预览进度: ${progress}%`);
+          robot: robot || 1,
+          qrcodeFormat: qrcodeFormat || "terminal",
+          qrcodeOutputDest,
+          pagePath,
+          searchQuery,
+          onProgressUpdate: (progress: string | any) => {
+            info(`预览进度: ${typeof progress === 'string' ? progress : JSON.stringify(progress)}`);
           }
         });
 
@@ -189,23 +233,43 @@ export function registerMiniprogramTools(server: ExtendedMcpServer) {
         };
       }
     }
+  );
 
-    // 构建小程序 npm
-    if (request.params.name === "buildMiniprogramNpm") {
+  // 构建小程序 npm
+  server.registerTool?.(
+    "buildMiniprogramNpm",
+    {
+      title: "构建小程序npm",
+      description: "构建小程序 npm 包",
+      inputSchema: {
+        appId: z.string().describe("小程序 appId"),
+        projectPath: z.string().describe("项目路径"),
+        type: z.enum(["miniProgram", "miniGame"]).optional().describe("项目类型"),
+        robot: z.number().optional().describe("机器人编号，1-30"),
+        ignores: z.array(z.string()).optional().describe("忽略文件列表")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true,
+        category: "miniprogram"
+      }
+    },
+    async ({ appId, projectPath, type, robot, ignores }: {
+      appId: string;
+      projectPath: string;
+      type?: "miniProgram" | "miniGame";
+      robot?: number;
+      ignores?: string[];
+    }) => {
       try {
-        const args = z.object({
-          appId: z.string().describe("小程序 appId"),
-          projectPath: z.string().describe("项目路径"),
-          type: z.enum(["miniProgram", "miniGame"]).optional().describe("项目类型"),
-          robot: z.number().optional().describe("机器人编号，1-30")
-        }).parse(request.params.arguments);
-
         const ci = await getMiniprogramCi();
-        const project = await createProject(args.projectPath, args.appId, args.type);
+        const project = await createProject(projectPath, appId, type);
         
         const result = await ci.packNpm(project, {
-          ignores: ["pack_npm_ignore_list"],
-          reporter: (infos) => {
+          ignores: ignores || ["pack_npm_ignore_list"],
+          reporter: (infos: any) => {
             info("构建 npm 包信息:", infos);
           }
         });
@@ -237,17 +301,34 @@ export function registerMiniprogramTools(server: ExtendedMcpServer) {
         };
       }
     }
+  );
 
-    // 获取小程序项目配置
-    if (request.params.name === "getMiniprogramProjectConfig") {
+  // 获取小程序项目配置
+  server.registerTool?.(
+    "getMiniprogramProjectConfig",
+    {
+      title: "获取小程序项目配置",
+      description: "获取小程序项目配置信息",
+      inputSchema: {
+        appId: z.string().describe("小程序 appId"),
+        projectPath: z.string().describe("项目路径"),
+        type: z.enum(["miniProgram", "miniGame"]).optional().describe("项目类型")
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
+        category: "miniprogram"
+      }
+    },
+    async ({ appId, projectPath, type }: {
+      appId: string;
+      projectPath: string;
+      type?: "miniProgram" | "miniGame";
+    }) => {
       try {
-        const args = z.object({
-          appId: z.string().describe("小程序 appId"),
-          projectPath: z.string().describe("项目路径"),
-          type: z.enum(["miniProgram", "miniGame"]).optional().describe("项目类型")
-        }).parse(request.params.arguments);
-
-        const project = await createProject(args.projectPath, args.appId, args.type);
+        const project = await createProject(projectPath, appId, type);
         
         return {
           content: [
@@ -257,9 +338,9 @@ export function registerMiniprogramTools(server: ExtendedMcpServer) {
                 success: true,
                 message: "获取项目配置成功",
                 data: {
-                  appId: args.appId,
-                  projectPath: args.projectPath,
-                  type: args.type || "miniProgram"
+                  appId,
+                  projectPath,
+                  type: type || "miniProgram"
                 }
               }, null, 2)
             }
@@ -280,172 +361,209 @@ export function registerMiniprogramTools(server: ExtendedMcpServer) {
         };
       }
     }
+  );
 
-    return { content: [] };
-  });
+  // 获取小程序开发版 SourceMap
+  server.registerTool?.(
+    "getMiniprogramSourceMap",
+    {
+      title: "获取小程序SourceMap",
+      description: "获取最近上传版本的 SourceMap，用于生产环境错误调试",
+      inputSchema: {
+        appId: z.string().describe("小程序 appId"),
+        projectPath: z.string().describe("项目路径"),
+        robot: z.number().describe("指定使用哪一个 ci 机器人，可选值：1~30"),
+        sourceMapSavePath: z.string().describe("SourceMap 保存路径"),
+        type: z.enum(["miniProgram", "miniGame"]).optional().describe("项目类型")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true,
+        category: "miniprogram"
+      }
+    },
+    async ({ appId, projectPath, robot, sourceMapSavePath, type }: {
+      appId: string;
+      projectPath: string;
+      robot: number;
+      sourceMapSavePath: string;
+      type?: "miniProgram" | "miniGame";
+    }) => {
+      try {
+        const ci = await getMiniprogramCi();
+        const project = await createProject(projectPath, appId, type);
+        
+        const result = await ci.getDevSourceMap({
+          project,
+          robot,
+          sourceMapSavePath
+        });
 
-  // 注册工具
-  server.setRequestHandler("tools/list", async () => {
-    return {
-      tools: [
-        {
-          name: "uploadMiniprogramCode",
-          description: "上传小程序代码到微信平台",
-          inputSchema: {
-            type: "object",
-            properties: {
-              appId: {
-                type: "string",
-                description: "小程序 appId"
-              },
-              projectPath: {
-                type: "string",
-                description: "项目路径"
-              },
-              version: {
-                type: "string",
-                description: "版本号"
-              },
-              desc: {
-                type: "string",
-                description: "版本描述"
-              },
-              setting: {
-                type: "object",
-                description: "编译设置",
-                properties: {
-                  es6: { type: "boolean", description: "是否启用 ES6 转 ES5" },
-                  es7: { type: "boolean", description: "是否启用 ES7 转 ES5" },
-                  minify: { type: "boolean", description: "是否压缩代码" },
-                  minifyWXSS: { type: "boolean", description: "是否压缩 WXSS" },
-                  minifyJS: { type: "boolean", description: "是否压缩 JS" },
-                  autoPrefixWXSS: { type: "boolean", description: "是否自动补全 WXSS" }
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                success: true,
+                message: "SourceMap 获取成功",
+                data: {
+                  robot,
+                  sourceMapSavePath,
+                  result
                 }
-              },
-              robot: {
-                type: "number",
-                description: "机器人编号，1-30"
-              },
-              type: {
-                type: "string",
-                enum: ["miniProgram", "miniGame"],
-                description: "项目类型"
-              }
-            },
-            required: ["appId", "projectPath", "version"]
-          }
-        },
-        {
-          name: "previewMiniprogramCode",
-          description: "预览小程序代码并生成二维码",
-          inputSchema: {
-            type: "object",
-            properties: {
-              appId: {
-                type: "string",
-                description: "小程序 appId"
-              },
-              projectPath: {
-                type: "string",
-                description: "项目路径"
-              },
-              desc: {
-                type: "string",
-                description: "预览描述"
-              },
-              setting: {
-                type: "object",
-                description: "编译设置",
-                properties: {
-                  es6: { type: "boolean", description: "是否启用 ES6 转 ES5" },
-                  es7: { type: "boolean", description: "是否启用 ES7 转 ES5" },
-                  minify: { type: "boolean", description: "是否压缩代码" },
-                  minifyWXSS: { type: "boolean", description: "是否压缩 WXSS" },
-                  minifyJS: { type: "boolean", description: "是否压缩 JS" },
-                  autoPrefixWXSS: { type: "boolean", description: "是否自动补全 WXSS" }
+              }, null, 2)
+            }
+          ]
+        };
+      } catch (err) {
+        error("获取小程序 SourceMap 失败:", err);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                success: false,
+                error: err instanceof Error ? err.message : String(err)
+              }, null, 2)
+            }
+          ]
+        };
+      }
+    }
+  );
+
+  // 检查小程序代码质量
+  server.registerTool?.(
+    "checkMiniprogramCodeQuality",
+    {
+      title: "检查小程序代码质量",
+      description: "检查小程序代码质量，生成质量报告（需要 miniprogram-ci 1.9.11+）",
+      inputSchema: {
+        appId: z.string().describe("小程序 appId"),
+        projectPath: z.string().describe("项目路径"),
+        saveReportPath: z.string().describe("质量报告保存路径"),
+        type: z.enum(["miniProgram", "miniGame"]).optional().describe("项目类型")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true,
+        category: "miniprogram"
+      }
+    },
+    async ({ appId, projectPath, saveReportPath, type }: {
+      appId: string;
+      projectPath: string;
+      saveReportPath: string;
+      type?: "miniProgram" | "miniGame";
+    }) => {
+      try {
+        const ci = await getMiniprogramCi();
+        const project = await createProject(projectPath, appId, type);
+        
+        const result = await (ci as any).checkCodeQuality({
+          project,
+          saveReportPath
+        });
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                success: true,
+                message: "代码质量检查完成",
+                data: {
+                  saveReportPath,
+                  result
                 }
-              },
-              robot: {
-                type: "number",
-                description: "机器人编号，1-30"
-              },
-              type: {
-                type: "string",
-                enum: ["miniProgram", "miniGame"],
-                description: "项目类型"
-              },
-              qrcodeFormat: {
-                type: "string",
-                enum: ["image", "base64", "terminal"],
-                description: "二维码格式"
-              },
-              qrcodeOutputDest: {
-                type: "string",
-                description: "二维码输出路径"
-              },
-              pagePath: {
-                type: "string",
-                description: "预览页面路径"
-              },
-              searchQuery: {
-                type: "string",
-                description: "预览页面参数"
-              }
-            },
-            required: ["appId", "projectPath"]
-          }
-        },
-        {
-          name: "buildMiniprogramNpm",
-          description: "构建小程序 npm 包",
-          inputSchema: {
-            type: "object",
-            properties: {
-              appId: {
-                type: "string",
-                description: "小程序 appId"
-              },
-              projectPath: {
-                type: "string",
-                description: "项目路径"
-              },
-              type: {
-                type: "string",
-                enum: ["miniProgram", "miniGame"],
-                description: "项目类型"
-              },
-              robot: {
-                type: "number",
-                description: "机器人编号，1-30"
-              }
-            },
-            required: ["appId", "projectPath"]
-          }
-        },
-        {
-          name: "getMiniprogramProjectConfig",
-          description: "获取小程序项目配置",
-          inputSchema: {
-            type: "object",
-            properties: {
-              appId: {
-                type: "string",
-                description: "小程序 appId"
-              },
-              projectPath: {
-                type: "string",
-                description: "项目路径"
-              },
-              type: {
-                type: "string",
-                enum: ["miniProgram", "miniGame"],
-                description: "项目类型"
-              }
-            },
-            required: ["appId", "projectPath"]
-          }
-        }
-      ]
-    };
-  });
+              }, null, 2)
+            }
+          ]
+        };
+      } catch (err) {
+        error("检查小程序代码质量失败:", err);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                success: false,
+                error: err instanceof Error ? err.message : String(err)
+              }, null, 2)
+            }
+          ]
+        };
+      }
+    }
+  );
+
+  // 自定义 npm 构建
+  server.registerTool?.(
+    "packMiniprogramNpmManually",
+    {
+      title: "自定义构建小程序npm",
+      description: "自定义 node_modules 位置的小程序 npm 构建，支持复杂项目结构",
+      inputSchema: {
+        packageJsonPath: z.string().describe("希望被构建的 node_modules 对应的 package.json 的路径"),
+        miniprogramNpmDistDir: z.string().describe("被构建 miniprogram_npm 的目标位置"),
+        ignores: z.array(z.string()).optional().describe("指定需要排除的规则")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true,
+        category: "miniprogram"
+      }
+    },
+    async ({ packageJsonPath, miniprogramNpmDistDir, ignores }: {
+      packageJsonPath: string;
+      miniprogramNpmDistDir: string;
+      ignores?: string[];
+    }) => {
+      try {
+        const ci = await getMiniprogramCi();
+        
+        const result = await ci.packNpmManually({
+          packageJsonPath,
+          miniprogramNpmDistDir,
+          ignores
+        });
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                success: true,
+                message: "自定义 npm 构建完成",
+                data: {
+                  packageJsonPath,
+                  miniprogramNpmDistDir,
+                  result
+                }
+              }, null, 2)
+            }
+          ]
+        };
+      } catch (err) {
+        error("自定义构建小程序 npm 失败:", err);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                success: false,
+                error: err instanceof Error ? err.message : String(err)
+              }, null, 2)
+            }
+          ]
+        };
+      }
+    }
+  );
 }

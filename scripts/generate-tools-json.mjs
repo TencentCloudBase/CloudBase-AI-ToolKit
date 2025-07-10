@@ -15,7 +15,7 @@ async function generateToolsJson() {
 
   // 构建 MCP 服务器路径
   const mcpPath = path.join(__dirname, '../mcp');
-  const cliPath = path.join(mcpPath, 'dist/cli.js');
+  const cliPath = path.join(mcpPath, 'dist/cli.cjs');
 
   // 检查 cli.js 是否存在，如果不存在则先构建
   if (!fs.existsSync(cliPath)) {
