@@ -3,7 +3,7 @@
   "name": "@cloudbase/cloudbase-mcp",
   "displayName": "CloudBase AI ToolKit",
   "version": "1.8.8",
-  "description": "One-stop backend services for WeChat Mini-Programs and full-stack apps. Provides 34 specialized MCP tools for cloud development.",
+  "description": "One-stop backend services for WeChat Mini-Programs and full-stack apps. Provides 38 specialized MCP tools for cloud development.",
   "longDescription": "CloudBase AI ToolKit is a comprehensive MCP server that enables AI-powered development and deployment of full-stack applications to Tencent CloudBase. It provides seamless integration with WeChat Mini-Programs, serverless cloud functions, databases, and static hosting. Perfect for developers building applications targeting the Chinese market with WeChat ecosystem integration.",
   "author": {
     "name": "TencentCloudBase",
@@ -130,6 +130,22 @@
     {
       "name": "interactiveDialog",
       "description": "Interactive dialog for user confirmations and requirement clarification"
+    },
+    {
+      "name": "uploadMiniprogramCode",
+      "description": "Upload WeChat Mini-Program code to WeChat platform for deployment"
+    },
+    {
+      "name": "previewMiniprogramCode",
+      "description": "Preview WeChat Mini-Program code and generate QR code for testing"
+    },
+    {
+      "name": "buildMiniprogramNpm",
+      "description": "Build npm packages for WeChat Mini-Program projects"
+    },
+    {
+      "name": "getMiniprogramProjectConfig",
+      "description": "Get WeChat Mini-Program project configuration and settings"
     }
   ],
   "requirements": {

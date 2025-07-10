@@ -23,6 +23,7 @@ CloudBase MCP 采用插件化架构，支持按需启用工具模块，解决 MC
 | `rag` | 知识库搜索 (AI 增强问答) |
 | `download` | 远程文件下载 |
 | `gateway` | API 网关管理 |
+| `miniprogram` | 小程序发布 (上传、预览、构建) |
 
 ## ⚙️ 插件配置
 
@@ -63,9 +64,9 @@ CloudBase MCP 采用插件化架构，支持按需启用工具模块，解决 MC
 | 场景 | 推荐插件 |
 |------|----------|
 | **基础开发** | `env,database,functions,hosting` |
-| **完整功能** | `env,database,functions,hosting,storage,setup,interactive,rag,download,gateway` |
+| **完整功能** | `env,database,functions,hosting,storage,setup,interactive,rag,download,gateway,miniprogram` |
 | **纯后端** | `env,database,functions` |
-| **小程序** | `env,database,functions,storage,setup` |
+| **小程序** | `env,database,functions,storage,setup,miniprogram` |
 | **AI 应用** | `env,database,functions,hosting,rag,interactive` |
 
 ## 📚 相关文档
