@@ -334,8 +334,8 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
           name: z.string().describe("函数名称"),
           offset: z.number().optional().describe("偏移量"),
           limit: z.number().optional().describe("返回数量"),
-          order: z.string().optional().describe("排序方式"),
-          orderBy: z.string().optional().describe("排序字段"),
+          order: z.enum(["desc", "asc"]).optional().describe("排序方式: desc=降序, asc=升序"),
+          orderBy: z.enum(["function_name", "duration", "mem_usage", "start_time"]).optional().describe("排序字段: function_name=函数名, duration=执行时长, mem_usage=内存使用, start_time=开始时间"),
           startTime: z.string().optional().describe("开始时间"),
           endTime: z.string().optional().describe("结束时间"),
           requestId: z.string().optional().describe("请求ID")
