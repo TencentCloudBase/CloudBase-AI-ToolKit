@@ -24,7 +24,7 @@
 [![CNB 镜像](https://img.shields.io/badge/CNB-CloudBase--AI--ToolKit-blue?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHJ4PSIyIiBmaWxsPSIjM0I4MkY2Ii8+PHBhdGggZD0iTTUgM0g3VjVINSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNNSA3SDdWOUg1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==)](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/TencentCloudBase/CloudBase-AI-ToolKit)
 
-当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Claude Code/OpenAI Codex CLI**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
+当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Claude Code/OpenAI Codex CLI/OpenCode**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
 
 
 **📹 完整视频演示 ⬇️**
@@ -696,6 +696,71 @@ codex --config .codex/config.toml
 ```
 登录云开发
 ```
+然后就可以进行需求的开发了
+
+</details>
+
+<details>
+<summary><strong>🧑‍💻 OpenCode 配置</strong></summary>
+
+#### 步骤1：安装 OpenCode
+
+从 [OpenCode GitHub](https://github.com/opencode-ai/opencode) 下载并安装 OpenCode CLI 工具：
+
+```bash
+# 使用 npm 安装
+npm install -g opencode
+
+# 或者使用 yarn
+yarn global add opencode
+```
+
+#### 步骤2：配置 MCP
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
+在项目根目录创建 `.opencode.json` 文件：
+
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+    }
+  }
+}
+```
+
+#### 步骤3：启用 AI 规则
+
+OpenCode 支持多种规则文件格式，模板中已包含 `OPENCODE.md` 文件。如果不是从模板开始，可以让 AI 帮你下载云开发规则：
+
+```
+在当前项目中下载云开发 AI 规则
+```
+
+#### 步骤4：开始开发
+
+启动 OpenCode CLI：
+
+```bash
+opencode
+```
+
+或者直接提问：
+
+```bash
+opencode "登录云开发"
+```
+
+在 OpenCode CLI 中与 AI 对话：
+
+```
+登录云开发
+```
+
 然后就可以进行需求的开发了
 
 </details>

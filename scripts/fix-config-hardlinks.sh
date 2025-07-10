@@ -29,6 +29,12 @@ TARGET_FILES=(
     "config/CLAUDE.md"
     "config/.gemini/GEMINI.md"
     "config/AGENTS.md"
+    "config/OPENCODE.md"
+    "config/opencode.md"
+    "config/opencode.local.md"
+    "config/OpenCode.md"
+    "config/OpenCode.local.md"
+    "config/OPENCODE.local.md"
 )
 
 echo -e "${BLUE}🔧 CloudBase AI 配置文件硬链接修复工具${NC}"
