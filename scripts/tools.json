@@ -1086,11 +1086,13 @@
               },
               "order": {
                 "type": "string",
-                "description": "排序方式"
+                "enum": ["desc", "asc"],
+                "description": "排序方式: desc=降序, asc=升序"
               },
               "orderBy": {
                 "type": "string",
-                "description": "排序字段"
+                "enum": ["function_name", "duration", "mem_usage", "start_time"],
+                "description": "排序字段: function_name=函数名, duration=执行时长, mem_usage=内存使用, start_time=开始时间"
               },
               "startTime": {
                 "type": "string",
