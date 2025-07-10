@@ -19,7 +19,7 @@
 4. 对 AI 说"登录云开发"开始开发
 
 ### 支持哪些 AI 开发工具？
-支持 Cursor、WindSurf、CodeBuddy、CLINE、GitHub Copilot、Claude Code、Gemini CLI、OpenAI Codex CLI、Trae、通义灵码、RooCode、文心快码、Augment Code 等主流 AI 开发工具。
+支持 Cursor、WindSurf、CodeBuddy、CLINE、GitHub Copilot、Claude Code、Gemini CLI、OpenAI Codex CLI、OpenCode、Trae、通义灵码、RooCode、文心快码、Augment Code 等主流 AI 开发工具。
 
 ## 🛠️ 技术问题
 

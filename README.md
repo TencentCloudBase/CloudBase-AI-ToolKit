@@ -153,6 +153,7 @@ npx -y clear-npx-cache
 | [Claude Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/claude-code) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/claude-code) |
 | [Gemini CLI](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/gemini-cli) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/gemini-cli) |
 | [OpenAI Codex CLI](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli) |
+| [OpenCode](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/opencode) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/opencode) |
 
 
 <details>
@@ -696,6 +697,63 @@ codex --config .codex/config.toml
 ```
 登录云开发
 ```
+然后就可以进行需求的开发了
+
+</details>
+
+<details>
+<summary><strong>🧑‍💻 OpenCode 配置</strong></summary>
+
+#### 步骤1：安装 OpenCode
+
+从 [OpenCode GitHub](https://github.com/opencode-ai/opencode) 下载并安装 OpenCode CLI 工具
+
+#### 步骤2：配置 MCP
+
+> [!TIP] 
+> 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
+
+如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，在项目根目录创建 `.opencode.json` 文件：
+
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+    }
+  }
+}
+```
+
+#### 步骤3：启用 AI 规则
+
+OpenCode 支持多种规则文件格式，模板中已包含 `OPENCODE.md` 文件。如果不是从模板开始，可以让 AI 帮你下载云开发规则：
+
+```
+在当前项目中下载云开发 AI 规则
+```
+
+#### 步骤4：开始开发
+
+启动 OpenCode CLI：
+
+```bash
+opencode
+```
+
+或者直接提问：
+
+```bash
+opencode -p "登录云开发"
+```
+
+在 OpenCode CLI 中与 AI 对话：
+
+```
+登录云开发
+```
+
 然后就可以进行需求的开发了
 
 </details>
