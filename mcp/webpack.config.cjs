@@ -175,12 +175,14 @@ module.exports = [
           'default-browser-id',
           'bundle-name', 
           'is-docker',
-          'run-applescript'
+          'run-applescript',
+          // CloudBase 包 - 打包到 bundle 中
+          '@cloudbase/manager-node',
+          /^@cloudbase\//
         ],
         importType: 'module'
       }),
       // 只排除无法打包的大型依赖和Node.js内置模块
-      /^@cloudbase\//,
       /^miniprogram-ci$/,
       /^express$/,
       /^ws$/,
@@ -248,11 +250,13 @@ module.exports = [
           'default-browser-id',
           'bundle-name', 
           'is-docker',
-          'run-applescript'
+          'run-applescript',
+          // CloudBase 包 - 打包到 bundle 中
+          '@cloudbase/manager-node',
+          /^@cloudbase\//
         ]
       }),
       // 只排除无法打包的大型依赖和Node.js内置模块
-      /^@cloudbase\//,
       /^miniprogram-ci$/,
       /^express$/,
       /^ws$/,
