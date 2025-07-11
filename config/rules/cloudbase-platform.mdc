@@ -1,0 +1,44 @@
+---
+description: CloudBase 平台知识和最佳实践
+globs: ["**/cloudbaserc.json", "**/cloudfunctions/**/*"]
+alwaysApply: false
+---
+
+# CloudBase 平台知识
+
+## 存储和托管
+1. 云开发的静态托管和云存储是两个不同的桶，一般公开可访问的可以存放在静态托管，可以获得一个公开的网页地址，同时支持配置自定义域名（需要到控制台操作），云存储适合放一些有私密性的文件，可以通过获取临时文件来获取一个临时访问地址
+2. 云开发的静态托管域名可以通过 getWebsiteConfig 来获取，然后结合静态托管文件的路径可以拼出最终访问地址，记住如果访问地址是个目录，最后必须带有 /
+
+## 环境和认证
+1. 云开发的 SDK 初始化时都需要填写环境 id，可以通过 envQuery 工具来查询环境 id，然后进行登录，例如使用匿名登录
+
+## 云函数
+1. Node.js 的云函数中需要包含package.json，声明所需的依赖，可以使用 createFunction 来创建函数，使用 updateFunctionCode 来部署云函数，优先采用云端安装依赖，不上传 node_modules，functionRootPath 指的是函数目录的父目录，例如 cloudfuncitons 这个目录
+
+## 数据库权限
+1. 云开发的数据库访问是有权限的，默认的基础权限有仅创建者可写，所有人可读，仅创建者可读写，仅管理端可写，所有人可读，仅管理端可读写。如果直接从 web 端或者小程序端请求数据库，需要考虑配置合适的数据库权限，在云函数中，默认没有权限控制
+2. 如用户无特殊要求，涉及到跨数据库集合的操作必须通过云函数实现
+3. 如果用涉及到云函数，在保证安全的情况下，可以尽可能可能缩减云函数的数量，例如实现一个面向 c 端请求的云函数，实现一个初始化数据的云函数
+
+## 数据模型
+1. 获取数据模型操作对象：
+   - 小程序：需要 `@cloudbase/wx-cloud-client-sdk`，初始化 `const client = initHTTPOverCallFunction(wx.cloud)`，使用 `client.models`
+   - 云函数：需要 `@cloudbase/node-sdk@3.10+`，初始化 `const app = cloudbase.init({env})`，使用 `app.models`
+   - Web：需要 `@cloudbase/js-sdk`，初始化 `const app = cloudbase.init({env})`，登录后使用 `app.models`
+2. 数据模型查询：可调用 MCP manageDataModel 工具查询模型列表、获取模型详细信息（含Schema字段）、获取具体的 models SDK使用文档
+3. MySQL 数据模型调用规则
+   - MySQL 数据模型不能使用 collection 方式调用，必须使用数据模型 SDK
+   - 错误：`db.collection('model_name').get()`
+   - 正确：`app.models.model_name.list({ filter: { where: {} } })`
+   - 使用 manageDataModel 工具的 docs 方法获取具体 SDK 用法
+
+## 控制台管理
+创建/部署资源后，提供对应的控制台管理页面链接：
+
+1. 静态托管：https://console.cloud.tencent.com/tcb/hosting
+2. 云函数：https://tcb.cloud.tencent.com/dev?envId=${envId}#/scf/detail?id=${functionName}&NameSpace=${envId}
+3. 数据库集合：https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/doc/collection/${collectionName}
+4. 数据模型：https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/doc/model/${modelName}
+
+使用方式：创建对应资源后，将变量替换为实际值，提供给用户进行管理操作。
