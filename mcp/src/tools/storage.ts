@@ -33,7 +33,7 @@ export function registerStorageTools(server: ExtendedMcpServer) {
       await cloudbase.storage.uploadFile({
         localPath,
         cloudPath,
-        onProgress: (progressData) => {
+        onProgress: (progressData: any) => {
           console.log("Upload progress:", progressData);
         }
       });
