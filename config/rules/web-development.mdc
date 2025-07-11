@@ -1,0 +1,44 @@
+---
+description: Web 前端项目开发规则
+globs: ["**/*.html", "**/*.js", "**/*.ts", "**/*.jsx", "**/*.tsx", "**/*.vue"]
+alwaysApply: false
+---
+
+# Web 前端开发规则
+
+## 项目结构
+1. web 项目一般前端源代码存放在 src 目录下，构建后的产物放在 dist 目录下，云函数放在 cloudfunctions 目录下
+2. 项目尽量使用 vite 等现代前端工程化体系，通过 npm 安装依赖
+3. 前端项目如何涉及到路由，可以默认用 hash 路由，可以解决路由刷新404的问题，更适合部署到静态网站托管
+
+## 部署和预览
+1. 如果是一个前端项目，你可以在构建完毕后使用云开发静态托管，先本地启动预览，然后可以跟用户确认是否需要部署到云开发静态托管，部署的时候，如果用户没有特殊要求，一般不要直接部署到根目录，并返回部署后的地址，需要是一个markdown 的链接格式
+2. 本地启动预览静态网页可以进到指定的产物目录后，可以用 `npx live-server`
+3. web 项目部署到静态托管 cdn 上时，由于无法提前预知路径，publicPath 之类的配置应该采用用相对路径而不是绝对路径。这会解决资源加载的问题
+
+## CloudBase Web SDK 使用
+1. 如果用户项目中需要用到数据库，云函数等功能，需要在 web 应用引入 @cloudbase/js-sdk@latest
+
+```js
+const app = cloudbase.init({
+  env: 'xxxx-yyy'; // 可以通过 envQuery 工具来查询环境 id
+});
+const auth = app.auth();
+
+// 检查当前登录状态
+let loginState = await auth.getLoginState();
+
+if (loginState && loginState.isLoggedIn) {
+  // 已登录
+} else {
+  // 未登录
+  // 如果是游客类型，需要用下方的方式
+  // 重要 2.x的 jssdk 匿名登录必须采用下方的方式
+  // await auth.signInAnonymously();
+  // 如果需要登录，可以用下方的方式
+  // await auth.toDefaultLoginPage()
+}
+```
+
+## 构建流程
+web 构建项目流程：确保首先执行过 npm install 命令，然后参考项目说明进行构建

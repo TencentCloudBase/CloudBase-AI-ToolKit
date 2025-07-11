@@ -1,0 +1,61 @@
+---
+description: 微信小程序开发规则
+globs: ["**/*.wxml", "**/*.wxss", "**/*.js", "**/*.ts", "**/*.json", "miniprogram/**/*"]
+alwaysApply: false
+---
+
+# 微信小程序开发规则
+
+## 项目结构
+1. 如果用户需要开发小程序，你会使用微信云开发的各种能力来开发项目，小程序的基础库直接用 latest 即可
+2. 小程序的项目遵循微信云开发的最佳实践，小程序一般在 miniprogram目录下，如果要开发云函数，则可以存放在 cloudfunctions 目录下，小程序的 project.config.json 需要指定miniprogramRoot这些
+3. 生成小程序页面的时候，必须包含页面的配置文件例如index.json等，要符合规范，避免编译出错
+
+## 云开发集成
+1. 小程序 wx.cloud 的时候，需要指定环境 Id，环境 id 可以通过 envQuery 工具来查询
+2. 生成小程序代码的时候，如果需要用到素材图片，比如 tabbar 的 iconPath 等地方，可以从 unsplash 通过 url 来下载，可以参考工作流程中的下载远程资源流程，在生成小程序代码的时候，如果用到了iconPath 这些，必须同时帮用户下载图标，避免构建报错
+
+## AI 大模型调用
+小程序中基础库 3.7.1版本以上已经支持直接调用大模型
+
+```js
+// 创建模型实例，这里我们使用 DeepSeek 大模型
+const model = wx.cloud.extend.AI.createModel("deepseek");
+
+// 我们先设定好 AI 的系统提示词，这里以七言绝句生成为例
+const systemPrompt =
+  "请严格按照七言绝句或七言律诗的格律要求创作，平仄需符合规则，押韵要和谐自然，韵脚字需在同一韵部。创作内容围绕用户给定的主题，七言绝句共四句，每句七个字；七言律诗共八句，每句七个字，颔联和颈联需对仗工整。同时，要融入生动的意象、丰富的情感与优美的意境，展现出古诗词的韵味与美感。";
+
+// 用户的自然语言输入，如'帮我写一首赞美玉龙雪山的诗'
+const userInput = "帮我写一首赞美玉龙雪山的诗";
+
+// 将系统提示词和用户输入，传入大模型
+const res = await model.streamText({
+  data: {
+    model: "deepseek-v3", // 指定具体的模型
+    messages: [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userInput },
+    ],
+  },
+});
+
+// 接收大模型的响应
+// 由于大模型的返回结果是流式的，所以我们这里需要循环接收完整的响应文本。
+for await (let str of res.textStream) {
+  console.log(str);
+}
+```
+
+## 微信步数获取
+**微信步数获取必须使用CloudID方式（基础库2.7.0+）**：
+- 前端：`wx.getWeRunData()` 获取cloudID，使用 `wx.cloud.CloudID(cloudID)` 传递给云函数
+- 云函数：直接使用 `weRunData.data` 获取解密后的步数数据，检查 `weRunData.errCode` 处理错误
+- 禁止使用session_key手动解密方式，CloudID更安全简单
+- 必须实现降级机制（模拟数据）处理cloudID获取失败的情况
+
+## 云函数部署和权限注意事项
+- AI自动部署云函数后，可能缺少云调用等特殊权限
+- 建议用户在微信开发者工具中右键选择云函数，选择"云端安装依赖"
+- 对于需要云调用权限的函数（如微信步数解密），建议通过开发者工具手动部署一次以获取完整权限
+- 如遇到权限问题，提示用户检查云函数的服务授权和API权限配置
