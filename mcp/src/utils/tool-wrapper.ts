@@ -12,6 +12,9 @@ import os from 'os';
 // 重新导出 MCP SDK 的类型，方便其他模块使用
 export type { ToolAnnotations, Tool } from "@modelcontextprotocol/sdk/types.js";
 
+// 构建时注入的版本号
+declare const __MCP_VERSION__: string;
+
 /**
  * 生成 GitHub Issue 创建链接
  * @param toolName 工具名称
@@ -37,6 +40,7 @@ ${errorMessage}
 ## 环境信息
 - 操作系统: ${os.type()} ${os.release()}
 - Node.js版本: ${process.version}
+- MCP 版本：${process.env.npm_package_version || __MCP_VERSION__ || 'unknown'}
 - 系统架构: ${os.arch()}
 - 时间: ${new Date().toISOString()}
 

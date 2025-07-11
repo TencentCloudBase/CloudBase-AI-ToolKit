@@ -1,13 +1,16 @@
 const path = require('path');
 const webpack = require('webpack');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-
 const nodeExternals = require('webpack-node-externals');
 
 // 基础配置
 const baseConfig = {
   mode: 'production',
   target: 'node',
+  node: {
+    __dirname: false,
+    __filename: false,
+  },
   resolve: {
     extensions: ['.ts', '.js'],
     extensionAlias: {
@@ -43,7 +46,6 @@ const baseConfig = {
         configFile: path.resolve(__dirname, 'tsconfig.json'),
       }
     }),
-    // ProvidePlugin 不需要了，因为我们在 Node.js 环境中运行
     // 忽略有问题的 native 依赖
     new webpack.IgnorePlugin({
       resourceRegExp: /^(fsevents|@swc\/core.*)$/,
@@ -53,33 +55,20 @@ const baseConfig = {
       __MCP_VERSION__: JSON.stringify(require('./package.json').version),
     }),
   ],
-  // 为 CommonJS 构建使用默认的 externals
-  externals: [
-    // 排除所有 node_modules 依赖
-    nodeExternals({
-      // 只打包特定的依赖
-      allowlist: ['zod']
-    }),
-    // 手动排除可能有问题的模块
-    /^@modelcontextprotocol\/sdk\//,
-    /^@cloudbase\//,
-    /^miniprogram-ci$/,
-    /^open$/
-  ],
   optimization: {
-    minimize: false, // 保持代码可读性，特别是对于 MCP 服务器
+    minimize: true, // 启用压缩来减小文件体积
   },
   stats: {
     warnings: false, // 忽略循环依赖警告
   }
 };
 
-// 导出多个配置
+// 导出配置
 module.exports = [
-  // ESM build for index.js
+  // 库文件 - ESM 版本，尽量少的外部依赖
   {
     ...baseConfig,
-    name: 'esm',
+    name: 'library-esm',
     entry: './src/index.ts',
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -98,31 +87,23 @@ module.exports = [
     },
     externalsType: 'module',
     externals: [
-      // 为 ESM 构建使用 import 语法的 externals
       nodeExternals({
-        allowlist: ['zod'],
+        // 打包更多小型依赖
+        allowlist: [
+          'zod',
+          'punycode',
+          '@types/adm-zip',
+          'adm-zip'
+        ],
         importType: 'module'
-      }),
-      // 手动处理关键依赖，强制使用 import
-      (context, request, callback) => {
-        if (/^@modelcontextprotocol\/sdk\//.test(request)) {
-          return callback(null, `import ${JSON.stringify(request)}`);
-        }
-        if (/^@cloudbase\//.test(request)) {
-          return callback(null, `import ${JSON.stringify(request)}`);
-        }
-        if (/^(miniprogram-ci|open)$/.test(request)) {
-          return callback(null, `import ${JSON.stringify(request)}`);
-        }
-        callback();
-      }
+      })
     ]
   },
 
-  // CommonJS build for index.cjs  
+  // 库文件 - CommonJS 版本，尽量少的外部依赖
   {
     ...baseConfig,
-    name: 'cjs',
+    name: 'library-cjs',
     entry: './src/index.ts',
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -130,13 +111,24 @@ module.exports = [
       library: {
         type: 'commonjs2'
       }
-    }
+    },
+    externals: [
+      nodeExternals({
+        // 打包更多小型依赖
+        allowlist: [
+          'zod',
+          'punycode',
+          '@types/adm-zip',
+          'adm-zip'
+        ]
+      })
+    ]
   },
 
-  // CLI build for cli.js (ESM with proper externals handling)
+  // CLI 全功能 bundle - ESM 版本，最大化依赖打包
   {
     ...baseConfig,
-    name: 'cli-esm',
+    name: 'cli-bundle-esm',
     entry: './src/cli.ts',
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -155,28 +147,58 @@ module.exports = [
     },
     externalsType: 'module',
     externals: [
-      // 为 ESM 构建使用 import 语法的 externals
       nodeExternals({
-        allowlist: ['zod'],
+        // 打包所有安全的第三方依赖（包含小型工具库）
+        allowlist: [
+          'zod',
+          'punycode', 
+          '@types/adm-zip',
+          'adm-zip',
+          'cors',
+          '@modelcontextprotocol/sdk',
+          /^@modelcontextprotocol\/sdk\//,
+          'zod-to-json-schema',
+          'ajv',
+          /^ajv\//,
+          // 安全的第三方依赖
+          'fast-json-stable-stringify',
+          'open',
+          'uri-js',
+          'fast-deep-equal',
+          'json-schema-traverse',
+          // 小型工具库
+          'is-wsl',
+          'define-lazy-prop',
+          'default-browser',
+          'is-inside-container',
+          // 更多小型依赖
+          'default-browser-id',
+          'bundle-name', 
+          'is-docker',
+          'run-applescript'
+        ],
         importType: 'module'
       }),
-      // 手动处理关键依赖，强制使用 import
-      (context, request, callback) => {
-        if (/^@modelcontextprotocol\/sdk\//.test(request)) {
-          return callback(null, `import ${JSON.stringify(request)}`);
-        }
-        if (/^@cloudbase\//.test(request)) {
-          return callback(null, `import ${JSON.stringify(request)}`);
-        }
-        if (/^(miniprogram-ci|open)$/.test(request)) {
-          return callback(null, `import ${JSON.stringify(request)}`);
-        }
-        callback();
-      }
+      // 只排除无法打包的大型依赖和Node.js内置模块
+      /^@cloudbase\//,
+      /^miniprogram-ci$/,
+      /^express$/,
+      /^ws$/,
+      /^node:/,
+      /^fs$/,
+      /^path$/,
+      /^os$/,
+      /^crypto$/,
+      /^url$/,
+      /^http$/,
+      /^https$/,
+      /^net$/,
+      /^dns$/,
+      /^zlib$/,
+      /^fs\/promises$/
     ],
     plugins: [
       ...baseConfig.plugins,
-      // 添加 shebang 到 CLI 文件
       new webpack.BannerPlugin({
         banner: '#!/usr/bin/env node',
         raw: true,
@@ -185,10 +207,10 @@ module.exports = [
     ]
   },
 
-  // CLI build for cli.cjs
+  // CLI 全功能 bundle - CommonJS 版本，最大化依赖打包
   {
     ...baseConfig,
-    name: 'cli-cjs',
+    name: 'cli-bundle-cjs',
     entry: './src/cli.ts',
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -197,9 +219,58 @@ module.exports = [
         type: 'commonjs2'
       }
     },
+    externals: [
+      nodeExternals({
+        // 打包所有安全的第三方依赖（包含小型工具库）
+        allowlist: [
+          'zod',
+          'punycode',
+          '@types/adm-zip', 
+          'adm-zip',
+          'cors',
+          '@modelcontextprotocol/sdk',
+          /^@modelcontextprotocol\/sdk\//,
+          'zod-to-json-schema',
+          'ajv',
+          /^ajv\//,
+          // 安全的第三方依赖
+          'fast-json-stable-stringify',
+          'open',
+          'uri-js',
+          'fast-deep-equal',
+          'json-schema-traverse',
+          // 小型工具库
+          'is-wsl',
+          'define-lazy-prop',
+          'default-browser',
+          'is-inside-container',
+          // 更多小型依赖
+          'default-browser-id',
+          'bundle-name', 
+          'is-docker',
+          'run-applescript'
+        ]
+      }),
+      // 只排除无法打包的大型依赖和Node.js内置模块
+      /^@cloudbase\//,
+      /^miniprogram-ci$/,
+      /^express$/,
+      /^ws$/,
+      /^node:/,
+      /^fs$/,
+      /^path$/,
+      /^os$/,
+      /^crypto$/,
+      /^url$/,
+      /^http$/,
+      /^https$/,
+      /^net$/,
+      /^dns$/,
+      /^zlib$/,
+      /^fs\/promises$/
+    ],
     plugins: [
       ...baseConfig.plugins,
-      // 添加 shebang 到 CLI 文件
       new webpack.BannerPlugin({
         banner: '#!/usr/bin/env node',
         raw: true,
