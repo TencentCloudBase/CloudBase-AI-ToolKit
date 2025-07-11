@@ -72,6 +72,21 @@ export interface ExtendedMcpServer extends McpServer {
  * Create and configure a CloudBase MCP Server instance
  * @param options Server configuration options
  * @returns Configured McpServer instance
+ * 
+ * @example
+ * import { createCloudBaseMcpServer } from "@cloudbase/mcp-server";
+ * import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+ * 
+ * const server = createCloudBaseMcpServer({ cloudBaseOptions: { 
+ *  envId,    // 环境ID
+ *  secretId,  // 腾讯云密钥ID
+ *  secretKey, // 腾讯云密钥
+ *  region, // 地域，默认是 ap-shanghai
+ *  token // 临时密钥，有有效期限制，生成密钥时可控制
+ * } });
+ * 
+ * const transport = new StdioServerTransport();
+ * await server.connect(transport);
  */
 export function createCloudBaseMcpServer(options?: {
   name?: string;
