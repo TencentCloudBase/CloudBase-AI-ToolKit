@@ -506,7 +506,7 @@
               },
               "runtime": {
                 "type": "string",
-                "description": "运行时环境,建议指定为 'Nodejs 18.15'，其他可选值：Nodejs18.15，Nodejs16.13，Nodejs14.18，Nodejs12.16，Nodejs10.15，Nodejs8.9"
+                "description": "运行时环境,建议指定为 'Nodejs18.15'，其他可选值：Nodejs16.13，Nodejs14.18，Nodejs12.16，Nodejs10.15，Nodejs8.9"
               },
               "triggers": {
                 "type": "array",
