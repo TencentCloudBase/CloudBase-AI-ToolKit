@@ -97,7 +97,7 @@ npm config set registry https://mirrors.cloud.tencent.com/npm/
 
 在**终端命令行**中运行以下命令：
 ```
-npx -y clear-npx-cache 
+npx clear-npx-cache 
 ```
 </details>
 
@@ -179,7 +179,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -212,7 +212,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -248,7 +248,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -357,7 +357,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -389,7 +389,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -580,7 +580,7 @@ npx @google/gemini-cli
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }

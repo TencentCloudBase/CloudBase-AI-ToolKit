@@ -97,7 +97,7 @@ npm config set registry https://mirrors.cloud.tencent.com/npm/
 
 在**终端命令行**中运行以下命令：
 ```
-npx -y clear-npx-cache 
+npx clear-npx-cache
 ```
 </details>
 
@@ -180,7 +180,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -213,7 +213,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -249,7 +249,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -358,7 +358,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -390,7 +390,7 @@ npx -y clear-npx-cache
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -581,7 +581,7 @@ npx @google/gemini-cli
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -651,7 +651,7 @@ npx @openai/codex
 ```toml
 [mcp_servers.cloudbase]
 command = "npx"
-args = ["-y", "@cloudbase/cloudbase-mcp@latest"]
+args = ["@cloudbase/cloudbase-mcp@latest"]
 ```
 
 然后启动时指定配置文件：
@@ -667,7 +667,7 @@ codex --config .codex/config.toml
 ```toml
 [mcp_servers.cloudbase]
 command = "npx"
-args = ["-y", "@cloudbase/cloudbase-mcp@latest"]
+args = ["@cloudbase/cloudbase-mcp@latest"]
 ```
 
 #### 步骤3：启用 AI 规则
@@ -720,7 +720,7 @@ codex --config .codex/config.toml
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }

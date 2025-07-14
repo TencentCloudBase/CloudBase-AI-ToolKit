@@ -64,7 +64,7 @@ npm install -g @openai/codex
 ```toml
 [mcp_servers.cloudbase]
 command = "npx"
-args = ["-y", "@cloudbase/cloudbase-mcp@latest"]
+args = ["@cloudbase/cloudbase-mcp@latest"]
 ```
 
 然后启动时指定配置文件：
@@ -80,7 +80,7 @@ codex --config .codex/config.toml
 ```toml
 [mcp_servers.cloudbase]
 command = "npx"
-args = ["-y", "@cloudbase/cloudbase-mcp@latest"]
+args = ["@cloudbase/cloudbase-mcp@latest"]
 ```
 
 ### 步骤 3：启用 AI 规则

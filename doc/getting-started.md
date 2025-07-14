@@ -93,7 +93,7 @@ npm config set registry https://mirrors.cloud.tencent.com/npm/
 
 **清理 npx 缓存**（避免安装问题）：
 ```bash
-npx -y clear-npx-cache 
+npx clear-npx-cache
 ```
 
 </details>
