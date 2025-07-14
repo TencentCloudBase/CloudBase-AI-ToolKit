@@ -89,7 +89,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
             vpcId: z.string(),
             subnetId: z.string()
           }).optional().describe("私有网络配置"),
-          runtime: z.string().optional().describe("运行时环境,建议指定为 'Nodejs 18.15'，其他可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，')),
+          runtime: z.string().optional().describe("运行时环境,建议指定为 'Nodejs18.15'，其他可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，')),
           triggers: z.array(z.object({
             name: z.string(),
             type: z.string(),
@@ -122,6 +122,20 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
       // 自动填充默认 runtime
       if (!func.runtime) {
         func.runtime = DEFAULT_NODEJS_RUNTIME;
+      } else {
+        // 验证 runtime 格式，防止常见的空格问题
+        const normalizedRuntime = func.runtime.replace(/\s+/g, '');
+        if (SUPPORTED_NODEJS_RUNTIMES.includes(normalizedRuntime)) {
+          func.runtime = normalizedRuntime;
+        } else if (func.runtime.includes(' ')) {
+          console.warn(`检测到 runtime 参数包含空格: "${func.runtime}"，已自动移除空格`);
+          func.runtime = normalizedRuntime;
+        }
+      }
+      
+      // 验证 runtime 是否有效
+      if (!SUPPORTED_NODEJS_RUNTIMES.includes(func.runtime)) {
+        throw new Error(`不支持的运行时环境: "${func.runtime}"。支持的值：${SUPPORTED_NODEJS_RUNTIMES.join(', ')}`);
       }
       
       // 强制设置 installDependency 为 true（不暴露给AI）
