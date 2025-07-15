@@ -51,7 +51,7 @@ ${JSON.stringify(sanitizeArgs(args), null, 2)}
 
 ## 复现步骤
 1. 使用工具: ${toolName}
-2. 传入参数: [请根据上述参数信息填写]
+2. 传入参数: 上述参数信息
 3. 出现错误
 
 ## 期望行为
@@ -100,7 +100,7 @@ function createWrappedHandler(name: string, handler: any) {
             const issueLink = generateGitHubIssueLink(name, errorMessage, args);
             
             // 创建增强的错误消息，包含 GitHub Issue 链接
-            const enhancedErrorMessage = `${errorMessage}\n\n🔗 遇到问题？请点击以下链接快速创建 GitHub Issue：\n${issueLink}`;
+            const enhancedErrorMessage = `${errorMessage}\n\n🔗 遇到问题？请复制以下链接到浏览器打开\n即可自动携带错误详情快速创建 GitHub Issue：\n${issueLink}`;
             
             // 创建新的错误对象，保持原有的错误类型但更新消息
             const enhancedError = error instanceof Error 
