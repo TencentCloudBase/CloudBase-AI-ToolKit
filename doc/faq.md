@@ -101,10 +101,19 @@ npm i @cloudbase/cloudbase-mcp@latest -g
 如果在 AI 开发工具的 MCP 列表中看到 cloudbase-mcp 显示工具数量为 0，可以按以下步骤排查：
 
 **1. 检查环境配置**
-- 确保 Node.js 版本为 v18 及以上
+- 确保 Node.js 版本为 v18.15.0 及以上
+- macOS 用户且使用 nvm 管理 Node.js 的，请务必设置默认 Node 版本为 v18.15.0 及以上，避免不同终端版本不一致导致的问题。
+  设置默认版本命令示例：
+  ```bash
+  nvm alias default 18.15.0
+  ```
 - 检查网络连接，建议设置 npm 源为腾讯镜像源：
   ```bash
   npm config set registry https://mirrors.cloud.tencent.com/npm/
+  ```
+- 输入如下命令测试，若无异常报错则为正常启动服务
+  ```bash
+  npx @cloudbase/cloudbase-mcp@latest
   ```
 
 **2. 清理缓存**
