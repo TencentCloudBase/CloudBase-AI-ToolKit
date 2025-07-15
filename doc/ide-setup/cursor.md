@@ -68,7 +68,7 @@
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }

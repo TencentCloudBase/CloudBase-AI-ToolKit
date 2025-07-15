@@ -371,7 +371,7 @@ MCP 工具通过以下配置添加到你的 AI IDE 中：
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }

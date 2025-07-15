@@ -89,7 +89,7 @@ Due to a caching bug in npx itself, it may cause CloudBase AI ToolKit installati
 
 Run the following command in **terminal**:
 ```
-npx -y clear-npx-cache 
+npx clear-npx-cache
 ```
 </details>
 
@@ -167,7 +167,7 @@ Or manually add configuration to `.cursor/mcp.json`:
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -200,7 +200,7 @@ If using template project, MCP configuration is pre-configured. If not starting 
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -233,7 +233,7 @@ Template includes `.rules/` directory, CodeBuddy will automatically recognize Cl
   "mcpServers": {
     "cloudbase": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -336,7 +336,7 @@ Add in Trae's MCP configuration:
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -367,7 +367,7 @@ If using template project, MCP configuration is pre-configured. If not starting 
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -546,7 +546,7 @@ If not starting from template, create `.gemini/settings.json` file in user home 
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -615,7 +615,7 @@ Create `.codex/config.toml` file in project root:
 ```toml
 [mcp_servers.cloudbase]
 command = "npx"
-args = ["-y", "@cloudbase/cloudbase-mcp@latest"]
+args = ["@cloudbase/cloudbase-mcp@latest"]
 ```
 
 Then start with the specified configuration file:
@@ -631,7 +631,7 @@ Create `~/.codex/config.toml` file in user home directory:
 ```toml
 [mcp_servers.cloudbase]
 command = "npx"
-args = ["-y", "@cloudbase/cloudbase-mcp@latest"]
+args = ["@cloudbase/cloudbase-mcp@latest"]
 ```
 
 #### Step 3: Enable AI Rules

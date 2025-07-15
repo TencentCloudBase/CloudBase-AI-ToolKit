@@ -110,7 +110,7 @@ npm i @cloudbase/cloudbase-mcp@latest -g
 **2. 清理缓存**
 - 清理 npx 缓存（npx 存在缓存 bug 可能导致安装问题）：
   ```bash
-  npx -y clear-npx-cache
+  npx clear-npx-cache
   ```
 
 **3. 重新启用 MCP**
@@ -156,7 +156,7 @@ Safari 浏览器在某些情况下可能存在兼容性问题，影响授权流�
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"],
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "TENCENTCLOUD_SECRETID": "腾讯云 SecretId",
         "TENCENTCLOUD_SECRETKEY": "腾讯云 SecretKey",
