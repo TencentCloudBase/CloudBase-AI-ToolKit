@@ -73,9 +73,9 @@
 </details>
 
 <details>
-<summary>安装 Node.js v18及以上版本</summary>
+<summary>安装 Node.js v18.15.0及以上版本</summary>
 
-确保您的计算机上安装了 Node.js v18 及以上版本。您可以从 [Node.js 官网](https://nodejs.org/) 下载并安装最新版本。
+确保您的计算机上安装了 Node.js v18.15.0 及以上版本。您可以从 [Node.js 官网](https://nodejs.org/) 下载并安装最新版本。
 
 </details>
 

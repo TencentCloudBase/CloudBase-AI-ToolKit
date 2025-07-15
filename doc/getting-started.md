@@ -66,9 +66,9 @@
 ### 前置条件检查
 
 <details>
-<summary>✅ Node.js v18+ 已安装</summary>
+<summary>✅ Node.js v18.15.0+ 已安装</summary>
 
-确保您的计算机上安装了 Node.js v18 及以上版本。检查版本：
+确保您的计算机上安装了 Node.js v18.15.0 及以上版本。检查版本：
 ```bash
 node --version
 ```

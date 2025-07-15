@@ -65,9 +65,9 @@ Visit [Tencent CloudBase Console](https://tcb.cloud.tencent.com/dev) to create a
 </details>
 
 <details>
-<summary>Install Node.js v18 or Higher</summary>
+<summary>Install Node.js v18.15.0 or Higher</summary>
 
-Make sure Node.js v18 or higher is installed on your computer. You can download and install the latest version from [Node.js official website](https://nodejs.org/).
+Make sure Node.js v18.15.0 or higher is installed on your computer. You can download and install the latest version from [Node.js official website](https://nodejs.org/).
 
 </details>
 
