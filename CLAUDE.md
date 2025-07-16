@@ -31,3 +31,14 @@ cp -r doc/* {cloudbase-docs dir}/docs/ai/cloudbase-ai-toolkit/
  2. 英文文档中的banner 图是英文的，保持不变
  3. 复制 README.md 覆盖 mcp/
 </update_readme>
+
+
+<fix-config-hardlinks>
+用来修复 config 中的硬链接
+sh ./scripts/fix-config-hardlinks.sh
+</update_readme>
+
+
+<git_push>
+git push github && git push cnb
+</git_push>
