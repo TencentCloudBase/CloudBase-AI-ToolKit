@@ -900,10 +900,10 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
     "insertDocuments",
     {
       title: "插入文档",
-      description: "向云开发数据库集合中插入一个或多个文档",
+      description: "向云开发数据库集合中插入一个或多个文档（支持对象数组）",
       inputSchema: {
         collectionName: z.string().describe("云开发数据库集合名称"),
-        documents: z.array(z.string()).describe("要插入的文档JSON 字符串数组，每个文档都是 JSON字符串，注意不是JSON对象")
+        documents: z.array(z.object({}).passthrough()).describe("要插入的文档对象数组，每个文档都是对象")
       },
       annotations: {
         readOnlyHint: false,
@@ -913,20 +913,20 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
         category: "database"
       }
     },
-    async ({ collectionName, documents }: { collectionName: string; documents: string[] }) => {
+    async ({ collectionName, documents }: { collectionName: string; documents: object[] }) => {
       try {
         const cloudbase = await getManager()
         const instanceId = await getDatabaseInstanceId(getManager);
-
+        // 将对象数组序列化为字符串数组
+        const docsAsStrings = documents.map(doc => JSON.stringify(doc));
         const result = await cloudbase.commonService('flexdb').call({
           Action: 'PutItem',
           Param: {
             TableName: collectionName,
-            MgoDocs: documents,
+            MgoDocs: docsAsStrings,
             Tag: instanceId
           }
         });
-
         return {
           content: [
             {
@@ -962,12 +962,12 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
     "queryDocuments",
     {
       title: "查询文档",
-      description: "查询云开发数据库集合中的文档",
+      description: "查询云开发数据库集合中的文档（支持对象参数）",
       inputSchema: {
         collectionName: z.string().describe("云开发数据库集合名称"),
-        query: z.string().optional().describe("查询条件（JSON字符串）"),
-        projection: z.string().optional().describe("返回字段投影（JSON字符串）"),
-        sort: z.string().optional().describe("排序条件（JSON字符串）"),
+        query: z.union([z.object({}).passthrough(), z.string()]).optional().describe("查询条件（对象或字符串，推荐对象）"),
+        projection: z.union([z.object({}).passthrough(), z.string()]).optional().describe("返回字段投影（对象或字符串，推荐对象）"),
+        sort: z.union([z.object({}).passthrough(), z.string()]).optional().describe("排序条件（对象或字符串，推荐对象）"),
         limit: z.number().optional().describe("返回数量限制"),
         offset: z.number().optional().describe("跳过的记录数")
       },
@@ -977,31 +977,31 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
         category: "database"
       }
     },
-    async ({ collectionName, query, projection, sort, limit, offset }: { 
-      collectionName: string; 
-      query?: string; 
-      projection?: string; 
-      sort?: string; 
-      limit?: number; 
-      offset?: number 
+    async ({ collectionName, query, projection, sort, limit, offset }: {
+      collectionName: string;
+      query?: object | string;
+      projection?: object | string;
+      sort?: object | string;
+      limit?: number;
+      offset?: number
     }) => {
       try {
         const cloudbase = await getManager()
         const instanceId = await getDatabaseInstanceId(getManager);
-
+        // 兼容对象和字符串
+        const toJSONString = (v: any) => typeof v === 'object' && v !== null ? JSON.stringify(v) : v;
         const result = await cloudbase.commonService('flexdb').call({
           Action: 'Query',
           Param: {
             TableName: collectionName,
-            MgoQuery: query,
-            MgoProjection: projection,
-            MgoSort: sort,
-            MgoLimit: limit,
+            MgoQuery: toJSONString(query),
+            MgoProjection: toJSONString(projection),
+            MgoSort: toJSONString(sort),
+            MgoLimit: limit ?? 100, // 默认返回100条，避免底层SDK缺参报错
             MgoOffset: offset,
             Tag: instanceId
           }
         });
-
         return {
           content: [
             {
@@ -1038,11 +1038,11 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
     "updateDocuments",
     {
       title: "更新文档",
-      description: "更新云开发数据库集合中的文档",
+      description: "更新云开发数据库集合中的文档（支持对象参数）",
       inputSchema: {
         collectionName: z.string().describe("云开发数据库集合名称"),
-        query: z.string().describe("查询条件（JSON字符串）"),
-        update: z.string().describe("更新内容（JSON字符串）"),
+        query: z.union([z.object({}).passthrough(), z.string()]).describe("查询条件（对象或字符串，推荐对象）"),
+        update: z.union([z.object({}).passthrough(), z.string()]).describe("更新内容（对象或字符串，推荐对象）"),
         isMulti: z.boolean().optional().describe("是否更新多条记录"),
         upsert: z.boolean().optional().describe("是否在不存在时插入")
       },
@@ -1054,29 +1054,28 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
         category: "database"
       }
     },
-    async ({ collectionName, query, update, isMulti, upsert }: { 
-      collectionName: string; 
-      query: string; 
-      update: string; 
-      isMulti?: boolean; 
-      upsert?: boolean 
+    async ({ collectionName, query, update, isMulti, upsert }: {
+      collectionName: string;
+      query: object | string;
+      update: object | string;
+      isMulti?: boolean;
+      upsert?: boolean
     }) => {
       try {
         const cloudbase = await getManager()
         const instanceId = await getDatabaseInstanceId(getManager);
-
+        const toJSONString = (v: any) => typeof v === 'object' && v !== null ? JSON.stringify(v) : v;
         const result = await cloudbase.commonService('flexdb').call({
           Action: 'UpdateItem',
           Param: {
             TableName: collectionName,
-            MgoQuery: query,
-            MgoUpdate: update,
+            MgoQuery: toJSONString(query),
+            MgoUpdate: toJSONString(update),
             MgoIsMulti: isMulti,
             MgoUpsert: upsert,
             Tag: instanceId
           }
         });
-
         return {
           content: [
             {
@@ -1114,10 +1113,10 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
     "deleteDocuments",
     {
       title: "删除文档",
-      description: "删除云开发数据库集合中的文档",
+      description: "删除云开发数据库集合中的文档（支持对象参数）",
       inputSchema: {
         collectionName: z.string().describe("云开发数据库集合名称"),
-        query: z.string().describe("查询条件（JSON字符串）"),
+        query: z.union([z.object({}).passthrough(), z.string()]).describe("查询条件（对象或字符串，推荐对象）"),
         isMulti: z.boolean().optional().describe("是否删除多条记录")
       },
       annotations: {
@@ -1128,21 +1127,24 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
         category: "database"
       }
     },
-    async ({ collectionName, query, isMulti }: { collectionName: string; query: string; isMulti?: boolean }) => {
+    async ({ collectionName, query, isMulti }: {
+      collectionName: string;
+      query: object | string;
+      isMulti?: boolean
+    }) => {
       try {
         const cloudbase = await getManager()
         const instanceId = await getDatabaseInstanceId(getManager);
-
+        const toJSONString = (v: any) => typeof v === 'object' && v !== null ? JSON.stringify(v) : v;
         const result = await cloudbase.commonService('flexdb').call({
           Action: 'DeleteItem',
           Param: {
             TableName: collectionName,
-            MgoQuery: query,
+            MgoQuery: toJSONString(query),
             MgoIsMulti: isMulti,
             Tag: instanceId
           }
         });
-
         return {
           content: [
             {

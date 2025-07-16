@@ -235,3 +235,83 @@ test('Tool consistency between multiple client connections', async () => {
     await cleanup(client2, transport2);
   }
 }, 120000); // 增加到 120 秒 
+
+test('Database tools support object/object[] parameters', async () => {
+  let transport = null;
+  let client = null;
+  const testCollection = `test_collection_${Date.now()}`;
+  try {
+    // 启动 MCP server
+    const serverPath = join(__dirname, '../mcp/dist/cli.cjs');
+    transport = new StdioClientTransport({
+      command: 'node',
+      args: [serverPath]
+    });
+    client = new Client({ name: 'test-db-client', version: '1.0.0' }, { capabilities: {} });
+    await client.connect(transport);
+    await delay(3000);
+
+    // 创建集合
+    await client.callTool({
+      name: 'createCollection',
+      arguments: { collectionName: testCollection }
+    });
+
+    // 1. insertDocuments 支持 object[]
+    const docs = [
+      { name: 'Alice', age: 18, nested: { foo: 'bar' } },
+      { name: 'Bob', age: 20, tags: ['a', 'b'] }
+    ];
+    const insertRes = await client.callTool({
+      name: 'insertDocuments',
+      arguments: { collectionName: testCollection, documents: docs }
+    });
+    expect(insertRes).toBeDefined();
+    expect(insertRes.content[0].text).toContain('文档插入成功');
+
+    // 2. queryDocuments 支持对象参数
+    const queryRes = await client.callTool({
+      name: 'queryDocuments',
+      arguments: { collectionName: testCollection, query: { name: { $eq: 'Alice' } } }
+    });
+    expect(queryRes).toBeDefined();
+    expect(queryRes.content[0].text).toContain('文档查询成功');
+
+    // 3. updateDocuments 支持对象参数
+    const updateRes = await client.callTool({
+      name: 'updateDocuments',
+      arguments: {
+        collectionName: testCollection,
+        query: { name: { $eq: 'Alice' } },
+        update: { $set: { age: 19 } },
+        isMulti: false
+      }
+    });
+    expect(updateRes).toBeDefined();
+    expect(updateRes.content[0].text).toContain('文档更新成功');
+
+    // 4. deleteDocuments 支持对象参数
+    const deleteRes = await client.callTool({
+      name: 'deleteDocuments',
+      arguments: {
+        collectionName: testCollection,
+        query: { name: { $eq: 'Bob' } },
+        isMulti: false
+      }
+    });
+    expect(deleteRes).toBeDefined();
+    expect(deleteRes.content[0].text).toContain('文档删除成功');
+
+    // 5. 兼容字符串参数
+    const queryStrRes = await client.callTool({
+      name: 'queryDocuments',
+      arguments: { collectionName: testCollection, query: JSON.stringify({ name: { $eq: 'Alice' } }) }
+    });
+    expect(queryStrRes).toBeDefined();
+    expect(queryStrRes.content[0].text).toContain('文档查询成功');
+
+  } finally {
+    if (client) { try { await client.close(); } catch {} }
+    if (transport) { try { await transport.close(); } catch {} }
+  }
+}, 60000); 
