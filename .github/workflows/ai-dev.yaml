@@ -23,12 +23,6 @@ jobs:
       pull-requests: read
       issues: read
       id-token: write
-    env:
-      # 云开发环境变量
-      TENCENTCLOUD_SECRETID: ${{ secrets.TENCENTCLOUD_SECRETID }}
-      TENCENTCLOUD_SECRETKEY: ${{ secrets.TENCENTCLOUD_SECRETKEY }}
-      TENCENTCLOUD_SESSIONTOKEN: ${{ secrets.TENCENTCLOUD_SESSIONTOKEN }}
-      CLOUDBASE_ENV_ID: ${{ secrets.CLOUDBASE_ENV_ID }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

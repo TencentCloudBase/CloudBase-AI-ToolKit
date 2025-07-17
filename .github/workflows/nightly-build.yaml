@@ -13,11 +13,6 @@ jobs:
   # 构建和发布到pkg.pr.new
   build-and-publish:
     runs-on: ubuntu-latest
-    env:
-      TENCENTCLOUD_SECRETID: ${{ secrets.TENCENTCLOUD_SECRETID }}
-      TENCENTCLOUD_SECRETKEY: ${{ secrets.TENCENTCLOUD_SECRETKEY }}
-      CLOUDBASE_ENV_ID: ${{ secrets.CLOUDBASE_ENV_ID }}
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
