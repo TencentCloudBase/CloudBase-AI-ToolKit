@@ -239,7 +239,7 @@ test('Tool consistency between multiple client connections', async () => {
 test('Database tools support object/object[] parameters', async () => {
   let transport = null;
   let client = null;
-  const testCollection = `test_collection_${Date.now()}`;
+  const testCollection = `test_collection`;
 
   try {
     // 启动 MCP server
