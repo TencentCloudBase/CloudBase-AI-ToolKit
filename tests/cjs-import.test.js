@@ -49,10 +49,9 @@ test('CJS CLI executable works correctly', async () => {
   let client = null;
   
   try {
-    // 注意：由于 CJS CLI 文件包含 shebang，我们需要特殊处理
+    // 注意：直接用 node 执行 dist/cli.cjs
     console.log('Testing CJS CLI executable...');
     
-    // Create client to test the CJS-built CLI
     client = new Client({
       name: "test-client-cjs-cli",
       version: "1.0.0",
@@ -60,71 +59,45 @@ test('CJS CLI executable works correctly', async () => {
       capabilities: {}
     });
 
-    // 直接使用 node 运行 CJS 文件，避免 shebang 问题
-    const serverPath = join(__dirname, '../mcp/dist/index.cjs');
-    
-    // 创建一个简单的 CJS 服务器脚本来测试，使用 .cjs 扩展名
-    const fs = await import('fs');
-    const testServerScript = `
-const { createCloudBaseMcpServer, StdioServerTransport } = require('${serverPath}');
-
-const server = createCloudBaseMcpServer({
-  name: 'test-cjs-server',
-  version: '1.0.0',
-  enableTelemetry: false
-});
-
-async function main() {
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-}
-
-main().catch(console.error);
-`;
-    
-    const tempScriptPath = join(__dirname, '../mcp/test-cjs-server.cjs');
-    fs.writeFileSync(tempScriptPath, testServerScript);
-    
+    // 直接用 node 执行 CLI CJS 文件
+    const cliCjsPath = join(__dirname, '../mcp/dist/cli.cjs');
     transport = new StdioClientTransport({
       command: 'node',
-      args: [tempScriptPath]
+      args: [cliCjsPath]
     });
 
     // Connect client to server
     await client.connect(transport);
-    
-    // Wait longer for connection to establish in CI environment
     await delay(3000);
 
-    console.log('Testing CJS server functionality...');
-    
+    console.log('Testing CJS CLI functionality...');
     // List available tools
     const toolsResult = await client.listTools();
     expect(toolsResult).toBeDefined();
     expect(toolsResult.tools).toBeDefined();
     expect(Array.isArray(toolsResult.tools)).toBe(true);
-    
-    console.log(`Found ${toolsResult.tools.length} tools in CJS build`);
-    
-    // Clean up temp file
-    fs.unlinkSync(tempScriptPath);
+    console.log(`Found ${toolsResult.tools.length} tools in CJS CLI build`);
+
+    // 新增：测试 login 工具调用，超时不算失败
+    try {
+      console.log('Testing login tool call (may timeout)...');
+      const loginResult = await Promise.race([
+        client.callTool('login', { provider: 'cloudbase' }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('login timeout')), 10000))
+      ]);
+      console.log('login tool call result:', loginResult);
+    } catch (err) {
+      if (err && err.message && err.message.includes('timeout')) {
+        console.warn('⚠️ login tool call timeout (acceptable)');
+      } else {
+        throw err;
+      }
+    }
     
     console.log('✅ CJS CLI executable test passed');
     
   } catch (error) {
     console.error('❌ CJS CLI test failed:', error);
-    
-    // Clean up temp file if it exists
-    try {
-      const fs = await import('fs');
-      const tempScriptPath = join(__dirname, '../mcp/test-cjs-server.cjs');
-      if (fs.existsSync(tempScriptPath)) {
-        fs.unlinkSync(tempScriptPath);
-      }
-    } catch (e) {
-      // Ignore cleanup errors
-    }
-    
     throw error;
   } finally {
     // Clean up

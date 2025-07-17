@@ -44,45 +44,40 @@ test('ESM import and library usage works correctly', async () => {
   }
 }, 90000);
 
-test('MCP client-server integration works correctly', async () => {
+test('ESM CLI executable and client-server integration works correctly', async () => {
   let transport = null;
   let client = null;
   
   try {
-    console.log('Testing MCP client-server integration...');
+    // 注意：直接用 node 执行 dist/cli.js
+    console.log('Testing ESM CLI executable and integration...');
     
-    // Create client
     client = new Client({
-      name: "test-client",
+      name: "test-client-esm-cli",
       version: "1.0.0",
     }, {
       capabilities: {}
     });
 
-    // Create stdio transport that spawns the server as a child process
-    // 注意：这里我们仍然需要用子进程，因为客户端需要连接到一个独立的服务器进程
-    const serverPath = join(__dirname, '../mcp/dist/cli.cjs');
+    // 直接用 node 执行 CLI ESM 文件
+    const cliEsmPath = join(__dirname, '../mcp/dist/cli.js');
     transport = new StdioClientTransport({
       command: 'node',
-      args: [serverPath]
+      args: [cliEsmPath]
     });
 
     // Connect client to server
     await client.connect(transport);
-    
-    // Wait longer for connection to establish in CI environment
     await delay(3000);
 
-    console.log('Testing MCP operations...');
-    
-    // List available tools (this should work)
+    console.log('Testing ESM CLI functionality...');
+    // List available tools
     const toolsResult = await client.listTools();
     expect(toolsResult).toBeDefined();
     expect(toolsResult.tools).toBeDefined();
     expect(Array.isArray(toolsResult.tools)).toBe(true);
-    
-    console.log(`Found ${toolsResult.tools.length} tools`);
-    
+    console.log(`Found ${toolsResult.tools.length} tools in ESM CLI build`);
+
     // Look for the searchKnowledgeBase tool
     const searchTool = toolsResult.tools.find(tool => tool.name === 'searchKnowledgeBase');
     if (searchTool) {
@@ -90,13 +85,26 @@ test('MCP client-server integration works correctly', async () => {
       expect(searchTool.name).toBe('searchKnowledgeBase');
     }
 
-    // Note: We're not testing listResources() and listPrompts() since our server 
-    // only declares 'tools' capability and may not properly handle these requests
+    // 新增：测试 login 工具调用，超时不算失败
+    try {
+      console.log('Testing login tool call (may timeout)...');
+      const loginResult = await Promise.race([
+        client.callTool('login', { provider: 'cloudbase' }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('login timeout')), 10000))
+      ]);
+      console.log('login tool call result:', loginResult);
+    } catch (err) {
+      if (err && err.message && err.message.includes('timeout')) {
+        console.warn('⚠️ login tool call timeout (acceptable)');
+      } else {
+        throw err;
+      }
+    }
     
-    console.log('✅ MCP client-server integration test passed');
+    console.log('✅ ESM CLI executable and integration test passed');
     
   } catch (error) {
-    console.error('❌ Integration test failed:', error);
+    console.error('❌ ESM CLI/integration test failed:', error);
     throw error;
   } finally {
     // Clean up
