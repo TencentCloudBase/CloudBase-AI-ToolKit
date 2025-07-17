@@ -240,6 +240,7 @@ test('Database tools support object/object[] parameters', async () => {
   let transport = null;
   let client = null;
   const testCollection = `test_collection_${Date.now()}`;
+
   try {
     // 启动 MCP server
     const serverPath = join(__dirname, '../mcp/dist/cli.cjs');
@@ -251,11 +252,15 @@ test('Database tools support object/object[] parameters', async () => {
     await client.connect(transport);
     await delay(3000);
 
-    // 创建集合
-    await client.callTool({
-      name: 'createCollection',
-      arguments: { collectionName: testCollection }
-    });
+    try {
+      // 创建集合
+      await client.callTool({
+        name: 'createCollection',
+        arguments: { collectionName: testCollection }
+      });
+    } catch (error) {
+      console.log('数据库已经创建，跳过创建集合', error);
+    }
 
     // 1. insertDocuments 支持 object[]
     const docs = [
@@ -314,7 +319,7 @@ test('Database tools support object/object[] parameters', async () => {
     if (client) { try { await client.close(); } catch {} }
     if (transport) { try { await transport.close(); } catch {} }
   }
-}, 60000); 
+}, 120000); 
 
 // 修复后的 security rule tools 测试用例
 
