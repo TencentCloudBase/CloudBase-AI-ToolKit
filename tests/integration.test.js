@@ -75,7 +75,8 @@ test('MCP server basic functionality test', async () => {
     const serverPath = join(__dirname, '../mcp/dist/cli.cjs');
     transport = new StdioClientTransport({
       command: 'node',
-      args: [serverPath]
+      args: [serverPath],
+      env: { ...process.env }
     });
 
     // Connect client to server
@@ -160,7 +161,8 @@ test('Tool consistency between multiple client connections', async () => {
     const serverPath = join(__dirname, '../mcp/dist/cli.cjs');
     transport1 = new StdioClientTransport({
       command: 'node',
-      args: [serverPath]
+      args: [serverPath],
+      env: { ...process.env }
     });
 
     await client1.connect(transport1);
@@ -176,7 +178,8 @@ test('Tool consistency between multiple client connections', async () => {
 
     transport2 = new StdioClientTransport({
       command: 'node',
-      args: [serverPath]
+      args: [serverPath],
+      env: { ...process.env }
     });
 
     await client2.connect(transport2);
@@ -258,7 +261,8 @@ test('Database tools support object/object[] parameters', async () => {
     const serverPath = join(__dirname, '../mcp/dist/cli.cjs');
     transport = new StdioClientTransport({
       command: 'node',
-      args: [serverPath]
+      args: [serverPath],
+      env: { ...process.env }
     });
     client = new Client({ name: 'test-db-client', version: '1.0.0' }, { capabilities: {} });
     await client.connect(transport);
@@ -365,7 +369,8 @@ test('Security rule tools functionality test', async () => {
     const serverPath = join(__dirname, '../mcp/dist/cli.cjs');
     transport = new StdioClientTransport({
       command: 'node',
-      args: [serverPath]
+      args: [serverPath],
+      env: { ...process.env }
     });
 
     await client.connect(transport);
