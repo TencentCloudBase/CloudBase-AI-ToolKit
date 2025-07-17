@@ -125,6 +125,63 @@
 | `readTempFile`            | 读取临时目录中的文件，支持文本和二进制文件 | `filePath`（必填，文件路径），`asBase64`（选填，是否以 base64 格式返回内容，默认为 `false`） |
 
 
+---
+
+# 安全规则插件（security-rule）
+
+安全规则插件用于统一管理数据库、云函数、存储的安全规则，支持简易权限和自定义规则的读取与写入。
+
+## 工具列表
+
+### 1. readSecurityRule
+- 功能：读取指定资源（数据库集合、云函数、存储桶）的安全规则和权限类别。
+- 参数：
+  - resourceType: "database" | "function" | "storage"
+  - resourceId: 资源唯一标识（集合名/函数名/桶名）
+  - envId: 环境ID
+- 返回：
+  - aclTag: 权限类别
+  - rule: 自定义安全规则内容（如有）
+  - raw: 原始返回
+
+#### 示例
+```js
+const res = await tools.readSecurityRule({
+  resourceType: 'database',
+  resourceId: 'myCollection',
+  envId: 'xxx-xxx'
+});
+console.log(res);
+```
+
+### 2. writeSecurityRule
+- 功能：设置指定资源的安全规则。
+- 参数：
+  - resourceType: "database" | "function" | "storage"
+  - resourceId: 资源唯一标识
+  - envId: 环境ID
+  - aclTag: 权限类别（READONLY/PRIVATE/ADMINWRITE/ADMINONLY/CUSTOM）
+  - rule: 自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填
+- 返回：
+  - requestId: 请求唯一标识
+  - raw: 原始返回
+
+#### 示例
+```js
+const res = await tools.writeSecurityRule({
+  resourceType: 'database',
+  resourceId: 'myCollection',
+  envId: 'xxx-xxx',
+  aclTag: 'CUSTOM',
+  rule: JSON.stringify({ read: true, write: 'doc._openid == auth.openid' })
+});
+console.log(res);
+```
+
+## 典型场景
+- 统一管理多种资源的安全规则
+- 批量读取/设置数据库集合权限
+- 云函数/存储桶的自定义安全策略配置
 
 ---
 

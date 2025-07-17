@@ -15,6 +15,7 @@ CloudBase AI ToolKit 提供了完整的 MCP 工具集，支持云开发的各种
 | 📁 [文件操作](#文件操作) | 2 个 | 文件下载、云存储上传 |
 | 📱 [小程序发布](#小程序发布) | 7 个 | 小程序上传、预览、构建、配置、调试、质量检查 |
 | 🛠️ [工具支持](#工具支持) | 4 个 | 模板下载、知识库搜索、联网搜索、交互对话 |
+| 🔒 [安全规则管理](#安全规则管理) | 2 个 | 统一管理数据库、云函数、存储的安全规则 |
 
 ---
 
@@ -414,3 +415,48 @@ MCP 工具通过以下配置添加到你的 AI IDE 中：
 - 🆕 **小程序调试**: 新增了 `getMiniprogramSourceMap` + `checkMiniprogramCodeQuality` + `packMiniprogramNpmManually`
 
 通过合并相关功能和新增小程序完整工具链，提供了从开发到调试的完整云开发体验。 
+
+## 🔒 安全规则管理
+
+### readSecurityRule
+**功能**: 读取指定资源（数据库集合、云函数、存储桶）的安全规则和权限类别。
+**参数**:
+- `resourceType` (string): 资源类型（database/function/storage）
+- `resourceId` (string): 资源唯一标识（集合名/函数名/桶名）
+- `envId` (string): 环境ID
+**返回**:
+- `aclTag` (string): 权限类别
+- `rule` (string|null): 自定义安全规则内容
+- `raw` (object): 原始返回
+
+#### 示例
+```js
+const res = await tools.readSecurityRule({
+  resourceType: 'database',
+  resourceId: 'myCollection',
+  envId: 'xxx-xxx'
+});
+```
+
+### writeSecurityRule
+**功能**: 设置指定资源的安全规则。
+**参数**:
+- `resourceType` (string): 资源类型（database/function/storage）
+- `resourceId` (string): 资源唯一标识
+- `envId` (string): 环境ID
+- `aclTag` (string): 权限类别（READONLY/PRIVATE/ADMINWRITE/ADMINONLY/CUSTOM）
+- `rule` (string, 可选): 自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填
+**返回**:
+- `requestId` (string): 请求唯一标识
+- `raw` (object): 原始返回
+
+#### 示例
+```js
+const res = await tools.writeSecurityRule({
+  resourceType: 'database',
+  resourceId: 'myCollection',
+  envId: 'xxx-xxx',
+  aclTag: 'CUSTOM',
+  rule: JSON.stringify({ read: true, write: 'doc._openid == auth.openid' })
+});
+``` 

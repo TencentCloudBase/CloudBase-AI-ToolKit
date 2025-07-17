@@ -38,6 +38,15 @@
 ```
 </workflow>
 
+
+<project_rules>
+1.项目结构
+- doc 存放对外的文档
+- mcp 核心的 mcp package
+- config 用来给 AI IDE提供的规则和 mcp 预设配置
+- tests 自动化测试
+</project_rules>
+
 <add_aiide>
 # CloudBase AI Toolkit - 新增 AI IDE 支持工作流
 

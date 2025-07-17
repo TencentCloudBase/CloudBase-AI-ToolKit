@@ -986,7 +986,7 @@ CloudBase MCP 采用插件化架构，支持按需启用工具模块。[查看�
 
 ## 🛠️ 云开发 MCP 工具一览
 
-目前共有 **36 个工具**，涵盖环境管理、数据库操作、云函数管理、静态托管等核心功能。
+目前共有 **38 个工具**，涵盖环境管理、数据库操作、云函数管理、静态托管、安全规则等核心功能。
 
 📋 **完整工具文档**: [查看 MCP 工具详细说明](doc/mcp-tools.md) | [查看工具规格 JSON](scripts/tools.json)
 
@@ -998,20 +998,35 @@ CloudBase MCP 采用插件化架构，支持按需启用工具模块。[查看�
 | 🗄️ **数据库操作** | 11 个 | 集合管理、文档 CRUD、索引操作、数据模型 |
 | ⚡ **云函数管理** | 9 个 | 函数创建、更新、调用、日志、触发器 |
 | 🌐 **静态托管** | 5 个 | 文件上传管理、域名配置、网站部署 |
+| 🔒 **安全规则管理** | 2 个 | 统一管理数据库、云函数、存储的安全规则 |
 | 📁 **文件操作** | 2 个 | 远程文件下载、云存储上传 |
 | 🛠️ **工具支持** | 4 个 | 项目模板、知识库搜索、联网搜索、交互对话 |
 | 🔌 **HTTP访问** | 1 个 | HTTP 函数访问配置 |
 
-### 🌟 核心工具亮点
+### 🔐 安全规则插件（security-rule）
 
-| 工具类型 | 工具名称 | 功能亮点 |
-|----------|----------|----------|
-| 🔐 **身份认证** | `login` / `logout` | 一键登录云开发，自动环境选择 |
-| 📊 **环境查询** | `envQuery` | **🔄 合并工具** - 环境列表、信息、域名一体化查询 |
-| 🗄️ **数据库** | `collectionQuery` | **🔄 合并工具** - 集合存在性、详情、列表统一管理 |
-| ⚡ **云函数** | `createFunction` | 支持完整配置、自动依赖安装、触发器设置 |
-| 🌐 **静态托管** | `uploadFiles` | 批量文件上传、智能忽略规则、CDN 加速 |
-| 🧠 **AI 增强** | `searchKnowledgeBase` | 向量搜索云开发知识库，智能问答支持 |
+安全规则插件用于统一管理数据库、云函数、存储的安全规则，支持简易权限和自定义规则的读取与写入。
+
+#### 工具列表
+- `readSecurityRule`：读取指定资源（数据库集合、云函数、存储桶）的安全规则和权限类别。
+- `writeSecurityRule`：设置指定资源的安全规则。
+
+#### 用法示例
+```js
+const res = await tools.readSecurityRule({
+  resourceType: 'database',
+  resourceId: 'myCollection',
+  envId: 'xxx-xxx'
+});
+
+const res2 = await tools.writeSecurityRule({
+  resourceType: 'database',
+  resourceId: 'myCollection',
+  envId: 'xxx-xxx',
+  aclTag: 'CUSTOM',
+  rule: JSON.stringify({ read: true, write: 'doc._openid == auth.openid' })
+});
+```
 
 ### 💡 工具优化说明
 

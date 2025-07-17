@@ -315,3 +315,70 @@ test('Database tools support object/object[] parameters', async () => {
     if (transport) { try { await transport.close(); } catch {} }
   }
 }, 60000); 
+
+// 修复后的 security rule tools 测试用例
+
+test('Security rule tools functionality test', async () => {
+  let transport = null;
+  let client = null;
+  
+  try {
+    console.log('Testing security rule tools functionality...');
+    
+    // Create client
+    client = new Client({
+      name: "test-client-security-rule",
+      version: "1.0.0"
+    }, {
+      capabilities: {}
+    });
+
+    const serverPath = join(__dirname, '../mcp/dist/cli.cjs');
+    transport = new StdioClientTransport({
+      command: 'node',
+      args: [serverPath]
+    });
+
+    await client.connect(transport);
+    await delay(3000);
+    // List tools to verify security rule tools are available
+    const toolsResult = await client.listTools();
+    const securityTools = toolsResult.tools.filter(t => 
+      t.name === 'readSecurityRule' || t.name === 'writeSecurityRule'
+    );
+    
+    expect(securityTools.length).toBe(2);
+    console.log('✅ Security rule tools are available');
+
+    // Test readSecurityRule tool (with mock data)
+    const readSecurityRuleTool = toolsResult.tools.find(t => t.name === 'readSecurityRule');
+    expect(readSecurityRuleTool).toBeDefined();
+    
+    // Test writeSecurityRule tool (with mock data)
+    const writeSecurityRuleTool = toolsResult.tools.find(t => t.name === 'writeSecurityRule');
+    expect(writeSecurityRuleTool).toBeDefined();
+
+    // Verify tool schemas
+    expect(readSecurityRuleTool.inputSchema).toBeDefined();
+    expect(writeSecurityRuleTool.inputSchema).toBeDefined();
+    
+    // Verify required parameters in JSON Schema
+    expect(readSecurityRuleTool.inputSchema.properties.resourceType).toBeDefined();
+    expect(readSecurityRuleTool.inputSchema.properties.resourceId).toBeDefined();
+    expect(readSecurityRuleTool.inputSchema.properties.envId).toBeDefined();
+    
+    expect(writeSecurityRuleTool.inputSchema.properties.resourceType).toBeDefined();
+    expect(writeSecurityRuleTool.inputSchema.properties.resourceId).toBeDefined();
+    expect(writeSecurityRuleTool.inputSchema.properties.envId).toBeDefined();
+    expect(writeSecurityRuleTool.inputSchema.properties.aclTag).toBeDefined();
+
+    console.log('✅ Security rule tools schema validation passed');
+
+  } catch (error) {
+    console.error('❌ Security rule tools test failed:', error);
+    throw error;
+  } finally {
+    if (client) { try { await client.close(); } catch {} }
+    if (transport) { try { await transport.close(); } catch {} }
+  }
+}, 60000); 
