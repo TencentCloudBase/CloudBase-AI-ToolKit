@@ -239,7 +239,19 @@ test('Tool consistency between multiple client connections', async () => {
 test('Database tools support object/object[] parameters', async () => {
   let transport = null;
   let client = null;
-  const testCollection = `test_collection`;
+  const testCollection = `test_collection_${Date.now()}`;
+
+  // 检查环境变量
+  console.log('🔍 检查环境变量状态:');
+  console.log('TENCENTCLOUD_SECRETID 长度:', process.env.TENCENTCLOUD_SECRETID ? process.env.TENCENTCLOUD_SECRETID.length : '未设置');
+  console.log('TENCENTCLOUD_SECRETKEY 长度:', process.env.TENCENTCLOUD_SECRETKEY ? process.env.TENCENTCLOUD_SECRETKEY.length : '未设置');
+  console.log('TENCENTCLOUD_SESSIONTOKEN 长度:', process.env.TENCENTCLOUD_SESSIONTOKEN ? process.env.TENCENTCLOUD_SESSIONTOKEN.length : '未设置');
+  console.log('CLOUDBASE_ENV_ID 长度:', process.env.CLOUDBASE_ENV_ID ? process.env.CLOUDBASE_ENV_ID.length : '未设置');
+  console.log('CLOUDBASE_ENV_ID 值:', process.env.CLOUDBASE_ENV_ID || '未设置');
+  
+  // 检查是否有认证信息
+  const hasAuth = process.env.TENCENTCLOUD_SECRETID && process.env.TENCENTCLOUD_SECRETKEY;
+  console.log('🔐 认证信息状态:', hasAuth ? '✅ 已设置' : '❌ 未设置');
 
   try {
     // 启动 MCP server
@@ -254,15 +266,18 @@ test('Database tools support object/object[] parameters', async () => {
 
     try {
       // 创建集合
+      console.log('📝 尝试创建集合:', testCollection);
       await client.callTool({
         name: 'createCollection',
         arguments: { collectionName: testCollection }
       });
+      console.log('✅ 集合创建成功');
     } catch (error) {
-      console.log('数据库已经创建，跳过创建集合', error);
+      console.log('⚠️ 数据库已经创建，跳过创建集合', error.message);
     }
 
     // 1. insertDocuments 支持 object[]
+    console.log('📝 尝试插入文档...');
     const docs = [
       { name: 'Alice', age: 18, nested: { foo: 'bar' } },
       { name: 'Bob', age: 20, tags: ['a', 'b'] }
@@ -273,16 +288,20 @@ test('Database tools support object/object[] parameters', async () => {
     });
     expect(insertRes).toBeDefined();
     expect(insertRes.content[0].text).toContain('文档插入成功');
+    console.log('✅ 文档插入成功');
 
     // 2. queryDocuments 支持对象参数
+    console.log('📝 尝试查询文档...');
     const queryRes = await client.callTool({
       name: 'queryDocuments',
       arguments: { collectionName: testCollection, query: { name: { $eq: 'Alice' } } }
     });
     expect(queryRes).toBeDefined();
     expect(queryRes.content[0].text).toContain('文档查询成功');
+    console.log('✅ 文档查询成功');
 
     // 3. updateDocuments 支持对象参数
+    console.log('📝 尝试更新文档...');
     const updateRes = await client.callTool({
       name: 'updateDocuments',
       arguments: {
@@ -294,8 +313,10 @@ test('Database tools support object/object[] parameters', async () => {
     });
     expect(updateRes).toBeDefined();
     expect(updateRes.content[0].text).toContain('文档更新成功');
+    console.log('✅ 文档更新成功');
 
     // 4. deleteDocuments 支持对象参数
+    console.log('📝 尝试删除文档...');
     const deleteRes = await client.callTool({
       name: 'deleteDocuments',
       arguments: {
@@ -306,20 +327,23 @@ test('Database tools support object/object[] parameters', async () => {
     });
     expect(deleteRes).toBeDefined();
     expect(deleteRes.content[0].text).toContain('文档删除成功');
+    console.log('✅ 文档删除成功');
 
     // 5. 兼容字符串参数
+    console.log('📝 尝试字符串参数查询...');
     const queryStrRes = await client.callTool({
       name: 'queryDocuments',
       arguments: { collectionName: testCollection, query: JSON.stringify({ name: { $eq: 'Alice' } }) }
     });
     expect(queryStrRes).toBeDefined();
     expect(queryStrRes.content[0].text).toContain('文档查询成功');
+    console.log('✅ 字符串参数查询成功');
 
   } finally {
     if (client) { try { await client.close(); } catch {} }
     if (transport) { try { await transport.close(); } catch {} }
   }
-}, 120000); 
+}, 180000); 
 
 // 修复后的 security rule tools 测试用例
 
