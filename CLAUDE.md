@@ -87,5 +87,6 @@ sh ./scripts/fix-config-hardlinks.sh
 
 
 <git_push>
+提交代码注意 commit 采用 conventional-changelog 风格，提交信息前加一个 emoji 图标，使用英文描述
 git push github && git push cnb --force
 </git_push>
