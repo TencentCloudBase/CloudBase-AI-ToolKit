@@ -14,10 +14,6 @@ function createBaseConfig() {
       __dirname: false,
       __filename: false,
     },
-    externals: {
-      'protobufjs/cli': 'commonjs2 protobufjs/cli',
-      'graceful-fs': 'commonjs2 graceful-fs',
-    },
     resolve: {
       extensions: ['.ts', '.js'],
       extensionAlias: {
