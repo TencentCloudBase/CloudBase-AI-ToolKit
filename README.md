@@ -1005,35 +1005,10 @@ CloudBase MCP 采用插件化架构，支持按需启用工具模块。[查看�
 | 🗄️ **数据库操作** | 11 个 | 集合管理、文档 CRUD、索引操作、数据模型 |
 | ⚡ **云函数管理** | 9 个 | 函数创建、更新、调用、日志、触发器 |
 | 🌐 **静态托管** | 5 个 | 文件上传管理、域名配置、网站部署 |
-| 🔒 **安全规则管理** | 2 个 | 统一管理数据库、云函数、存储的安全规则 |
+| 🔒 **安全规则管理** | 2 个 | 统一管理数据库、云函数、存储的安全规则，支持简易权限和自定义规则 |
 | 📁 **文件操作** | 2 个 | 远程文件下载、云存储上传 |
 | 🛠️ **工具支持** | 4 个 | 项目模板、知识库搜索、联网搜索、交互对话 |
 | 🔌 **HTTP访问** | 1 个 | HTTP 函数访问配置 |
-
-### 🔐 安全规则插件（security-rule）
-
-安全规则插件用于统一管理数据库、云函数、存储的安全规则，支持简易权限和自定义规则的读取与写入。
-
-#### 工具列表
-- `readSecurityRule`：读取指定资源（数据库集合、云函数、存储桶）的安全规则和权限类别。
-- `writeSecurityRule`：设置指定资源的安全规则。
-
-#### 用法示例
-```js
-const res = await tools.readSecurityRule({
-  resourceType: 'database',
-  resourceId: 'myCollection',
-  envId: 'xxx-xxx'
-});
-
-const res2 = await tools.writeSecurityRule({
-  resourceType: 'database',
-  resourceId: 'myCollection',
-  envId: 'xxx-xxx',
-  aclTag: 'CUSTOM',
-  rule: JSON.stringify({ read: true, write: 'doc._openid == auth.openid' })
-});
-```
 
 ### 💡 工具优化说明
 
