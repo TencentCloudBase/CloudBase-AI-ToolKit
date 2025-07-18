@@ -14,11 +14,18 @@ function createBaseConfig() {
       __dirname: false,
       __filename: false,
     },
+    externals: {
+      'protobufjs/cli': 'commonjs2 protobufjs/cli',
+      'graceful-fs': 'commonjs2 graceful-fs',
+    },
     resolve: {
       extensions: ['.ts', '.js'],
       extensionAlias: {
         // 处理 TypeScript ESM 导入中的 .js 扩展名
         '.js': ['.ts', '.js'],
+      },
+      alias: {
+        'graceful-fs': path.resolve(__dirname, '../node_modules/graceful-fs')
       },
       fallback: {
         // 在 Node.js 环境中我们不需要这些 polyfills
@@ -52,6 +59,10 @@ function createBaseConfig() {
       // 忽略有问题的 native 依赖
       new webpack.IgnorePlugin({
         resourceRegExp: /^(fsevents|@swc\/core.*)$/,
+      }),
+      // 忽略 @aws-sdk/client-s3 相关模块
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^@aws-sdk\/client-s3$/,
       }),
       // 定义构建时的全局变量
       new webpack.DefinePlugin({

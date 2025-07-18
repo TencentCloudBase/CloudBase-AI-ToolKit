@@ -30,7 +30,7 @@ function createLibraryConfigs() {
       outputModule: true
     },
     externalsType: 'module',
-    externals: createMinimalExternals('module')
+    externals: [/^node:.+$/, /^[^./].*$/], // 外部化所有 node_modules 依赖和 node: 内建模块
   });
 
   // CJS 版本配置
