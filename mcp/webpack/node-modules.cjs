@@ -11,8 +11,5 @@ module.exports = [
   'trace_events', 'v8', 'constants', 'assert', 'module', 'domain', 'punycode',
   
   // 带 node: 前缀的模块
-  /^node:/,
-  
-  // 其他核心模块
-  'querystring-es3', 'requires-port'
+  /^node:/
 ]; 
