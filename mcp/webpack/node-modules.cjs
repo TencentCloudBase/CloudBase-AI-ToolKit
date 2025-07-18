@@ -14,5 +14,5 @@ module.exports = [
   /^node:/,
   
   // 其他核心模块
-  'querystring-es3', 'url-parse', 'requires-port'
+  'querystring-es3', 'requires-port'
 ]; 
