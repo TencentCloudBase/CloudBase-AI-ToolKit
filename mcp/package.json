@@ -7,7 +7,7 @@
   "types": "./dist/index.d.ts",
   "type": "module",
   "bin": {
-    "cloudbase-mcp": "./dist/cli.js"
+    "cloudbase-mcp": "./dist/cli.cjs"
   },
   "exports": {
     ".": {
@@ -33,8 +33,7 @@
     "build": "npm run build:webpack && npm run build:types && npm run build:permissions",
     "build:webpack": "webpack --config webpack/index.cjs --mode=production",
     "build:types": "tsc --emitDeclarationOnly --declaration --declarationMap --outDir dist/types && cp dist/types/index.d.ts dist/index.d.ts && cp dist/types/cli.d.ts dist/cli.d.ts && rm -rf dist/types",
-    "build:permissions": "chmod 755 dist/cli.js dist/cli.cjs",
-    "build:legacy": "tsc && chmod 755 dist/cli.js",
+    "build:permissions": "chmod 755 dist/cli.cjs",
     "test": "npm run build && vitest run",
     "test:watch": "npm run build && vitest",
     "test:ui": "npm run build && vitest --ui",

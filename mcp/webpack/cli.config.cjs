@@ -20,33 +20,6 @@ function createCLIConfigs() {
     })
   ];
 
-  // ESM 版本配置
-  const esmConfig = merge(baseConfig, {
-    name: 'cli-bundle-esm',
-    entry: './src/cli.ts',
-    output: {
-      path: path.resolve(__dirname, '../dist'),
-      filename: 'cli.js',
-      library: {
-        type: 'module'
-      },
-      chunkFormat: 'module',
-      environment: {
-        module: true,
-        dynamicImport: true
-      }
-    },
-    experiments: {
-      outputModule: true
-    },
-    externalsType: 'module',
-    externals: createMinimalExternals('module'),
-    plugins: [
-      ...baseConfig.plugins,
-      ...cliPlugins
-    ]
-  });
-
   // CJS 版本配置
   const cjsConfig = merge(baseConfig, {
     name: 'cli-bundle-cjs',
@@ -65,7 +38,7 @@ function createCLIConfigs() {
     ]
   });
 
-  return [esmConfig, cjsConfig];
+  return [cjsConfig];
 }
 
 module.exports = createCLIConfigs; 
