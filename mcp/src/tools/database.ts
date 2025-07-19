@@ -34,6 +34,72 @@ async function getDatabaseInstanceId(getManager: () => Promise<any>) {
   return EnvInfo.Databases[0].InstanceId;
 }
 
+// 递归解析字段结构的函数
+function parseFieldStructure(field: any, fieldName: string, schema: any, depth: number = 0, maxDepth: number = 5): any {
+  if (depth > maxDepth) {
+    return {
+      name: fieldName,
+      type: field.type,
+      title: field.title || fieldName,
+      description: field.description || '',
+      error: '递归深度超限'
+    };
+  }
+
+  const fieldInfo: any = {
+    name: fieldName,
+    type: field.type,
+    format: field.format,
+    title: field.title || fieldName,
+    description: field.description || '',
+    required: schema.required?.includes(fieldName) || false,
+    depth: depth
+  };
+
+  // 处理 array 类型字段
+  if (field.type === 'array' && field.items) {
+    try {
+      fieldInfo.items = parseFieldStructure(field.items, `${fieldName}_item`, schema, depth + 1, maxDepth);
+    } catch (error: any) {
+      fieldInfo.items = {
+        name: `${fieldName}_item`,
+        type: 'unknown',
+        title: '数组元素',
+        description: '数组元素结构解析失败',
+        error: error.message
+      };
+    }
+  }
+
+  // 处理 object 类型字段
+  if (field.type === 'object' && field.properties) {
+    try {
+      fieldInfo.properties = Object.keys(field.properties).map(key => 
+        parseFieldStructure(field.properties[key], key, field, depth + 1, maxDepth)
+      );
+    } catch (error: any) {
+      fieldInfo.properties = [{
+        name: 'property',
+        type: 'unknown',
+        title: '对象属性',
+        description: '对象属性结构解析失败',
+        error: error.message
+      }];
+    }
+  }
+
+  // 处理关联关系
+  if (field['x-parent']) {
+    fieldInfo.linkage = field['x-parent'];
+  }
+
+  // 添加其他属性
+  if (field.enum) fieldInfo.enum = field.enum;
+  if (field.default !== undefined) fieldInfo.default = field.default;
+
+  return fieldInfo;
+}
+
 // 生成SDK使用文档的函数
 function generateSDKDocs(modelName: string, modelTitle: string, userFields: any[], relations: any[]): string {
   // 获取主要字段（前几个非关联字段）
@@ -43,7 +109,7 @@ function generateSDKDocs(modelName: string, modelTitle: string, userFields: any[
   const numberFields = userFields.filter(f => f.type === 'number');
 
   // 生成字段示例值
-  const generateFieldValue = (field: any) => {
+  const generateFieldValue = (field: any): string => {
     if (field.enum && field.enum.length > 0) {
       return `"${field.enum[0]}"`;
     }
@@ -57,8 +123,20 @@ function generateSDKDocs(modelName: string, modelTitle: string, userFields: any[
       case 'boolean':
         return field.default !== undefined ? field.default : 'true';
       case 'array':
+        // 如果有子结构信息，生成更详细的示例
+        if (field.items) {
+          const itemValue = generateFieldValue(field.items);
+          return `[${itemValue}]`;
+        }
         return '[]';
       case 'object':
+        // 如果有子结构信息，生成更详细的示例
+        if (field.properties && field.properties.length > 0) {
+          const props = field.properties.slice(0, 2).map((prop: any) => 
+            `${prop.name}: ${generateFieldValue(prop)}`
+          ).join(', ');
+          return `{${props}}`;
+        }
         return '{}';
       default:
         return `"${field.title || field.name}值"`;
@@ -92,6 +170,22 @@ ${userFields.map(field => {
   if (field.format) fieldDoc += ` [格式: ${field.format}]`;
   if (field.enum) fieldDoc += ` [可选值: ${field.enum.join(', ')}]`;
   if (field.default !== undefined) fieldDoc += ` [默认值: ${field.default}]`;
+  
+  // 添加复杂字段结构的说明
+  if (field.type === 'array' && field.items) {
+    fieldDoc += `\n  - 数组元素: ${field.items.type}`;
+    if (field.items.description) fieldDoc += ` (${field.items.description})`;
+  }
+  if (field.type === 'object' && field.properties && field.properties.length > 0) {
+    fieldDoc += `\n  - 对象属性:`;
+    field.properties.slice(0, 3).forEach((prop: any) => {
+      fieldDoc += `\n    - ${prop.name} (${prop.type})`;
+    });
+    if (field.properties.length > 3) {
+      fieldDoc += `\n    - ... 还有 ${field.properties.length - 3} 个属性`;
+    }
+  }
+  
   return fieldDoc;
 }).join('\n')}
 
@@ -1229,20 +1323,7 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
                     .filter(key => !properties[key]['x-system']) // 排除系统字段
                     .map(key => {
                       const field = properties[key];
-                      const fieldInfo: any = {
-                        name: key,
-                        type: field.type,
-                        format: field.format,
-                        title: field.title || key,
-                        required: schema.required?.includes(key) || false,
-                        description: field.description || ''
-                      };
-
-                      if (field['x-parent']) {
-                       fieldInfo.linkage = field['x-parent'];
-                      }
-
-                      return fieldInfo;
+                      return parseFieldStructure(field, key, schema);
                     });
 
                   // 提取关联关系
@@ -1382,17 +1463,7 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
                     .filter(key => !properties[key]['x-system'])
                     .map(key => {
                       const field = properties[key];
-                      return {
-                        name: key,
-                        type: field.type,
-                        title: field.title || key,
-                        required: schema.required?.includes(key) || false,
-                        description: field.description || '',
-                        format: field.format,
-                        enum: field.enum,
-                        default: field.default,
-                        linkage: field['x-parent']
-                      };
+                      return parseFieldStructure(field, key, schema);
                     });
 
                   // 提取关联关系
