@@ -17,29 +17,6 @@ async function openUrl(url: string, options?: any) {
   }
 }
 
-const getFilename = (): string => {
-  // 优先使用 CJS 的 __filename
-  if (typeof __filename !== 'undefined') {
-    return __filename;
-  }
-  // ESM 环境下动态获取
-  if (typeof import.meta !== 'undefined' && import.meta.url) {
-    return fileURLToPath(import.meta.url);
-  }
-  // 兼容 globalThis.__filename
-  if (typeof (globalThis as any).__filename === 'string') {
-    return (globalThis as any).__filename;
-  }
-  // 更安全的降级方案
-  if (typeof require !== 'undefined' && require.main && require.main.filename) {
-    return require.main.filename;
-  }
-  return path.join(process.cwd(), 'interactive-server.js');
-};
-
-const __filename = getFilename();
-const __dirname = path.dirname(__filename);
-
 export interface InteractiveResult {
   type: 'envId' | 'clarification' | 'confirmation';
   data: any;
@@ -82,8 +59,7 @@ export class InteractiveServer {
 
   private setupExpress() {
     this.app.use(express.json());
-    this.app.use(express.static(path.join(__dirname, '../static')));
-
+    
     this.app.get('/env-setup/:sessionId', (req, res) => {
       const { sessionId } = req.params;
       const sessionData = this.sessionData.get(sessionId);
