@@ -18,9 +18,15 @@ async function openUrl(url: string, options?: any) {
 }
 
 const getFilename = (): string => {
+  // 优先使用 CJS 的 __filename
+  if (typeof __filename !== 'undefined') {
+    return __filename;
+  }
+  // ESM 环境下动态获取
   if (typeof import.meta !== 'undefined' && import.meta.url) {
     return fileURLToPath(import.meta.url);
   }
+  // 兼容 globalThis.__filename
   if (typeof (globalThis as any).__filename === 'string') {
     return (globalThis as any).__filename;
   }
