@@ -134,7 +134,25 @@ npm i @cloudbase/cloudbase-mcp@latest -g
 **5. 尝试全局安装**
 - 如果 npx 方式持续有问题，可以尝试[全局安装方式](#如何全局安装-cloudbase-ai-toolkit)
 
+**6. 使用 inspector 工具验证 MCP 连接**
+- 如果上述方法都无效，可以通过 inspector 工具进一步排查 MCP 是否正常：
+  ```bash
+  npx @modelcontextprotocol/inspector npx @cloudbase/cloudbase-mcp@latest
+  ```
+- 命令行会输出类似如下的网址：
+  ```
+  http://localhost:6274/?MCP_PROXY_AUTH_TOKEN=8fbe0137d3bd77f0181a66a0ced8476283ba2b25927f2d3fd84492dfa1eb2199
+  ```
+- 用浏览器打开该网址，填写如下信息：
+  - **Command** 填写为 `npx`
+  - **Arguments** 填写为 `@cloudbase/cloudbase-mcp@latest`
+  - 然后点击 **Connect** 进行测试，需要等待安装和连接 MCP Server
+- 如果测试 OK，说明 MCP 工具本身连接正常，问题可能出在客户端配置或环境。
+- 如果连接失败，可以复制下方红色的错误信息，在 [社区 issue](https://cnb.cool/tencent/cloud/cloudbase/community/-/issues) 提交问题，便于进一步排查。
+
 一般情况下，在 MCP 列表中重新启用或刷新即可正常安装并显示工具。
+
+
 
 ---
 
