@@ -55,7 +55,7 @@
   "author": "TencentCloudBase",
   "license": "MIT",
   "dependencies": {
-    "@cloudbase/manager-node": "^4.3.2",
+    "@cloudbase/manager-node": "^4.4.0",
     "@cloudbase/mcp": "^1.0.0-beta.25",
     "@cloudbase/toolbox": "^0.7.5",
     "@modelcontextprotocol/sdk": "1.13.1",
