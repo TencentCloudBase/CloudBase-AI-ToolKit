@@ -183,6 +183,9 @@ sh ./scripts/fix-config-hardlinks.sh
 
 
 <git_push>
-提交代码注意 commit 采用 conventional-changelog 风格，在feat(xxx): 后面提加一个 emoji 字符，提交信息使用英文描述
+1. 提交代码注意 commit 采用 conventional-changelog 风格，在feat(xxx): 后面提加一个 emoji 字符，提交信息使用英文描述
+2. 提交代码不要直接提到 main，可以提一个分支，例如 feature/xxx，然后
+
 git push github && git push cnb --force
+3. 然后自动创建 PR
 </git_push>
