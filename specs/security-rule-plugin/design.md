@@ -97,3 +97,51 @@ export interface WriteSecurityRuleParams {
 - Tool 注册时补充详细注释，便于大模型理解。
 - 参数说明、枚举说明需在 Tool 描述和类型定义中体现。
 - 代码风格与 `database.ts` 保持一致，便于维护和扩展。 
+
+# 技术方案：rules 模板版本号集成（最终版）
+
+## 目标
+1. 在 rules 模板（cloudbase-rules.mdc 文件）中插入版本号，格式为“版本号：x.y.z”，x.y.z 取自 mcp/package.json。
+2. 在 downloadTemplate 工具描述中，补充说明 rules 模板会包含版本号信息，并在描述中内嵌当前版本号。
+
+---
+
+## 方案细节
+
+### 1. 用脚本自动更新 cloudbase-rules.mdc 版本号
+- 新增脚本 scripts/update-rules-version.js。
+- 脚本读取 mcp/package.json 的 version 字段。
+- 查找 cloudbase-rules.mdc 文件，自动插入或替换“版本号：x.y.z”文本。
+- 可在发版、模板更新或需要时运行，保证版本号同步。
+
+### 2. 工具描述内嵌版本号
+- 在 mcp/src/tools/setup.ts 的 downloadTemplate 工具 description 字符串中，直接拼接版本号。
+- 采用构建时注入的 __MCP_VERSION__（如 telemetry.ts 用法），如：
+  ```js
+  description: `...（当前版本：${__MCP_VERSION__}）...`
+  ```
+- 这样用户在工具描述中可直接看到当前 rules 模板版本。
+
+### 3. 兼容性与幂等性
+- 版本号维护完全自动化，无需每次下载时动态处理。
+- 仅对 rules 模板生效，其他模板不受影响。
+
+---
+
+## Mermaid 流程图
+```mermaid
+graph TD
+  A[运行 update-rules-version.js] --> B[读取 package.json 版本号]
+  B --> C[查找 cloudbase-rules.mdc]
+  C --> D{是否有版本号行?}
+  D -- 有 --> E[替换为最新版本号]
+  D -- 无 --> F[插入版本号到文件头]
+  E & F --> G[完成]
+```
+
+---
+
+## 影响范围
+- 仅影响 rules 模板版本号维护流程。
+- 其他模板和功能不受影响。
+- downloadTemplate 工具描述需同步更新。 

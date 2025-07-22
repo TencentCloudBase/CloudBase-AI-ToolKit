@@ -40,7 +40,7 @@
     "test:coverage": "npm run build && vitest run --coverage",
     "test:inspector": "npm run build && npx @modelcontextprotocol/inspector node ./dist/cli.js",
     "prepublishOnly": "npm run build",
-    "postpublish": "dxt pack"
+    "postpublish": "node ../scripts/update-rules-version.js"
   },
   "files": [
     "dist",

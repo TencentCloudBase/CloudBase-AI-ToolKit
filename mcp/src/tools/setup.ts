@@ -9,6 +9,10 @@ import { execSync } from "child_process";
 import AdmZip from "adm-zip";
 import { ExtendedMcpServer } from '../server.js';
 
+// 构建时注入的版本号
+// @ts-ignore
+declare const __MCP_VERSION__: string;
+
 // CloudBase 模板配置
 const TEMPLATES = {
   "react": {
@@ -142,16 +146,7 @@ export function registerSetupTools(server: ExtendedMcpServer) {
     "downloadTemplate",
     {
       title: "下载项目模板",
-      description: `自动下载并部署CloudBase项目模板。
-
-支持的模板:
-- react: React + CloudBase 全栈应用模板
-- vue: Vue + CloudBase 全栈应用模板
-- miniprogram: 微信小程序 + 云开发模板  
-- uniapp: UniApp + CloudBase 跨端应用模板
-- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置
-
-工具会自动下载模板到临时目录，解压后如果检测到WORKSPACE_FOLDER_PATHS环境变量，则复制到项目目录。`,
+      description: `自动下载并部署CloudBase项目模板。\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n特别说明：rules 模板会自动包含当前 mcp 版本号信息（版本号：${typeof __MCP_VERSION__ !== 'undefined' ? __MCP_VERSION__ : 'unknown'}），便于后续维护和版本追踪。`,
       inputSchema: {
         template: z.enum(["react", "vue", "miniprogram", "uniapp", "rules"]).describe("要下载的模板类型"),
         overwrite: z.boolean().optional().describe("是否覆盖已存在的文件，默认为false（不覆盖）")
