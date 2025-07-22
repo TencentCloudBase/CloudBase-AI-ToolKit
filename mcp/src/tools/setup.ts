@@ -230,6 +230,7 @@ export function registerSetupTools(server: ExtendedMcpServer) {
           finalFiles = extractedFiles.map(relativePath => path.join(extractDir, relativePath));
           results.push(`✅ ${templateConfig.description} 下载完成`);
           results.push(`📁 保存在临时目录: ${extractDir}`);
+          results.push('💡 如需将模板（包括隐藏文件）复制到项目目录，请确保复制时包含所有隐藏文件。');
         }
 
         // 文件路径列表
