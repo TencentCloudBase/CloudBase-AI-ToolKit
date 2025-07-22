@@ -60,6 +60,44 @@
 > - 摆脱“拉霸式” vibe coding，开发过程可控、可追溯
 > - 让 AI 协助梳理需求、设计方案、拆分任务，人类专注决策与评审
 
+---
+🚩 **快速上手 CloudBase AI ToolKit**
+
+1. **启用 CloudBase 工具（MCP 配置）**  
+在你的 AI IDE（如 Cursor）中添加以下配置，即可启用 CloudBase AI ToolKit 的全部能力：
+
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
+    }
+  }
+}
+```
+
+2. **一键生成项目模板**  
+在 AI 对话框输入：
+
+```
+下载小程序云开发模板
+```
+
+3. **可选模板类型**  
+- 小程序云开发模板
+- React 云开发模板
+- Vue 云开发模板
+- UniApp 云开发模板
+- 通用云开发模板
+
+👉 [查看全部官方模板及说明](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates)
+
+4. **详细教程**  
+👉 [查看完整配置与使用教程](#2-配置你的-ai-ide)
+
+---
+
 ## 🚀 快速开始
 
 

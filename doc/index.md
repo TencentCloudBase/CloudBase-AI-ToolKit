@@ -44,6 +44,44 @@
 - **⚡ 极速体验** - 国内 CDN 加速，比海外平台访问速度更快
 - **📚 知识检索** - 内置云开发、微信小程序等专业知识库的智能向量检索
 
+---
+🚩 **快速上手 CloudBase AI ToolKit**
+
+1. **启用 CloudBase 工具（MCP 配置）**  
+在你的 AI IDE（如 Cursor）中添加以下配置，即可启用 CloudBase AI ToolKit 的全部能力：
+
+```json
+{
+  "mcpServers": {
+    "cloudbase-mcp": {
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
+    }
+  }
+}
+```
+
+2. **一键生成项目模板**  
+在 AI 对话框输入：
+
+```
+下载小程序云开发模板
+```
+
+3. **可选模板类型**  
+- 小程序云开发模板
+- React 云开发模板
+- Vue 云开发模板
+- UniApp 云开发模板
+- 通用云开发模板
+
+👉 [查看全部官方模板及说明](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates)
+
+4. **详细教程**  
+👉 [查看完整配置与使用教程](#💻-支持的-ai-开发工具)
+
+---
+
 ## 💻 支持的 AI 开发工具
 
 | 工具 | 支持平台 | 查看指引 |
