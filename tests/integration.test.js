@@ -407,3 +407,5 @@ test('Security rule tools functionality test', async () => {
     if (transport) { try { await transport.close(); } catch {} }
   }
 }, 60000); 
+
+// 已移除云函数创建-调用-日志-详情全流程集成测试 

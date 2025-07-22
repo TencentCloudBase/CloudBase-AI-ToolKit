@@ -54,7 +54,7 @@
 > [!TIP] 
 > 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
-在 Trae 的 MCP 配置中添加：
+在 Trae 的 MCP 配置中添加，Trae 的 [MCP 参考文档](https://docs.trae.ai/ide/model-context-protocol#93db5d1e)：
 
 ```json
 {
@@ -69,7 +69,7 @@
 
 ### 步骤 3：启用 AI 规则
 
-创建 `.trae/rules/cloudbase.md` 文件，或直接对 AI 说：
+创建 `.trae/rules/cloudbase.md` 文件，或直接对  **Builder with MCP** 说：
 ```
 在当前项目中下载云开发 AI 规则
 ```

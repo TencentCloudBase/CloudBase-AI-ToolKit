@@ -350,7 +350,7 @@ npx clear-npx-cache
 
 #### 步骤1：使用 AI 规则
 
-模板中的 `.trae/rules` 目录包含面向 Trae 的云开发规则配置。如果不是从模板开始，可以让 AI 帮你下载云开发规则。
+模板中的 `.trae/rules` 目录包含面向 Trae 的云开发规则配置。如果不是从模板开始，可以让 AI 帮你下载云开发规则，例如，可以在配置 MCP 后，对 Builder with MCP 说：帮我在当前项目目录下载云开发 AI 规则
 
 #### 步骤2：配置 MCP
 
@@ -358,7 +358,7 @@ npx clear-npx-cache
 > [!TIP] 
 > 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
-需要在 Trae 的MCP 配置中添加：
+需要在 Trae 的MCP 配置中添加，Trae 的 [MCP 参考文档](https://docs.trae.ai/ide/model-context-protocol#93db5d1e)
 
 ```json
 {

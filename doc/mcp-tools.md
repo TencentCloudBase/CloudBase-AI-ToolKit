@@ -170,9 +170,29 @@ CloudBase AI ToolKit 提供了完整的 MCP 工具集，支持云开发的各种
 - `params` (object): 调用参数
 
 #### `getFunctionLogs`
-**功能**: 获取云函数日志
-**参数**: 
-- `options` (object): 包含函数名、时间范围等
+**功能**: 获取云函数日志（新版，仅返回基础信息LogList，不含日志详情）
+**参数**:
+- `name` (string): 函数名称
+- `offset` (number, 可选): 数据的偏移量，Offset+Limit 不能大于 10000
+- `limit` (number, 可选): 返回数据的长度，Offset+Limit 不能大于 10000
+- `startTime` (string, 可选): 查询的具体日期，例如：2017-05-16 20:00:00，只能与 EndTime 相差一天之内
+- `endTime` (string, 可选): 查询的具体日期，例如：2017-05-16 20:59:59，只能与 StartTime 相差一天之内
+- `requestId` (string, 可选): 执行该函数对应的 requestId
+- `qualifier` (string, 可选): 函数版本，默认为 $LATEST
+**返回**: LogList[]，每条日志包含 RequestId、RetryNum、RetCode、StartTime 等基础信息。
+> 如需日志详情，请用 RequestId 调用 getFunctionLogDetail 工具。
+
+#### `getFunctionLogDetail`
+**功能**: 根据 getFunctionLogs 返回的 RequestId 查询日志详情
+**参数**:
+- `startTime` (string, 可选): 查询的具体日期，例如：2017-05-16 20:00:00，只能与 EndTime 相差一天之内
+- `endTime` (string, 可选): 查询的具体日期，例如：2017-05-16 20:59:59，只能与 StartTime 相差一天之内
+- `requestId` (string): 执行该函数对应的 RequestId
+**返回**: 日志详情（LogJson、StartTime、Duration、MemUsage 等）
+
+> 推荐用法：
+> 1. 先用 getFunctionLogs 查询日志列表，获得 RequestId。
+> 2. 再用 getFunctionLogDetail 查询具体日志内容。
 
 ### 🔗 函数触发器
 
