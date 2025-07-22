@@ -398,6 +398,34 @@ CloudBase AI ToolKit 提供了完整的 MCP 工具集，支持云开发的各种
 - `requestId` (string): 请求唯一标识
 - `raw` (object): 原始返回
 
+### 🎁 激励计划
+
+#### `activateInviteCode`
+**功能**: 云开发 AI编程激励计划，通过邀请码激活用户激励
+**参数**:
+- `InviteCode` (string): 待激活的邀请码
+
+**示例**:
+```json
+{
+  "InviteCode": "TCBAI666"
+}
+```
+
+**返回**: 
+- `ErrorCode` (string): 错误码，成功为空
+- `ErrorMsg` (string): 错误信息，成功为空
+- `RequestId` (string): 请求唯一标识
+
+**典型错误码说明**:
+- 邀请码无效
+- 不能使用本人邀请码进行激活
+- 激活次数已达上限
+- 非新用户无法激活
+- 已参与过活动
+- 奖励发放完毕
+- 并发失败需重试
+
 ## 🚀 使用方式
 
 这些工具会在你与 AI 对话时自动调用，无需手动执行。例如：

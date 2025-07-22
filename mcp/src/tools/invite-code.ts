@@ -1,0 +1,75 @@
+import { z } from "zod";
+import { getCloudBaseManager, getEnvId } from '../cloudbase-manager.js';
+import { ExtendedMcpServer } from '../server.js';
+
+export function registerInviteCodeTools(server: ExtendedMcpServer) {
+  const cloudBaseOptions = server.cloudBaseOptions;
+  const getManager = () => getCloudBaseManager({ cloudBaseOptions });
+
+  server.registerTool?.(
+    "activateInviteCode",
+    {
+      title: "激活邀请码",
+      description: "云开发 AI编程激励计划，通过邀请码激活用户激励。",
+      inputSchema: {
+        InviteCode: z.string().describe("待激活的邀请码")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true,
+        category: "invite-code"
+      }
+    },
+    async ({ InviteCode }: { InviteCode: string }) => {
+      if (!InviteCode) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                ErrorCode: 'MissingParameter',
+                ErrorMsg: '邀请码为必填项',
+                RequestId: ''
+              }, null, 2)
+            }
+          ]
+        };
+      }
+      try {
+        const manager = await getManager({cloudBaseOptions});
+        const EnvId = await getEnvId(cloudBaseOptions);
+        const result = await manager.commonService().call({
+          Action: 'ActivateInviteCode',
+          Param: { InviteCode, EnvId }
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                ErrorCode: result?.ErrorCode || '',
+                ErrorMsg: result?.ErrorMsg || '',
+                RequestId: result?.RequestId || ''
+              }, null, 2)
+            }
+          ]
+        };
+      } catch (e: any) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                ErrorCode: 'Exception',
+                ErrorMsg: '激活失败，请稍后重试',
+                RequestId: ''
+              }, null, 2)
+            }
+          ]
+        };
+      }
+    }
+  );
+} 
