@@ -38,7 +38,7 @@ export function registerInviteCodeTools(server: ExtendedMcpServer) {
         };
       }
       try {
-        const manager = await getManager({cloudBaseOptions});
+        const manager = await getManager();
         const EnvId = await getEnvId(cloudBaseOptions);
         const result = await manager.commonService().call({
           Action: 'ActivateInviteCode',
