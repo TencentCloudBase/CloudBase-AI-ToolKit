@@ -3,7 +3,23 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { createCloudBaseMcpServer } from "./server.js";
 import { telemetryReporter, reportToolkitLifecycle } from "./utils/telemetry.js";
-import { info } from "./utils/logger.js";
+import { info, warn } from './utils/logger.js';
+
+// 劫持 console.log/info/warn，防止污染 stdout 协议流
+const joinArgs = (...args: any[]) => args.map(a => {
+  if (typeof a === 'string') return a;
+  try { return JSON.stringify(a); } catch { return String(a); }
+}).join(' ');
+
+(globalThis as any).console._originLog = console.log;
+(globalThis as any).console._originInfo = console.info;
+(globalThis as any).console._originWarn = console.warn;
+// 不劫持 console.error，保持输出到 stderr
+
+console.log = (...args) => info(joinArgs(...args));
+console.info = (...args) => info(joinArgs(...args));
+console.warn = (...args) => warn(joinArgs(...args));
+// console.error 保持原样
 
 // 记录启动时间
 const startTime = Date.now();
