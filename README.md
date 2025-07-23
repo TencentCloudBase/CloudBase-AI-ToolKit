@@ -187,7 +187,7 @@ npx clear-npx-cache
 |------|----------|----------|
 | [Cursor](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) | 独立 IDE| [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) |
 | [WindSurf](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) | 独立 IDE, VSCode、JetBrains 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) |
-| [CodeBuddy](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) | 独立 IDE（内置 CloudBase）、VS Code、JetBrains、微信开发者工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) |
+| [CodeBuddy](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) | VS Code、JetBrains、微信开发者工具插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) |
 | [CLINE](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) | VS Code 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) |
 | [GitHub Copilot](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) | VS Code 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) |
 | [Trae](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/trae) | 独立 IDE | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/trae) |
@@ -845,3 +845,258 @@ AI 就会自动完成弹出登录腾讯云界面以及云开发的环境选择
 ```
 退出云开发
 ```
+
+AI 就会清理本地的配置，后续可以再要求 AI 登录云开发来重新登录。
+
+在登录成功后，可以确认 AI 已经连接到云开发
+
+```
+查询当前云开发环境信息
+```
+
+向 AI 描述你的需求,进行开发：
+
+```
+做一个双人在线对战五子棋网站，支持联机对战，最后进行部署
+```
+
+AI 会自动：
+- 📝 生成前后端代码  
+- 🚀 部署到云开发
+- 🔗 返回在线访问链接
+
+开发过程中如果遇到报错，可以把错误信息发给 AI 来进行排障
+
+```
+报错了，错误是xxxx
+```
+
+
+也可以让 AI 结合云函数日志进行调试和修改代码
+
+```
+云函数代码运行不符合需求，需求是 xxx，请查看日志和数据进行调试，并进行修复
+```
+
+## 🔌 插件系统
+
+CloudBase MCP 采用插件化架构，支持按需启用工具模块。[查看详细文档](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins)
+
+### 快速配置
+
+```json
+{
+  "env": {
+    "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+  }
+}
+```
+
+
+## 📚 教程
+
+### 📄 文章
+- [1小时开发微信小游戏《我的早餐店》——基于CloudBase AI Toolkit](https://cloud.tencent.com/developer/article/2532595)
+- [AI Coding宝藏组合：Cursor + Cloudbase-AI-Toolkit 开发游戏实战](https://juejin.cn/post/7518783423277695028#comment)
+- [我用「CloudBase AI ToolKit」一天做出"网络热词"小程序](https://cloud.tencent.com/developer/article/2537907)
+- [我用AI开发并上线了一款小程序：解忧百宝盒](https://mp.weixin.qq.com/s/DYekRheNQ2u8LAl_F830fA)
+- [2天上线一款可联机的分手厨房小游戏](https://mp.weixin.qq.com/s/nKfhHUf8w-EVKvA0u1rdeg)
+- [AI时代，从零基础到全栈开发者之路：Figma + Cursor + Cloudbase快速搭建微信小程序](https://mp.weixin.qq.com/s/nT2JsKnwBiup1imniCr2jA)
+
+### 📱 应用项目
+- [简历助手小程序](https://gitcode.com/qq_33681891/resume_template)
+- [五子棋联机游戏](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/gomoku-game)
+- [分手厨房联机游戏](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/overcooked-game)
+- [电商管理后台](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/ecommerce-management-backend)
+- [短视频小程序](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-ai-video)
+- [约会小程序](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/dating)
+
+### 🎥 视频教程
+- [云开发CloudBase：用AI开发一款分手厨房小游戏](https://www.bilibili.com/video/BV1v5KAzwEf9/)
+- [软件3.0：AI 编程新时代的最佳拍档 CloudBase AI ToolKit，以开发微信小程序为例](https://www.bilibili.com/video/BV15gKdz1E5N/)
+
+---
+
+## 🎯 使用案例
+
+### 案例1：双人在线对战五子棋
+
+**开发过程：**
+1. 输入需求："做个双人在线对战五子棋网站，支持联机对战"
+2. AI 生成：Web 应用 + 云数据库 + 实时数据推送
+3. 自动部署并获得访问链接
+
+👉 **体验地址：** [五子棋游戏](https://cloud1-5g39elugeec5ba0f-1300855855.tcloudbaseapp.com/gobang/#/)
+
+<details>
+<summary>📸 查看开发截图</summary>
+
+| 开发过程 | 最终效果 |
+|---------|---------|
+| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-001.png" width="400" alt="开发过程截图1"> | <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-004.png" width="400" alt="五子棋游戏效果"> |
+| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-002.png" width="400" alt="开发过程截图2"> | 支持双人在线对战<br>实时棋局同步 |
+
+</details>
+
+### 案例2：AI 宠物养成小程序
+
+**开发过程：**
+1. 输入："开发一个宠物小精灵养成小程序，使用 AI 增强互动"
+2. AI 生成：小程序 + 云数据库 + AI 云函数
+3. 导入微信开发者工具即可发布
+
+<details>
+<summary>📸 查看开发截图与小程序预览</summary>
+
+<table>
+<tr>
+<td width="50%">
+<b>🖥️ 开发截图</b><br>
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-005.png" width="100%" alt="AI宠物小程序开发截图">
+<br>
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-003.png" width="100%" alt="小程序开发过程">
+</td>
+<td width="50%">
+<b>📱 小程序预览</b><br>
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-006.png" width="200" alt="小程序界面1">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-007.png" width="200" alt="小程序界面2">
+<br><br>
+<b>📲 体验二维码</b><br>
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-008.png" width="150" alt="小程序体验二维码">
+</td>
+</tr>
+</table>
+
+</details>
+
+### 案例3：智能问题诊断
+
+当应用出现问题时：
+1. AI 自动查看云函数日志
+2. 分析错误原因并生成修复代码  
+3. 自动重新部署
+
+<details>
+<summary>📸 查看智能诊断过程</summary>
+
+<div align="center">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-009.png" width="600" alt="智能问题诊断过程">
+<br>
+<i>AI 自动分析日志并生成修复方案</i>
+</div>
+
+</details>
+
+---
+
+## 🌟 为什么选择 CloudBase？
+
+- **⚡ 极速部署**：国内节点,访问速度比海外更快
+- **🛡️ 稳定可靠**：330 万开发者选择的 Serverless 平台
+- **🔧 开发友好**：专为AI时代设计的全栈平台，支持自动环境配置
+- **💰 成本优化**：Serverless 架构更具弹性，新用户开发期间可以免费体验
+
+
+## 📋 常见问题 FAQ
+
+如有迁移、集成等常见疑问，请查阅 [FAQ 常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)。 
+
+## 💬 技术交流群
+
+遇到问题或想要交流经验？加入我们的技术社区！
+
+### 🔥 微信交流群
+
+<div align="center">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/toolkit-qrcode.png" width="200" alt="微信群二维码">
+<br>
+<i>扫码加入微信技术交流群</i>
+</div>
+
+**群内你可以：**
+- 💡 分享你的 AI + 云开发项目
+- 🤝 技术交流和开发问题沟通
+- 📢 获取最新功能更新和最佳实践
+- 🎯 参与产品功能讨论和建议
+
+### 📱 其他交流方式
+
+| 平台 | 链接 | 说明 |
+|------|------|------|
+| **官方文档** | [📖 查看文档](https://docs.cloudbase.net/) | 完整的云开发文档 |
+| **Issue 反馈** | [🐛 提交问题](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues) | Bug 反馈和功能请求 |
+
+### 🎉 社区活动
+
+- **每周技术分享**：群内定期分享 AI + 云开发最佳实践
+- **项目展示**：展示你用 AI 开发的精彩项目
+- **问题答疑**：腾讯云开发团队成员在线答疑
+- **新功能预览**：第一时间体验最新功能
+
+
+## 🛠️ 云开发 MCP 工具一览
+
+目前共有 **38 个工具**，涵盖环境管理、数据库操作、云函数管理、静态托管、安全规则等核心功能。
+
+📋 **完整工具文档**: [查看 MCP 工具详细说明](doc/mcp-tools.md) | [查看工具规格 JSON](scripts/tools.json)
+
+### 🔧 工具分类概览
+
+| 分类 | 工具数量 | 主要功能 |
+|------|----------|----------|
+| 🌍 **环境管理** | 4 个 | 登录认证、环境信息查询、域名管理 |
+| 🗄️ **数据库操作** | 11 个 | 集合管理、文档 CRUD、索引操作、数据模型 |
+| ⚡ **云函数管理** | 9 个 | 函数创建、更新、调用、日志、触发器 |
+| 🌐 **静态托管** | 5 个 | 文件上传管理、域名配置、网站部署 |
+| 🔒 **安全规则管理** | 2 个 | 统一管理数据库、云函数、存储的安全规则，支持简易权限和自定义规则 |
+| 📁 **文件操作** | 2 个 | 远程文件下载、云存储上传 |
+| 🛠️ **工具支持** | 4 个 | 项目模板、知识库搜索、联网搜索、交互对话 |
+| 🔌 **HTTP访问** | 1 个 | HTTP 函数访问配置 |
+
+### 💡 工具优化说明
+
+我们将原来 40 个工具优化为 36 个，通过合并相关功能提供更好的使用体验
+
+🔗 **想了解每个工具的详细功能？** 请查看 [MCP 工具完整文档](doc/mcp-tools.md)
+
+## 🏗️ 架构原理
+
+```mermaid
+graph TD
+    A[开发者] --> B[AI IDE]
+    B -->|使用| C[CloudBase AI 规则]
+    C --> D[生成代码]
+    B -->|调用| E[CloudBase MCP]
+    E --> F{检测部署}
+    F -->|成功| G[云开发平台]
+    F -->|失败| H[返回日志]
+    H --> I[AI 修复]
+    I --> E
+    G --> J[线上应用]
+    J --> K[Web/小程序/API]
+```
+
+## 🔒 数据统计说明
+
+为了改进产品体验，CloudBase AI ToolKit 会收集匿名使用统计信息：
+
+- **收集内容**：工具调用情况、基础环境信息（操作系统、Node.js版本等）
+- **隐私保护**：不收集代码内容、文件路径等敏感信息，仅用于产品改进
+
+可通过环境变量 `CLOUDBASE_MCP_TELEMETRY_DISABLED` 设置为 `true` 禁用数据统计
+
+## 🤝 贡献指南
+
+欢迎提交 Issue 和 Pull Request！请查看我们的[贡献指南](CONTRIBUTING.md)了解如何参与项目开发。
+
+## 📄 开源协议
+
+[MIT](LICENSE) © TencentCloudBase
+
+---
+
+⭐ 如果这个项目对你有帮助，请给我们一个 Star！
+
+[![Star History Chart](https://api.star-history.com/svg?repos=TencentCloudBase/CloudBase-AI-ToolKit&type=Timeline)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+
+![Alt](https://repobeats.axiom.co/api/embed/60598d4f0cad83043b6317528e0fa0691122003d.svg "Repobeats analytics image")
