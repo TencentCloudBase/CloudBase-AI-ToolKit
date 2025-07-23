@@ -62,9 +62,9 @@ export function registerInviteCodeTools(server: ExtendedMcpServer) {
             {
               type: "text",
               text: JSON.stringify({
-                ErrorCode: 'Exception',
-                ErrorMsg: '激活失败，请稍后重试' + e.message,
-                RequestId: ''
+                ErrorCode: e.code || 'Exception',
+                ErrorMsg: '激活失败：' + e.message,
+                RequestId: e.RequestId || ''
               }, null, 2)
             }
           ]
