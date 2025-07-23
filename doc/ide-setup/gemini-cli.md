@@ -74,7 +74,7 @@ npx @google/gemini-cli
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"]
+      "args": ["--cache", ".", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }

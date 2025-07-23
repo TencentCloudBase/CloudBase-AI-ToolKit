@@ -2,7 +2,11 @@
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp@latest"]
+      "args": [
+        "--cache",
+        ".",
+        "@cloudbase/cloudbase-mcp@latest"
+      ]
     }
   }
 }

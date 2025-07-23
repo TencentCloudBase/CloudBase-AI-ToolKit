@@ -24,7 +24,7 @@
 
 ### NPM 命令
 ```bash
-npx @cloudbase/cloudbase-mcp@latest
+npx --cache . @cloudbase/cloudbase-mcp@latest
 ```
 
 ### MCP 配置
@@ -33,7 +33,7 @@ npx @cloudbase/cloudbase-mcp@latest
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"]
+      "args": ["--cache", ".", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }

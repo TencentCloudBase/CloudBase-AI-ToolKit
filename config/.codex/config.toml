@@ -3,4 +3,4 @@
 
 [mcp_servers.cloudbase]
 command = "npx"
-args = ["-y", "@cloudbase/cloudbase-mcp@latest"]
+args = ["--cache", ".", @cloudbase/cloudbase-mcp@latest"]

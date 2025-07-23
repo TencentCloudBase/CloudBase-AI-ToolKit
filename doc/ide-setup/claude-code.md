@@ -62,7 +62,8 @@
     "cloudbase": {
       "command": "npx",
       "args": [
-        "-y",
+        "--cache",
+        ".",
         "@cloudbase/cloudbase-mcp@latest"
       ]
     }

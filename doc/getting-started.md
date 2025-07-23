@@ -50,7 +50,7 @@
   "mcpServers": {
     "cloudbase": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"]
+      "args": ["--cache", ".", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
