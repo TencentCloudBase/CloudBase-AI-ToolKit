@@ -19,23 +19,15 @@ function updateMdcVersion(version) {
   const content = fs.readFileSync(MDC_PATH, 'utf8');
   const versionLine = `cloudbaseAIVersion：${version}`;
   const lines = content.split(/\r?\n/);
-  let found = false;
-  const newLines = lines.map(line => {
-    if (/^版本号：/.test(line)) {
-      found = true;
-      return versionLine;
-    }
-    return line;
-  });
-  if (!found) {
-    // 插入到第二行（假设第一行是标题）
-    if (newLines.length > 1) {
-      newLines.splice(1, 0, versionLine);
-    } else {
-      newLines.push(versionLine);
-    }
+  // 移除所有 cloudbaseAIVersion 行
+  const filteredLines = lines.filter(line => !/^cloudbaseAIVersion：/.test(line));
+  // 插入到第二行（假设第一行是 --- 或 yaml 标题）
+  if (filteredLines.length > 1) {
+    filteredLines.splice(1, 0, versionLine);
+  } else {
+    filteredLines.push(versionLine);
   }
-  fs.writeFileSync(MDC_PATH, newLines.join('\n'), 'utf8');
+  fs.writeFileSync(MDC_PATH, filteredLines.join('\n'), 'utf8');
   console.log(`cloudbase-rules.mdc 已更新版本号：${version}`);
 }
 

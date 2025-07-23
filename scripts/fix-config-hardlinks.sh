@@ -29,6 +29,7 @@ TARGET_FILES=(
     "config/CLAUDE.md"
     "config/.gemini/GEMINI.md"
     "config/AGENTS.md"
+    "config/.qwen/QWEN.md"
 )
 
 echo -e "${BLUE}🔧 CloudBase AI 配置文件硬链接修复工具${NC}"
