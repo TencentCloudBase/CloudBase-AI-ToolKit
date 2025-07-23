@@ -8,7 +8,7 @@ import { registerStorageTools } from "./tools/storage.js";
 import { registerRagTools } from './tools/rag.js';
 import { registerSetupTools } from "./tools/setup.js";
 import { registerInteractiveTools } from "./tools/interactive.js";
-import { registerMiniprogramTools } from "./tools/miniprogram.js";
+// import { registerMiniprogramTools } from "./tools/miniprogram.js";
 import { registerSecurityRuleTools } from "./tools/security-rule.js";
 import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
 import { registerGatewayTools } from "./tools/gateway.js";
@@ -37,7 +37,7 @@ const AVAILABLE_PLUGINS: Record<string, PluginDefinition> = {
   rag: { name: 'rag', register: registerRagTools },
   download: { name: 'download', register: registerDownloadTools },
   gateway: { name: 'gateway', register: registerGatewayTools },
-  miniprogram: { name: 'miniprogram', register: registerMiniprogramTools },
+  // miniprogram: { name: 'miniprogram', register: registerMiniprogramTools },
   'security-rule': { name: 'security-rule', register: registerSecurityRuleTools },
   'invite-code': { name: 'invite-code', register: registerInviteCodeTools },
 };
