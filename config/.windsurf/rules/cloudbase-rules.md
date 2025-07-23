@@ -1,6 +1,5 @@
 ---
 cloudbaseAIVersion：1.8.21
-cloudbaseAIVersion：1.8.20
 description: CloudBase AI 开发规则索引 - 防止不同开发场景的规则互相干扰
 globs: 
 alwaysApply: true
