@@ -1,15 +1,12 @@
 import express from 'express';
 import http from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import open from 'open';
 import { debug, info, warn, error, getLogs, getLoggerStatus, clearLogs } from './utils/logger.js';
 
 // 动态导入 open 模块，兼容 ESM/CJS 环境
 async function openUrl(url: string, options?: any) {
-  try {
-    const openModule = await import('open');
-    const open = openModule.default || openModule;
+  try { 
     return await open(url, options);
   } catch (err) {
     error('Failed to import or use open module', err);
