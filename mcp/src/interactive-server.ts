@@ -9,7 +9,7 @@ async function openUrl(url: string, options?: any) {
   try { 
     return await open(url, options);
   } catch (err) {
-    error('Failed to import or use open module', err);
+    error(`Failed to open ${url} ${options} ${err instanceof Error ? err.message : err} `, err);
     warn(`Please manually open: ${url}`);
   }
 }
