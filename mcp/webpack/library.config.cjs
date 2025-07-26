@@ -2,6 +2,7 @@ const path = require('path');
 const { merge } = require('webpack-merge');
 const createBaseConfig = require('./base.config.cjs');
 const createMinimalExternals = require('./minimal-externals.cjs');
+const webpack = require('webpack');
 
 /**
  * 库文件配置
@@ -44,6 +45,12 @@ function createLibraryConfigs() {
         type: 'commonjs2'
       }
     },
+    plugins: [
+      new webpack.DefinePlugin({ 
+        // 修复 import.meta.url 在编译时被替换成绝对路径的问题
+        "import.meta.url": "('file://' + __filename)",
+      }),
+    ],
     externals: createMinimalExternals('commonjs')
   });
 

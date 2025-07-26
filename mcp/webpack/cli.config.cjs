@@ -17,7 +17,11 @@ function createCLIConfigs() {
       banner: '#!/usr/bin/env node',
       raw: true,
       entryOnly: true
-    })
+    }),
+    new webpack.DefinePlugin({ 
+      // 修复 import.meta.url 在编译时被替换成绝对路径的问题
+      "import.meta.url": "('file://' + __filename)",
+    }),
   ];
 
   // CJS 版本配置
