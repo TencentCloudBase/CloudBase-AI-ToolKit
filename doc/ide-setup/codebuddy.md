@@ -72,7 +72,7 @@
   "mcpServers": {
     "cloudbase": {
       "command": "npx",
-      "args": ["--cache", ".","@cloudbase/cloudbase-mcp@latest"]
+      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }

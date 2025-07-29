@@ -23,7 +23,7 @@ export CLOUDBASE_MCP_PLUGINS_ENABLED="env,database,functions,hosting,storage,set
   "mcpServers": {
     "cloudbase": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "MINIPROGRAM_PRIVATE_KEY": "你的小程序私钥",
         "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting,storage,setup,interactive,rag,gateway,download,miniprogram"

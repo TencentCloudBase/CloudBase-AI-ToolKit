@@ -445,7 +445,7 @@ MCP 工具通过以下配置添加到你的 AI IDE 中：
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["--cache", ".", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -464,7 +464,7 @@ MCP 工具通过以下配置添加到你的 AI IDE 中：
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["-y", "@cloudbase/cloudbase-mcp"],
+      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "TENCENTCLOUD_SECRETID": "腾讯云 SecretId",
         "TENCENTCLOUD_SECRETKEY": "腾讯云 SecretKey",

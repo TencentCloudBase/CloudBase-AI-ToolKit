@@ -66,8 +66,7 @@
       "timeout": 60,
       "command": "npx",
       "args": [
-        "--cache",
-        ".",
+        "npm-global-exec@latest",
         "@cloudbase/cloudbase-mcp@latest"
       ],
       "transportType": "stdio",

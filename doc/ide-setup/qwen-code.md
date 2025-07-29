@@ -61,9 +61,9 @@ npx @qwen-code/qwen-code
 ```json
 {
   "mcpServers": {
-    "cloudbase-mcp": {
+    "cloudbase": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"]
+      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }

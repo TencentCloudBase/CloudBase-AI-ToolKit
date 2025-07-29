@@ -35,7 +35,7 @@ CloudBase MCP 采用插件化架构，支持按需启用工具模块，解决 MC
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["--cache", ".", "@cloudbase/cloudbase-mcp@latest"],
+      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
       }
@@ -51,7 +51,7 @@ CloudBase MCP 采用插件化架构，支持按需启用工具模块，解决 MC
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["--cache", ".""@cloudbase/cloudbase-mcp@latest"],
+      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "CLOUDBASE_MCP_PLUGINS_DISABLED": "rag,download,gateway"
       }

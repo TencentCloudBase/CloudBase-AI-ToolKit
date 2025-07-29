@@ -64,9 +64,9 @@ Add the following config to your AI IDE (e.g., Cursor) to enable all CloudBase A
 ```json
 {
   "mcpServers": {
-    "cloudbase-mcp": {
+    "cloudbase": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"]
+      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }

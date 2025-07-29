@@ -65,21 +65,16 @@ AI 会自动下载并更新最新的规则配置到你的项目目录。
 
 ### 如何全局安装 CloudBase AI ToolKit？
 
-如果你希望全局安装 CloudBase AI ToolKit 以避免每次使用 npx 下载，可以使用以下方法：
+如果你希望全局安装 CloudBase AI ToolKit 以避免每次使用 npx 下载，推荐使用 `npm-global-exec` 方式，这种方式更稳定且自动处理依赖：
 
-**1. 全局安装**
-```bash
-npm i @cloudbase/cloudbase-mcp@latest -g
-```
-
-**2. 更新 MCP 配置**
-安装完成后，将 MCP 配置中的 `command` 从 `npx` 改为直接使用命令：
+**推荐配置方式：**
 
 ```json
 {
   "mcpServers": {
     "cloudbase": {
-      "command": "cloudbase-mcp"
+      "command": "npx",
+      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
@@ -89,10 +84,9 @@ npm i @cloudbase/cloudbase-mcp@latest -g
 - 启动速度更快，无需每次下载
 - 避免网络问题导致的启动失败
 - 减少 npx 缓存相关问题
-
-**注意事项：**
-- 需要手动更新：`npm update @cloudbase/cloudbase-mcp -g`
-- 确保全局安装的版本是最新的
+- 自动安装和管理依赖
+- 避免全局安装可能遇到的权限和环境问题
+- 自动获取最新版本
 
 ---
 
@@ -103,17 +97,9 @@ npm i @cloudbase/cloudbase-mcp@latest -g
 **1. 检查环境配置**
 - 确保 Node.js 版本为 v18.15.0 及以上
 - macOS 用户且使用 nvm 管理 Node.js 的，请务必设置默认 Node 版本为 v18.15.0 及以上，避免不同终端版本不一致导致的问题。
-  设置默认版本命令示例：
-  ```bash
-  nvm alias default 18.15.0
-  ```
 - 检查网络连接，建议设置 npm 源为腾讯镜像源：
   ```bash
   npm config set registry https://mirrors.cloud.tencent.com/npm/
-  ```
-- 输入如下命令测试，若无异常报错则为正常启动服务
-  ```bash
-  npx @cloudbase/cloudbase-mcp@latest
   ```
 
 **2. 清理缓存**
@@ -131,8 +117,8 @@ npm i @cloudbase/cloudbase-mcp@latest -g
 - 如果上述方法无效，可以删除 MCP 配置后重新添加
 - 确保使用最新的配置格式
 
-**5. 尝试全局安装**
-- 如果 npx 方式持续有问题，可以尝试[全局安装方式](#如何全局安装-cloudbase-ai-toolkit)
+**5. 尝试 npm-global-exec 方式**
+- 如果 npx 方式持续有问题，推荐使用 npm-global-exec 方式，这种方式更稳定且自动处理依赖
 
 **6. 使用 inspector 工具验证 MCP 连接**
 - 如果上述方法都无效，可以通过 inspector 工具进一步排查 MCP 是否正常：
@@ -155,6 +141,62 @@ npm i @cloudbase/cloudbase-mcp@latest -g
 
 
 ---
+
+### MCP 配置后提示 MCP error -32001: Request timed out
+
+如果在配置 MCP 时遇到 `MCP error -32001: Request timed out` 错误，可以按以下步骤解决：
+
+**1. 检查环境配置**
+- 确保 Node.js 版本为 v18.15.0 及以上
+- macOS 用户且使用 nvm 管理 Node.js 的，请务必设置默认 Node 版本为 v18.15.0 及以上，避免不同终端版本不一致导致的问题。
+  设置默认版本命令示例：
+  ```bash
+  nvm alias default 18.15.0
+  ```
+- 检查网络连接，建议设置 npm 源为腾讯镜像源：
+  ```bash
+  npm config set registry https://mirrors.cloud.tencent.com/npm/
+  ```
+
+**2. 使用 npm-global-exec 工具安装 @cloudbase/cloudbase-mcp 到本地**
+
+2.1 在终端中执行如下命令
+```bash
+npx -y npm-global-exec@latest @cloudbase/cloudbase-mcp@latest
+```
+
+2.2 执行完成后，确认终端命令执行结果如下图，表示已安装成功 @cloudbase/cloudbase-mcp 且测试启动server 正常（确认后这里可以 ctrl+c 关掉）
+![](https://qcloudimg.tencent-cloud.cn/raw/223c92ffcb54fad9210ec6d77a61dcea.png)
+
+> 可以在用户 home 主目录下找到 cloudbase-mcp 文件夹，确认里面是否正确安装了 @cloudbase/cloudbase-mcp
+
+**3. 重新配置 MCP**
+
+3.1 重启 IDE
+
+3.2 删除原有的 CloudBase MCP Server 配置，并使用新的 MCP Server 配置如下
+
+```json
+{
+  "mcpServers": {
+	  "cloudbase": {
+		  "command": "npx",
+		  "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
+		}
+	}
+}
+```
+
+3.3 等待约10-20s，可以看到 CloudBase MCP 正常
+
+- CodeBuddy中正常配置效果
+![](https://qcloudimg.tencent-cloud.cn/raw/3ad6cefbfee790ad3b42eea0cdb752cb.png)
+
+- Visual Studio Code 中 CodeBuddy 插件配置 CloudBase MCP 正常效果
+![](https://qcloudimg.tencent-cloud.cn/raw/b6e70f722768d4a844280102378358fe.png)
+
+- Cursor 中正常配置效果
+![](https://qcloudimg.tencent-cloud.cn/raw/344fe2c5a96a3e19c6cafc2bcbe73f96.png)
 
 ### MCP 配置不生效怎么办？
 
@@ -183,7 +225,7 @@ Safari 浏览器在某些情况下可能存在兼容性问题，影响授权流�
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "TENCENTCLOUD_SECRETID": "腾讯云 SecretId",
         "TENCENTCLOUD_SECRETKEY": "腾讯云 SecretKey",

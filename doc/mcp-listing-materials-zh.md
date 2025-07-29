@@ -33,7 +33,7 @@ npx --cache . @cloudbase/cloudbase-mcp@latest
   "mcpServers": {
     "cloudbase-mcp": {
       "command": "npx",
-      "args": ["--cache", ".", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
     }
   }
 }
