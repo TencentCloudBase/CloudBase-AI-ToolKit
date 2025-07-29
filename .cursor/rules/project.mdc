@@ -59,7 +59,13 @@ alwaysApply: true
 3. 执行硬链接脚本确保规则文件同步
 4. 创建 `doc/ide-setup/{ide-name}.md` 配置文档
 5. 更新 `README.md`、`doc/index.md`、`doc/faq.md` 中的 AI IDE 支持列表,README 中注意 detail 中的内容也要填写
-6. 验证硬链接状态和文档完整性
+6. **更新 IDE 文件映射**：
+   - 在 `mcp/src/tools/setup.ts` 的 `ALL_IDE_FILES` 数组中添加新IDE的配置文件路径
+   - 在 `IDE_FILE_MAPPINGS` 对象中添加新IDE的文件映射关系
+   - 在 `IDE_DESCRIPTIONS` 对象中添加新IDE的描述
+   - 在 `IDE_TYPES` 数组中添加新IDE的类型
+7. 验证硬链接状态和文档完整性
+8. 测试IDE特定下载功能是否正常工作
 </add_aiide>
 
 
@@ -151,7 +157,13 @@ git push github && git push cnb --force
 3. 执行硬链接脚本确保规则文件同步
 4. 创建 `doc/ide-setup/{ide-name}.md` 配置文档
 5. 更新 `README.md`、`doc/index.md`、`doc/faq.md` 中的 AI IDE 支持列表,README 中注意 detail 中的内容也要填写
-6. 验证硬链接状态和文档完整性
+6. **更新 IDE 文件映射**：
+   - 在 `mcp/src/tools/setup.ts` 的 `ALL_IDE_FILES` 数组中添加新IDE的配置文件路径
+   - 在 `IDE_FILE_MAPPINGS` 对象中添加新IDE的文件映射关系
+   - 在 `IDE_DESCRIPTIONS` 对象中添加新IDE的描述
+   - 在 `IDE_TYPES` 数组中添加新IDE的类型
+7. 验证硬链接状态和文档完整性
+8. 测试IDE特定下载功能是否正常工作
 </add_aiide>
 
 

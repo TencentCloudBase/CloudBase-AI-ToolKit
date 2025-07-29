@@ -24,7 +24,7 @@ TARGET_FILES=(
     "config/.rules/cloudbase-rules.md"
     "config/.clinerules/cloudbase-rules.mdc"
     "config/.github/copilot-instructions.md"
-    "config/.comate/rules/cloudbaase-rules.mdr"
+    "config/.comate/rules/cloudbase-rules.mdr"
     "config/.augment-guidelines"
     "config/CLAUDE.md"
     "config/.gemini/GEMINI.md"

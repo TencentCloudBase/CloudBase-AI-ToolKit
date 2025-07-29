@@ -59,6 +59,7 @@
 > - 需求、设计、任务分明，自动生成 requirements.md、design.md、tasks.md
 > - 摆脱“拉霸式” vibe coding，开发过程可控、可追溯
 > - 让 AI 协助梳理需求、设计方案、拆分任务，人类专注决策与评审
+- **Spec 工作流已内置在云开发 AI 规则中**，下载最新模板或让 AI 在当前项目下载云开发 AI 规则即可获取
 
 ---
 🚩 **快速上手 CloudBase AI ToolKit**
@@ -83,6 +84,15 @@
 ```
 下载小程序云开发模板
 ```
+
+如果你只想下载特定IDE的配置文件，避免项目文件混乱，可以指定IDE类型：
+```
+下载小程序云开发模板，只包含Cursor配置
+下载React云开发模板，只包含WindSurf配置
+下载通用云开发模板，只包含Claude Code配置
+```
+
+支持的IDE类型：cursor、windsurf、codebuddy、claude-code、cline、gemini-cli、opencode、qwen-code、baidu-comate、openai-codex-cli、augment-code、github-copilot、roocode、tongyi-lingma、trae、vscode
 
 3. **可选模板类型**  
 - 小程序云开发模板
@@ -173,6 +183,13 @@ npx clear-npx-cache
 #### 🛠️ 已有项目增强
 
 如果你已经有自己的项目，只需在配置好 MCP 后，只需要对 AI 说 "在当前项目中下载云开发 AI 规则"，即可一键下载并补全 AI 编辑器规则配置到当前项目目录，无需手动操作。
+
+如果你只想下载特定IDE的配置文件，避免项目文件混乱，可以指定IDE类型：
+```
+在当前项目中下载云开发 AI 规则，只包含Cursor配置
+在当前项目中下载云开发 AI 规则，只包含WindSurf配置
+在当前项目中下载云开发 AI 规则，只包含Claude Code配置
+```
 
 
 ### 2. 配置你的 AI IDE

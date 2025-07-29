@@ -91,6 +91,11 @@ args = ["@cloudbase/cloudbase-mcp@latest"]
 在当前项目中下载云开发 AI 规则
 ```
 
+如果你只想下载OpenAI Codex CLI相关的配置文件，避免项目文件混乱，可以指定IDE类型：
+```
+在当前项目中下载云开发 AI 规则，只包含OpenAI Codex CLI配置
+```
+
 ### 步骤 4：开始开发
 
 启动 OpenAI Codex CLI：

@@ -353,6 +353,13 @@ CloudBase AI ToolKit 提供了完整的 MCP 工具集，支持云开发的各种
 **功能**: 下载CloudBase项目模板（React、小程序、AI编辑器配置等）
 **参数**: 
 - `template` (string): react/vue/miniprogram/uniapp/rules
+- `ide` (string, 可选): 指定要下载的IDE类型，默认为"all"下载所有IDE配置。支持：cursor、windsurf、codebuddy、claude-code、cline、gemini-cli、opencode、qwen-code、baidu-comate、openai-codex-cli、augment-code、github-copilot、roocode、tongyi-lingma、trae、vscode
+- `overwrite` (boolean, 可选): 是否覆盖已存在的文件，默认为false
+
+**使用示例**:
+- `下载小程序云开发模板，只包含Cursor配置`
+- `下载React云开发模板，只包含WindSurf配置`
+- `下载通用云开发模板，只包含Claude Code配置`
 
 #### `searchKnowledgeBase`
 **功能**: 智能检索云开发知识库，通过向量搜索获取专业文档与答案

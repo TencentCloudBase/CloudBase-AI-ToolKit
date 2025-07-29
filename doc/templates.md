@@ -54,6 +54,15 @@
 
 即可一键下载并补全 AI 编辑器规则配置到当前项目目录，无需手动操作。
 
+如果你只想下载特定IDE的配置文件，避免项目文件混乱，可以指定IDE类型：
+```
+在当前项目中下载云开发 AI 规则，只包含Cursor配置
+在当前项目中下载云开发 AI 规则，只包含WindSurf配置
+在当前项目中下载云开发 AI 规则，只包含Claude Code配置
+```
+
+支持的IDE类型包括：cursor、windsurf、codebuddy、claude-code、cline、gemini-cli、opencode、qwen-code、baidu-comate、openai-codex-cli、augment-code、github-copilot、roocode、tongyi-lingma、trae、vscode 等。
+
 ## 📁 模板包含内容
 
 所有模板都包含以下配置：
