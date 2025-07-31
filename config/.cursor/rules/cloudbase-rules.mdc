@@ -75,6 +75,7 @@ alwaysApply: true
 ### rules/miniprogram-development.mdc  
 描述微信小程序开发的专业规则，包含：
 - 小程序项目结构和配置
+- 微信开发者工具 CLI 打开项目方法
 - 微信云开发能力集成
 - 小程序特有的 API 和权限处理
 - 适用于微信小程序开发时参考
