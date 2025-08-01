@@ -11,7 +11,9 @@ module.exports = [
   /^@aws-sdk\//,
   
   // Babel 相关 (体积过大，且有兼容性问题)
-  'babel-core', /^@babel\//, 'core-js-compat',
+  'babel-core', 'core-js-compat',
+  // 暂时不排除 Babel 相关依赖，因为它们都是必需的
+  // /^@babel\//,
   
   // 终端相关 (有兼容性问题)
   'terminal-kit',
