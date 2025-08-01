@@ -5,7 +5,28 @@ import open from 'open';
 import { debug, info, warn, error, getLogs, getLoggerStatus, clearLogs } from './utils/logger.js';
 
 // 动态导入 open 模块，兼容 ESM/CJS 环境
-async function openUrl(url: string, options?: any) {
+async function openUrl(url: string, options?: any, server?: any) {
+  // 检查是否为 CodeBuddy IDE
+  if (process.env.INTEGRATION_IDE === 'CodeBuddy' && server) {
+    try {
+      // 发送通知而不是直接打开网页
+      server.server.sendLoggingMessage({ 
+        level: "notice", 
+        data: {
+          "type": "tcb",
+          "url": url
+        }
+      });
+      info(`CodeBuddy IDE: 已发送网页打开通知 - ${url}`);
+      return;
+    } catch (err) {
+      error(`Failed to send logging message for ${url}: ${err instanceof Error ? err.message : err}`, err);
+      // 如果发送通知失败，回退到直接打开
+      warn(`回退到直接打开网页: ${url}`);
+    }
+  }
+  
+  // 默认行为：直接打开网页
   try { 
     return await open(url, options);
   } catch (err) {
@@ -28,11 +49,22 @@ export class InteractiveServer {
   private isRunning: boolean = false;
   private currentResolver: ((result: InteractiveResult) => void) | null = null;
   private sessionData: Map<string, any> = new Map();
+  private _mcpServer: any = null; // 保存 MCP server 实例引用
+  
+  // 公共 getter 和 setter
+  get mcpServer(): any {
+    return this._mcpServer;
+  }
+  
+  set mcpServer(server: any) {
+    this._mcpServer = server;
+  }
   
   private readonly DEFAULT_PORT = 3721;
   private readonly FALLBACK_PORTS = [3722, 3723, 3724, 3725, 3726, 3727, 3728, 3729, 3730, 3731, 3732, 3733, 3734, 3735];
 
-  constructor() {
+  constructor(mcpServer?: any) {
+    this._mcpServer = mcpServer;
     this.app = express();
     this.server = http.createServer(this.app);
     this.wss = new WebSocketServer({ server: this.server });
@@ -308,7 +340,7 @@ export class InteractiveServer {
       
       try {
         // 使用默认浏览器打开一个新窗口
-        await openUrl(url, { wait: false });
+        await openUrl(url, { wait: false }, this._mcpServer);
         info('Browser opened successfully');
       } catch (browserError) {
         error('Failed to open browser', browserError);
@@ -349,7 +381,7 @@ export class InteractiveServer {
     const url = `http://localhost:${port}/clarification/${sessionId}`;
     
     // 打开浏览器
-    await openUrl(url);
+    await openUrl(url, undefined, this._mcpServer);
 
     return new Promise((resolve) => {
       this.currentResolver = resolve;
@@ -2563,9 +2595,12 @@ export class InteractiveServer {
 // 单例实例
 let interactiveServerInstance: InteractiveServer | null = null;
 
-export function getInteractiveServer(): InteractiveServer {
+export function getInteractiveServer(mcpServer?: any): InteractiveServer {
   if (!interactiveServerInstance) {
-    interactiveServerInstance = new InteractiveServer();
+    interactiveServerInstance = new InteractiveServer(mcpServer);
+  } else if (mcpServer && !interactiveServerInstance.mcpServer) {
+    // 如果实例已存在但没有 mcpServer，更新它
+    interactiveServerInstance.mcpServer = mcpServer;
   }
   return interactiveServerInstance;
 }
@@ -2581,7 +2616,7 @@ export async function resetInteractiveServer(): Promise<void> {
   }
 }
 
-export async function getInteractiveServerSafe(): Promise<InteractiveServer> {
+export async function getInteractiveServerSafe(mcpServer?: any): Promise<InteractiveServer> {
   // 如果当前实例存在但不在运行状态，先清理
   if (interactiveServerInstance && !interactiveServerInstance.running) {
     try {
@@ -2592,5 +2627,5 @@ export async function getInteractiveServerSafe(): Promise<InteractiveServer> {
     interactiveServerInstance = null;
   }
   
-  return getInteractiveServer();
+  return getInteractiveServer(mcpServer);
 }

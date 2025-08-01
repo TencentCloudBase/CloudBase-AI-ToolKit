@@ -44,5 +44,5 @@ export async function getInteractiveServerAsync() {
   }
   
   const { getInteractiveServer } = await import("./interactive-server.js");
-  return getInteractiveServer();
+  return getInteractiveServer(undefined);
 }

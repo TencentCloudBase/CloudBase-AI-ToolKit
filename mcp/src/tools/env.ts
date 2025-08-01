@@ -30,7 +30,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
     },
     async ({ forceUpdate = false }: { forceUpdate?: boolean }) => {
       try {
-        const { selectedEnvId, cancelled, error, noEnvs } = await _promptAndSetEnvironmentId(forceUpdate);
+        const { selectedEnvId, cancelled, error, noEnvs } = await _promptAndSetEnvironmentId(forceUpdate, server);
 
         debug("login", { selectedEnvId, cancelled, error, noEnvs });
 

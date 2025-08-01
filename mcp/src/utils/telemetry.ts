@@ -36,9 +36,16 @@ class TelemetryReporter {
         this.deviceId = this.getDeviceId();
         this.userAgent = this.getUserAgent().userAgent;
         
+        // 检查 INTEGRATION_IDE 环境变量，如果存在则添加到额外参数中
+        if (process.env.INTEGRATION_IDE) {
+            this.addAdditionalParams({ ide: process.env.INTEGRATION_IDE });
+            debug('检测到 IDE 集成环境', { ide: process.env.INTEGRATION_IDE });
+        }
+        
         debug('数据上报已初始化', { 
             enabled: this.enabled, 
-            deviceId: this.deviceId.substring(0, 8) + '...' 
+            deviceId: this.deviceId.substring(0, 8) + '...',
+            ide: process.env.INTEGRATION_IDE || 'none'
         });
     }
 

@@ -44,7 +44,7 @@ export function registerInteractiveTools(server: ExtendedMcpServer) {
               throw new Error("需求澄清必须提供message参数");
             }
 
-            const interactiveServer = getInteractiveServer();
+            const interactiveServer = getInteractiveServer(server);
             const result = await interactiveServer.clarifyRequest(message, options);
 
             if (result.cancelled) {
@@ -74,7 +74,7 @@ export function registerInteractiveTools(server: ExtendedMcpServer) {
             
             const dialogOptions = options || ["确认执行", "取消操作", "需要修改任务"];
             
-            const interactiveServer = getInteractiveServer();
+            const interactiveServer = getInteractiveServer(server);
             const result = await interactiveServer.clarifyRequest(dialogMessage, dialogOptions);
 
             if (result.cancelled || (result.data && result.data.includes && result.data.includes('取消'))) {
@@ -105,7 +105,7 @@ export function registerInteractiveTools(server: ExtendedMcpServer) {
 }
 
 // 封装了获取环境、提示选择、保存配置的核心逻辑
-export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean): Promise<{ selectedEnvId: string | null; cancelled: boolean; error?: string; noEnvs?: boolean }> {
+export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean, server?: any): Promise<{ selectedEnvId: string | null; cancelled: boolean; error?: string; noEnvs?: boolean }> {
   // 1. 确保用户已登录
   const loginState = await getLoginState();
   debug('loginState',loginState)
@@ -129,7 +129,7 @@ export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean): Pro
   if (autoSelectSingle && EnvList.length === 1 && EnvList[0].EnvId) {
     selectedEnvId = EnvList[0].EnvId;
   } else {
-    const interactiveServer = getInteractiveServer();
+    const interactiveServer = getInteractiveServer(server);
     const result = await interactiveServer.collectEnvId(EnvList);
 
     if (result.cancelled) {
@@ -213,7 +213,7 @@ export async function clearUserEnvId(): Promise<void> {
 // 自动设置环境ID（无需MCP工具调用）
 export async function autoSetupEnvironmentId(): Promise<string | null> {
   try {
-    const { selectedEnvId, cancelled, error, noEnvs } = await _promptAndSetEnvironmentId(true);
+    const { selectedEnvId, cancelled, error, noEnvs } = await _promptAndSetEnvironmentId(true, undefined);
 
     if (error || noEnvs || cancelled) {
       debug('Auto setup environment ID interrupted or failed silently.', { error, noEnvs, cancelled });
