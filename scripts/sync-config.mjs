@@ -28,8 +28,9 @@ try {
  * @param {string} srcDir 源目录
  * @param {string} destDir 目标目录
  * @param {Array} excludePatterns 排除模式
+ * @param {Array} includePatterns 包含模式（可选）
  */
-function copyDirectory(srcDir, destDir, excludePatterns = []) {
+function copyDirectory(srcDir, destDir, excludePatterns = [], includePatterns = null) {
   try {
     // 确保目标目录存在
     if (!fs.existsSync(destDir)) {
@@ -57,8 +58,36 @@ function copyDirectory(srcDir, destDir, excludePatterns = []) {
       const stat = fs.statSync(srcPath);
       
       if (stat.isDirectory()) {
-        copyDirectory(srcPath, destPath, excludePatterns);
+        // 如果有包含模式，检查当前目录是否在包含列表中
+        if (includePatterns) {
+          const relativePath = path.relative(configDir, srcPath);
+          const isIncluded = includePatterns.some(pattern => {
+            // 检查是否完全匹配或作为前缀匹配
+            return relativePath === pattern || relativePath.startsWith(pattern + '/');
+          });
+          
+          if (!isIncluded) {
+            console.log(`  ⏭️  跳过目录: ${item} (不在包含列表中)`);
+            continue;
+          }
+        }
+        
+        copyDirectory(srcPath, destPath, excludePatterns, includePatterns);
       } else {
+        // 如果有包含模式，检查当前文件是否在包含列表中
+        if (includePatterns) {
+          const relativePath = path.relative(configDir, srcPath);
+          const isIncluded = includePatterns.some(pattern => {
+            // 检查是否完全匹配或作为前缀匹配
+            return relativePath === pattern || relativePath.startsWith(pattern + '/');
+          });
+          
+          if (!isIncluded) {
+            console.log(`  ⏭️  跳过文件: ${item} (不在包含列表中)`);
+            continue;
+          }
+        }
+        
         fs.copyFileSync(srcPath, destPath);
         console.log(`  ✓ 已复制: ${path.relative(projectRoot, destPath)}`);
       }
@@ -162,23 +191,32 @@ async function syncConfigs(options = {}) {
   console.log(`📁 配置源目录: ${configDir}`);
   
   // 获取要同步的模板路径
-  let templatePaths = templateConfig.templates;
+  let templateConfigs = templateConfig.templates;
   
   if (filter) {
-    templatePaths = templatePaths.filter(path => path.includes(filter));
+    templateConfigs = templateConfigs.filter(config => {
+      const path = typeof config === 'string' ? config : config.path;
+      return path.includes(filter);
+    });
     console.log(`🔍 过滤条件: 包含 "${filter}"`);
   }
   
-  console.log(`📋 共需要同步 ${templatePaths.length} 个模板`);
+  console.log(`📋 共需要同步 ${templateConfigs.length} 个模板`);
   console.log(`🔧 模式: ${dryRun ? '干运行' : '实际执行'}\n`);
   
   let successCount = 0;
   let skipCount = 0;
   
   // 遍历模板列表
-  for (let i = 0; i < templatePaths.length; i++) {
-    const templatePath = templatePaths[i];
-    console.log(`\n[${i + 1}/${templatePaths.length}] 处理模板: ${templatePath}`);
+  for (let i = 0; i < templateConfigs.length; i++) {
+    const templateConfig = templateConfigs[i];
+    const templatePath = typeof templateConfig === 'string' ? templateConfig : templateConfig.path;
+    const includePatterns = typeof templateConfig === 'object' ? templateConfig.includePatterns : null;
+    
+    console.log(`\n[${i + 1}/${templateConfigs.length}] 处理模板: ${templatePath}`);
+    if (includePatterns) {
+      console.log(`  📁 包含模式: ${includePatterns.join(', ')}`);
+    }
     
     const targetDir = path.join(projectRoot, '..', 'cloudbase-examples', templatePath);
     
@@ -205,17 +243,24 @@ async function syncConfigs(options = {}) {
     }
     
     // 同步config目录下的所有内容
-    const configItems = fs.readdirSync(configDir);
-    for (const configItem of configItems) {
-      const srcPath = path.join(configDir, configItem);
-      const destPath = path.join(targetDir, configItem);
-      
-      if (fs.statSync(srcPath).isDirectory()) {
-        console.log(`  📂 同步目录: ${configItem}`);
-        copyDirectory(srcPath, destPath, templateConfig.excludePatterns);
-      } else {
-        console.log(`  📄 同步文件: ${configItem}`);
-        fs.copyFileSync(srcPath, destPath);
+    if (includePatterns) {
+      // 如果有包含模式，只同步指定的目录和文件
+      console.log(`  📂 按包含模式同步...`);
+      copyDirectory(configDir, targetDir, templateConfig.excludePatterns, includePatterns);
+    } else {
+      // 如果没有包含模式，同步所有内容
+      const configItems = fs.readdirSync(configDir);
+      for (const configItem of configItems) {
+        const srcPath = path.join(configDir, configItem);
+        const destPath = path.join(targetDir, configItem);
+        
+        if (fs.statSync(srcPath).isDirectory()) {
+          console.log(`  📂 同步目录: ${configItem}`);
+          copyDirectory(srcPath, destPath, templateConfig.excludePatterns);
+        } else {
+          console.log(`  📄 同步文件: ${configItem}`);
+          fs.copyFileSync(srcPath, destPath);
+        }
       }
     }
     
@@ -326,6 +371,11 @@ function showUsage() {
 
 配置文件: scripts/template-config.json
 模板总数: ${templateConfig.templates.length} 个
+
+配置格式说明:
+- 字符串格式: "path/to/template" - 同步整个config目录
+- 对象格式: { "path": "path/to/template", "includePatterns": ["dir1", "dir2"] } - 只同步指定目录
+  示例: { "path": "airules/codebuddy", "includePatterns": ["rules", ".rules"] }
 `);
 }
 

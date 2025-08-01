@@ -1,6 +1,7 @@
 {
   "description": "awsome-cloudbase-examples 项目模板路径配置",
   "version": "1.0.0",
+  "comment": "templates 支持两种格式：1) 字符串格式同步整个config目录，2) 对象格式只同步指定目录",
   "templates": [
     "web/art-exhibition",
     "web/overcooked-game",
@@ -14,7 +15,14 @@
     "miniprogram/dating",
     "miniprogram/cloudbase-ai-video",
     "miniprogram/cloudbase-miniprogram-template",
-    "universal/cloudbase-uniapp-template"
+    "universal/cloudbase-uniapp-template",
+    {
+      "path": "airules/codebuddy",
+      "includePatterns": [
+        "rules",
+        ".rules"
+      ]
+    }
   ],
   "excludePatterns": [
     ".git",
