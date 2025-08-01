@@ -220,10 +220,11 @@ async function syncConfigs(options = {}) {
     
     const targetDir = path.join(projectRoot, '..', 'cloudbase-examples', templatePath);
     
-    if (!checkTargetExists(path.dirname(targetDir))) {
-      console.log(`  ⚠️  跳过: 目标目录不存在 ${templatePath}`);
-      skipCount++;
-      continue;
+    // 自动创建目标目录的父目录
+    const targetParentDir = path.dirname(targetDir);
+    if (!fs.existsSync(targetParentDir)) {
+      console.log(`  📁 自动创建目录: ${path.relative(projectRoot, targetParentDir)}`);
+      fs.mkdirSync(targetParentDir, { recursive: true });
     }
     
     if (dryRun) {
