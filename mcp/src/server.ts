@@ -109,9 +109,11 @@ export function createCloudBaseMcpServer(options?: {
   // Create server instance
   const server = new McpServer({
     name,
-    version,
+    version
+  }, {
     capabilities: {
       tools: {},
+      logging: {},
     },
   }) as ExtendedMcpServer;
 
