@@ -286,12 +286,23 @@ CloudBase MCP 采用插件化架构，支持按需启用工具模块。[查看�
 ## 📚 教程
 
 ### 📄 文章
+
+#### 🎮 小游戏
 - [1小时开发微信小游戏《我的早餐店》——基于CloudBase AI Toolkit](https://cloud.tencent.com/developer/article/2532595)
 - [AI Coding宝藏组合：Cursor + Cloudbase-AI-Toolkit 开发游戏实战](https://juejin.cn/post/7518783423277695028#comment)
-- [我用「CloudBase AI ToolKit」一天做出"网络热词"小程序](https://cloud.tencent.com/developer/article/2537907)
-- [我用AI开发并上线了一款小程序：解忧百宝盒](https://mp.weixin.qq.com/s/DYekRheNQ2u8LAl_F830fA)
 - [2天上线一款可联机的分手厨房小游戏](https://mp.weixin.qq.com/s/nKfhHUf8w-EVKvA0u1rdeg)
+
+#### 📱 小程序
+- [我用「CloudBase AI ToolKit」一天做出"网络热词"小程序](https://cloud.tencent.com/developer/article/2537907)
+- [用AI打造你的专属"云书房"小程序！](https://cloud.tencent.com/developer/article/2535789)
+- [一人挑战全栈研发简历制作小程序](https://cloud.tencent.com/developer/article/2535894)
+- [我用AI开发并上线了一款小程序：解忧百宝盒](https://mp.weixin.qq.com/s/DYekRheNQ2u8LAl_F830fA)
 - [AI时代，从零基础到全栈开发者之路：Figma + Cursor + Cloudbase快速搭建微信小程序](https://mp.weixin.qq.com/s/nT2JsKnwBiup1imniCr2jA)
+
+#### 🌐 H5应用
+- [CloudBase AI Toolkit 做一个医院实习生排班系统，告别痛苦的excel表格](https://cloud.tencent.com/developer/article/2538023)
+- [没有服务器，怎么云化部署前后端项目](https://cloud.tencent.com/developer/article/2537971)
+- [快速打造程序员专属名片网站](https://cloud.tencent.com/developer/article/2536273)
 
 ### 📱 应用项目
 - [简历助手小程序](https://gitcode.com/qq_33681891/resume_template)
@@ -304,6 +315,8 @@ CloudBase MCP 采用插件化架构，支持按需启用工具模块。[查看�
 ### 🎥 视频教程
 - [云开发CloudBase：用AI开发一款分手厨房小游戏](https://www.bilibili.com/video/BV1v5KAzwEf9/)
 - [软件3.0：AI 编程新时代的最佳拍档 CloudBase AI ToolKit，以开发微信小程序为例](https://www.bilibili.com/video/BV15gKdz1E5N/)
+- [用AiCoding 一人挑战全栈研发简历制作小程序](https://www.bilibili.com/video/BV1D23Nz1Ec3/)
+- [5分钟在本地创造一个程序员专属名片网站](https://www.bilibili.com/video/BV19y3EzsEHQ/?vd_source=c8763f6ab9c7c6f7f760ad7ea9157011)
 
 ---
 
