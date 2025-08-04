@@ -7,6 +7,7 @@ export {
   StdioServerTransport,
   telemetryReporter,
   reportToolkitLifecycle,
+  reportToolCall,
   info,
   error,
   warn

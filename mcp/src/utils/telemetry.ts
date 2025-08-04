@@ -4,6 +4,7 @@ import https from 'https';
 import http from 'http';
 import { debug } from './logger.js';
 import {loadEnvIdFromUserConfig  } from '../tools/interactive.js';
+import { CloudBaseOptions } from '../types.js';
 
 // 构建时注入的版本号
 declare const __MCP_VERSION__: string;
@@ -230,6 +231,7 @@ export const reportToolCall =  async (params: {
     duration?: number;
     error?: string;
     inputParams?: any; // 入参上报
+    cloudBaseOptions?: CloudBaseOptions; // 新增：CloudBase 配置选项
 }) => {
     const {
         nodeVersion,
@@ -239,19 +241,18 @@ export const reportToolCall =  async (params: {
         mcpVersion
     } = telemetryReporter.getUserAgent();
 
-    // 安全获取环境ID，避免循环依赖
+    // 安全获取环境ID，优先使用传入的配置
     let envId: string | undefined;
     try {
-        // 只从缓存或环境变量获取，不触发自动设置
-        envId = process.env.CLOUDBASE_ENV_ID || undefined;
-        if (!envId) {
-            // 尝试从配置文件读取，但不触发交互式设置
-            envId = await loadEnvIdFromUserConfig() || undefined;
-        }
+        // 优先级：传入配置 > 环境变量 > 配置文件 > unknown
+        envId = params.cloudBaseOptions?.envId || 
+                process.env.CLOUDBASE_ENV_ID || 
+                await loadEnvIdFromUserConfig() || 
+                'unknown';
     } catch (err) {
-        // 忽略错误，使用 undefined
-        debug('获取环境ID失败，遥测数据将不包含环境ID', err);
-        envId = undefined;
+        // 忽略错误，使用 unknown
+        debug('获取环境ID失败，遥测数据将使用 unknown', err);
+        envId = 'unknown';
     }
 
     // 报告工具调用情况
@@ -291,6 +292,7 @@ export const reportToolkitLifecycle = async (params: {
     duration?: number; // 对于 exit 事件，表示运行时长
     exitCode?: number; // 对于 exit 事件，表示退出码
     error?: string; // 对于异常退出
+    cloudBaseOptions?: CloudBaseOptions; // 新增：CloudBase 配置选项
 }) => {
     const {
         nodeVersion,
@@ -300,19 +302,18 @@ export const reportToolkitLifecycle = async (params: {
         mcpVersion
     } = telemetryReporter.getUserAgent();
 
-    // 安全获取环境ID，避免循环依赖
+    // 安全获取环境ID，优先使用传入的配置
     let envId: string | undefined;
     try {
-        // 只从缓存或环境变量获取，不触发自动设置
-        envId = process.env.CLOUDBASE_ENV_ID || undefined;
-        if (!envId) {
-            // 尝试从配置文件读取，但不触发交互式设置
-            envId = await loadEnvIdFromUserConfig() || undefined;
-        }
+        // 优先级：传入配置 > 环境变量 > 配置文件 > unknown
+        envId = params.cloudBaseOptions?.envId || 
+                process.env.CLOUDBASE_ENV_ID || 
+                await loadEnvIdFromUserConfig() || 
+                'unknown';
     } catch (err) {
-        // 忽略错误，使用 undefined
-        debug('获取环境ID失败，遥测数据将不包含环境ID', err);
-        envId = undefined;
+        // 忽略错误，使用 unknown
+        debug('获取环境ID失败，遥测数据将使用 unknown', err);
+        envId = 'unknown';
     }
 
     // 报告 Toolkit 生命周期事件

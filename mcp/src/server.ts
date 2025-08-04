@@ -150,5 +150,5 @@ export function getDefaultServer(): ExtendedMcpServer {
 // Re-export types and utilities that might be useful
 export type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 export { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-export { telemetryReporter, reportToolkitLifecycle } from "./utils/telemetry.js";
+export { telemetryReporter, reportToolkitLifecycle, reportToolCall } from "./utils/telemetry.js";
 export { info, error, warn } from "./utils/logger.js"; 

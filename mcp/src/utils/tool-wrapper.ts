@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ToolAnnotations, Tool } from "@modelcontextprotocol/sdk/types.js";
 import { reportToolCall } from './telemetry.js';
 import { debug } from './logger.js';
+import { CloudBaseOptions } from '../types.js';
 import os from 'os';
 
 /**
@@ -71,7 +72,7 @@ ${JSON.stringify(sanitizeArgs(args), null, 2)}
 /**
  * 创建包装后的处理函数，添加数据上报功能
  */
-function createWrappedHandler(name: string, handler: any) {
+function createWrappedHandler(name: string, handler: any, cloudBaseOptions?: CloudBaseOptions) {
     return async (args: any) => {
         const startTime = Date.now();
         let success = false;
@@ -123,7 +124,8 @@ function createWrappedHandler(name: string, handler: any) {
                 success,
                 duration,
                 error: errorMessage,
-                inputParams: sanitizeArgs(args) // 添加入参上报
+                inputParams: sanitizeArgs(args), // 添加入参上报
+                cloudBaseOptions // 传递 CloudBase 配置
             });
         }
     };
@@ -145,8 +147,8 @@ export function wrapServerWithTelemetry(server: McpServer): void {
             toolConfig
         });
 
-        // 使用包装后的处理函数
-        const wrappedHandler = createWrappedHandler(toolName, handler);
+        // 使用包装后的处理函数，传递服务器配置
+        const wrappedHandler = createWrappedHandler(toolName, handler, (server as any).cloudBaseOptions);
         
         // 调用原始 registerTool 方法
         return originalRegisterTool(toolName, toolConfig, wrappedHandler);
