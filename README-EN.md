@@ -254,11 +254,16 @@ CloudBase MCP uses a plugin architecture. [See detailed docs](https://docs.cloud
 ## 📚 Tutorials
 
 ### 📄 Articles
+
+#### 🌐 Full-Stack Web Apps
+- [One-stop development of card flip game with CodeBuddy IDE + CloudBase](https://mp.weixin.qq.com/s/2EM3RBzdQUCdfld2CglWgg)
 - [Develop a WeChat mini-game in 1 hour with CloudBase AI Toolkit](https://cloud.tencent.com/developer/article/2532595)
 - [AI Coding Power Combo: Cursor + Cloudbase-AI-Toolkit Game Dev](https://juejin.cn/post/7518783423277695028#comment)
+- [Launched a co-op Overcooked game in 2 days](https://mp.weixin.qq.com/s/nKfhHUf8w-EVKvA0u1rdeg)
+
+#### 📱 Full-Stack Mini-Programs
 - [I built a "hot words" mini-program with CloudBase AI ToolKit in one day](https://cloud.tencent.com/developer/article/2537907)
 - [I used AI to develop and launch a mini-program: Worry Relief Box](https://mp.weixin.qq.com/s/DYekRheNQ2u8LAl_F830fA)
-- [Launched a co-op Overcooked game in 2 days](https://mp.weixin.qq.com/s/nKfhHUf8w-EVKvA0u1rdeg)
 - [From zero to full-stack dev in the AI era: Figma + Cursor + Cloudbase for WeChat mini-programs](https://mp.weixin.qq.com/s/nT2JsKnwBiup1imniCr2jA)
 
 ### 📱 App Projects
