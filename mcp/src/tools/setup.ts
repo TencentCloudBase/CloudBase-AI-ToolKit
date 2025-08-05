@@ -237,9 +237,23 @@ async function copyFileIfNotExists(src: string, dest: string): Promise<{ copied:
 }
 
 // 复制文件，支持覆盖模式
-async function copyFile(src: string, dest: string, overwrite: boolean = false): Promise<{ copied: boolean; reason?: string; action?: string }> {
+// 判断是否应该跳过 README.md 文件
+function shouldSkipReadme(template: string, destPath: string, overwrite: boolean): boolean {
+  const isReadme = path.basename(destPath).toLowerCase() === 'readme.md';
+  const isRulesTemplate = template === 'rules';
+  const exists = fs.existsSync(destPath);
+  
+  return isReadme && isRulesTemplate && exists && !overwrite;
+}
+
+async function copyFile(src: string, dest: string, overwrite: boolean = false, template?: string): Promise<{ copied: boolean; reason?: string; action?: string }> {
   try {
     const destExists = fs.existsSync(dest);
+    
+    // 检查是否需要跳过 README.md 文件（仅对 rules 模板）
+    if (template && shouldSkipReadme(template, dest, overwrite)) {
+      return { copied: false, reason: 'README.md 文件已存在，已保护', action: 'protected' };
+    }
     
     // 如果目标文件存在且不允许覆盖
     if (destExists && !overwrite) {
@@ -303,7 +317,7 @@ export function registerSetupTools(server: ExtendedMcpServer) {
     "downloadTemplate",
     {
       title: "下载项目模板",
-      description: `自动下载并部署CloudBase项目模板。\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n支持的IDE类型:\n- all: 下载所有IDE配置（默认）\n- cursor: Cursor AI编辑器\n- windsurf: WindSurf AI编辑器\n- codebuddy: CodeBuddy AI编辑器\n- claude-code: Claude Code AI编辑器\n- cline: Cline AI编辑器\n- gemini-cli: Gemini CLI\n- opencode: OpenCode AI编辑器\n- qwen-code: 通义灵码\n- baidu-comate: 百度Comate\n- openai-codex-cli: OpenAI Codex CLI\n- augment-code: Augment Code\n- github-copilot: GitHub Copilot\n- roocode: RooCode AI编辑器\n- tongyi-lingma: 通义灵码\n- trae: Trae AI编辑器\n- vscode: Visual Studio Code\n\n特别说明：rules 模板会自动包含当前 mcp 版本号信息（版本号：${typeof __MCP_VERSION__ !== 'undefined' ? __MCP_VERSION__ : 'unknown'}），便于后续维护和版本追踪。`,
+      description: `自动下载并部署CloudBase项目模板。\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n支持的IDE类型:\n- all: 下载所有IDE配置（默认）\n- cursor: Cursor AI编辑器\n- windsurf: WindSurf AI编辑器\n- codebuddy: CodeBuddy AI编辑器\n- claude-code: Claude Code AI编辑器\n- cline: Cline AI编辑器\n- gemini-cli: Gemini CLI\n- opencode: OpenCode AI编辑器\n- qwen-code: 通义灵码\n- baidu-comate: 百度Comate\n- openai-codex-cli: OpenAI Codex CLI\n- augment-code: Augment Code\n- github-copilot: GitHub Copilot\n- roocode: RooCode AI编辑器\n- tongyi-lingma: 通义灵码\n- trae: Trae AI编辑器\n- vscode: Visual Studio Code\n\n特别说明：\n- rules 模板会自动包含当前 mcp 版本号信息（版本号：${typeof __MCP_VERSION__ !== 'undefined' ? __MCP_VERSION__ : 'unknown'}），便于后续维护和版本追踪\n- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）`,
       inputSchema: {
         template: z.enum(["react", "vue", "miniprogram", "uniapp", "rules"]).describe("要下载的模板类型"),
         ide: z.enum(IDE_TYPES).optional().default("all").describe("指定要下载的IDE类型，默认为all（下载所有IDE配置）"),
@@ -367,11 +381,12 @@ export function registerSetupTools(server: ExtendedMcpServer) {
         const results: string[] = [];
 
         if (workspaceFolder) {
+          let protectedCount = 0;
           for (const relativePath of filteredFiles) {
             const srcPath = path.join(extractDir, relativePath);
             const destPath = path.join(workspaceFolder, relativePath);
             
-            const copyResult = await copyFile(srcPath, destPath, overwrite);
+            const copyResult = await copyFile(srcPath, destPath, overwrite, template);
             
             if (copyResult.copied) {
               if (copyResult.action === 'overwritten') {
@@ -381,7 +396,11 @@ export function registerSetupTools(server: ExtendedMcpServer) {
               }
               finalFiles.push(destPath);
             } else {
-              skippedCount++;
+              if (copyResult.action === 'protected') {
+                protectedCount++;
+              } else {
+                skippedCount++;
+              }
               finalFiles.push(srcPath);
             }
           }
@@ -395,6 +414,7 @@ export function registerSetupTools(server: ExtendedMcpServer) {
           const stats: string[] = [];
           if (createdCount > 0) stats.push(`新建 ${createdCount} 个文件`);
           if (overwrittenCount > 0) stats.push(`覆盖 ${overwrittenCount} 个文件`);
+          if (protectedCount > 0) stats.push(`保护 ${protectedCount} 个文件（README.md）`);
           if (skippedCount > 0) stats.push(`跳过 ${skippedCount} 个已存在文件`);
           
           if (stats.length > 0) {
