@@ -784,6 +784,71 @@ export class InteractiveServer {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success-state {
+            text-align: center;
+            padding: 40px 20px;
+            animation: fadeInUp 0.8s ease-out both;
+        }
+        
+        .success-icon {
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            animation: successPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes successPulse {
+            0%, 100% { 
+                transform: scale(1);
+                filter: drop-shadow(0 0 8px rgba(103, 233, 233, 0.3));
+            }
+            50% { 
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 16px rgba(103, 233, 233, 0.6));
+            }
+        }
+        
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        
+        .success-message {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .selected-env-info {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(103, 233, 233, 0.1);
+            border: 1px solid var(--accent-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .env-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .env-value {
+            color: var(--accent-color);
+            font-size: 16px;
+            font-weight: 600;
+            font-family: var(--font-mono);
+        }
     </style>
 </head>
 <body>
@@ -837,6 +902,20 @@ export class InteractiveServer {
             <div class="loading" id="loading">
                 <div class="spinner"></div>
                 <span>正在配置环境...</span>
+            </div>
+            
+            <div class="success-state" id="successState" style="display: none;">
+                <div class="success-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                </div>
+                <h2 class="success-title">环境配置成功！</h2>
+                <p class="success-message">已成功选择云开发环境</p>
+                <div class="selected-env-info">
+                    <span class="env-label">环境 ID:</span>
+                    <span class="env-value" id="selectedEnvDisplay"></span>
+                </div>
             </div>
         </div>
     </div>
@@ -911,7 +990,14 @@ export class InteractiveServer {
             }).then(data => {
                 console.log('📥 响应数据:', data);
                 if (data.success) {
-                    console.log('✅ 请求成功，即将关闭窗口');
+                    console.log('✅ 请求成功，展示成功提示');
+                    // 隐藏选择区和按钮，仅展示成功提示
+                    document.getElementById('envList').style.display = 'none';
+                    document.querySelector('.actions').style.display = 'none';
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('successState').style.display = 'block';
+                    // 显示选中的环境 ID
+                    document.getElementById('selectedEnvDisplay').textContent = selectedEnvId;
                     window.close();
                 } else {
                     console.error('❌ 请求失败:', data);
@@ -1929,6 +2015,71 @@ export class InteractiveServer {
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success-state {
+            text-align: center;
+            padding: 40px 20px;
+            animation: fadeInUp 0.8s ease-out both;
+        }
+        
+        .success-icon {
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            animation: successPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes successPulse {
+            0%, 100% { 
+                transform: scale(1);
+                filter: drop-shadow(0 0 8px rgba(103, 233, 233, 0.3));
+            }
+            50% { 
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 16px rgba(103, 233, 233, 0.6));
+            }
+        }
+        
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        
+        .success-message {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .selected-env-info {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(103, 233, 233, 0.1);
+            border: 1px solid var(--accent-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .env-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .env-value {
+            color: var(--accent-color);
+            font-size: 16px;
+            font-weight: 600;
+            font-family: var(--font-mono);
         }
     </style>
 </head>
