@@ -13,6 +13,21 @@ alwaysApply: false
 ## 环境和认证
 1. 云开发的 SDK 初始化时都需要填写环境 id，可以通过 envQuery 工具来查询环境 id，然后进行登录，例如使用匿名登录
 
+## 认证最佳实践
+**重要：不同平台的认证方式完全不同，必须严格区分！**
+
+### Web 端认证
+- **必须使用 SDK 内置认证**：CloudBase Web SDK 提供了完整的认证功能
+- **推荐方式**：`auth.toDefaultLoginPage()` 跳转到默认登录页面
+- **禁止行为**：不要使用云函数实现登录认证逻辑
+- **用户管理**：登录后通过 `auth.getCurrentUser()` 获取用户信息
+
+### 小程序端认证
+- **免登录特性**：小程序云开发天然免登录，无需登录流程
+- **用户标识**：在云函数中通过 wx-server-sdk 获取 `wxContext.OPENID`
+- **用户管理**：基于 openid 在云函数中进行用户数据管理
+- **禁止行为**：不要生成登录页面或登录流程代码
+
 ## 云函数
 1. Node.js 的云函数中需要包含package.json，声明所需的依赖，可以使用 createFunction 来创建函数，使用 updateFunctionCode 来部署云函数，优先采用云端安装依赖，不上传 node_modules，functionRootPath 指的是函数目录的父目录，例如 cloudfuncitons 这个目录
 

@@ -1,5 +1,5 @@
 ---
-cloudbaseAIVersion：1.8.26
+cloudbaseAIVersion：1.8.28
 description: CloudBase AI 开发规则索引 - 防止不同开发场景的规则互相干扰
 globs: *
 alwaysApply: true
@@ -15,6 +15,9 @@ alwaysApply: true
 4. 开发预览的时候，如果本身项目有依赖后端数据库集合和云函数，可以优先部署后端然后再预览前端
 5. 交互式反馈规则：在需求不明确时主动与用户对话澄清，优先使用自动化工具 interactiveDialog 完成配置。执行高风险操作前必须使用 interactiveDialog 获得用户确认。保持消息简洁并用emoji标记状态。
 6. 如果涉及到实时通信相关的例如实时对战等，可以使用云开发的实时数据库 watch 能力
+7. **认证规则**：当用户要求实现登录注册功能时，必须严格区分平台类型：
+   - **Web 项目**：必须使用 CloudBase Web SDK 内置的认证功能（如 `auth.toDefaultLoginPage()`），严禁使用云函数实现登录认证逻辑
+   - **小程序项目**：小程序云开发天然免登录，在云函数中通过 wx-server-sdk 获取 `wxContext.OPENID`，严禁生成登录页面或登录流程
 
 ## 工作流
 

@@ -23,6 +23,23 @@ alwaysApply: false
 1. 小程序 wx.cloud 的时候，需要指定环境 Id，环境 id 可以通过 envQuery 工具来查询
 2. 生成小程序代码的时候，如果需要用到素材图片，比如 tabbar 的 iconPath 等地方，可以从 unsplash 通过 url 来下载，可以参考工作流程中的下载远程资源流程，在生成小程序代码的时候，如果用到了iconPath 这些，必须同时帮用户下载图标，避免构建报错
 
+## 小程序认证特性
+**重要：小程序云开发天然免登录，严禁生成登录页面或登录流程！**
+
+1. **免登录特性**：小程序云开发不需要用户登录，可以在云函数中通过 wx-server-sdk 获取用户身份
+2. **用户身份获取**：在云函数中通过 `cloud.getWXContext().OPENID` 获取用户的唯一标识
+3. **用户数据管理**：基于 openid 在云函数中进行用户数据管理，无需登录流程
+
+```js
+// 云函数中获取用户身份示例
+exports.main = async (event, context) => {
+  const wxContext = cloud.getWXContext();
+  const openid = wxContext.OPENID;
+  
+  return { openid: openid };
+};
+```
+
 ## AI 大模型调用
 小程序中基础库 3.7.1版本以上已经支持直接调用大模型
 

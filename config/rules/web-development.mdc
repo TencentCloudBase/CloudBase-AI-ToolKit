@@ -19,6 +19,8 @@ alwaysApply: false
 ## CloudBase Web SDK 使用
 1. 如果用户项目中需要用到数据库，云函数等功能，需要在 web 应用引入 @cloudbase/js-sdk@latest
 
+**重要：登录认证必须使用 SDK 内置功能，严禁使用云函数实现登录认证逻辑！**
+
 ```js
 const app = cloudbase.init({
   env: 'xxxx-yyy'; // 可以通过 envQuery 工具来查询环境 id
@@ -30,15 +32,23 @@ let loginState = await auth.getLoginState();
 
 if (loginState && loginState.isLoggedIn) {
   // 已登录
+  const user = await auth.getCurrentUser();
+  console.log('当前用户:', user);
 } else {
-  // 未登录
-  // 如果是游客类型，需要用下方的方式
-  // 重要 2.x的 jssdk 匿名登录必须采用下方的方式
+  // 未登录 - 使用 SDK 内置认证功能
+  // 方式1：跳转到默认登录页面（推荐）
+  await auth.toDefaultLoginPage();
+  
+  // 方式2：匿名登录
   // await auth.signInAnonymously();
-  // 如果需要登录，可以用下方的方式
-  // await auth.toDefaultLoginPage()
 }
 ```
+
+## 登录认证最佳实践
+1. **必须使用 SDK 内置认证**：CloudBase Web SDK 提供了完整的认证功能，包括默认登录页面、匿名登录、自定义登录等
+2. **禁止使用云函数实现登录**：不要创建云函数来处理登录逻辑，这是错误的方式
+3. **用户数据管理**：登录后可以通过 `auth.getCurrentUser()` 获取用户信息，然后存储到数据库
+4. **错误处理**：所有认证操作都应该包含完整的错误处理逻辑
 
 ## 构建流程
 web 构建项目流程：确保首先执行过 npm install 命令，然后参考项目说明进行构建
