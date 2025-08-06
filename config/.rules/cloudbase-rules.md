@@ -1,4 +1,11 @@
 
+---
+cloudbaseAIVersion：1.8.28
+description: CloudBase AI 开发规则索引 - 防止不同开发场景的规则互相干扰
+globs: *
+alwaysApply: true
+---
+
 #  AI 开发人机协同规则索引
 
 ## 核心行为规则

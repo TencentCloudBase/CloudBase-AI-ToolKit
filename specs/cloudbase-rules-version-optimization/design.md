@@ -34,7 +34,7 @@
 ## 版本检测和升级约束
 
 ### 自动版本检测
-- 当用户使用 CloudBase 相关功能时，AI Agent 应自动检查当前项目的 cloudbaseAIVersion 字段
+- 当用户使用 CloudBase 相关功能时，AI Agent 应自动检查当    
 - 通过 npm registry API 查询 @cloudbase/cloudbase-mcp 的最新版本
 - 比较版本差异，如果发现新版本可用，主动向用户提示升级建议
 
