@@ -1,203 +1,123 @@
+# CloudBase AI Toolkit 项目规范
+
+## 项目统一约束 ⚠️
+
+### 代码规范（强制要求）
+- **所有代码注释必须使用英文，禁止使用中文注释**
+- **代码中的变量名、函数名、类名等标识符应使用英文**
+- 代码中的字符串内容可以使用中文（如用户界面文本、错误信息等）
+
+### 提交规范（强制要求）
+- **Git commit 信息必须使用英文，采用 conventional-changelog 风格**
+- **Commit 信息格式：** `type(scope): description`，例如 `feat(auth): add user authentication system`
+- **在 feat(xxx): 后面可以添加 emoji 字符**
+- **禁止在 commit 信息中使用中文**
+
+### 项目结构
+- `doc` 存放对外的文档
+- `mcp` 核心的 mcp package
+- `config` 用来给 AI IDE提供的规则和 mcp 预设配置
+- `tests` 自动化测试
+- `specs` 存放核心的迭代过程中沉淀的 spec
+
 ---
-alwaysApply: true
----
-<workflow>
-0. 请注意！必须遵守以下的规则，每个环节完成后都需要由我进行确认后才可进行下一个环节；
-1. 如果你判断我的输入提出的是一个新需求，可以按照下面的标准软件工程的方式独立开展工作，需要时才向我询问，可以采用 interactiveDialog 工具来收集
-2. 每当我输入新的需求的时候，为了规范需求质量和验收标准，你首先会搞清楚问题和需求，然后再进入下一阶段
-3. 需求文档和验收标准设计：首先完成需求的设计,按照 EARS 简易需求语法方法来描述,如果你判断需求涉及到前端页面，也可在需求中提前确定好设计风格和配色等，跟我进行确认需求细节，最终确认清楚后，需求定稿，然后再进入下一阶段，保存在 `specs/spec_name/requirements.md` 中，参考格式如下
 
-```markdown
-# 需求文档
+# 自定义斜杠命令
 
-## 介绍
+## 命令列表
 
-需求描述
+### `/list_commands`
+**功能：** 列出所有可用的斜杠命令
+**触发条件：** 当用户输入 `/list_commands` 时
+**行为：** 显示所有可用的命令及其功能描述
 
-## 需求
+### `/new_feature`
+**功能：** 新功能开发工作流
+**触发条件：** 当用户输入 `/new_feature` 或提出新需求时
+**行为：** 采用标准软件工程方式独立开展工作，每个环节完成后都需要用户确认后才可进行下一个环节
+**工作流程：**
+1. 需求澄清：搞清楚问题和需求
+2. 需求文档设计：按照 EARS 简易需求语法方法描述，保存在 `specs/spec_name/requirements.md`
+3. 技术方案设计：描述技术架构，保存在 `specs/spec_name/design.md`
+4. 任务拆分：细化具体任务，保存在 `specs/spec_name/tasks.md`
+5. 执行任务：独立自主运行，及时更新任务状态
 
-### 需求 1 - 需求名称
-
-**用户故事：** 用户故事内容
-
-#### 验收标准
-
-1. 采用 ERAS 描述的子句 While <可选前置条件>, when <可选触发器>, the <系统名称> shall <系统响应>，例如 When 选择"静音"时，笔记本电脑应当抑制所有音频输出。
-2. ...
-...
-```
-4. 技术方案设计： 在完成需求的设计之后，你会根据当前的技术架构和前面确认好的需求，进行需求的技术方案设计，精简但是能够准确的描述技术的架构（例如架构、技术栈、技术选型、数据库/接口设计、测试策略、安全性），必要时可以用 mermaid 来绘图，跟我确认清楚后，保存在  `specs/spec_name/design.md`  中，然后再进入下一阶段
-5. 任务拆分：在完成技术方案设计后，你会根据需求文档和技术方案，细化具体要做的事情，跟我确认清楚后，，保存在`specs/spec_name/tasks.md` 中, 然后再进入下一阶段，开始正式执行任务，同时需要及时更新任务的状态，执行的时候尽可能独立自主运行，保证效率和质量
-
-任务参考格式如下
-
-``` markdown
-# 实施计划
-
-- [ ] 1. 任务信息
-  - 具体要做的事情
-  - ...
-  - _需求: 相关的需求点的编号
-
-```
-</workflow>
-
-
-<project_rules>
-1.项目结构
-- doc 存放对外的文档
-- mcp 核心的 mcp package
-- config 用来给 AI IDE提供的规则和 mcp 预设配置
-- tests 自动化测试
-</project_rules>
-
-<add_aiide>
-# CloudBase AI Toolkit - 新增 AI IDE 支持工作流
-
+### `/add_aiide`
+**功能：** 新增 AI IDE 支持
+**触发条件：** 当用户输入 `/add_aiide` 时
+**行为：** 按照 CloudBase AI Toolkit 新增 AI IDE 支持工作流执行
+**步骤：**
 1. 创建 IDE 特定配置文件（如 `.mcp.json` 和 `CLAUDE.md`）
 2. 更新 `scripts/fix-config-hardlinks.sh` 添加新目标文件到硬链接列表
 3. 执行硬链接脚本确保规则文件同步
 4. 创建 `doc/ide-setup/{ide-name}.md` 配置文档
-5. 更新 `README.md`、`doc/index.md`、`doc/faq.md` 中的 AI IDE 支持列表,README 中注意 detail 中的内容也要填写
-6. **更新 IDE 文件映射**：
-   - 在 `mcp/src/tools/setup.ts` 的 `ALL_IDE_FILES` 数组中添加新IDE的配置文件路径
-   - 在 `IDE_FILE_MAPPINGS` 对象中添加新IDE的文件映射关系
-   - 在 `IDE_DESCRIPTIONS` 对象中添加新IDE的描述
-   - 在 `IDE_TYPES` 数组中添加新IDE的类型
+5. 更新 `README.md`、`doc/index.md`、`doc/faq.md` 中的 AI IDE 支持列表
+6. 更新 IDE 文件映射（在 `mcp/src/tools/setup.ts` 中）
 7. 验证硬链接状态和文档完整性
 8. 测试IDE特定下载功能是否正常工作
-</add_aiide>
 
+### `/add_example`
+**功能：** 新增用户案例/视频/文章
+**触发条件：** 当用户输入 `/add_example` 时
+**行为：** 按照 CloudBase AI Toolkit 新增用户案例工作流执行
+**步骤：**
+1. 注意标题尽量用原标题，然后适当增加一些描述
+2. 更新 README.md
+3. 更新 doc/tutorials.md
 
-<add_example>
-# CloudBase AI Toolkit - 新增用户案例/视频/文章工作流
-0. 注意标题尽量用原标题，然后适当增加一些描述
-1. 更新 README.md
-2. 更新 doc/tutorials.md
+### `/sync_doc`
+**功能：** 同步文档到官方文档库
+**触发条件：** 当用户输入 `/sync_doc` 时
+**行为：** 执行 `cp -r doc/* {cloudbase-docs dir}/docs/ai/cloudbase-ai-toolkit/`
 
-例如 艺术展览预约系统 - 一个完全通过AI 编程开发的艺术展览预约系统, 包含预约功能、管理后台等功能。
-</add_example>
+### `/update_readme`
+**功能：** 更新 README 文档
+**触发条件：** 当用户输入 `/update_readme` 时
+**行为：** 
+1. 按照中文文档更新英文文档
+2. 英文文档中的banner 图是英文的，保持不变
+3. 复制 README.md 覆盖 mcp/
 
-<sync_doc>
-cp -r doc/* {cloudbase-docs dir}/docs/ai/cloudbase-ai-toolkit/
-</sync_doc>
+### `/fix_config`
+**功能：** 修复 config 中的硬链接
+**触发条件：** 当用户输入 `/fix_config` 时
+**行为：** 执行 `sh ./scripts/fix-config-hardlinks.sh`
 
-
-<update_readme>
- 1. 按照中文文档更新英文文档
- 2. 英文文档中的banner 图是英文的，保持不变
- 3. 复制 README.md 覆盖 mcp/
-</update_readme>
-
-
-<fix-config-hardlinks>
-用来修复 config 中的硬链接
-sh ./scripts/fix-config-hardlinks.sh
-</update_readme>
-
-
-<git_push>
-提交代码注意 commit 采用 conventional-changelog 风格，在feat(xxx): 后面提加一个 emoji 字符，提交信息使用英文描述
-git push github && git push cnb --force
-</git_push>
-
-<workflow>
-1. 每当我输入新的需求的时候，为了规范需求质量和验收标准，你首先会搞清楚问题和需求
-2. 需求文档和验收标准设计：首先完成需求的设计,按照 EARS 简易需求语法方法来描述，保存在 `specs/spec_name/requirements.md` 中，跟我进行确认，最终确认清楚后，需求定稿，参考格式如下
-
-```markdown
-# 需求文档
-
-## 介绍
-
-需求描述
-
-## 需求
-
-### 需求 1 - 需求名称
-
-**用户故事：** 用户故事内容
-
-#### 验收标准
-
-1. 采用 ERAS 描述的子句 While <可选前置条件>, when <可选触发器>, the <系统名称> shall <系统响应>，例如 When 选择"静音"时，笔记本电脑应当抑制所有音频输出。
-2. ...
-...
-```
-2. 技术方案设计： 在完成需求的设计之后，你会根据当前的技术架构和前面确认好的需求，进行需求的技术方案设计，保存在  `specs/spec_name/design.md`  中，精简但是能够准确的描述技术的架构（例如架构、技术栈、技术选型、数据库/接口设计、测试策略、安全性），必要时可以用 mermaid 来绘图，跟我确认清楚后，才进入下阶段
-3. 任务拆分：在完成技术方案设计后，你会根据需求文档和技术方案，细化具体要做的事情，保存在`specs/spec_name/tasks.md` 中, 跟我确认清楚后，才开始正式执行任务，同时更新任务的状态
-
-格式如下
-
-``` markdown
-# 实施计划
-
-- [ ] 1. 任务信息
-  - 具体要做的事情
-  - ...
-  - _需求: 相关的需求点的编号
-
-```
-</workflow>
-
-
-<project_rules>
-1.项目结构
-- doc 存放对外的文档
-- mcp 核心的 mcp package
-- config 用来给 AI IDE提供的规则和 mcp 预设配置
-- tests 自动化测试
-</project_rules>
-
-<add_aiide>
-# CloudBase AI Toolkit - 新增 AI IDE 支持工作流
-
-1. 创建 IDE 特定配置文件（如 `.mcp.json` 和 `CLAUDE.md`）
-2. 更新 `scripts/fix-config-hardlinks.sh` 添加新目标文件到硬链接列表
-3. 执行硬链接脚本确保规则文件同步
-4. 创建 `doc/ide-setup/{ide-name}.md` 配置文档
-5. 更新 `README.md`、`doc/index.md`、`doc/faq.md` 中的 AI IDE 支持列表,README 中注意 detail 中的内容也要填写
-6. **更新 IDE 文件映射**：
-   - 在 `mcp/src/tools/setup.ts` 的 `ALL_IDE_FILES` 数组中添加新IDE的配置文件路径
-   - 在 `IDE_FILE_MAPPINGS` 对象中添加新IDE的文件映射关系
-   - 在 `IDE_DESCRIPTIONS` 对象中添加新IDE的描述
-   - 在 `IDE_TYPES` 数组中添加新IDE的类型
-7. 验证硬链接状态和文档完整性
-8. 测试IDE特定下载功能是否正常工作
-</add_aiide>
-
-
-<add_example>
-# CloudBase AI Toolkit - 新增用户案例/视频/文章工作流
-0. 注意标题尽量用原标题，然后适当增加一些描述
-1. 更新 README.md
-2. 更新 doc/tutorials.md
-
-例如 艺术展览预约系统 - 一个完全通过AI 编程开发的艺术展览预约系统, 包含预约功能、管理后台等功能。
-</add_example>
-
-<sync_doc>
-cp -r doc/* {cloudbase-docs dir}/docs/ai/cloudbase-ai-toolkit/
-</sync_doc>
-
-
-<update_readme>
- 1. 按照中文文档更新英文文档
- 2. 英文文档中的banner 图是英文的，保持不变
- 3. 复制 README.md 覆盖 mcp/
-</update_readme>
-
-
-<fix-config-hardlinks>
-用来修复 config 中的硬链接
-sh ./scripts/fix-config-hardlinks.sh
-</update_readme>
-
-
-<git_push>
+### `/git_push`
+**功能：** Git 代码提交和推送
+**触发条件：** 当用户输入 `/git_push` 时
+**行为：**
 1. 提交代码注意 commit 采用 conventional-changelog 风格，在feat(xxx): 后面提加一个 emoji 字符，提交信息使用英文描述
 2. 提交代码不要直接提到 main，可以提一个分支，例如 feature/xxx，然后
+3. 执行 `git push github && git push cnb --force`
+4. 然后自动创建 PR
+5. 创建完 PR 后还是切回到 main 来
 
-git push github && git push cnb --force
-3. 然后自动创建 PR
-</git_push>
+## 需求文档模板
+
+### 需求文档格式
+```markdown
+# 需求文档
+
+## 介绍
+需求描述
+
+## 需求
+
+### 需求 1 - 需求名称
+**用户故事：** 用户故事内容
+
+#### 验收标准
+1. 采用 ERAS 描述的子句 While <可选前置条件>, when <可选触发器>, the <系统名称> shall <系统响应>，例如 When 选择"静音"时，笔记本电脑应当抑制所有音频输出。
+2. ...
+```
+
+### 任务计划格式
+```markdown
+# 实施计划
+
+- [ ] 1. 任务信息
+  - 具体要做的事情
+  - ...
+  - _需求: 相关的需求点的编号
+```
