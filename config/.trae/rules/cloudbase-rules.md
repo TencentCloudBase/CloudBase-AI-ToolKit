@@ -1,9 +1,3 @@
----
-cloudbaseAIVersion：1.8.28
-description: CloudBase AI 开发规则索引 - 防止不同开发场景的规则互相干扰
-globs: *
-alwaysApply: true
----
 
 #  AI 开发人机协同规则索引
 
@@ -18,6 +12,62 @@ alwaysApply: true
 7. **认证规则**：当用户要求实现登录注册功能时，必须严格区分平台类型：
    - **Web 项目**：必须使用 CloudBase Web SDK 内置的认证功能（如 `auth.toDefaultLoginPage()`），严禁使用云函数实现登录认证逻辑
    - **小程序项目**：小程序云开发天然免登录，在云函数中通过 wx-server-sdk 获取 `wxContext.OPENID`，严禁生成登录页面或登录流程
+
+## 版本检测和升级约束
+
+### 自动版本检测
+- 当用户使用 CloudBase 相关功能时，AI Agent 应自动检查当前项目的 cloudbaseAIVersion 字段
+- 通过 npm registry API 查询 @cloudbase/cloudbase-mcp 的最新版本
+- 比较版本差异，如果发现新版本可用，主动向用户提示升级建议
+- 首次使用时显示友好的欢迎信息和当前版本
+
+### 升级指导流程
+- 检测到版本差异时，使用 interactiveDialog 工具与用户确认升级意愿
+- 提供详细的升级指导，包括 MCP 升级和 AI 规则下载两个选项
+- 集成官方文档链接：https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#%E5%A6%82%E4%BD%95%E6%9B%B4%E6%96%B0-cloudbase-ai-toolkit
+- 指导用户执行 downloadTemplate 操作，参数为 template:rules
+
+### 版本信息展示格式
+```
+🚀 CloudBase AI Toolkit v{currentVersion}
+
+✨ 当前版本：{currentVersion}
+🆕 最新版本：{latestVersion}
+📅 最后检查：{lastCheckTime}
+
+{upgradeMessage}
+```
+
+### 升级提示格式
+```
+🔄 发现新版本可用！
+
+当前版本：{currentVersion}
+最新版本：{latestVersion}
+
+选择升级方式：
+1. 🔧 升级 MCP 工具
+2. 📥 下载最新 AI 规则
+3. 🚀 全部升级
+4. ❌ 暂不升级
+
+官方升级指南：{officialDocLink}
+```
+
+### 首次使用欢迎信息
+```
+🎉 欢迎使用 CloudBase AI Toolkit！
+
+✨ 当前版本：{currentVersion}
+🚀 功能特性：
+   • 智能云开发助手
+   • 多平台项目支持
+   • 自动化部署流程
+   • 丰富的项目模板
+
+📚 快速开始：https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/
+🔄 需要了解升级流程吗？
+```
 
 ## 工作流
 
@@ -120,6 +170,3 @@ alwaysApply: true
 - **UI 设计需求**：额外参考 `rules/ui-design.mdc`
 
 **重要提醒：开发微信小程序时，严禁参考 Web SDK 的认证方式，必须使用小程序专用的 API 和云开发方式！**
-
-
-
