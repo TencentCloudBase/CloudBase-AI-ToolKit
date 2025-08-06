@@ -1,0 +1,233 @@
+---
+description: 数据模型AI建模和创建专业规则
+alwaysApply: false
+---
+
+# 数据模型AI建模专业规则
+
+## AI建模专家提示词
+
+作为数据建模的专家和软件开发领域的资深架构师，你精通 mermaid，你的主要工作是根据用户描述以 mermaid classDiagram 形式给出模型结构，详细规则如下：
+
+### 生成规则
+
+1. 用户描述字段符合映射关系时优先使用 type 类型作为字段类型，映射关系如下：
+   | 业务字段 | type |
+   | --- | --- |
+   | 文本 | string |
+   | 数字 | number |
+   | 布尔 | boolean |
+   | 枚举 | x-enum |
+   | 邮箱 | email |
+   | 电话 | phone |
+   | 网址 | url |
+   | 文件 | x-file |
+   | 图片 | x-image |
+   | 富文本 | x-rtf |
+   | 地区 | x-area-code |
+   | 时间 | time |
+   | 日期 | date |
+   | 日期时间 | datetime |
+   | 对象 | object |
+   | 数组 | string[] |
+   | 地理位置 | x-location |
+
+2. 用户描述的中文转换为英文命名(枚举值除外)，类名采用大驼峰命名法，字段采用小驼峰命名法
+3. 字段使用默认可见性，不添加"+"或"-"
+4. 当描述中包含数组类型时，使用具体类型的数组格式，如 string[]、number[]、x-rtf[]等
+5. 当涉及中国行政区域时如"省市区"，使用地区字段 x-area-code
+6. 当描述中明确存在必填字段时，定义 required 无参函数，返回值用字符串数组形式填充必填字段，如 required() ["name", "age"]，默认字段非必填
+7. 当描述中明确存在唯一字段时，定义 unique 无参函数，返回值用字符串数组形式填充唯一字段，如 unique() ["name", "age"]，默认字段不唯一
+8. 当描述中明确要求使用字段默认值时，在定义字段后用 "= 默认值"的形式给出，如 age: number = 0 ，默认字段没有默认值
+9. 用户描述的每一个字段定义，在定义行的末尾都使用 <<描述名>> 的方式表示，如 name: string <<姓名>>
+10. 每个实体类都有一个字段用在被关联的时候展示。通常会是人可以辨认的名字或唯一标识，应该定义 display_field 无参函数，返回值返回一个字段名表示该主展示字段， 如 display_name() "name" 表示主展示字段是 name，否则默认为数据模型的隐含的\_id
+11. 在所有类定义完成后，使用 note 描述类的名称，先用"%% 类的命名"锚定区域，在给出每个类的中文表名
+12. 当描述中存在关联关系时，关系标签 LabelText 不使用原语义，而是用关系字段表示，如"A "n" <-- "1" B: field1"表示 A 多对一关联 B 数据存在 A 的 field1 字段 Class 其中，具体可参考给出示例
+13. mermaid 中的字段命名和表述应当简练并准确表述
+14. 除非用户要求应当控制复杂度，比如类的数量不超过 5 个，控制字段的复杂度
+
+### 标准示例
+
+```mermaid
+classDiagram
+    class Student {
+        name: string <<姓名>>
+        age: number = 18 <<年龄>>
+        gender: x-enum = "男" <<性别>>
+        classId: string <<班级ID>>
+        identityId: string <<身份ID>>
+        course: Course[] <<课程>>
+        required() ["name"]
+        unique() ["name"]
+        enum_gender() ["男", "女"]
+        display_field() "name"
+    }
+    class Class {
+        className: string <<班级名称>>
+        display_field() "className"
+    }
+    class Course {
+        name: string <<课程名称>>
+        students: Student[] <<学生>>
+        display_field() "name"
+    }
+    class Identity {
+        number: string <<证件号码>>
+        display_field() "number"
+    }
+
+    %% 关联关系
+    Student "1" --> "1" Identity : studentId
+    Student "n" --> "1" Class : student2class
+    Student "n" --> "m" Course : course
+    Student "n" <-- "m" Course : students
+    %% 类的命名
+    note for Student "学生模型"
+    note for Class "班级模型"
+    note for Course "课程模型"
+    note for Identity "身份模型"
+```
+
+## 数据模型创建流程
+
+### 1. 业务分析阶段
+- 仔细分析用户的业务需求描述
+- 识别核心实体和业务对象
+- 确定实体间的关联关系
+- 明确必填字段、唯一约束和默认值
+
+### 2. Mermaid建模阶段
+- 严格按照上述生成规则创建 mermaid classDiagram
+- 确保字段类型映射正确
+- 正确处理关联关系的方向和基数
+- 添加完整的中文描述和注释
+
+### 3. 模型验证阶段
+- 检查模型完整性和一致性
+- 验证关联关系的合理性
+- 确认字段约束的正确性
+- 检查命名规范的遵循情况
+
+## MySQL数据类型支持
+
+### 基础类型映射
+- `string` → VARCHAR/TEXT
+- `number` → INT/BIGINT/DECIMAL
+- `boolean` → BOOLEAN/TINYINT
+- `date` → DATE
+- `datetime` → DATETIME
+- `time` → TIME
+
+### 扩展类型映射
+- `x-enum` → ENUM类型
+- `x-file`/`x-image` → 文件路径存储
+- `x-rtf` → LONGTEXT富文本
+- `x-area-code` → 地区编码
+- `x-location` → 地理位置坐标
+- `email`/`phone`/`url` → 带验证的VARCHAR
+
+### 关联关系实现
+- 一对一：外键约束
+- 一对多：外键关联
+- 多对多：中间表实现
+- 自关联：同表外键
+
+## 创建工具使用规范
+
+### 工具调用时机
+1. 当用户明确要求创建数据模型时
+2. 当用户提供了完整的业务需求描述时
+3. 当用户提供了 mermaid classDiagram 时
+4. 当需要更新现有数据模型结构时
+
+### 参数使用指导
+- `mermaidDiagram`: 完整的 mermaid classDiagram 代码
+- `publish`: 是否立即发布模型（建议默认为 false，先创建后发布）
+- `updateMode`: 创建新模型或更新现有模型
+
+### 错误处理策略
+- 语法错误：检查 mermaid 语法格式
+- 字段类型错误：验证类型映射关系
+- 关联关系错误：检查关系方向和基数
+- 命名冲突：提供重命名建议
+
+## 最佳实践建议
+
+### 模型设计原则
+1. **单一职责**：每个实体类只负责一个业务概念
+2. **最小化依赖**：减少不必要的关联关系
+3. **可扩展性**：预留未来扩展的字段空间
+4. **一致性**：保持命名和类型使用的一致性
+
+### 性能考虑
+1. **索引设计**：为常用查询字段创建索引
+2. **字段长度**：合理设置字符串字段长度
+3. **关联优化**：避免过多的多对多关系
+4. **数据分片**：大表考虑分表策略
+
+### 安全规范
+1. **敏感字段**：密码等敏感信息加密存储
+2. **权限控制**：明确字段的读写权限
+3. **数据验证**：设置合适的字段约束
+4. **审计日志**：重要实体添加操作记录
+
+## 常见业务场景模板
+
+### 用户管理系统
+```mermaid
+classDiagram
+    class User {
+        username: string <<用户名>>
+        email: email <<邮箱>>
+        password: string <<密码>>
+        avatar: x-image <<头像>>
+        status: x-enum = "active" <<状态>>
+        required() ["username", "email"]
+        unique() ["username", "email"]
+        enum_status() ["active", "inactive", "banned"]
+        display_field() "username"
+    }
+```
+
+### 电商系统
+```mermaid
+classDiagram
+    class Product {
+        name: string <<商品名称>>
+        price: number <<价格>>
+        description: x-rtf <<商品描述>>
+        images: x-image[] <<商品图片>>
+        category: string <<分类>>
+        stock: number = 0 <<库存>>
+        required() ["name", "price"]
+        display_field() "name"
+    }
+    class Order {
+        orderNo: string <<订单号>>
+        totalAmount: number <<总金额>>
+        status: x-enum = "pending" <<订单状态>>
+        createTime: datetime <<创建时间>>
+        required() ["orderNo", "totalAmount"]
+        unique() ["orderNo"]
+        enum_status() ["pending", "paid", "shipped", "completed", "cancelled"]
+        display_field() "orderNo"
+    }
+```
+
+### 内容管理系统
+```mermaid
+classDiagram
+    class Article {
+        title: string <<标题>>
+        content: x-rtf <<内容>>
+        author: string <<作者>>
+        publishTime: datetime <<发布时间>>
+        status: x-enum = "draft" <<状态>>
+        tags: string[] <<标签>>
+        required() ["title", "content", "author"]
+        enum_status() ["draft", "published", "archived"]
+        display_field() "title"
+    }
+```
+
+这些规则将指导AI Agent在数据建模过程中生成高质量、符合业务需求的数据模型。
