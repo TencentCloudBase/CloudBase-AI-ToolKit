@@ -222,6 +222,10 @@ export class InteractiveServer {
         
         debug(`Trying to start server on port ${portToTry} (attempt ${currentIndex}/${tryPorts.length})`);
         
+        tryPort(portToTry);
+      };
+      
+      const tryPort = (portToTry: number) => {
         // 清除之前的所有监听器
         this.server.removeAllListeners('error');
         this.server.removeAllListeners('listening');
@@ -350,12 +354,22 @@ export class InteractiveServer {
       info('Waiting for user selection...');
       
       return new Promise((resolve) => {
-        this.currentResolver = resolve;
+        this.currentResolver = (result) => {
+          // 用户选择完成后，关闭服务器
+          this.stop().catch(err => {
+            debug('Error stopping server after user selection:', err);
+          });
+          resolve(result);
+        };
         
         setTimeout(() => {
-          if (this.currentResolver === resolve) {
+          if (this.currentResolver) {
             warn('Request timeout, resolving with cancelled');
             this.currentResolver = null;
+            // 超时后也关闭服务器
+            this.stop().catch(err => {
+              debug('Error stopping server after timeout:', err);
+            });
             resolve({ type: 'envId', data: null, cancelled: true });
           }
         }, 10 * 60 * 1000);
@@ -384,7 +398,13 @@ export class InteractiveServer {
     await openUrl(url, undefined, this._mcpServer);
 
     return new Promise((resolve) => {
-      this.currentResolver = resolve;
+      this.currentResolver = (result) => {
+        // 用户选择完成后，关闭服务器
+        this.stop().catch(err => {
+          debug('Error stopping server after user selection:', err);
+        });
+        resolve(result);
+      };
     });
   }
 
@@ -2099,7 +2119,7 @@ export class InteractiveServer {
         </div>
 
         <div class="content">
-            <h1 class="content-title">需求澄清</h1>
+            <h1 class="content-title">AI 需要您确认</h1>
             <div class="message">${message}</div>
             
             ${optionsArray ? `
@@ -2130,7 +2150,7 @@ export class InteractiveServer {
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20 6L9 17l-5-5"/>
                     </svg>
-                    提交反馈
+                    确认执行
                 </button>
             </div>
             
@@ -2780,3 +2800,4 @@ export async function getInteractiveServerSafe(mcpServer?: any): Promise<Interac
   
   return getInteractiveServer(mcpServer);
 }
+
