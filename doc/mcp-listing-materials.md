@@ -23,11 +23,6 @@
 
 ## Installation
 
-### NPM Command
-```bash
-npx --cache . @cloudbase/cloudbase-mcp@latest
-```
-
 ### MCP Configuration
 ```json
 {

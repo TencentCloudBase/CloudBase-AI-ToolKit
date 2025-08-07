@@ -61,14 +61,47 @@ AI 会自动下载并更新最新的规则配置到你的项目目录。
 
 当有新版本的 MCP 工具发布时，你可以通过以下方式更新：
 
-1. **自动更新（推荐）**：在你的 AI 开发工具的 MCP 列表中，找到 cloudbase-mcp 并重新启用或刷新 MCP 列表即可自动安装最新版本
+1. **自动更新（推荐）**：在你的 AI 开发工具的 MCP 列表中，找到 cloudbase 并重新启用或刷新 MCP 列表即可自动安装最新版本
 
-2. **手动更新**：如果自动更新不成功，可以先禁用再重新启用 cloudbase-mcp，或者重启你的 AI IDE
+2. **手动更新**：如果自动更新不成功，可以先禁用再重新启用 cloudbase，或者重启你的 AI IDE
 
 **注意事项**：
 - MCP 配置中使用了 `@latest` 标签，通常会自动获取最新版本
 - 如果遇到缓存问题，可以完全重启 AI IDE 后重新启用 MCP
 - 建议定期检查更新以获得最新功能和修复
+
+---
+
+### MCP 显示工具数量为 0 怎么办？
+
+如果在 AI 开发工具的 MCP 列表中看到 cloudbase-mcp 显示工具数量为 0，可以按以下步骤排查：
+
+**1. 检查环境配置**
+- 确保 Node.js 版本为 v18.15.0 及以上
+- macOS 用户且使用 nvm 管理 Node.js 的，请务必设置默认 Node 版本为 v18.15.0 及以上，避免不同终端版本不一致导致的问题。
+- 检查网络连接，建议设置 npm 源为腾讯镜像源：
+  ```bash
+  npm config set registry https://mirrors.cloud.tencent.com/npm/
+  ```
+
+**2. 重新启用 MCP**
+- 在 AI 开发工具的 MCP 列表中禁用 cloudbase-mcp
+- 重新启用 cloudbase 或刷新 MCP 列表
+- 如果仍有问题，完全重启 AI IDE 后重试
+
+**3. 手动重新安装**
+
+一般情况下，在 MCP 列表中重新启用或刷新即可正常安装并显示工具。
+
+参考下方的 如何全局安装 CloudBase AI ToolKit？ 的步骤进行操作
+
+---
+
+### MCP 配置后提示 MCP error -32001: Request timed out
+
+如果在配置 MCP 时遇到 `MCP error -32001: Request timed out` 错误，可以按以下步骤解决：
+
+参考下方的 如何全局安装 CloudBase AI ToolKit？ 的步骤进行操作
 
 ### 如何全局安装 CloudBase AI ToolKit？
 
@@ -95,71 +128,9 @@ AI 会自动下载并更新最新的规则配置到你的项目目录。
 - 避免全局安装可能遇到的权限和环境问题
 - 自动获取最新版本
 
----
-
-### MCP 显示工具数量为 0 怎么办？
-
-如果在 AI 开发工具的 MCP 列表中看到 cloudbase-mcp 显示工具数量为 0，可以按以下步骤排查：
 
 **1. 检查环境配置**
-- 确保 Node.js 版本为 v18.15.0 及以上
-- macOS 用户且使用 nvm 管理 Node.js 的，请务必设置默认 Node 版本为 v18.15.0 及以上，避免不同终端版本不一致导致的问题。
-- 检查网络连接，建议设置 npm 源为腾讯镜像源：
-  ```bash
-  npm config set registry https://mirrors.cloud.tencent.com/npm/
-  ```
-
-**2. 清理缓存**
-- 清理 npx 缓存（npx 存在缓存 bug 可能导致安装问题）：
-  ```bash
-  npx clear-npx-cache
-  ```
-
-**3. 重新启用 MCP**
-- 在 AI 开发工具的 MCP 列表中禁用 cloudbase-mcp
-- 重新启用 cloudbase-mcp 或刷新 MCP 列表
-- 如果仍有问题，完全重启 AI IDE 后重试
-
-**4. 手动重新安装**
-- 如果上述方法无效，可以删除 MCP 配置后重新添加
-- 确保使用最新的配置格式
-
-**5. 尝试 npm-global-exec 方式**
-- 如果 npx 方式持续有问题，推荐使用 npm-global-exec 方式，这种方式更稳定且自动处理依赖
-
-**6. 使用 inspector 工具验证 MCP 连接**
-- 如果上述方法都无效，可以通过 inspector 工具进一步排查 MCP 是否正常：
-  ```bash
-  npx @modelcontextprotocol/inspector npx @cloudbase/cloudbase-mcp@latest
-  ```
-- 命令行会输出类似如下的网址：
-  ```
-  http://localhost:6274/?MCP_PROXY_AUTH_TOKEN=8fbe0137d3bd77f0181a66a0ced8476283ba2b25927f2d3fd84492dfa1eb2199
-  ```
-- 用浏览器打开该网址，填写如下信息：
-  - **Command** 填写为 `npx`
-  - **Arguments** 填写为 `@cloudbase/cloudbase-mcp@latest`
-  - 然后点击 **Connect** 进行测试，需要等待安装和连接 MCP Server
-- 如果测试 OK，说明 MCP 工具本身连接正常，问题可能出在客户端配置或环境。
-- 如果连接失败，可以复制下方红色的错误信息，在 [社区 issue](https://cnb.cool/tencent/cloud/cloudbase/community/-/issues) 提交问题，便于进一步排查。
-
-一般情况下，在 MCP 列表中重新启用或刷新即可正常安装并显示工具。
-
-
-
----
-
-### MCP 配置后提示 MCP error -32001: Request timed out
-
-如果在配置 MCP 时遇到 `MCP error -32001: Request timed out` 错误，可以按以下步骤解决：
-
-**1. 检查环境配置**
-- 确保 Node.js 版本为 v18.15.0 及以上
-- macOS 用户且使用 nvm 管理 Node.js 的，请务必设置默认 Node 版本为 v18.15.0 及以上，避免不同终端版本不一致导致的问题。
-  设置默认版本命令示例：
-  ```bash
-  nvm alias default 18.15.0
-  ```
+- 确保 Node.js 版本为 v18.15.0 及以上,macOS 用户且使用 nvm 管理 Node.js 的，请务必设置默认 Node 版本为 v18.15.0 及以上，避免不同终端版本不一致导致的问题。
 - 检查网络连接，建议设置 npm 源为腾讯镜像源：
   ```bash
   npm config set registry https://mirrors.cloud.tencent.com/npm/

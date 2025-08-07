@@ -61,7 +61,10 @@
   "mcpServers": {
     "cloudbase": {
       "command": "npx",
-      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "INTEGRATION_IDE": "Trae"
+      }
     }
   }
 }
@@ -69,7 +72,7 @@
 
 ### 步骤 3：启用 AI 规则
 
-创建 `.trae/rules/cloudbase.md` 文件，或直接对  **Builder with MCP** 说：
+直接对  **Builder with MCP** 说：
 ```
 在当前项目中下载云开发 AI 规则
 ```

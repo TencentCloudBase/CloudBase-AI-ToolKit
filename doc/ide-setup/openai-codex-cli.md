@@ -64,7 +64,8 @@ npm install -g @openai/codex
 ```toml
 [mcp_servers.cloudbase]
 command = "npx"
-args = ["@cloudbase/cloudbase-mcp@latest"]
+args = ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
+env = { INTEGRATION_IDE = "CodeX" }
 ```
 
 然后启动时指定配置文件：

@@ -57,7 +57,7 @@
 
 **一键安装（推荐）：**
 
-[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=CloudBase&config=eyJjb21tYW5kIjoibnB4IEBjbG91ZGJhc2UvY2xvdWRiYXNlLW1jcEBsYXRlc3QiLCJkaXNhYmxlZCI6ZmFsc2V9)
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=cloudbase&config=JTdCJTIyY29tbWFuZCUyMiUzQSUyMm5weCUyMG5wbS1nbG9iYWwtZXhlYyU0MGxhdGVzdCUyMCU0MGNsb3VkYmFzZSUyRmNsb3VkYmFzZS1tY3AlNDBsYXRlc3QlMjIlMkMlMjJlbnYlMjIlM0ElN0IlMjJJTlRFR1JBVElPTl9JREUlMjIlM0ElMjJDdXJzb3IlMjIlN0QlN0Q%3D)
 
 **手动配置：**
 
@@ -68,7 +68,10 @@
   "mcpServers": {
     "cloudbase": {
       "command": "npx",
-      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
+      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"],
+       "env": {
+        "INTEGRATION_IDE": "Cursor"
+      }
     }
   }
 }

@@ -59,16 +59,21 @@
 
 ```json
 {
-  "augment.advanced": {
-     "mcpServers": {
-        "cloudbase": {
-            "command": "npx",
-            "args": [
-                "@cloudbase/cloudbase-mcp@latest"
-            ]
-        }
+    "augment.advanced": {
+        "mcpServers": [
+            {
+                "name": "cloudbase",
+                "command": "npx",
+                "args": [
+                    "npm-global-exec@latest",
+                    "@cloudbase/cloudbase-mcp@latest"
+                ],
+                "env": {
+                    "INTEGRATION_IDE": "Augment"
+                }
+            }
+        ]
     }
-  }
 }
 ```
 

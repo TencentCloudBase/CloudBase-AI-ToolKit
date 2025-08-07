@@ -60,9 +60,13 @@
         "cloudbase": {
             "command": "npx",
             "args": [
+                "npm-global-exec@latest",
                 "@cloudbase/cloudbase-mcp@latest"
             ],
-            "disabled": false
+            "disabled": false,
+            "env": {
+                "INTEGRATION_IDE": "RooCode"
+            }
         }
     }
 }

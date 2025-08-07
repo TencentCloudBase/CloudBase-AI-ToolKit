@@ -64,8 +64,12 @@
         "cloudbase": {
             "command": "npx",
             "args": [
-                "@cloudbase/cloudbase-mcp@latest"
-            ]
+                "npm-global-exec@latest",
+                "@cloudbase/cloudbase-mcp@latest",
+            ],
+            "env": {
+                "INTEGRATION_IDE": "VSCode Copilot"
+            }
         }
     }
 }

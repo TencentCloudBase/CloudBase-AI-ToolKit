@@ -60,11 +60,12 @@
         "cloudbase": {
             "command": "npx",
             "args": [
-                "--cache",
-                ".",
+                "npm-global-exec@latest",
                 "@cloudbase/cloudbase-mcp@latest"
             ],
-            "disabled": false
+            "env": {
+                "INTEGRATION_IDE": "Comate"
+            }
         }
     }
 }

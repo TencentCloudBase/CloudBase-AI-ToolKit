@@ -22,11 +22,6 @@
 
 ## 安装
 
-### NPM 命令
-```bash
-npx --cache . @cloudbase/cloudbase-mcp@latest
-```
-
 ### MCP 配置
 ```json
 {

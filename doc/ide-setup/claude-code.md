@@ -62,13 +62,16 @@
     "cloudbase": {
       "command": "npx",
       "args": [
-        "--cache",
-        ".",
+        "npm-global-exec@latest",
         "@cloudbase/cloudbase-mcp@latest"
-      ]
+      ],
+      "env": {
+        "INTEGRATION_IDE": "ClaudeCode"
+      }
     }
   }
 }
+
 ```
 
 ### 步骤 3：启用 AI 规则
