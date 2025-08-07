@@ -14,6 +14,26 @@ export const SUPPORTED_NODEJS_RUNTIMES = [
 ];
 export const DEFAULT_NODEJS_RUNTIME = 'Nodejs18.15';
 
+// Supported trigger types
+export const SUPPORTED_TRIGGER_TYPES = [
+  'timer',  // Timer trigger
+] as const;
+
+export type TriggerType = typeof SUPPORTED_TRIGGER_TYPES[number];
+
+// Trigger configuration examples
+export const TRIGGER_CONFIG_EXAMPLES = {
+  timer: {
+    description: "Timer trigger configuration using cron expression format: second minute hour day month week year",
+    examples: [
+      "0 0 2 1 * * *",  // Execute at 2:00 AM on the 1st of every month
+      "0 30 9 * * * *", // Execute at 9:30 AM every day
+      "0 0 12 * * * *", // Execute at 12:00 PM every day
+      "0 0 0 1 1 * *",  // Execute at midnight on January 1st every year
+    ]
+  }
+};
+
 /**
  * 处理函数根目录路径，确保不包含函数名
  * @param functionRootPath 用户输入的路径
@@ -91,10 +111,10 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
           }).optional().describe("私有网络配置"),
           runtime: z.string().optional().describe("运行时环境,建议指定为 'Nodejs18.15'，其他可选值：" + SUPPORTED_NODEJS_RUNTIMES.join('，')),
           triggers: z.array(z.object({
-            name: z.string(),
-            type: z.string(),
-            config: z.string()
-          })).optional().describe("触发器配置"),
+            name: z.string().describe("Trigger name"),
+            type: z.enum(SUPPORTED_TRIGGER_TYPES).describe("Trigger type, currently only supports 'timer'"),
+            config: z.string().describe("Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)")
+          })).optional().describe("Trigger configuration array"),
           handler: z.string().optional().describe("函数入口"),
           ignore: z.union([z.string(), z.array(z.string())]).optional().describe("忽略文件"),
           isWaitInstall: z.boolean().optional().describe("是否等待依赖安装"),
@@ -433,10 +453,10 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
       inputSchema: {
         name: z.string().describe("函数名"),
         triggers: z.array(z.object({
-          name: z.string().describe("触发器名称"),
-          type: z.string().describe("触发器类型"),
-          config: z.string().describe("触发器配置")
-        })).describe("触发器配置数组")
+          name: z.string().describe("Trigger name"),
+          type: z.enum(SUPPORTED_TRIGGER_TYPES).describe("Trigger type, currently only supports 'timer'"),
+          config: z.string().describe("Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)")
+        })).describe("Trigger configuration array")
       },
       annotations: {
         readOnlyHint: false,
