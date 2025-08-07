@@ -45,7 +45,7 @@ When coding in **Cursor/VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Cla
 - **🔧 Smart Debugging** - AI automatically reviews logs and fixes issues, reducing operational costs
 - **⚡ Lightning Fast** - Domestic CDN acceleration, faster access than overseas platforms
 - **📚 Knowledge Retrieval** - Built-in intelligent vector search for CloudBase and WeChat Mini-Program professional knowledge bases
-- **🔄 Smart Upgrade** - Auto-detect version differences and provide upgrade guidance, ensuring users always use the latest features
+
 - **🎯 Flexible Workflow** - Support for /spec and /no_spec commands, intelligently choose development mode based on task complexity
 
 > [!TIP]
