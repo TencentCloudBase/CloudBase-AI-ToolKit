@@ -1,12 +1,12 @@
 <div align="center">
 
-![](scripts/assets/banner-en.png)
+![](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/banner-en%20(1).png)
 
 # 🌟 CloudBase AI ToolKit
 
 **🪐 Instantly generate, deploy, and host your full-stack Web apps, mini-programs, databases, and backend services with AI IDE—no DevOps required, launch your ideas at lightning speed 💫**
 
-**🌍 Languages:** **English** | [中文](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/blob/main/README-ZH.md)
+**🌍 Languages:** [中文](README.md) | **English**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm version](https://badge.fury.io/js/%40cloudbase%2Fcloudbase-mcp.svg)](https://www.npmjs.com/package/@cloudbase/cloudbase-mcp)
