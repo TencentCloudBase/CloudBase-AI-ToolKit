@@ -1,15 +1,12 @@
 <div align="center">
 
-
-![](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/cloudbase-ai-toolkit.png)
-
+![](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/banner-en%20(1).png)
 
 # 🌟 CloudBase AI ToolKit
 
-**🪐 用 AI IDE 一键生成、部署和托管你的全栈 Web 应用与小程序、数据库和后端服务，无需运维，极速上线你的创意 💫**
+**🪐 Instantly generate, deploy, and host your full-stack Web apps, mini-programs, databases, and backend services with AI IDE—no DevOps required, launch your ideas at lightning speed 💫**
 
-**🌍 Languages:** **中文** | [English](README-EN.md)
-
+**🌍 Languages:** **English** | [中文](README-ZH.md)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm version](https://badge.fury.io/js/%40cloudbase%2Fcloudbase-mcp.svg)](https://www.npmjs.com/package/@cloudbase/cloudbase-mcp)
@@ -21,51 +18,51 @@
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/pulls)
 [![GitHub last commit](https://img.shields.io/github/last-commit/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commits)
 [![GitHub contributors](https://img.shields.io/github/contributors/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/graphs/contributors)
-[![CNB 镜像](https://img.shields.io/badge/CNB-CloudBase--AI--ToolKit-blue?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHJ4PSIyIiBmaWxsPSIjM0I4MkY2Ii8+PHBhdGggZD0iTTUgM0g3VjVINSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNNSA3SDdWOUg1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==)](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit)
+[![CNB Mirror](https://img.shields.io/badge/CNB-CloudBase--AI--ToolKit-blue?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHJ4PSIyIiBmaWxsPSIjM0I4MkY2Ii8+PHBhdGggZD0iTTUgM0g3VjVINSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNNSA3SDdWOUg1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==)](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/TencentCloudBase/CloudBase-AI-ToolKit)
 
-当你在**Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Claude Code/OpenAI Codex CLI**等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。
+When coding in **Cursor/VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Claude Code/OpenAI Codex CLI** and other AI programming tools, it automatically helps you generate deployable full-stack apps + mini-programs, and publish them to Tencent CloudBase with one click.
 
-
-**📹 完整视频演示 ⬇️**
+**📹 Full Video Demo ⬇️**
 
 <a href="https://www.bilibili.com/video/BV1hpjvzGESg/" target="_blank">
-  <img style="max-width:  min(600px, 100%); height: auto;" src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/video-banner.png" alt="视频演示" />
+  <img style="max-width:  min(600px, 100%); height: auto;" src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/video-banner.png" alt="Video Demo" />
 </a>
 
-| 🚀 **核心能力** | 🛠️ **支持平台** |
+| 🚀 **Core Capabilities** | 🛠️ **Supported Platforms** |
 |---|---|
-| 🤖 **AI智能开发**: AI自动生成代码和架构设计<br>☁️ **云开发集成**: 一键接入数据库、云函数、静态托管<br>⚡ **快速部署**: 几分钟内完成全栈应用上线 | **Web应用**: 现代化前端 + 静态托管<br>**微信小程序**: 云开发小程序解决方案<br>**后端服务**: 云数据库 + 无服务器函数+云托管 |
+| 🤖 **AI-Powered Development**: AI auto-generates code and architecture<br>☁️ **Cloud Integration**: One-click access to database, cloud functions, static hosting<br>⚡ **Rapid Deployment**: Full-stack apps online in minutes | **Web Apps**: Modern frontend + static hosting<br>**WeChat Mini-Programs**: Cloud-native mini-program solutions<br>**Backend Services**: Cloud database + serverless functions + cloud hosting |
 
-📚 [快速开始](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/getting-started) | 🛠️ [IDE配置](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/) | 🎨 [项目模板](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates) | 📖 [开发指南](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/development) | 🎮 [使用案例](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/examples) | 🎓 [教程](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials) | 🔌 [插件系统](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins) | 🔧 [MCP工具](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/mcp-tools) | ❓ [常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)
+📚 [Quick Start](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/getting-started) | 🛠️ [IDE Setup](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/) | 🎨 [Project Templates](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates) | 📖 [Development Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/development) | 🎮 [Use Cases](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/examples) | 🎓 [Tutorials](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials) | 🔌 [Plugin System](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins) | 🔧 [MCP Tools](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/mcp-tools) | ❓ [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)
 
+</div>
 
-</div> 
+## ✨ Key Features
 
-## ✨ 核心特性
-
-- **🤖 AI 原生** - 专为 AI 编程工具设计的规则库，生成代码符合云开发最佳实践
-- **🚀 一键部署** - MCP 自动化部署到腾讯云开发 CloudBase 平台，Serverless 架构无需购买服务器
-- **📱 全栈应用** - Web + 小程序 + 数据库 + 后端一体化，支持多种应用形式和后端托管
-- **🔧 智能修复** - AI 自动查看日志并修复问题，降低运维成本
-- **⚡ 极速体验** - 国内 CDN 加速，比海外平台访问速度更快
-- **📚 知识检索** - 内置云开发、微信小程序等专业知识库的智能向量检索
+- **🤖 AI-Native** - Rule library designed for AI programming tools, generates code following CloudBase best practices
+- **🚀 One-Click Deploy** - MCP automated deployment to Tencent CloudBase platform, Serverless architecture without server management
+- **📱 Full-Stack Apps** - Web + Mini-programs + Database + Backend integration, supports multiple app types and backend hosting
+- **🔧 Smart Debugging** - AI automatically reviews logs and fixes issues, reducing operational costs
+- **⚡ Lightning Fast** - Domestic CDN acceleration, faster access than overseas platforms
+- **📚 Knowledge Retrieval** - Built-in intelligent vector search for CloudBase and WeChat Mini-Program professional knowledge bases
+- **🔄 Smart Upgrade** - Auto-detect version differences and provide upgrade guidance, ensuring users always use the latest features
+- **🎯 Flexible Workflow** - Support for /spec and /no_spec commands, intelligently choose development mode based on task complexity
 
 > [!TIP]
 > 
-> 🚩内置支持 Spec 工作流：让 AI 编程更工程化
+> 🚩 Built-in Spec Workflow: Make AI programming more engineering-oriented
 > 
-> - 内置 Kiro 风格 Spec 工作流，支持 Cursor、Claude Code 等主流 AI IDE
-> - 需求、设计、任务分明，自动生成 requirements.md、design.md、tasks.md
-> - 摆脱“拉霸式” vibe coding，开发过程可控、可追溯
-> - 让 AI 协助梳理需求、设计方案、拆分任务，人类专注决策与评审
-- **Spec 工作流已内置在云开发 AI 规则中**，下载最新模板或让 AI 在当前项目下载云开发 AI 规则即可获取
+> - Built-in Kiro-style Spec workflow, supports Cursor, Claude Code, and other mainstream AI IDEs
+> - Clear requirements, design, and tasks, auto-generates requirements.md, design.md, tasks.md
+> - Move beyond "slot machine" vibe coding, development process is controllable and traceable
+> - Let AI assist in sorting out requirements, design solutions, and task breakdowns, while humans focus on decision-making and review
+- **Spec workflow is built into CloudBase AI rules**, download the latest template or let AI download CloudBase AI rules in the current project to get it
 
 ---
-🚩 **快速上手 CloudBase AI ToolKit**
+🚩 **Get Started with CloudBase AI ToolKit**
 
-1. **启用 CloudBase 工具（MCP 配置）**  
-在你的 AI IDE（如 Cursor）中添加以下配置，即可启用 CloudBase AI ToolKit 的全部能力：
+1. **Enable CloudBase Tools (MCP Config)**  
+Add the following config to your AI IDE (e.g., Cursor) to enable all CloudBase AI ToolKit capabilities:
 
 ```json
 {
@@ -78,201 +75,193 @@
 }
 ```
 
-2. **一键生成项目模板**  
-在 AI 对话框输入：
+2. **One-Click Project Template Generation**  
+In the AI chat box, enter:
 
 ```
-下载小程序云开发模板
+Download mini-program cloud development template
 ```
 
-如果你只想下载特定IDE的配置文件，避免项目文件混乱，可以指定IDE类型：
+If you only want to download specific IDE config files to avoid project file confusion, you can specify the IDE type:
 ```
-下载小程序云开发模板，只包含Cursor配置
-下载React云开发模板，只包含WindSurf配置
-下载通用云开发模板，只包含Claude Code配置
+Download mini-program cloud development template, only include Cursor config
+Download React cloud development template, only include WindSurf config
+Download universal cloud development template, only include Claude Code config
 ```
 
-支持的IDE类型：cursor、windsurf、codebuddy、claude-code、cline、gemini-cli、opencode、qwen-code、baidu-comate、openai-codex-cli、augment-code、github-copilot、roocode、tongyi-lingma、trae、vscode
+Supported IDE types: cursor, windsurf, codebuddy, claude-code, cline, gemini-cli, opencode, qwen-code, baidu-comate, openai-codex-cli, augment-code, github-copilot, roocode, tongyi-lingma, trae, vscode
 
-3. **可选模板类型**  
-- 小程序云开发模板
-- React 云开发模板
-- Vue 云开发模板
-- UniApp 云开发模板
-- 通用云开发模板
+3. **Available Template Types**  
+- Mini-program cloud development template
+- React cloud development template
+- Vue cloud development template
+- UniApp cloud development template
+- Universal cloud development template
 
-👉 [查看全部官方模板及说明](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates)
+👉 [View all official templates and docs](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates)
 
-4. **详细教程**  
-👉 [查看完整配置与使用教程](#2-配置你的-ai-ide)
+4. **Detailed Tutorial**  
+👉 [View full configuration and usage tutorial](#2-configure-your-ai-ide)
 
 ---
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-
-### 0. 前置条件
+### 0. Prerequisites
 
 <details>
-<summary>安装 AI 开发工具</summary>
+<summary>Install an AI development tool</summary>
 
-例如 [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/) 等，点击查看 [支持的 AI 开发工具列表](#2-配置你的-ai-ide)
+For example, [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/), etc. See the [Supported AI IDE List](#2-configure-your-ai-ide).
 
 </details>
 
 <details>
-<summary>开通云开发环境</summary>
+<summary>Enable CloudBase Environment</summary>
 
-访问 [腾讯云开发控制台](https://tcb.cloud.tencent.com/dev)开通环境，新用户可以免费开通体验。
-
-</details>
-
-<details>
-<summary>安装 Node.js v18.15.0及以上版本</summary>
-
-确保您的计算机上安装了 Node.js v18.15.0 及以上版本。您可以从 [Node.js 官网](https://nodejs.org/) 下载并安装最新版本。
+Visit the [Tencent CloudBase Console](https://tcb.cloud.tencent.com/dev) to enable your environment. New users can try it for free.
 
 </details>
 
 <details>
-<summary>可选：设置 npm 源</summary>
+<summary>Install Node.js v18.15.0 or above</summary>
 
-为了提高依赖包的下载速度，建议将 npm 源设置为腾讯镜像源。您可以在**终端命令行**中运行以下命令：
+Make sure your computer has Node.js v18.15.0 or above. Download the latest version from the [Node.js official site](https://nodejs.org/).
+
+</details>
+
+<details>
+<summary>Optional: Set npm registry</summary>
+
+To speed up dependency downloads, set npm registry to Tencent mirror. Run in your terminal:
 
 ```bash
 npm config set registry https://mirrors.cloud.tencent.com/npm/
 ```
 
-这样可以加快依赖包的下载速度，特别是在中国大陆地区。
+This will speed up downloads, especially in mainland China.
 </details>
 
 <details>
-<summary>可选：清理 npx 缓存</summary>
-由于 npx 这个工具本身存在一个缓存的 bug，可能导致 CloudBase AI ToolKit 安装问题，您可以尝试清理 npx 缓存。
+<summary>Optional: Clear npx cache</summary>
+Due to a bug in npx, you may need to clear its cache if you encounter installation issues. Run:
 
-在**终端命令行**中运行以下命令：
 ```
 npx clear-npx-cache
 ```
 </details>
 
-### 1. 快速初始化或增强你的项目
+### 1. Initialize or Enhance Your Project
 
-我们为你准备了内置云开发最佳实践和 AI IDE 规则的项目模板，推荐如下两种方式：
+We provide project templates with best CloudBase practices and AI IDE rules. Two recommended ways:
 
-#### 🚀 新项目推荐
+#### 🚀 For New Projects
 
-选择适合你的模板，一键初始化：
+Choose a template and initialize in one click:
 
-- **微信小程序 + 云开发模板**  
-  [下载代码包](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
+- **WeChat Mini-Program + CloudBase**  
+  [Download Code](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
 
-- **React Web 应用 + 云开发模板**  
-  [下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
+- **React Web App + CloudBase**  
+  [Download Code](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
 
-- **Vue Web 应用 + 云开发模板**  
-  [下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-vue-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-vue-template)
+- **Vue Web App + CloudBase**  
+  [Download Code](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-vue-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-vue-template)
 
-- **UniApp 跨端应用 + 云开发模板**  
-  [下载代码包](https://static.cloudbase.net/cloudbase-examples/universal-cloudbase-uniapp-template.zip?v=2025053001) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/universal/cloudbase-uniapp-template)
+- **UniApp Cross-Platform + CloudBase**  
+  [Download Code](https://static.cloudbase.net/cloudbase-examples/universal-cloudbase-uniapp-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/universal/cloudbase-uniapp-template)
 
-- **AI 规则通用云开发模板** ：不限定语言和框架，内置 CloudBase AI 规则和MCP，适用于任意云开发项目
+- **Universal CloudBase Template**: Not limited to any language or framework, includes CloudBase AI rules and MCP, suitable for any CloudBase project
 
-  [下载代码包](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-project.zip) ｜ [开源代码地址](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-project)
+  [Download Code](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-project.zip) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-project)
 
-#### 🛠️ 已有项目增强
+#### 🛠️ Enhance Existing Projects
 
-如果你已经有自己的项目，只需在配置好 MCP 后，只需要对 AI 说 "在当前项目中下载云开发 AI 规则"，即可一键下载并补全 AI 编辑器规则配置到当前项目目录，无需手动操作。
+If you already have a project, after configuring MCP, just tell the AI "Download CloudBase AI rules in the current project" to automatically download and complete the AI editor rule configuration in your project directory.
 
-如果你只想下载特定IDE的配置文件，避免项目文件混乱，可以指定IDE类型：
+If you only want to download specific IDE config files to avoid project file confusion, you can specify the IDE type:
 ```
-在当前项目中下载云开发 AI 规则，只包含Cursor配置
-在当前项目中下载云开发 AI 规则，只包含WindSurf配置
-在当前项目中下载云开发 AI 规则，只包含Claude Code配置
+Download CloudBase AI rules in the current project, only include Cursor config
+Download CloudBase AI rules in the current project, only include WindSurf config
+Download CloudBase AI rules in the current project, only include Claude Code config
 ```
 
-
-### 2. 配置你的 AI IDE
+### 2. Configure Your AI IDE
 
 > [!TIP]
-> 温馨提示：如果你使用的是模板项目，所有配置都已经预置完成,请按照指引进行检查和开启工具。如果不是从模板开始，需要按具体的说明手动添加相应配置：
+> If you use a template project, all configs are preset. If not, follow the instructions below to add the required config manually.
 
-以下工具均支持 CloudBase AI ToolKit，选择合适的工具并按说明配置：
+All the following tools support CloudBase AI ToolKit. Choose your tool and follow the guide:
 
-
-| 工具 | 支持平台 | 查看指引 |
+| Tool | Platform | Guide |
 |------|----------|----------|
-| [Cursor](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) | 独立 IDE| [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) |
-| [WindSurf](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) | 独立 IDE, VSCode、JetBrains 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) |
-| [CodeBuddy](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) | 独立 IDE（已内置 CloudBase），VS Code、JetBrains、微信开发者工具| [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) |
-| [CLINE](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) | VS Code 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) |
-| [GitHub Copilot](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) | VS Code 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) |
-| [Trae](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/trae) | 独立 IDE | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/trae) |
-| [通义灵码](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/tongyi-lingma) | 独立 IDE，VS Code、 JetBrains插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/tongyi-lingma) |
-| [RooCode](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/roocode) | VS Code插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/roocode) |
-| [文心快码](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/baidu-comate) | VS Code、JetBrains插件| [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/baidu-comate) |
-| [Augment Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/augment-code) | VS Code、JetBrains 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/augment-code) |
-| [Claude Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/claude-code) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/claude-code) |
-| [Gemini CLI](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/gemini-cli) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/gemini-cli) |
-| [OpenAI Codex CLI](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli) |
-| [OpenCode](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/opencode) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/opencode) |
-| [Qwen Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/qwen-code) | 命令行工具 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/qwen-code) |
+| [Cursor](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) | Standalone IDE| [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) |
+| [WindSurf](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) | Standalone IDE, VSCode, JetBrains | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) |
+| [CodeBuddy](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) | Standalone IDE (CloudBase built-in), VS Code, JetBrains, WeChat DevTools | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) |
+| [CLINE](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) | VS Code | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) |
+| [GitHub Copilot](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) | VS Code | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) |
+| [Trae](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/trae) | Standalone IDE | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/trae) |
+| [Tongyi Lingma](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/tongyi-lingma) | Standalone IDE, VS Code, JetBrains | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/tongyi-lingma) |
+| [RooCode](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/roocode) | VS Code | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/roocode) |
+| [Baidu Comate](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/baidu-comate) | VS Code, JetBrains | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/baidu-comate) |
+| [Augment Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/augment-code) | VS Code, JetBrains | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/augment-code) |
+| [Claude Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/claude-code) | CLI | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/claude-code) |
+| [Gemini CLI](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/gemini-cli) | CLI | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/gemini-cli) |
+| [OpenAI Codex CLI](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli) | CLI | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli) |
+| [OpenCode](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/opencode) | CLI | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/opencode) |
+| [Qwen Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/qwen-code) | CLI | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/qwen-code) |
 
+### 3. Start Developing
 
-
-### 3. 开始开发
-
-
-在开始使用前，只需要对 AI 说
+Before you start, just tell the AI:
 
 ```
-登录云开发
+Login to CloudBase
 ```
-AI 就会自动完成弹出登录腾讯云界面以及云开发的环境选择
+The AI will automatically pop up the Tencent Cloud login and environment selection.
 
-后续如需切换环境，可以说
-
-```
-退出云开发
-```
-
-AI 就会清理本地的配置，后续可以再要求 AI 登录云开发来重新登录。
-
-在登录成功后，可以确认 AI 已经连接到云开发
+To switch environments later, say:
 
 ```
-查询当前云开发环境信息
+Logout CloudBase
 ```
 
-向 AI 描述你的需求,进行开发：
+The AI will clear the local config. You can ask the AI to login again anytime.
+
+After login, you can confirm the AI is connected:
 
 ```
-做一个双人在线对战五子棋网站，支持联机对战，最后进行部署
+Query current CloudBase environment info
 ```
 
-AI 会自动：
-- 📝 生成前后端代码  
-- 🚀 部署到云开发
-- 🔗 返回在线访问链接
-
-开发过程中如果遇到报错，可以把错误信息发给 AI 来进行排障
+Describe your requirements to the AI and start developing:
 
 ```
-报错了，错误是xxxx
+Build a two-player online Gomoku game website, support online battle, and deploy it
 ```
 
+The AI will automatically:
+- 📝 Generate frontend and backend code
+- 🚀 Deploy to CloudBase
+- 🔗 Return the online access link
 
-也可以让 AI 结合云函数日志进行调试和修改代码
+If you encounter errors during development, send the error message to the AI for troubleshooting:
 
 ```
-云函数代码运行不符合需求，需求是 xxx，请查看日志和数据进行调试，并进行修复
+There was an error: xxxx
 ```
 
-## 🔌 插件系统
+You can also ask the AI to debug and modify code using cloud function logs:
 
-CloudBase MCP 采用插件化架构，支持按需启用工具模块。[查看详细文档](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins)
+```
+The cloud function code does not meet the requirements, the requirement is xxx, please check the logs and data for debugging and fix it
+```
 
-### 快速配置
+## 🔌 Plugin System
+
+CloudBase MCP uses a plugin architecture. [See detailed docs](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins)
+
+### Quick Config
 
 ```json
 {
@@ -282,233 +271,230 @@ CloudBase MCP 采用插件化架构，支持按需启用工具模块。[查看�
 }
 ```
 
+## 📚 Tutorials
 
-## 📚 教程
+### 📄 Articles
 
-### 📄 文章
+#### 🌐 Full-Stack Web Apps
+- [One-stop development of card flip game with CodeBuddy IDE + CloudBase](https://mp.weixin.qq.com/s/2EM3RBzdQUCdfld2CglWgg)
+- [Develop a WeChat mini-game in 1 hour with CloudBase AI Toolkit](https://cloud.tencent.com/developer/article/2532595)
+- [AI Coding Power Combo: Cursor + Cloudbase-AI-Toolkit Game Dev](https://juejin.cn/post/7518783423277695028#comment)
+- [Launched a co-op Overcooked game in 2 days](https://mp.weixin.qq.com/s/nKfhHUf8w-EVKvA0u1rdeg)
+- [CloudBase AI Toolkit: Build a hospital intern scheduling system, goodbye painful excel tables](https://cloud.tencent.com/developer/article/2538023)
+- [No server, how to cloud deploy full-stack projects](https://cloud.tencent.com/developer/article/2537971)
+- [Quickly create a programmer's exclusive business card website](https://cloud.tencent.com/developer/article/2536273)
 
-#### 🌐 全栈Web应用
-- [使用 CodeBuddy IDE + CloudBase 一站式开发卡片翻翻翻游戏](https://mp.weixin.qq.com/s/2EM3RBzdQUCdfld2CglWgg)
-- [1小时开发微信小游戏《我的早餐店》——基于CloudBase AI Toolkit](https://cloud.tencent.com/developer/article/2532595)
-- [AI Coding宝藏组合：Cursor + Cloudbase-AI-Toolkit 开发游戏实战](https://juejin.cn/post/7518783423277695028#comment)
-- [2天上线一款可联机的分手厨房小游戏](https://mp.weixin.qq.com/s/nKfhHUf8w-EVKvA0u1rdeg)
-- [CloudBase AI Toolkit 做一个医院实习生排班系统，告别痛苦的excel表格](https://cloud.tencent.com/developer/article/2538023)
-- [没有服务器，怎么云化部署前后端项目](https://cloud.tencent.com/developer/article/2537971)
-- [快速打造程序员专属名片网站](https://cloud.tencent.com/developer/article/2536273)
+#### 📱 Full-Stack Mini-Programs
+- [I built a "hot words" mini-program with CloudBase AI ToolKit in one day](https://cloud.tencent.com/developer/article/2537907)
+- [Use AI to create your exclusive "cloud library" mini-program!](https://cloud.tencent.com/developer/article/2535789)
+- [One person challenges full-stack development resume mini-program](https://cloud.tencent.com/developer/article/2535894)
+- [I used AI to develop and launch a mini-program: Worry Relief Box](https://mp.weixin.qq.com/s/DYekRheNQ2u8LAl_F830fA)
+- [From zero to full-stack dev in the AI era: Figma + Cursor + Cloudbase for WeChat mini-programs](https://mp.weixin.qq.com/s/nT2JsKnwBiup1imniCr2jA)
 
-#### 📱 全栈小程序
-- [我用「CloudBase AI ToolKit」一天做出"网络热词"小程序](https://cloud.tencent.com/developer/article/2537907)
-- [用AI打造你的专属"云书房"小程序！](https://cloud.tencent.com/developer/article/2535789)
-- [一人挑战全栈研发简历制作小程序](https://cloud.tencent.com/developer/article/2535894)
-- [我用AI开发并上线了一款小程序：解忧百宝盒](https://mp.weixin.qq.com/s/DYekRheNQ2u8LAl_F830fA)
-- [AI时代，从零基础到全栈开发者之路：Figma + Cursor + Cloudbase快速搭建微信小程序](https://mp.weixin.qq.com/s/nT2JsKnwBiup1imniCr2jA)
+### 📱 App Projects
+- [Resume Assistant Mini-Program](https://gitcode.com/qq_33681891/resume_template)
+- [Gomoku Online Game](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/gomoku-game)
+- [Overcooked Co-op Game](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/overcooked-game)
+- [E-commerce Admin Panel](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/ecommerce-management-backend)
+- [Short Video Mini-Program](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-ai-video)
+- [Dating Mini-Program](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/dating)
 
-### 📱 应用项目
-- [简历助手小程序](https://gitcode.com/qq_33681891/resume_template)
-- [五子棋联机游戏](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/gomoku-game)
-- [分手厨房联机游戏](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/overcooked-game)
-- [电商管理后台](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/ecommerce-management-backend)
-- [短视频小程序](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-ai-video)
-- [约会小程序](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/dating)
-
-### 🎥 视频教程
-- [云开发CloudBase：用AI开发一款分手厨房小游戏](https://www.bilibili.com/video/BV1v5KAzwEf9/)
-- [软件3.0：AI 编程新时代的最佳拍档 CloudBase AI ToolKit，以开发微信小程序为例](https://www.bilibili.com/video/BV15gKdz1E5N/)
-- [用AiCoding 一人挑战全栈研发简历制作小程序](https://www.bilibili.com/video/BV1D23Nz1Ec3/)
-- [5分钟在本地创造一个程序员专属名片网站](https://www.bilibili.com/video/BV19y3EzsEHQ/?vd_source=c8763f6ab9c7c6f7f760ad7ea9157011)
+### 🎥 Video Tutorials
+- [CloudBase: Use AI to develop an Overcooked game](https://www.bilibili.com/video/BV1v5KAzwEf9/)
+- [Software 3.0: Best AI Programming Partner CloudBase AI ToolKit, WeChat Mini-Program Example](https://www.bilibili.com/video/BV15gKdz1E5N/)
+- [Use AiCoding to challenge full-stack development resume mini-program](https://www.bilibili.com/video/BV1D23Nz1Ec3/)
+- [5 minutes to create a programmer's exclusive business card website locally](https://www.bilibili.com/video/BV19y3EzsEHQ/?vd_source=c8763f6ab9c7c6f7f760ad7ea9157011)
 
 ---
 
-## 🎯 使用案例
+## 🎯 Use Cases
 
-### 案例1：双人在线对战五子棋
+### Case 1: Two-Player Online Gomoku
 
-**开发过程：**
-1. 输入需求："做个双人在线对战五子棋网站，支持联机对战"
-2. AI 生成：Web 应用 + 云数据库 + 实时数据推送
-3. 自动部署并获得访问链接
+**Development Process:**
+1. Input requirement: "Build a two-player online Gomoku website, support online battle"
+2. AI generates: Web app + cloud database + real-time data push
+3. Auto-deploy and get access link
 
-👉 **体验地址：** [五子棋游戏](https://cloud1-5g39elugeec5ba0f-1300855855.tcloudbaseapp.com/gobang/#/)
+👉 **Demo:** [Gomoku Game](https://cloud1-5g39elugeec5ba0f-1300855855.tcloudbaseapp.com/gobang/#/)
 
 <details>
-<summary>📸 查看开发截图</summary>
+<summary>📸 See development screenshots</summary>
 
-| 开发过程 | 最终效果 |
+| Development | Final Result |
 |---------|---------|
-| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-001.png" width="400" alt="开发过程截图1"> | <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-004.png" width="400" alt="五子棋游戏效果"> |
-| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-002.png" width="400" alt="开发过程截图2"> | 支持双人在线对战<br>实时棋局同步 |
+| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-001.png" width="400" alt="Dev Screenshot 1"> | <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-004.png" width="400" alt="Gomoku Game Result"> |
+| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-002.png" width="400" alt="Dev Screenshot 2"> | Supports two-player online battle<br>Real-time board sync |
 
 </details>
 
-### 案例2：AI 宠物养成小程序
+### Case 2: AI Pet Mini-Program
 
-**开发过程：**
-1. 输入："开发一个宠物小精灵养成小程序，使用 AI 增强互动"
-2. AI 生成：小程序 + 云数据库 + AI 云函数
-3. 导入微信开发者工具即可发布
+**Development Process:**
+1. Input: "Develop a pet-raising mini-program with AI-enhanced interaction"
+2. AI generates: Mini-program + cloud database + AI cloud function
+3. Import to WeChat DevTools to publish
 
 <details>
-<summary>📸 查看开发截图与小程序预览</summary>
+<summary>📸 See dev screenshots and mini-program preview</summary>
 
 <table>
 <tr>
 <td width="50%">
-<b>🖥️ 开发截图</b><br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-005.png" width="100%" alt="AI宠物小程序开发截图">
+<b>🖥️ Dev Screenshots</b><br>
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-005.png" width="100%" alt="AI Pet Mini-Program Dev Screenshot">
 <br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-003.png" width="100%" alt="小程序开发过程">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-003.png" width="100%" alt="Mini-Program Dev Process">
 </td>
 <td width="50%">
-<b>📱 小程序预览</b><br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-006.png" width="200" alt="小程序界面1">
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-007.png" width="200" alt="小程序界面2">
+<b>📱 Mini-Program Preview</b><br>
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-006.png" width="200" alt="Mini-Program UI 1">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-007.png" width="200" alt="Mini-Program UI 2">
 <br><br>
-<b>📲 体验二维码</b><br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-008.png" width="150" alt="小程序体验二维码">
+<b>📲 Experience QR Code</b><br>
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-008.png" width="150" alt="Mini-Program QR Code">
 </td>
 </tr>
 </table>
 
 </details>
 
-### 案例3：智能问题诊断
+### Case 3: Smart Issue Diagnosis
 
-当应用出现问题时：
-1. AI 自动查看云函数日志
-2. 分析错误原因并生成修复代码  
-3. 自动重新部署
+When an app has issues:
+1. AI automatically checks cloud function logs
+2. Analyzes error causes and generates fix code
+3. Auto redeploys
 
 <details>
-<summary>📸 查看智能诊断过程</summary>
+<summary>📸 See smart diagnosis process</summary>
 
 <div align="center">
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-009.png" width="600" alt="智能问题诊断过程">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-009.png" width="600" alt="Smart Diagnosis Process">
 <br>
-<i>AI 自动分析日志并生成修复方案</i>
+<i>AI auto-analyzes logs and generates fixes</i>
 </div>
 
 </details>
 
 ---
 
-## 🌟 为什么选择 CloudBase？
+## 🌟 Why Choose CloudBase?
 
-- **⚡ 极速部署**：国内节点,访问速度比海外更快
-- **🛡️ 稳定可靠**：330 万开发者选择的 Serverless 平台
-- **🔧 开发友好**：专为AI时代设计的全栈平台，支持自动环境配置
-- **💰 成本优化**：Serverless 架构更具弹性，新用户开发期间可以免费体验
+- **⚡ Lightning Fast Deployment**: Domestic nodes, faster than overseas
+- **🛡️ Stable & Reliable**: Trusted by 3.3 million developers
+- **🔧 Developer Friendly**: Full-stack platform for the AI era, supports auto environment config
+- **💰 Cost-Effective**: Serverless architecture, free for new users during development
 
+## 📋 FAQ
 
-## 📋 常见问题 FAQ
+For migration, integration, and other common questions, see the [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq).
 
-如有迁移、集成等常见疑问，请查阅 [FAQ 常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)。 
+## 💬 Community
 
-## 💬 技术交流群
+Need help or want to share? Join our community!
 
-遇到问题或想要交流经验？加入我们的技术社区！
-
-### 🔥 微信交流群
+### 🔥 WeChat Group
 
 <div align="center">
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/toolkit-qrcode.png" width="200" alt="微信群二维码">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/toolkit-qrcode.png" width="200" alt="WeChat Group QR">
 <br>
-<i>扫码加入微信技术交流群</i>
+<i>Scan to join the WeChat tech group</i>
 </div>
 
-**群内你可以：**
-- 💡 分享你的 AI + 云开发项目
-- 🤝 技术交流和开发问题沟通
-- 📢 获取最新功能更新和最佳实践
-- 🎯 参与产品功能讨论和建议
+**In the group you can:**
+- 💡 Share your AI + CloudBase projects
+- 🤝 Tech exchange and Q&A
+- 📢 Get the latest updates and best practices
+- 🎯 Join product discussions and suggestions
 
-### 📱 其他交流方式
+### 📱 Other Channels
 
-| 平台 | 链接 | 说明 |
+| Platform | Link | Description |
 |------|------|------|
-| **官方文档** | [📖 查看文档](https://docs.cloudbase.net/) | 完整的云开发文档 |
-| **Issue 反馈** | [🐛 提交问题](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues) | Bug 反馈和功能请求 |
+| **Docs** | [📖 Docs](https://docs.cloudbase.net/) | Full CloudBase docs |
+| **Issue Feedback** | [🐛 Submit Issue](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues) | Bug reports & feature requests |
 
-### 🎉 社区活动
+### 🎉 Community Events
 
-- **每周技术分享**：群内定期分享 AI + 云开发最佳实践
-- **项目展示**：展示你用 AI 开发的精彩项目
-- **问题答疑**：腾讯云开发团队成员在线答疑
-- **新功能预览**：第一时间体验最新功能
+- **Weekly Tech Sharing**: Best practices for AI + CloudBase
+- **Project Showcases**: Show off your AI-powered projects
+- **Q&A**: Tencent CloudBase team answers questions
+- **Feature Previews**: Try new features first
 
+## 🛠️ CloudBase MCP Tools Overview
 
-## 🛠️ 云开发 MCP 工具一览
+There are **39 tools** covering environment management, database, cloud functions, hosting, mini-program publishing, and more.
 
-目前共有 **39 个工具**，涵盖环境管理、数据库操作、云函数管理、静态托管、小程序发布等核心功能。
+📋 **Full tool docs**: [See MCP tool details](doc/mcp-tools.md) | [Tool spec JSON](scripts/tools.json)
 
-📋 **完整工具文档**: [查看 MCP 工具详细说明](doc/mcp-tools.md) | [查看工具规格 JSON](scripts/tools.json)
+### 🔧 Tool Categories
 
-### 🔧 工具分类概览
-
-| 分类 | 工具数量 | 主要功能 |
+| Category | Count | Main Features |
 |------|----------|----------|
-| 🌍 **环境管理** | 4 个 | 登录认证、环境信息查询、域名管理 |
-| 🗄️ **数据库操作** | 11 个 | 集合管理、文档 CRUD、索引操作、数据模型 |
-| ⚡ **云函数管理** | 9 个 | 函数创建、更新、调用、日志、触发器 |
-| 🌐 **静态托管** | 5 个 | 文件上传管理、域名配置、网站部署 |
-| 📁 **文件操作** | 2 个 | 远程文件下载、云存储上传 |
-| 📱 **小程序发布** | 7 个 | 小程序上传、预览、构建、配置、调试、质量检查 |
-| 🛠️ **工具支持** | 4 个 | 项目模板、知识库搜索、联网搜索、交互对话 |
-| 🔌 **HTTP访问** | 1 个 | HTTP 函数访问配置 |
+| 🌍 **Env Mgmt** | 4 | Login, env info, domain mgmt |
+| 🗄️ **Database** | 11 | Collection mgmt, CRUD, indexes, data models |
+| ⚡ **Cloud Functions** | 9 | Create, update, invoke, logs, triggers |
+| 🌐 **Hosting** | 5 | File upload, domain config, site deploy |
+| 📁 **File Ops** | 2 | Remote download, cloud storage upload |
+| 📱 **Mini-Program** | 7 | Upload, preview, build, config, debug, QA |
+| 🛠️ **Tool Support** | 4 | Templates, knowledge search, web search, dialogs |
+| 🔌 **HTTP Access** | 1 | HTTP function access |
 
-### 🌟 核心工具亮点
+### 🌟 Tool Highlights
 
-| 工具类型 | 工具名称 | 功能亮点 |
+| Type | Name | Highlights |
 |----------|----------|----------|
-| 🔐 **身份认证** | `login` / `logout` | 一键登录云开发，自动环境选择 |
-| 📊 **环境查询** | `envQuery` | **🔄 合并工具** - 环境列表、信息、域名一体化查询 |
-| 🗄️ **数据库** | `collectionQuery` | **🔄 合并工具** - 集合存在性、详情、列表统一管理 |
-| ⚡ **云函数** | `createFunction` | 支持完整配置、自动依赖安装、触发器设置 |
-| 🌐 **静态托管** | `uploadFiles` | 批量文件上传、智能忽略规则、CDN 加速 |
-| 🧠 **AI 增强** | `searchKnowledgeBase` | 向量搜索云开发知识库，智能问答支持 |
+| 🔐 **Auth** | `login` / `logout` | One-click CloudBase login, auto env selection |
+| 📊 **Env Query** | `envQuery` | **🔄 Merged Tool** - env list, info, domain in one |
+| 🗄️ **Database** | `collectionQuery` | **🔄 Merged Tool** - existence, detail, list mgmt |
+| ⚡ **Cloud Functions** | `createFunction` | Full config, auto deps install, trigger setup |
+| 🌐 **Hosting** | `uploadFiles` | Batch upload, smart ignore, CDN acceleration |
+| 🧠 **AI Enhanced** | `searchKnowledgeBase` | Vector search CloudBase KB, smart Q&A |
 
-### 💡 工具优化说明
+### 💡 Tool Optimization
 
-我们将原来 40 个工具优化为 36 个，并新增了 3 个小程序调试工具，现在共有 39 个工具，通过合并相关功能和新增小程序完整工具链提供更好的使用体验
+We optimized from 40 to 36 tools, added 3 mini-program debug tools, now 39 tools in total, with better experience via merging and full mini-program toolchain.
 
-🔗 **想了解每个工具的详细功能？** 请查看 [MCP 工具完整文档](doc/mcp-tools.md)
+🔗 **Want details for each tool?** See [MCP tool docs](doc/mcp-tools.md)
 
-## 🏗️ 架构原理
+## 🏗️ Architecture
 
 ```mermaid
 graph TD
-    A[开发者] --> B[AI IDE]
-    B -->|使用| C[CloudBase AI 规则]
-    C --> D[生成代码]
-    B -->|调用| E[CloudBase MCP]
-    E --> F{检测部署}
-    F -->|成功| G[云开发平台]
-    F -->|失败| H[返回日志]
-    H --> I[AI 修复]
+    A[Developer] --> B[AI IDE]
+    B -->|Use| C[CloudBase AI Rules]
+    C --> D[Generate Code]
+    B -->|Call| E[CloudBase MCP]
+    E --> F{Deploy Check}
+    F -->|Success| G[CloudBase Platform]
+    F -->|Fail| H[Return Logs]
+    H --> I[AI Fix]
     I --> E
-    G --> J[线上应用]
-    J --> K[Web/小程序/API]
+    G --> J[Online App]
+    J --> K[Web/Mini-Program/API]
 ```
 
-## 🔒 数据统计说明
+## 🔒 Telemetry
 
-为了改进产品体验，CloudBase AI ToolKit 会收集匿名使用统计信息：
+To improve product experience, CloudBase AI ToolKit collects anonymous usage stats:
 
-- **收集内容**：工具调用情况、基础环境信息（操作系统、Node.js版本等）
-- **隐私保护**：不收集代码内容、文件路径等敏感信息，仅用于产品改进
+- **Collected**: Tool calls, basic env info (OS, Node.js version, etc.)
+- **Privacy**: No code or file paths collected, only for product improvement
 
-可通过环境变量 `CLOUDBASE_MCP_TELEMETRY_DISABLED` 设置为 `true` 禁用数据统计
+Set `CLOUDBASE_MCP_TELEMETRY_DISABLED=true` to disable telemetry.
 
-## 🤝 贡献指南
+## 🤝 Contributing
 
-欢迎提交 Issue 和 Pull Request！请查看我们的[贡献指南](CONTRIBUTING.md)了解如何参与项目开发。
+PRs and issues welcome! See our [Contributing Guide](CONTRIBUTING.md) for how to get involved.
 
-## 📄 开源协议
+## 📄 License
 
 [MIT](LICENSE) © TencentCloudBase
 
 ---
 
-⭐ 如果这个项目对你有帮助，请给我们一个 Star！
+⭐ If you find this project helpful, please give us a Star!
 
 [![Star History Chart](https://api.star-history.com/svg?repos=TencentCloudBase/CloudBase-AI-ToolKit&type=Timeline)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
 
