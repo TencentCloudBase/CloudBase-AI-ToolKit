@@ -1,24 +1,49 @@
 
 ---
 cloudbaseAIVersion：1.8.28
-description: CloudBase AI 开发规则索引 - 防止不同开发场景的规则互相干扰
+description: CloudBase AI 开发规则指南 - 提供场景化的最佳实践，确保开发质量
 globs: *
 alwaysApply: true
 ---
 
-#  AI 开发人机协同规则索引
+# 📋 CloudBase AI 开发规则指南
+
+## 🎯 开发流程规范 - 场景识别与最佳实践
+
+**重要：为确保开发质量，AI 需要在开始工作前完成以下步骤：**
+
+### 1. 场景识别
+首先需要识别当前的开发场景类型：
+- **Web 项目**：React/Vue/原生 JS 等前端项目
+- **微信小程序**：小程序云开发项目  
+- **数据库相关**：涉及数据操作的项目
+- **UI 设计**：需要界面设计的项目
+
+### 2. 规则文件选择
+根据识别的场景，需要参考对应的专业规则文件：
+
+**📋 场景规则映射表（必须遵守）：**
+- **Web 项目** → 必读：`rules/web-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc`
+- **微信小程序** → 必读：`rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc`
+- **数据库操作** → 额外读：`rules/database.mdc`
+- **UI 设计** → 额外读：`rules/ui-design.mdc`
+
+### 3. 开发确认
+在开始工作前建议向用户确认：
+1. "我识别这是一个 [场景类型] 项目"
+2. "我将严格遵循以下规则文件：[具体文件列表]"
+3. "请确认我的理解是否正确"
 
 ## 核心行为规则
-0. 你擅长调用合适的工具来完成完成各项任务，例如关于腾讯云开发相关的操作，你会优先使用 cloubase 的 mcp 来进行调用
-1. 你会在对话输出完毕后选择适当的时机向用户提出询问，例如是否需要添加后端能力，是否打开预览，是否需要部署等
-2. 你首先会阅读当前项目的 README.md，遵照当前项目的说明进行开发，如果不存在则会在生成项目后生成一个 README.md 文件
-3. 开发的时候，默认就在当前目录下产出所有项目代码，先检查当前目录的文件  
-4. 开发预览的时候，如果本身项目有依赖后端数据库集合和云函数，可以优先部署后端然后再预览前端
-5. 交互式反馈规则：在需求不明确时主动与用户对话澄清，优先使用自动化工具 interactiveDialog 完成配置。执行高风险操作前必须使用 interactiveDialog 获得用户确认。保持消息简洁并用emoji标记状态。
-6. 如果涉及到实时通信相关的例如实时对战等，可以使用云开发的实时数据库 watch 能力
-7. **认证规则**：当用户要求实现登录注册功能时，必须严格区分平台类型：
-   - **Web 项目**：必须使用 CloudBase Web SDK 内置的认证功能（如 `auth.toDefaultLoginPage()`），严禁使用云函数实现登录认证逻辑
-   - **小程序项目**：小程序云开发天然免登录，在云函数中通过 wx-server-sdk 获取 `wxContext.OPENID`，严禁生成登录页面或登录流程
+1. **工具优先**：关于腾讯云开发的操作，优先使用 cloudbase 的 MCP 工具
+2. **项目理解**：首先阅读当前项目的 README.md，遵照项目说明开发
+3. **目录规范**：在当前目录下产出项目代码，先检查当前目录文件
+4. **部署顺序**：有后端依赖时，优先部署后端再预览前端
+5. **交互确认**：需求不明确时使用 interactiveDialog 澄清，执行高风险操作前必须确认
+6. **实时通信**：使用云开发的实时数据库 watch 能力
+7. **认证规则**：严格区分平台的认证方式
+   - **Web 项目**：必须使用 CloudBase Web SDK 内置认证（如 `auth.toDefaultLoginPage()`）
+   - **小程序项目**：天然免登录，云函数中获取 `wxContext.OPENID`
 
 ## 版本检测和升级约束
 
@@ -31,50 +56,8 @@ alwaysApply: true
 ### 升级指导流程
 - 检测到版本差异时，使用 interactiveDialog 工具与用户确认升级意愿
 - 提供详细的升级指导，包括 MCP 升级和 AI 规则下载两个选项
-- 集成官方文档链接：https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#%E5%A6%82%E4%BD%95%E6%9B%B4%E6%96%B0-cloudbase-ai-toolkit
+- 集成官方文档链接：https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#如何更新-cloudbase-ai-toolkit
 - 指导用户执行 downloadTemplate 操作，参数为 template:rules
-
-### 版本信息展示格式
-```
-🚀 CloudBase AI Toolkit v{currentVersion}
-
-✨ 当前版本：{currentVersion}
-🆕 最新版本：{latestVersion}
-📅 最后检查：{lastCheckTime}
-
-{upgradeMessage}
-```
-
-### 升级提示格式
-```
-🔄 发现新版本可用！
-
-当前版本：{currentVersion}
-最新版本：{latestVersion}
-
-选择升级方式：
-1. 🔧 升级 MCP 工具
-2. 📥 下载最新 AI 规则
-3. 🚀 全部升级
-4. ❌ 暂不升级
-
-官方升级指南：{officialDocLink}
-```
-
-### 首次使用欢迎信息
-```
-🎉 欢迎使用 CloudBase AI Toolkit！
-
-✨ 当前版本：{currentVersion}
-🚀 功能特性：
-   • 智能云开发助手
-   • 多平台项目支持
-   • 自动化部署流程
-   • 丰富的项目模板
-
-📚 快速开始：https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/
-🔄 需要了解升级流程吗？
-```
 
 ## 工作流
 
@@ -131,59 +114,64 @@ alwaysApply: true
 ```
 </workflow>
 
-## 专业领域规则文件
+## 🔍 专业规则文件详细说明
 
-**重要：根据具体的开发场景，AI 必须参考对应的规则文件，避免不同场景的规则互相干扰**
-
-### rules/web-development.mdc
-描述前端+云开发 CloudBase 项目开发的专业规则，包含：
-- Web 项目结构和工程化配置
-- 静态托管部署流程
-- Web SDK 使用和认证方式
-- 适用于纯 Web 项目开发时参考
-
-### rules/miniprogram-development.mdc  
-描述微信小程序开发的专业规则，包含：
+### 📱 rules/miniprogram-development.mdc  
+**强制适用**：微信小程序项目
 - 小程序项目结构和配置
-- 微信开发者工具 CLI 打开项目方法
-- 微信云开发能力集成
-- 小程序特有的 API 和权限处理
-- 适用于微信小程序开发时参考
+- 微信开发者工具 CLI 集成  
+- 云开发能力和 API 使用
+- **特别注意**：严禁使用 Web SDK 认证方式
 
-### rules/cloudbase-platform.mdc
-描述 CloudBase 平台的核心知识，包含：
-- 云开发环境和认证
-- 云函数、数据库、存储等服务
-- 数据模型和权限管理
-- 控制台管理页面链接
-- 适用于所有使用 CloudBase 平台的项目
+### 🌐 rules/web-development.mdc
+**强制适用**：Web 前端项目  
+- 现代前端工程化（Vite/Webpack）
+- 静态托管部署和预览
+- CloudBase Web SDK 集成和认证
+- **特别注意**：必须使用 SDK 内置认证功能
 
-### rules/workflows.mdc
-描述开发工作流程，包含：
-- 部署流程（云函数、静态托管）
+### ☁️ rules/cloudbase-platform.mdc
+**通用必读**：所有 CloudBase 项目
+- 云开发环境配置和认证机制
+- 云函数、数据库、存储服务
+- 数据模型和权限策略
+- 控制台管理链接
+
+### 🔄 rules/workflows.mdc  
+**通用必读**：项目开发各阶段
+- 部署流程和MCP工具调用
+- 文档生成和配置文件规范
 - 素材下载和知识库查询
-- 文档和配置文件生成规则
-- MCP 接口调用规范
-- 适用于项目开发的各个阶段
 
-### rules/database.mdc
-描述云开发 CloudBase 数据库操作的专业规则，包含：
-- CloudBase 数据库操作注意事项
-- 数据库权限管理
-- 数据更新和错误处理
-- 适用于涉及数据库操作的项目
+### 🗄️ rules/database.mdc
+**条件必读**：涉及数据库操作时
+- CloudBase 数据库操作规范
+- 权限管理和安全策略
+- 错误处理和数据更新
 
-### rules/ui-design.mdc
-描述web/小程序等页面设计和 UI 规范，包含：
-- 高保真原型设计流程
-- UI 设计规范和工具选择
-- 前端样式处理
-- 适用于需要设计界面的项目
+### 🎨 rules/ui-design.mdc
+**条件必读**：需要界面设计时  
+- 高保真原型设计
+- UI/UX 规范和样式处理
 
-## 使用指导
-- **Web 项目开发**：主要参考 `rules/web-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc`
-- **微信小程序开发**：主要参考 `rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc`  
-- **数据库相关**：额外参考 `rules/database.mdc`
-- **UI 设计需求**：额外参考 `rules/ui-design.mdc`
+## ⚡ 开发质量检查清单
 
-**重要提醒：开发微信小程序时，严禁参考 Web SDK 的认证方式，必须使用小程序专用的 API 和云开发方式！**
+为确保开发质量，建议在开始任务前完成以下检查：
+
+### ✅ 推荐完成的步骤
+1. **[ ] 场景识别**：明确当前是什么类型的项目（Web/小程序/数据库/UI）
+2. **[ ] 规则声明**：明确列出将要遵循的规则文件清单  
+3. **[ ] 用户确认**：向用户确认场景识别和规则选择是否正确
+4. **[ ] 规则执行**：严格按照选定的规则文件进行开发
+
+### ⚠️ 常见问题避免
+- 避免跳过场景识别直接开始开发
+- 避免混用不同平台的 API 和认证方式  
+- 避免忽略专业规则文件的指导
+- 重要技术方案建议与用户确认
+
+### 🔄 质量保障
+如发现开发不符合规范，可以：
+- 指出具体问题点
+- 要求重新执行规则检查流程
+- 明确指定需要遵循的规则文件
