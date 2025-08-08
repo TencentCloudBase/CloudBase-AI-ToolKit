@@ -23,8 +23,8 @@ alwaysApply: true
 根据识别的场景，需要参考对应的专业规则文件：
 
 **📋 场景规则映射表（必须遵守）：**
-- **Web 项目** → 必读：`rules/web-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc`
-- **微信小程序** → 必读：`rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc`
+- **Web 项目** → 必读：`rules/web-development.mdc` + `rules/cloudbase-platform.mdc`
+- **微信小程序** → 必读：`rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc`
 - **数据库操作** → 额外读：`rules/database.mdc`
 - **UI 设计** → 额外读：`rules/ui-design.mdc`
 
@@ -114,6 +114,31 @@ alwaysApply: true
 ```
 </workflow>
 
+## 🔄 开发工作流程
+
+### 部署流程
+1. **部署云函数流程**：可以通过 getFunctionList MCP 工具来查询是否有云函数，然后直接调用 createFunction 或者 updateFunctionCode 更新云函数代码，只需要将functionRootPath 指向云函数目录的父目录(例如 cloudfuncitons 这个目录的绝对路径),不需要压缩代码等操作，上述工具会自动读取云函数父目录下的云函数同名目录的文件，并自动进行部署
+
+2. **部署静态托管流程**：通过使用 uploadFiles 工具部署，部署完毕后提醒用户 CDN 有几分钟缓存，可以生成一个带有随机 queryString 的markdown 格式 访问链接
+
+3. **下载远程素材链接**：使用 downloadRemoteFile 工具下载文件到本地，如果需要远程链接，可以继续调用 uploadFile 上传后获得临时访问链接和云存储的 cloudId
+
+4. **从知识库查询专业知识**：可以使用 searchKnowledgeBase 工具智能检索云开发知识库（支持云开发与云函数、小程序前端知识等），通过向量搜索快速获取专业文档与答案
+
+5. **下载云开发 AI 规则或者其他模板**：可以使用downloadTemplate 来下载，如果无法下载到当前目录，可以使用脚本来进行复制，注意隐藏文件也需要复制
+
+### 文档生成规则
+1. 你会在生成项目后生成一个 README.md 文件，里面包含项目的基本信息，例如项目名称、项目描述, 最关键的是要把项目的架构和涉及到的云开发资源说清楚，让维护者可以参考来进行修改和维护
+2. 部署完毕后，如果是 web 可以把正式部署的访问地址也写到文档中
+
+### 配置文件规则
+1. 为了方便其他不使用 AI 的人了解有哪些资源，可以在生成之后，同时生成一个 cloudbaserc.json
+
+### MCP 接口调用规则
+你调用mcp服务的时候，需要充分理解所有要调用接口的数据类型，以及返回值的类型，如果你不确定需要调用什么接口，请先查看文档和tools的描述，然后根据文档和tools的描述，确定你需要调用什么接口和参数，不要出现调用的方法参数，或者参数类型错误的情况。
+
+例如，很多接口都需要传confirm参数，这个参数是boolean类型，如果你不提供这个参数，或者提供错误的数据类型错误，那么接口会返回错误。
+
 ## 🔍 专业规则文件详细说明
 
 ### 📱 rules/miniprogram-development.mdc  
@@ -137,11 +162,7 @@ alwaysApply: true
 - 数据模型和权限策略
 - 控制台管理链接
 
-### 🔄 rules/workflows.mdc  
-**通用必读**：项目开发各阶段
-- 部署流程和MCP工具调用
-- 文档生成和配置文件规范
-- 素材下载和知识库查询
+
 
 ### 🗄️ rules/database.mdc
 **条件必读**：涉及数据库操作时
