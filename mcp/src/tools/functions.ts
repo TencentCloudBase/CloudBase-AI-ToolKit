@@ -113,7 +113,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
           triggers: z.array(z.object({
             name: z.string().describe("Trigger name"),
             type: z.enum(SUPPORTED_TRIGGER_TYPES).describe("Trigger type, currently only supports 'timer'"),
-            config: z.string().describe("Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)")
+            config: z.string().describe("Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. IMPORTANT: Must include exactly 7 fields (second minute hour day month week year). Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)")
           })).optional().describe("Trigger configuration array"),
           handler: z.string().optional().describe("函数入口"),
           ignore: z.union([z.string(), z.array(z.string())]).optional().describe("忽略文件"),
@@ -455,7 +455,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         triggers: z.array(z.object({
           name: z.string().describe("Trigger name"),
           type: z.enum(SUPPORTED_TRIGGER_TYPES).describe("Trigger type, currently only supports 'timer'"),
-          config: z.string().describe("Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)")
+          config: z.string().describe("Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. IMPORTANT: Must include exactly 7 fields (second minute hour day month week year). Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)")
         })).describe("Trigger configuration array")
       },
       annotations: {
