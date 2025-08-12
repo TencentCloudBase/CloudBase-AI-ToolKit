@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { getCloudBaseManager } from '../cloudbase-manager.js'
 import { ExtendedMcpServer } from '../server.js';
+import { conditionalRegisterTool } from '../utils/cloud-mode.js';
 
 export function registerStorageTools(server: ExtendedMcpServer) {
   // 获取 cloudBaseOptions，如果没有则为 undefined
@@ -9,8 +10,9 @@ export function registerStorageTools(server: ExtendedMcpServer) {
   // 创建闭包函数来获取 CloudBase Manager
   const getManager = () => getCloudBaseManager({ cloudBaseOptions });
   
-  // uploadFile - 上传文件到云存储
-  server.registerTool?.(
+  // uploadFile - 上传文件到云存储 (cloud-incompatible)
+  conditionalRegisterTool(
+    server,
     "uploadFile",
     {
       title: "上传文件到云存储",
