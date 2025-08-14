@@ -2,6 +2,62 @@ import { z } from "zod";
 import { getCloudBaseManager, getEnvId } from '../cloudbase-manager.js'
 import { ExtendedMcpServer } from '../server.js';
 
+// 导入Mermaid转换功能
+let mermaidToJsonSchema: any = null;
+let jsonSchemaToMermaid: any = null;
+
+// 初始化Mermaid转换功能
+function initializeMermaidTransform() {
+  try {
+    // 使用require来导入mermaid转换函数
+    const mermaidTransform = require('@cloudbase/cals/lib/cjs/utils/mermaid-datasource/mermaid-json-transform');
+    mermaidToJsonSchema = mermaidTransform.mermaidToJsonSchema;
+    jsonSchemaToMermaid = mermaidTransform.jsonSchemaToMermaid;
+  } catch (error) {
+    console.warn('Failed to import mermaid transform functions from @cloudbase/cals:', error);
+  }
+}
+
+// 初始化导入
+initializeMermaidTransform();
+
+// Schema处理函数 - 根据用户提供的技术细节实现
+function createBackendSchemaParams(schema: any) {
+  const commonFields = {
+    "x-kind": "tcb",
+    "x-defaultMethods": [
+      "wedaCreate",
+      "wedaDelete", 
+      "wedaUpdate",
+      "wedaGetItem",
+      "wedaGetList",
+      "wedaGetRecords",
+      "wedaBatchCreate",
+      "wedaBatchUpdate",
+      "wedaBatchDelete"
+    ],
+    "x-primary-column": "_id",
+  };
+
+  // 处理schema中的属性
+  if (schema.properties) {
+    Object.values(schema.properties).forEach((property: any) => {
+      if (property.format === 'x-enum') {
+        property.enum = undefined; // 不创建选项集，太重了
+      }
+
+      if (Array.isArray(property.default) && property.type !== 'array') {
+        if (property.default.length > 0 && property.type === typeof property.default[0]) {
+          property.default = property.default[0];
+        }
+      }
+    });
+  }
+
+  const result = Object.assign({}, commonFields, schema);
+  return result;
+}
+
 
 // 云开发数据库集合相关的类型定义
 type CreateIndexOption = {
@@ -942,52 +998,7 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
   //   }
   // );
 
-  // 查询数据分布
-  server.registerTool?.(
-    "distribution",
-    {
-      title: "查询数据分布",
-      description: "查询数据库中云开发数据库集合的数据分布情况",
-      inputSchema: {},
-      annotations: {
-        readOnlyHint: true,
-        openWorldHint: true,
-        category: "database"
-      }
-    },
-    async () => {
-      try {
-        const cloudbase = await getManager()
-        const result = await cloudbase.database.distribution();
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify({
-                success: true,
-                requestId: result.RequestId,
-                collections: result.Collections,
-                message: "获取数据分布成功"
-              }, null, 2)
-            }
-          ]
-        };
-      } catch (error: any) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify({
-                success: false,
-                error: error.message,
-                message: "获取数据分布失败"
-              }, null, 2)
-            }
-          ]
-        };
-      }
-    }
-  );
+
 
   // 插入文档
   server.registerTool?.(
@@ -1349,13 +1360,53 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
                 }
               }
 
+              // 尝试生成Mermaid图表
+              let mermaidDiagram = null;
+              if (result.Data.Schema && jsonSchemaToMermaid && simplifiedSchema && !simplifiedSchema.error) {
+                try {
+                  const mainSchema = JSON.parse(result.Data.Schema);
+                  const schemasMap: { [modelName: string]: any } = {
+                    [name]: mainSchema
+                  };
+                  
+                  // 获取关联模型的 schema
+                  if (simplifiedSchema.relations && simplifiedSchema.relations.length > 0) {
+                    const relatedModelNames = [...new Set(simplifiedSchema.relations.map((rel: any) => rel.targetModel))];
+                    
+                    for (const relatedModelName of relatedModelNames) {
+                      try {
+                        const relatedResult = await cloudbase.commonService('lowcode').call({
+                          Action: 'DescribeBasicDataSource',
+                          Param: {
+                            EnvId: currentEnvId,
+                            Name: relatedModelName
+                          }
+                        });
+                        
+                        if (relatedResult.Data && relatedResult.Data.Schema) {
+                          schemasMap[relatedModelName] = JSON.parse(relatedResult.Data.Schema);
+                        }
+                      } catch (e) {
+                        console.warn(`获取关联模型 ${relatedModelName} 的 schema 失败:`, e);
+                      }
+                    }
+                  }
+                  
+                  // 调用 jsonSchemaToMermaid，传入正确的参数格式
+                  mermaidDiagram = jsonSchemaToMermaid(schemasMap);
+                } catch (e) {
+                  console.warn('生成Mermaid图表失败:', e);
+                }
+              }
+
               const simplifiedModel = {
                 DbInstanceType: result.Data.DbInstanceType,
                 Title: result.Data.Title,
                 Description: result.Data.Description,
                 Name: result.Data.Name,
                 UpdatedAt: result.Data.UpdatedAt,
-                Schema: simplifiedSchema
+                Schema: simplifiedSchema,
+                mermaid: mermaidDiagram
               };
 
               return {
@@ -1529,6 +1580,195 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
               error: error.message || error.original?.Message || '未知错误',
               code: error.original?.Code,
               message: "数据模型操作失败"
+            }, null, 2)
+          }]
+        };
+      }
+    }
+  );
+
+  // modifyDataModel - 数据模型修改工具（创建/更新）
+  server.registerTool?.(
+    "modifyDataModel",
+    {
+      title: "修改数据模型",
+      description: "基于Mermaid classDiagram创建或更新数据模型。支持创建新模型和更新现有模型结构。内置异步任务监控，自动轮询直至完成或超时。",
+      inputSchema: {
+        mermaidDiagram: z.string().describe(`Mermaid classDiagram代码，描述数据模型结构。
+示例：
+classDiagram
+    class Student {
+        name: string <<姓名>>
+        age: number = 18 <<年龄>>
+        gender: x-enum = "男" <<性别>>
+        classId: string <<班级ID>>
+        identityId: string <<身份ID>>
+        course: Course[] <<课程>>
+        required() ["name"]
+        unique() ["name"]
+        enum_gender() ["男", "女"]
+        display_field() "name"
+    }
+    class Class {
+        className: string <<班级名称>>
+        display_field() "className"
+    }
+    class Course {
+        name: string <<课程名称>>
+        students: Student[] <<学生>>
+        display_field() "name"
+    }
+    class Identity {
+        number: string <<证件号码>>
+        display_field() "number"
+    }
+
+    %% 关联关系
+    Student "1" --> "1" Identity : studentId
+    Student "n" --> "1" Class : student2class
+    Student "n" --> "m" Course : course
+    Student "n" <-- "m" Course : students
+    %% 类的命名
+    note for Student "学生模型"
+    note for Class "班级模型"
+    note for Course "课程模型"
+    note for Identity "身份模型"
+`),
+        action: z.enum(["create", "update"]).optional().default("create").describe("操作类型：create=创建新模型"),
+        publish: z.boolean().optional().default(false).describe("是否立即发布模型"),
+        dbInstanceType: z.string().optional().default("MYSQL").describe("数据库实例类型")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true,
+        category: "database"
+      }
+    },
+    async ({ mermaidDiagram, action = "create", publish = false, dbInstanceType = "MYSQL" }: {
+      mermaidDiagram: string;
+      action?: "create" | "update";
+      publish?: boolean;
+      dbInstanceType?: string;
+    }) => {
+      try {
+
+        const cloudbase = await getManager();
+        let currentEnvId = await getEnvId(cloudBaseOptions);
+
+        // 使用mermaidToJsonSchema转换Mermaid图表
+        const schemas = mermaidToJsonSchema(mermaidDiagram);
+        
+        if (!schemas || Object.keys(schemas).length === 0) {
+          return {
+            content: [{
+              type: "text",
+              text: JSON.stringify({
+                success: false,
+                error: "No schemas generated from Mermaid diagram",
+                message: "无法从Mermaid图表生成数据模型Schema"
+              }, null, 2)
+            }]
+          };
+        }
+
+        // 创建数据模型列表
+        const createDataModelList = Object.entries(schemas).map(([name, schema]) => {
+          return {
+            CreateSource: 'cloudbase_create',
+            Creator: null,
+            DbLinkName: null,
+            Description: (schema as any).description || `${(schema as any).title || name}数据模型`,
+            Schema: JSON.stringify(createBackendSchemaParams(schema)),
+            Title: (schema as any).title || name,
+            Name: name,
+            TableNameRule: 'only_name',
+          };
+        });
+
+        // 调用批量创建数据模型API
+        const result = await cloudbase.commonService('lowcode').call({
+          Action: 'BatchCreateDataModelList',
+          Param: {
+            CreateDataModelList: createDataModelList,
+            Creator: null,
+            DbInstanceType: dbInstanceType,
+            EnvId: currentEnvId,
+          }
+        });
+
+        const taskId = result.Data?.TaskId;
+        if (!taskId) {
+          return {
+            content: [{
+              type: "text",
+              text: JSON.stringify({
+                success: false,
+                requestId: result.RequestId,
+                error: "No TaskId returned",
+                message: "创建任务失败，未返回任务ID"
+              }, null, 2)
+            }]
+          };
+        }
+
+        // 轮询任务状态直至完成或超时
+        const maxWaitTime = 30000; // 30秒超时
+        const startTime = Date.now();
+        let status = 'init';
+        let statusResult: any = null;
+
+        while (status === 'init' && (Date.now() - startTime) < maxWaitTime) {
+          await new Promise(resolve => setTimeout(resolve, 2000)); // 等待2秒
+          
+          statusResult = await cloudbase.commonService('lowcode').call({
+            Action: 'QueryModelTaskStatus',
+            Param: {
+              EnvId: currentEnvId,
+              TaskId: taskId,
+            }
+          });
+          
+          status = statusResult.Data?.Status || 'init';
+        }
+
+        // 返回最终结果
+        const models = Object.keys(schemas);
+        const successModels = statusResult?.Data?.SuccessResourceIdList || [];
+        const failedModels = models.filter(model => !successModels.includes(model));
+
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify({
+              success: status === 'success',
+              requestId: result.RequestId,
+              taskId: taskId,
+              models: models,
+              successModels: successModels,
+              failedModels: failedModels,
+              status: status,
+              action: action,
+              message: status === 'success' 
+                ? `数据模型${action === 'create' ? '创建' : '更新'}成功，共处理${models.length}个模型`
+                : status === 'init' 
+                  ? `任务超时，任务ID: ${taskId}，请稍后手动查询状态`
+                  : `数据模型${action === 'create' ? '创建' : '更新'}失败`,
+              taskResult: statusResult?.Data
+            }, null, 2)
+          }]
+        };
+
+      } catch (error: any) {
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify({
+              success: false,
+              error: error.message || error.original?.Message || '未知错误',
+              code: error.original?.Code,
+              message: "数据模型修改操作失败"
             }, null, 2)
           }]
         };

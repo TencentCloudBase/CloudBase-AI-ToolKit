@@ -177,11 +177,28 @@ alwaysApply: true
 
 
 
+<<<<<<< HEAD
+### rules/data-model-creation.mdc
+描述数据模型AI建模和创建的专业规则，包含：
+- Mermaid ER图建模规范和语法
+- MySQL数据类型映射指导
+- 业务场景到数据结构转换规则
+- 数据模型创建工具使用规范
+- 适用于需要AI驱动数据建模的项目
+
+## 使用指导
+- **Web 项目开发**：主要参考 `rules/web-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc`
+- **微信小程序开发**：主要参考 `rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc`  
+- **数据库相关**：额外参考 `rules/database.mdc`
+- **UI 设计需求**：额外参考 `rules/ui-design.mdc`
+- **数据模型建模**：额外参考 `rules/data-model-creation.mdc`
+=======
 ### 🗄️ rules/database.mdc
 **条件必读**：涉及数据库操作时
 - CloudBase 数据库操作规范
 - 权限管理和安全策略
 - 错误处理和数据更新
+>>>>>>> main
 
 ### 🎨 rules/ui-design.mdc
 **条件必读**：需要界面设计时  
