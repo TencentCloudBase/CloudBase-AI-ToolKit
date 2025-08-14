@@ -69,6 +69,10 @@ export function shouldRegisterTool(toolName: string): boolean {
 
   // Cloud-incompatible tools that involve local file operations
   const cloudIncompatibleTools = [
+    // Auth tools - local file uploads
+    'login',
+    'logout',
+    
     // Storage tools - local file uploads
     'uploadFile',
     
@@ -84,6 +88,7 @@ export function shouldRegisterTool(toolName: string): boolean {
     
     // Download tools - local file downloads
     'downloadTemplate',
+    'downloadRemoteFile',
     
     // Setup tools - local config file operations
     'setupEnvironmentId',
@@ -102,19 +107,4 @@ export function shouldRegisterTool(toolName: string): boolean {
   return shouldRegister;
 }
 
-/**
- * Conditional tool registration wrapper
- * Only registers the tool if it's compatible with current mode
- */
-export function conditionalRegisterTool(
-  server: any,
-  toolName: string,
-  toolConfig: any,
-  handler: any
-): void {
-  if (shouldRegisterTool(toolName)) {
-    server.registerTool?.(toolName, toolConfig, handler);
-  } else {
-    debug(`Skipped registering tool '${toolName}' in cloud mode`);
-  }
-}
+

@@ -3,6 +3,7 @@ import { ToolAnnotations, Tool } from "@modelcontextprotocol/sdk/types.js";
 import { reportToolCall } from './telemetry.js';
 import { debug } from './logger.js';
 import { CloudBaseOptions } from '../types.js';
+import { shouldRegisterTool } from './cloud-mode.js';
 import os from 'os';
 
 // 扩展 McpServer 类型以包含 ide
@@ -139,25 +140,31 @@ function createWrappedHandler(name: string, handler: any, server: ExtendedMcpSer
 }
 
 /**
- * 包装 MCP Server 的 registerTool 方法，添加数据上报功能
+ * 包装 MCP Server 的 registerTool 方法，添加数据上报功能和条件注册
  * @param server MCP Server 实例
  */
 export function wrapServerWithTelemetry(server: McpServer): void {
     // 保存原始的 registerTool 方法
     const originalRegisterTool = server.registerTool.bind(server);
 
-    // 重写 registerTool 方法，添加数据上报功能
+    // Override the registerTool method to add telemetry and conditional registration
     server.registerTool = function(toolName: string, toolConfig: any, handler: any) {
-        
-        // 记录工具注册信息
-        debug(`注册工具: ${toolName}`, { 
+        // If the tool should not be registered in the current mode, do not register and return undefined
+        if (!shouldRegisterTool(toolName)) {
+            debug(`Cloud mode: skipping registration of incompatible tool: ${toolName}`);
+            // Explicitly return undefined to satisfy the expected type
+            return undefined as any;
+        }
+
+        // Log tool registration info
+        debug(`Registering tool: ${toolName}`, { 
             toolConfig
         });
 
-        // 使用包装后的处理函数，传递服务器实例
+        // Use the wrapped handler, passing the server instance
         const wrappedHandler = createWrappedHandler(toolName, handler, server as ExtendedMcpServer);
-        
-        // 调用原始 registerTool 方法
+
+        // Call the original registerTool method
         return originalRegisterTool(toolName, toolConfig, wrappedHandler);
     };
 }

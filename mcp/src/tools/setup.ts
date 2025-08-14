@@ -8,7 +8,7 @@ import * as http from "http";
 import { execSync } from "child_process";
 import AdmZip from "adm-zip";
 import { ExtendedMcpServer } from '../server.js';
-import { conditionalRegisterTool } from '../utils/cloud-mode.js';
+
 
 // 构建时注入的版本号
 // @ts-ignore
@@ -315,8 +315,7 @@ function filterFilesByIDE(files: string[], ide: string): string[] {
 
 export function registerSetupTools(server: ExtendedMcpServer) {
   // downloadTemplate - 下载项目模板 (cloud-incompatible)
-  conditionalRegisterTool(
-    server,
+  server.registerTool(
     "downloadTemplate",
     {
       title: "下载项目模板",

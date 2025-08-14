@@ -8,7 +8,7 @@ import * as https from "https";
 import * as http from "http";
 import { URL } from "url";
 import * as net from "net";
-import { conditionalRegisterTool } from '../utils/cloud-mode.js';
+
 import * as dns from "dns";
 import { getCloudBaseManager } from '../cloudbase-manager.js'
 import { ExtendedMcpServer } from '../server.js';
@@ -245,8 +245,7 @@ function downloadFile(url: string): Promise<{
 
 export function registerDownloadTools(server: ExtendedMcpServer) {
   // downloadRemoteFile - 下载远程文件 (cloud-incompatible)
-  conditionalRegisterTool(
-    server,
+  server.registerTool(
     "downloadRemoteFile",
     {
       title: "下载远程文件",

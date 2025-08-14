@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { getCloudBaseManager } from '../cloudbase-manager.js'
 import { ExtendedMcpServer } from '../server.js';
-import { conditionalRegisterTool } from '../utils/cloud-mode.js';
+
 import path from 'path';
 
 // 支持的 Node.js 运行时列表
@@ -96,8 +96,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
   );
 
   // createFunction - 创建云函数 (cloud-incompatible)
-  conditionalRegisterTool(
-    server,
+  server.registerTool(
     "createFunction",
     {
       title: "创建云函数",
@@ -185,8 +184,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
   );
 
   // updateFunctionCode - 更新函数代码 (cloud-incompatible)
-  conditionalRegisterTool(
-    server,
+  server.registerTool(
     "updateFunctionCode",
     {
       title: "更新云函数代码",

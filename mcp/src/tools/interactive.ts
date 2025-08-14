@@ -7,12 +7,11 @@ import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
 import { ExtendedMcpServer } from '../server.js';
-import { conditionalRegisterTool } from '../utils/cloud-mode.js';
+
 
 export function registerInteractiveTools(server: ExtendedMcpServer) {
   // 统一的交互式对话工具 (cloud-incompatible)
-  conditionalRegisterTool(
-    server,
+  server.registerTool(
     "interactiveDialog",
     {
       title: "交互式对话",

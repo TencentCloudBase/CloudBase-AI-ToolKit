@@ -27,7 +27,7 @@ export type {
 
 export { getLoginState, logout } from "./auth.js";
 
-export { isCloudMode, enableCloudMode, getCloudModeStatus, shouldRegisterTool, conditionalRegisterTool } from "./utils/cloud-mode.js";
+export { isCloudMode, enableCloudMode, getCloudModeStatus, shouldRegisterTool } from "./utils/cloud-mode.js";
 
 export {
   getCloudBaseManager,

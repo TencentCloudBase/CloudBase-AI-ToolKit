@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { getCloudBaseManager } from '../cloudbase-manager.js'
 import { ExtendedMcpServer } from '../server.js';
-import { conditionalRegisterTool } from '../utils/cloud-mode.js';
+
 
 // 定义扩展的EnvInfo接口，包含StaticStorages属性
 interface ExtendedEnvInfo {
@@ -23,8 +23,7 @@ export function registerHostingTools(server: ExtendedMcpServer) {
   const getManager = () => getCloudBaseManager({ cloudBaseOptions });
 
   // uploadFiles - 上传文件到静态网站托管 (cloud-incompatible)
-  conditionalRegisterTool(
-    server,
+  server.registerTool(
     "uploadFiles",
     {
       title: "上传静态文件",
