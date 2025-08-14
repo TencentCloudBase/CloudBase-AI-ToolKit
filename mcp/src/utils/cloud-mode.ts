@@ -8,14 +8,23 @@ import { debug } from './logger.js';
  * 3. Environment variable MCP_CLOUD_MODE=true
  */
 export function isCloudMode(): boolean {
+  // Check for CLI argument first
+  const hasCloudModeArg = process.argv.includes('--cloud-mode');
+  
+  // Check environment variables
   const cloudModeEnabled = process.env.CLOUDBASE_MCP_CLOUD_MODE === 'true' || 
                           process.env.MCP_CLOUD_MODE === 'true';
   
-  if (cloudModeEnabled) {
-    debug('Cloud mode is enabled');
+  const isEnabled = hasCloudModeArg || cloudModeEnabled;
+  
+  if (isEnabled) {
+    debug('Cloud mode is enabled', { 
+      source: hasCloudModeArg ? 'CLI_ARG' : 'ENV_VAR',
+      envVar: process.env.CLOUDBASE_MCP_CLOUD_MODE || process.env.MCP_CLOUD_MODE 
+    });
   }
   
-  return cloudModeEnabled;
+  return isEnabled;
 }
 
 /**
@@ -33,6 +42,11 @@ export function getCloudModeStatus(): {
   enabled: boolean; 
   source: string | null;
 } {
+  // Check CLI argument first
+  if (process.argv.includes('--cloud-mode')) {
+    return { enabled: true, source: 'CLI_ARG' };
+  }
+  
   if (process.env.CLOUDBASE_MCP_CLOUD_MODE === 'true') {
     return { enabled: true, source: 'CLOUDBASE_MCP_CLOUD_MODE' };
   }

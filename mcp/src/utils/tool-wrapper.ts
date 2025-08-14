@@ -5,6 +5,12 @@ import { debug } from './logger.js';
 import { CloudBaseOptions } from '../types.js';
 import os from 'os';
 
+// 扩展 McpServer 类型以包含 ide
+interface ExtendedMcpServer extends McpServer {
+  cloudBaseOptions?: CloudBaseOptions;
+  ide?: string;
+}
+
 /**
  * 工具包装器，为 MCP 工具添加数据上报功能
  * 自动记录工具调用的成功/失败状态、执行时长等信息
@@ -72,7 +78,7 @@ ${JSON.stringify(sanitizeArgs(args), null, 2)}
 /**
  * 创建包装后的处理函数，添加数据上报功能
  */
-function createWrappedHandler(name: string, handler: any, cloudBaseOptions?: CloudBaseOptions) {
+function createWrappedHandler(name: string, handler: any, server: ExtendedMcpServer) {
     return async (args: any) => {
         const startTime = Date.now();
         let success = false;
@@ -125,7 +131,8 @@ function createWrappedHandler(name: string, handler: any, cloudBaseOptions?: Clo
                 duration,
                 error: errorMessage,
                 inputParams: sanitizeArgs(args), // 添加入参上报
-                cloudBaseOptions // 传递 CloudBase 配置
+                cloudBaseOptions: server.cloudBaseOptions, // 传递 CloudBase 配置
+                ide: server.ide  || process.env.INTEGRATION_IDE // 传递集成IDE信息
             });
         }
     };
@@ -147,8 +154,8 @@ export function wrapServerWithTelemetry(server: McpServer): void {
             toolConfig
         });
 
-        // 使用包装后的处理函数，传递服务器配置
-        const wrappedHandler = createWrappedHandler(toolName, handler, (server as any).cloudBaseOptions);
+        // 使用包装后的处理函数，传递服务器实例
+        const wrappedHandler = createWrappedHandler(toolName, handler, server as ExtendedMcpServer);
         
         // 调用原始 registerTool 方法
         return originalRegisterTool(toolName, toolConfig, wrappedHandler);

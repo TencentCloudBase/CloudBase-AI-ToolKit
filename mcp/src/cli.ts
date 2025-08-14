@@ -5,6 +5,34 @@ import { createCloudBaseMcpServer } from "./server.js";
 import { telemetryReporter, reportToolkitLifecycle } from "./utils/telemetry.js";
 import { info, warn } from './utils/logger.js';
 
+/**
+ * Parse command line arguments
+ * Supports --cloud-mode and --integration-ide flags
+ */
+function parseCommandLineArgs(): {
+  cloudMode: boolean;
+  ide?: string;
+} {
+  const args = process.argv.slice(2);
+  let cloudMode = false;
+  let ide: string | undefined;
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    
+    if (arg === '--cloud-mode') {
+      cloudMode = true;
+    } else if (arg === '--integration-ide' && i + 1 < args.length) {
+      ide = args[i + 1];
+      i++; // Skip the next argument since we consumed it
+    } else if (arg.startsWith('--integration-ide=')) {
+      ide = arg.split('=')[1];
+    }
+  }
+
+  return { cloudMode, ide };
+}
+
 // 劫持 console.log/info/warn，防止污染 stdout 协议流
 const joinArgs = (...args: any[]) => args.map(a => {
   if (typeof a === 'string') return a;
@@ -28,11 +56,24 @@ const startTime = Date.now();
 const isTestEnvironment = process.env.NODE_ENV === 'test' || process.env.VITEST === 'true';
 const enableTelemetry = !isTestEnvironment;
 
-// Create server instance with conditional telemetry
+// Parse command line arguments
+const { cloudMode, ide } = parseCommandLineArgs();
+
+// Log startup information
+if (cloudMode) {
+  info("Starting CloudBase MCP Server in cloud mode");
+}
+if (ide) {
+  info(`Integration IDE: ${ide}`);
+}
+
+// Create server instance with conditional telemetry and CLI options
 const server = createCloudBaseMcpServer({
   name: "cloudbase-mcp",
   version: "1.0.0",
-  enableTelemetry
+  enableTelemetry,
+  cloudMode,
+  ide
 });
 
 async function main() {
@@ -43,7 +84,8 @@ async function main() {
   // 上报启动信息
   if (telemetryReporter.isEnabled()) {
     await reportToolkitLifecycle({
-      event: 'start'
+      event: 'start',
+      ide
     });
   }
 }
@@ -57,7 +99,8 @@ function setupExitHandlers() {
         event: 'exit',
         duration,
         exitCode,
-        error: signal ? `Process terminated by signal: ${signal}` : undefined
+        error: signal ? `Process terminated by signal: ${signal}` : undefined,
+        ide
       });
     }
   };
@@ -105,7 +148,8 @@ main().catch(async (error) => {
       event: 'exit',
       duration,
       exitCode: 1,
-      error: `Startup failed: ${error.message}`
+      error: `Startup failed: ${error.message}`,
+      ide
     });
   }
 

@@ -14,6 +14,7 @@ import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
 import { registerGatewayTools } from "./tools/gateway.js";
 import { registerInviteCodeTools } from "./tools/invite-code.js";
 import { CloudBaseOptions } from "./types.js";
+import { enableCloudMode } from "./utils/cloud-mode.js";
 
 
 // 插件定义
@@ -71,6 +72,7 @@ function parseEnabledPlugins(): string[] {
 // 扩展 McpServer 类型以包含 cloudBaseOptions 和新的registerTool方法
 export interface ExtendedMcpServer extends McpServer {
   cloudBaseOptions?: CloudBaseOptions;
+  ide?: string;
 }
 
 /**
@@ -98,13 +100,22 @@ export function createCloudBaseMcpServer(options?: {
   version?: string;
   enableTelemetry?: boolean;
   cloudBaseOptions?: CloudBaseOptions;
+  cloudMode?: boolean;
+  ide?: string;
 }): ExtendedMcpServer {
   const {
     name = "cloudbase-mcp",
     version = "1.0.0",
     enableTelemetry = true,
-    cloudBaseOptions
+    cloudBaseOptions,
+    cloudMode = false,
+    ide
   } = options ?? {};
+
+  // Enable cloud mode if specified
+  if (cloudMode) {
+    enableCloudMode();
+  }
 
   // Create server instance
   const server = new McpServer({
@@ -120,6 +131,11 @@ export function createCloudBaseMcpServer(options?: {
   // Store cloudBaseOptions in server instance for tools to access
   if (cloudBaseOptions) {
     server.cloudBaseOptions = cloudBaseOptions;
+  }
+
+  // Store ide in server instance for telemetry
+  if (ide) {
+    server.ide = ide;
   }
 
   // Enable telemetry if requested

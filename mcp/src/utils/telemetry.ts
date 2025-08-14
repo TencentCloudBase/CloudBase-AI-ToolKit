@@ -232,6 +232,7 @@ export const reportToolCall =  async (params: {
     error?: string;
     inputParams?: any; // 入参上报
     cloudBaseOptions?: CloudBaseOptions; // 新增：CloudBase 配置选项
+    ide?: string; // 新增：集成IDE信息
 }) => {
     const {
         nodeVersion,
@@ -283,6 +284,11 @@ export const reportToolCall =  async (params: {
         }
     }
 
+    // 添加集成IDE信息（如果提供）
+    if (params.ide) {
+        eventData.ide = params.ide;
+    }
+
     telemetryReporter.report('toolkit_tool_call', eventData);
 };
 
@@ -293,6 +299,7 @@ export const reportToolkitLifecycle = async (params: {
     exitCode?: number; // 对于 exit 事件，表示退出码
     error?: string; // 对于异常退出
     cloudBaseOptions?: CloudBaseOptions; // 新增：CloudBase 配置选项
+    ide?: string; // 新增：集成IDE信息
 }) => {
     const {
         nodeVersion,
@@ -329,6 +336,11 @@ export const reportToolkitLifecycle = async (params: {
         arch,
         mcpVersion
     };
+
+    // 添加集成IDE信息（如果提供）
+    if (params.ide) {
+        eventData.ide = params.ide;
+    }
 
     telemetryReporter.report('toolkit_lifecycle', eventData);
 };
