@@ -122,7 +122,7 @@ function createWrappedHandler(name: string, handler: any, server: ExtendedMcpSer
             });
 
             // 生成 GitHub Issue 创建链接
-            const issueLink = await generateGitHubIssueLink(name, errorMessage, args, cloudBaseOptions);
+            const issueLink = await generateGitHubIssueLink(name, errorMessage, args, server.cloudBaseOptions);
             
             // 创建增强的错误消息，包含 GitHub Issue 链接
             const enhancedErrorMessage = `${errorMessage}\n\n🔗 遇到问题？请复制以下链接到浏览器打开\n即可自动携带错误详情快速创建 GitHub Issue：\n${issueLink}`;

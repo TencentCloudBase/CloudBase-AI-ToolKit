@@ -715,6 +715,58 @@ export class InteractiveServer {
             font-size: 14px;
         }
         
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .empty-icon {
+            margin-bottom: 24px;
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+        
+        .empty-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        
+        .empty-message {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 32px;
+            max-width: 400px;
+        }
+        
+        .create-env-btn {
+            padding: 14px 24px;
+            font-size: 15px;
+            background: var(--primary-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        
+        .create-env-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
         .actions {
             display: flex;
             gap: 12px;
@@ -891,17 +943,37 @@ export class InteractiveServer {
             <p class="content-subtitle">请选择您要使用的云开发环境</p>
             
             <div class="env-list" id="envList">
-                ${(envs || []).map((env, index) => `
-                    <div class="env-item" onclick="selectEnv('${env.EnvId}', this)" style="animation-delay: ${index * 0.1}s;">
-                        <svg class="env-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                        </svg>
-                        <div class="env-info">
-                            <div class="env-name">${env.EnvId}</div>
-                            <div class="env-alias">${env.Alias || '无别名'}</div>
+                ${(envs || []).length > 0 ? 
+                    (envs || []).map((env, index) => `
+                        <div class="env-item" onclick="selectEnv('${env.EnvId}', this)" style="animation-delay: ${index * 0.1}s;">
+                            <svg class="env-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                            </svg>
+                            <div class="env-info">
+                                <div class="env-name">${env.EnvId}</div>
+                                <div class="env-alias">${env.Alias || '无别名'}</div>
+                            </div>
                         </div>
+                    `).join('') :
+                    `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                        </div>
+                        <h3 class="empty-title">暂无云开发环境</h3>
+                        <p class="empty-message">当前没有可用的云开发 CloudBase 环境，请新建后重新在 AI 对话中重试</p>
+                        <button class="btn btn-primary create-env-btn" onclick="createNewEnv()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M5 12h14"/>
+                            </svg>
+                            新建环境
+                        </button>
                     </div>
-                `).join('')}
+                    `
+                }
             </div>
             
             <div class="actions">
@@ -1031,6 +1103,13 @@ export class InteractiveServer {
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('confirmBtn').disabled = false;
               });
+        }
+        
+        function createNewEnv() {
+            const integrationIde = '${process.env.INTEGRATION_IDE || "AI Toolkit"}';
+            const url = \`http://tcb.cloud.tencent.com/dev?from=\${encodeURIComponent(integrationIde)}\`;
+            console.log('🚀 打开新建环境页面:', url);
+            window.open(url, '_blank');
         }
         
         function cancel() {

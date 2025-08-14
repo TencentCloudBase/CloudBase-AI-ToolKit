@@ -119,7 +119,7 @@ export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean, serv
   const cloudbase = await getCloudBaseManager({requireEnvId: false});
   const envResult = await cloudbase.env.listEnvs();
   debug('envResult', envResult);
-  if (!envResult || !envResult.EnvList || envResult.EnvList.length === 0) {
+  if (!envResult || !envResult.EnvList) {
     return { selectedEnvId: null, cancelled: false, noEnvs: true };
   }
 
