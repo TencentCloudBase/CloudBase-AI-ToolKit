@@ -1102,8 +1102,7 @@ export class InteractiveServer {
         function createNewEnv() {
             const integrationIde = '${process.env.INTEGRATION_IDE || "AI Toolkit"}';
             const url = \`http://tcb.cloud.tencent.com/dev?from=\${encodeURIComponent(integrationIde)}\`;
-            console.log('🚀 打开新建环境页面:', url);
-            window.open(url, '_blank');
+            location.href = url;
         }
         
         function cancel() {

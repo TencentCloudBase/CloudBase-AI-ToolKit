@@ -13,8 +13,14 @@ export async function getLoginState() {
     debug('TENCENTCLOUD_SECRETID',TENCENTCLOUD_SECRETID)
     if (TENCENTCLOUD_SECRETID && TENCENTCLOUD_SECRETKEY) {
         debug('loginByApiSecret')
-        await auth.loginByApiSecret(TENCENTCLOUD_SECRETID, TENCENTCLOUD_SECRETKEY, TENCENTCLOUD_SESSIONTOKEN)
+        return {
+            secretId: TENCENTCLOUD_SECRETID,
+            secretKey: TENCENTCLOUD_SECRETKEY,
+            token: TENCENTCLOUD_SESSIONTOKEN
+        }
+        // await auth.loginByApiSecret(TENCENTCLOUD_SECRETID, TENCENTCLOUD_SECRETKEY, TENCENTCLOUD_SESSIONTOKEN)
     }
+    
     const loginState = await auth.getLoginState()
     if (!loginState) {
         debug('loginByApiSecret')
