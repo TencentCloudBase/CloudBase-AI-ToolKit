@@ -2,6 +2,9 @@
 
 ## 📄 文章
 
+### 🚀 CloudBase AI CLI 实战案例
+- [用 CloudBase AI CLI 开发邻里闲置物品循环利用小程序](https://docs.cloudbase.net/practices/ai-cli-mini-program) - 详细案例教程，展示如何使用 CloudBase AI CLI 从零开始开发完整的小程序项目
+
 ### 🌐 全栈Web应用
 - [使用 CodeBuddy IDE + CloudBase 一站式开发卡片翻翻翻游戏](https://mp.weixin.qq.com/s/2EM3RBzdQUCdfld2CglWgg)
 - [1小时开发微信小游戏《我的早餐店》——基于CloudBase AI Toolkit](https://cloud.tencent.com/developer/article/2532595)

@@ -47,45 +47,37 @@
 ---
 🚩 **快速上手 CloudBase AI ToolKit**
 
-1. **启用 CloudBase 工具（MCP 配置）**  
-在你的 AI IDE（如 Cursor）中添加以下配置，即可启用 CloudBase AI ToolKit 的全部能力：
+## 🚀 推荐方式：CloudBase AI CLI（最简单）
 
-```json
-{
-  "mcpServers": {
-    "cloudbase": {
-      "command": "npx",
-      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
-    }
-  }
-}
+CloudBase AI CLI 是一个集成多种主流 AI 编程工具的统一命令行工具，支持内置模型和自定义模型，让你能够通过一个简单的命令使用 Claude Code、OpenAI Codex、aider、Qwen Code 等 AI 编程助手，同时内置 CloudBase AI Toolkit，支持从开发到部署的完整流程，支持在任意环境中运行。
+
+**核心优势：**
+- 🏗️ **统一管理** - 一个命令管理多种 AI 编程 CLI 工具，无需在多个工具间切换
+- 🤖 **多模型支持** - 支持内置和自定义各种大模型，包括 Kimi K2、智谱 GLM-4.5 等
+- 🚀 **一键开发部署** - 从代码生成到云端部署的完整流程，支持 Web 应用、小程序、后端服务
+- 🌍 **无处不在** - 可在任意环境中运行，包括小程序开发者工具、VS Code、GitHub Actions 等
+
+**一键安装**
+```bash
+# Mac/Linux/Windows 的 WSL
+curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
+
+# Windows PowerShell
+irm https://static.cloudbase.net/cli/install/install.ps1 | iex
 ```
 
-2. **一键生成项目模板**  
-在 AI 对话框输入：
-
-```
-下载小程序云开发模板
+**开始使用**
+```bash
+tcb ai
 ```
 
-如果你只想下载特定IDE的配置文件，避免项目文件混乱，可以指定IDE类型：
-```
-下载小程序云开发模板，只包含Cursor配置
-下载React云开发模板，只包含WindSurf配置
-下载通用云开发模板，只包含Claude Code配置
-```
+首次启动，配置向导会引导你完成 AI 工具选择和配置。完成配置后即可开始使用 AI 工具进行辅助开发，后续可以运行 `tcb ai --setup` 来切换工具和模型。
 
-3. **可选模板类型**  
-- 小程序云开发模板
-- React 云开发模板
-- Vue 云开发模板
-- UniApp 云开发模板
-- 通用云开发模板
+👉 [查看完整使用文档](https://docs.cloudbase.net/cli-v1/ai/introduce) | [立即体验](https://docs.cloudbase.net/cli-v1/ai/introduce) | [全栈小程序开发详细案例教程](https://docs.cloudbase.net/practices/ai-cli-mini-program)
 
-👉 [查看全部官方模板及说明](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates)
+## 🛠️ 其他 IDE 配置方式
 
-4. **详细教程**  
-👉 [查看完整配置与使用教程](#💻-支持的-ai-开发工具)
+如果你使用其他 AI IDE，请参考下面的配置指南：
 
 ---
 
@@ -93,6 +85,7 @@
 
 | 工具 | 支持平台 | 查看指引 |
 |------|----------|----------|
+| [CloudBase AI CLI](https://docs.cloudbase.net/cli-v1/ai/introduce) | 命令行工具 | [查看指引](https://docs.cloudbase.net/cli-v1/ai/introduce) |
 | [Cursor](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) | 独立 IDE| [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) |
 | [WindSurf](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) | 独立 IDE, VSCode、JetBrains 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) |
 | [CodeBuddy](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) | VS Code、JetBrains、微信开发者工具、独立 IDE（推荐，已内置 CloudBase AI Toolkit） | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) |

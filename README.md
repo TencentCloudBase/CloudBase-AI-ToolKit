@@ -61,47 +61,37 @@ When coding in **Cursor/VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Cla
 ---
 🚩 **Get Started with CloudBase AI ToolKit**
 
-1. **Enable CloudBase Tools (MCP Config)**  
-Add the following config to your AI IDE (e.g., Cursor) to enable all CloudBase AI ToolKit capabilities:
+## 🚀 Recommended: CloudBase AI CLI (Simplest)
 
-```json
-{
-  "mcpServers": {
-    "cloudbase": {
-      "command": "npx",
-      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
-    }
-  }
-}
+CloudBase AI CLI is a unified command-line tool that integrates multiple mainstream AI programming tools, supporting built-in models and custom models. It allows you to use Claude Code, OpenAI Codex, aider, Qwen Code, and other AI programming assistants with a simple command, while built-in CloudBase AI Toolkit supports the complete workflow from development to deployment, and can run in any environment.
+
+**Core Advantages:**
+- 🏗️ **Unified Management** - One command to manage multiple AI programming CLI tools, no need to switch between tools
+- 🤖 **Multi-Model Support** - Support for built-in and custom large models, including Kimi K2, Zhipu GLM-4.5, etc.
+- 🚀 **One-Click Development & Deployment** - Complete workflow from code generation to cloud deployment, supporting Web apps, mini-programs, and backend services
+- 🌍 **Everywhere** - Can run in any environment, including mini-program developer tools, VS Code, GitHub Actions, etc.
+
+**One-Click Installation**
+```bash
+# Mac/Linux/Windows WSL
+curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
+
+# Windows PowerShell
+irm https://static.cloudbase.net/cli/install/install.ps1 | iex
 ```
 
-2. **One-Click Project Template Generation**  
-In the AI chat box, enter:
-
-```
-Download mini-program cloud development template
+**Start Using**
+```bash
+tcb ai
 ```
 
-If you only want to download specific IDE config files to avoid project file confusion, you can specify the IDE type:
-```
-Download mini-program cloud development template, only include Cursor config
-Download React cloud development template, only include WindSurf config
-Download universal cloud development template, only include Claude Code config
-```
+On first launch, the configuration wizard will guide you through AI tool selection and configuration. After configuration, you can start using AI tools for assisted development. You can run `tcb ai --setup` later to switch tools and models.
 
-Supported IDE types: cursor, windsurf, codebuddy, claude-code, cline, gemini-cli, opencode, qwen-code, baidu-comate, openai-codex-cli, augment-code, github-copilot, roocode, tongyi-lingma, trae, vscode
+👉 [View complete usage documentation](https://docs.cloudbase.net/cli-v1/ai/introduce) | [Try Now](https://docs.cloudbase.net/cli-v1/ai/introduce) | [Full-Stack Mini-Program Development Case Tutorial](https://docs.cloudbase.net/practices/ai-cli-mini-program)
 
-3. **Available Template Types**  
-- Mini-program cloud development template
-- React cloud development template
-- Vue cloud development template
-- UniApp cloud development template
-- Universal cloud development template
+## 🛠️ Other IDE Configuration Methods
 
-👉 [View all official templates and docs](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates)
-
-4. **Detailed Tutorial**  
-👉 [View full configuration and usage tutorial](#2-configure-your-ai-ide)
+If you use other AI IDEs, please refer to the configuration guides below:
 
 ---
 
@@ -195,6 +185,7 @@ All the following tools support CloudBase AI ToolKit. Choose your tool and follo
 
 | Tool | Platform | Guide |
 |------|----------|----------|
+| [CloudBase AI CLI](https://docs.cloudbase.net/cli-v1/ai/introduce) | CLI | [Guide](https://docs.cloudbase.net/cli-v1/ai/introduce) |
 | [Cursor](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) | Standalone IDE| [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) |
 | [WindSurf](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) | Standalone IDE, VSCode, JetBrains | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) |
 | [CodeBuddy](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) | Standalone IDE (CloudBase built-in), VS Code, JetBrains, WeChat DevTools | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) |
@@ -274,6 +265,9 @@ CloudBase MCP uses a plugin architecture. [See detailed docs](https://docs.cloud
 ## 📚 Tutorials
 
 ### 📄 Articles
+
+#### 🚀 CloudBase AI CLI Case Studies
+- [Develop a Neighborhood Item Recycling Mini-Program with CloudBase AI CLI](https://docs.cloudbase.net/practices/ai-cli-mini-program) - Detailed case tutorial showing how to use CloudBase AI CLI to develop a complete mini-program project from scratch
 
 #### 🌐 Full-Stack Web Apps
 - [One-stop development of card flip game with CodeBuddy IDE + CloudBase](https://mp.weixin.qq.com/s/2EM3RBzdQUCdfld2CglWgg)
