@@ -1,5 +1,5 @@
 ---
-description: 页面设计和UI规范
+description: 页面设计和UI规范，web 前端和小程序页面设计规则
 globs: ["**/*.css", "**/*.scss", "**/*.less", "**/*.wxml", "**/*.html", "**/*.vue", "**/*.jsx", "**/*.tsx"]
 alwaysApply: false
 ---

@@ -1,9 +1,7 @@
 ---
-description: 数据库操作规则和注意事项
-globs: ["**/db/**/*", "**/database/**/*"]
+description: 云开发云数据库（NoSQL）参考指南
 alwaysApply: false
 ---
-
 # 数据库操作规则
 
 ## CloudBase 数据库注意事项

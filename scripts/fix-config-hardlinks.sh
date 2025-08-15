@@ -21,7 +21,8 @@ TARGET_FILES=(
     "config/.windsurf/rules/cloudbase-rules.md"
     "config/.roo/rules/cloudbaase-rules.md"
     "config/.lingma/rules/cloudbaase-rules.md"
-    "config/.rules/cloudbase-rules.md"
+    "config/.rules/cloudbase-rules.md",
+    "config/.rules/cloudbase-rules.mdc"
     "config/.clinerules/cloudbase-rules.mdc"
     "config/.github/copilot-instructions.md"
     "config/.comate/rules/cloudbase-rules.mdr"
