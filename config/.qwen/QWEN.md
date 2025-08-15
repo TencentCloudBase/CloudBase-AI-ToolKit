@@ -1,6 +1,6 @@
 
+cloudbaseAIVersion：1.8.32
 ---
-cloudbaseAIVersion：1.8.28
 description: CloudBase AI 开发规则指南 - 提供场景化的最佳实践，确保开发质量
 globs: *
 alwaysApply: true
@@ -41,23 +41,9 @@ alwaysApply: true
 4. **部署顺序**：有后端依赖时，优先部署后端再预览前端
 5. **交互确认**：需求不明确时使用 interactiveDialog 澄清，执行高风险操作前必须确认
 6. **实时通信**：使用云开发的实时数据库 watch 能力
-7. **认证规则**：严格区分平台的认证方式
+7. **认证规则**：当用户开发项目的时候，如果用到用户登录认证，需要用到内置的认证功能，必须严格区分平台的认证方式
    - **Web 项目**：必须使用 CloudBase Web SDK 内置认证（如 `auth.toDefaultLoginPage()`）
    - **小程序项目**：天然免登录，云函数中获取 `wxContext.OPENID`
-
-## 版本检测和升级约束
-
-### 自动版本检测
-- 当用户使用 CloudBase 相关功能时，AI Agent 应自动检查当前项目的 cloudbaseAIVersion 字段
-- 通过 npm registry API 查询 @cloudbase/cloudbase-mcp 的最新版本
-- 比较版本差异，如果发现新版本可用，主动向用户提示升级建议
-- 首次使用时显示友好的欢迎信息和当前版本
-
-### 升级指导流程
-- 检测到版本差异时，使用 interactiveDialog 工具与用户确认升级意愿
-- 提供详细的升级指导，包括 MCP 升级和 AI 规则下载两个选项
-- 集成官方文档链接：https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#如何更新-cloudbase-ai-toolkit
-- 指导用户执行 downloadTemplate 操作，参数为 template:rules
 
 ## 工作流
 
