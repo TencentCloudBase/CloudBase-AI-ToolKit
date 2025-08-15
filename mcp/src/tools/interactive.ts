@@ -117,21 +117,24 @@ export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean, serv
 
   // 2. 获取可用环境列表
   const cloudbase = await getCloudBaseManager({requireEnvId: false});
-  const envResult = await cloudbase.env.listEnvs();
-  debug('envResult', envResult);
-  if (!envResult || !envResult.EnvList) {
-    return { selectedEnvId: null, cancelled: false, noEnvs: true };
+  let envResult;
+  try {
+    envResult = await cloudbase.env.listEnvs();
+  } catch (error) {
+    debug('获取环境ID时出错:', error);
   }
+  
+  debug('envResult', envResult);
 
-  const { EnvList } = envResult;
+  const { EnvList } = envResult || {};
   let selectedEnvId: string | null = null;
 
   // 3. 根据情况选择或提示用户选择
-  if (autoSelectSingle && EnvList.length === 1 && EnvList[0].EnvId) {
+  if (autoSelectSingle && EnvList && EnvList.length === 1 && EnvList[0].EnvId) {
     selectedEnvId = EnvList[0].EnvId;
   } else {
     const interactiveServer = getInteractiveServer(server);
-    const result = await interactiveServer.collectEnvId(EnvList);
+    const result = await interactiveServer.collectEnvId(EnvList || []);
 
     if (result.cancelled) {
       return { selectedEnvId: null, cancelled: true };
@@ -146,6 +149,7 @@ export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean, serv
   }
 
   return { selectedEnvId, cancelled: false };
+  
 }
 
 // 获取用户配置文件路径

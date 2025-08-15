@@ -39,7 +39,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
         }
 
         if (noEnvs) {
-          return { content: [{ type: "text", text: "当前账户下暂无可用的云开发环境，请先在腾讯云控制台创建环境" }] };
+          return { content: [{ type: "text", text: "当前账户下暂无可用的云开发环境，请先在腾讯云控制台创建环境 https://tcb.cloud.tencent.com/dev?from=AIToolkit" }] };
         }
 
         if (cancelled) {
@@ -91,7 +91,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
         // 清理环境ID配置
         await clearUserEnvId();
         resetCloudBaseManagerCache();
-        
+
         return {
           content: [{
             type: "text",
@@ -127,23 +127,30 @@ export function registerEnvTools(server: ExtendedMcpServer) {
     async ({ action }: { action: "list" | "info" | "domains" }) => {
       try {
         let result;
-        
+
         switch (action) {
           case "list":
-            const cloudbaseList = await getCloudBaseManager({ cloudBaseOptions, requireEnvId: false });
-            result = await cloudbaseList.env.listEnvs();
+            try {
+              const cloudbaseList = await getCloudBaseManager({ cloudBaseOptions, requireEnvId: false });
+              result = await cloudbaseList.env.listEnvs();
+            } catch (error) {
+              debug('获取环境列表时出错:', error);
+              return { content: 
+                [{ type: "text", text: "当前账户下暂无可用的云开发环境，请先在腾讯云控制台创建环境 https://tcb.cloud.tencent.com/dev?from=AIToolkit \n错误信息:" + (error instanceof Error ? error.message : String(error)) }] 
+              };
+            }
             break;
-            
+
           case "info":
             const cloudbaseInfo = await getManager();
             result = await cloudbaseInfo.env.getEnvInfo();
             break;
-            
+
           case "domains":
             const cloudbaseDomains = await getManager();
             result = await cloudbaseDomains.env.getEnvAuthDomains();
             break;
-            
+
           default:
             throw new Error(`不支持的查询类型: ${action}`);
         }
@@ -187,16 +194,16 @@ export function registerEnvTools(server: ExtendedMcpServer) {
       try {
         const cloudbase = await getManager();
         let result;
-        
+
         switch (action) {
           case "create":
             result = await cloudbase.env.createEnvDomain(domains);
             break;
-            
+
           case "delete":
             result = await cloudbase.env.deleteEnvDomain(domains);
             break;
-            
+
           default:
             throw new Error(`不支持的操作类型: ${action}`);
         }
