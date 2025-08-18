@@ -107,28 +107,6 @@ AI 会自动下载并更新最新的规则配置到你的项目目录。
 
 如果你希望全局安装 CloudBase AI ToolKit 以避免每次使用 npx 下载，推荐使用 `npm-global-exec` 方式，这种方式更稳定且自动处理依赖：
 
-**推荐配置方式：**
-
-```json
-{
-  "mcpServers": {
-    "cloudbase": {
-      "command": "npx",
-      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
-    }
-  }
-}
-```
-
-**优势：**
-- 启动速度更快，无需每次下载
-- 避免网络问题导致的启动失败
-- 减少 npx 缓存相关问题
-- 自动安装和管理依赖
-- 避免全局安装可能遇到的权限和环境问题
-- 自动获取最新版本
-
-
 **1. 检查环境配置**
 - 确保 Node.js 版本为 v18.15.0 及以上,macOS 用户且使用 nvm 管理 Node.js 的，请务必设置默认 Node 版本为 v18.15.0 及以上，避免不同终端版本不一致导致的问题。
 - 检查网络连接，建议设置 npm 源为腾讯镜像源：
@@ -152,7 +130,7 @@ npx -y npm-global-exec@latest @cloudbase/cloudbase-mcp@latest
 
 3.1 重启 IDE
 
-3.2 删除原有的 CloudBase MCP Server 配置，并使用新的 MCP Server 配置如下
+3.2 确保 MCP Server 的配置如下
 
 ```json
 {
@@ -194,6 +172,12 @@ Safari 浏览器在某些情况下可能存在兼容性问题，影响授权流�
 
 如果你在远程开发环境中工作，或者需要在没有浏览器的服务端环境中直接调用 MCP，无法通过浏览器完成授权登录，可以使用环境变量来配置腾讯云密钥和环境信息。
 
+全局安装安装脚本
+
+```
+npm i  @cloudbase/cloudbase-mcp@latest -g
+```
+
 **配置方法：**
 
 在 MCP 配置中使用 `env` 环境变量来设置认证信息：
@@ -202,9 +186,9 @@ Safari 浏览器在某些情况下可能存在兼容性问题，影响授权流�
 {
   "mcpServers": {
     "cloudbase-mcp": {
-      "command": "npx",
-      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"],
-      "env": {
+    "command": "cloudbase-mcp",
+    "args": ["--integration-ide", "YOUR_IDE"]
+    "env": {
         "TENCENTCLOUD_SECRETID": "腾讯云 SecretId",
         "TENCENTCLOUD_SECRETKEY": "腾讯云 SecretKey",
         "TENCENTCLOUD_SESSIONTOKEN": "腾讯云临时密钥Token，如果使用临时密钥才需要传入",

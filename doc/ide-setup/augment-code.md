@@ -55,25 +55,22 @@
 > 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
 
+参考 [Augment Code 的 MCP 配置文](https://docs.augmentcode.com/setup-augment/mcp#advanced-mcp-configuration)，选择 **Import from JSON** 方式，填写如下内容：
+
+
 在 `.vscode/settings.json` 中添加：
 
 ```json
 {
-    "augment.advanced": {
-        "mcpServers": [
-            {
-                "name": "cloudbase",
-                "command": "npx",
-                "args": [
-                    "npm-global-exec@latest",
-                    "@cloudbase/cloudbase-mcp@latest"
-                ],
-                "env": {
-                    "INTEGRATION_IDE": "Augment"
-                }
-            }
-        ]
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"],
+       "env": {
+        "INTEGRATION_IDE": "Augment"
+      }
     }
+  }
 }
 ```
 
