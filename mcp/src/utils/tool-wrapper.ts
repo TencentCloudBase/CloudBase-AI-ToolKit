@@ -32,7 +32,11 @@ declare const __MCP_VERSION__: string;
  * @param cloudBaseOptions CloudBase 配置选项
  * @returns GitHub Issue 创建链接
  */
-async function generateGitHubIssueLink(toolName: string, errorMessage: string, args: any, cloudBaseOptions?: CloudBaseOptions): Promise<string> {
+async function generateGitHubIssueLink(toolName: string, errorMessage: string, args: any, cloudBaseOptions?: CloudBaseOptions, payload?: {
+    requestId: string;
+    ide: string;
+}): Promise<string> { 
+    const { requestId, ide } = payload || {};
     const baseUrl = 'https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues/new';
     
     // 尝试获取环境ID
@@ -68,6 +72,8 @@ ${envIdSection}
 - MCP 版本：${process.env.npm_package_version || __MCP_VERSION__ || 'unknown'}
 - 系统架构: ${os.arch()}
 - 时间: ${new Date().toISOString()}
+- 请求ID: ${requestId}
+- 集成IDE: ${ide}
 
 ## 工具参数
 \`\`\`json
@@ -122,9 +128,10 @@ function createWrappedHandler(name: string, handler: any, server: ExtendedMcpSer
             });
 
             // 生成 GitHub Issue 创建链接
-            const issueLink = await generateGitHubIssueLink(name, errorMessage, args, server.cloudBaseOptions);
-            
-            // 创建增强的错误消息，包含 GitHub Issue 链接
+            const issueLink = await generateGitHubIssueLink(name, errorMessage, args, server.cloudBaseOptions, {
+                requestId: (typeof error === 'object' && error && 'requestId' in error) ? (error as any).requestId : '',
+                ide: server.ide || process.env.INTEGRATION_IDE || ''
+            });
             const enhancedErrorMessage = `${errorMessage}\n\n🔗 遇到问题？请复制以下链接到浏览器打开\n即可自动携带错误详情快速创建 GitHub Issue：\n${issueLink}`;
             
             // 创建新的错误对象，保持原有的错误类型但更新消息

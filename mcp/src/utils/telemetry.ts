@@ -185,7 +185,8 @@ class TelemetryReporter {
                         eventCode,
                         eventTime: String(now),
                         mapValue: {
-                            ...eventData
+                            ...this.additionalParams,
+                            ...eventData,
                         }
                     }
                 ]
