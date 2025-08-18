@@ -24,11 +24,34 @@
 
 ## 🚀 第一步：选择你的 AI 开发工具
 
-选择你正在使用或计划使用的 AI 开发工具，点击查看详细配置指南：
+### 🎯 推荐：CloudBase AI CLI
+
+统一管理多种 AI 编程工具，内置 CloudBase AI Toolkit，支持从开发到部署的完整流程。
+
+**一键安装**
+```bash
+# Mac/Linux/Windows 的 WSL
+curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
+
+# Windows PowerShell
+irm https://static.cloudbase.net/cli/install/install.ps1 | iex
+```
+
+**开始使用**
+```bash
+tcb ai
+```
+
+👉 [查看文档](https://docs.cloudbase.net/cli-v1/ai/introduce)
+
+### 🛠️ 其他 IDE 配置方式
+
+如果你使用其他 AI IDE，请参考下面的配置指南：
 
 
 | 工具 | 支持平台 | 查看指引 |
 |------|----------|----------|
+| [CloudBase AI CLI](https://docs.cloudbase.net/cli-v1/ai/introduce) | 命令行工具 | [查看指引](https://docs.cloudbase.net/cli-v1/ai/introduce) |
 | [Cursor](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) | 独立 IDE| [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) |
 | [WindSurf](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) | 独立 IDE, VSCode、JetBrains 插件 | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) |
 | [CodeBuddy](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) | VS Code、JetBrains、微信开发者工具、独立 IDE（推荐，已内置 CloudBase AI Toolkit） | [查看指引](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) |
