@@ -115,6 +115,13 @@ alwaysApply: true
 
 3. **从知识库查询专业知识**： 如果对于云开发某块知识不确定，可以使用 searchKnowledgeBase 工具智能检索云开发知识库（支持云开发与云函数、小程序前端知识等），通过向量搜索快速获取专业文档与答案
 
+4. **微信开发者工具打开项目流程**：
+- 当检测到当前项目为小程序项目时，建议用户使用微信开发者工具进行预览调试和发布
+- 在打开前确认 project.config.json 中配置了 appid 字段，如果没有配置，必须向用户询问获取
+- 使用微信开发者内置的 CLI 命令打开项目（指向 project.config.json 所在目录）：
+  - Windows: `"C:\Program Files (x86)\Tencent\微信web开发者工具\cli.bat" open --project "项目根目录路径"`
+  - macOS: `/Applications/wechatwebdevtools.app/Contents/MacOS/cli open --project "/path/to/project/root"`
+- 项目根目录路径为包含 project.config.json 文件的目录
 
 ### 部署流程
 1. **部署云函数流程**：可以通过 getFunctionList MCP 工具来查询是否有云函数，然后直接调用 createFunction 或者 updateFunctionCode 更新云函数代码，只需要将functionRootPath 指向云函数目录的父目录(例如 cloudfuncitons 这个目录的绝对路径),不需要压缩代码等操作，上述工具会自动读取云函数父目录下的云函数同名目录的文件，并自动进行部署

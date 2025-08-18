@@ -12,9 +12,10 @@ alwaysApply: false
 3. 生成小程序页面的时候，必须包含页面的配置文件例如index.json等，要符合规范，避免编译出错
 
 ## 开发工具
-**微信开发者工具 CLI 打开项目**：
+**微信开发者工具打开项目流程**：
 - 当检测到当前项目为小程序项目时，建议用户使用微信开发者工具进行预览调试和发布
-- 使用 CLI 命令打开项目（指向 project.config.json 所在目录）：
+- 在打开前确认 project.config.json 中配置了 appid 字段，如果没有配置，必须向用户询问获取
+- 使用微信开发者内置的 CLI 命令打开项目（指向 project.config.json 所在目录）：
   - Windows: `"C:\Program Files (x86)\Tencent\微信web开发者工具\cli.bat" open --project "项目根目录路径"`
   - macOS: `/Applications/wechatwebdevtools.app/Contents/MacOS/cli open --project "/path/to/project/root"`
 - 项目根目录路径为包含 project.config.json 文件的目录
