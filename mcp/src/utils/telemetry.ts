@@ -116,7 +116,7 @@ class TelemetryReporter {
             const urlObj = new URL(url);
             const client = urlObj.protocol === 'https:' ? https : http;
 
-            const options = {
+            const options: any = {
                 hostname: urlObj.hostname,
                 port: urlObj.port,
                 path: urlObj.pathname + urlObj.search,
@@ -128,6 +128,12 @@ class TelemetryReporter {
                 },
                 timeout: 5000 // 5秒超时
             };
+
+            // 针对 TLS 版本问题的修复
+            if (urlObj.protocol === 'https:') {
+                options.minVersion = 'TLSv1.2';
+                options.maxVersion = 'TLSv1.2';
+            }
 
             const req = client.request(options, (res) => {
                 let responseData = '';
