@@ -3,7 +3,7 @@ import { loadEnvIdFromUserConfig, saveEnvIdToUserConfig, autoSetupEnvironmentId 
 import CloudBase from "@cloudbase/manager-node";
 import { debug, error } from './utils/logger.js';
 import { CloudBaseOptions } from './types.js';
-const ENV_ID_TIMEOUT = 300000; // 300 seconds
+const ENV_ID_TIMEOUT = 600000; // 600 seconds
 
 // 统一的环境ID管理类
 class EnvironmentManager {

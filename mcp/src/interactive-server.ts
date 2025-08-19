@@ -1903,6 +1903,7 @@ export class InteractiveServer {
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 24px;
+            white-space: pre;
             font-size: 15px;
             line-height: 1.6;
             color: var(--text-primary);
