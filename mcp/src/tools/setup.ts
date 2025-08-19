@@ -81,7 +81,11 @@ const IDE_FILE_MAPPINGS: Record<string, string[]> = {
   ],
   "claude-code": [
     "CLAUDE.md",
-    ".mcp.json"
+    ".mcp.json",
+    ".claude/settings.local.json",
+    ".claude/commands/prototype.md",
+    ".claude/commands/spec.md",
+    ".claude/commands/no_spec.md",
   ],
   "cline": [
     ".clinerules/cloudbase-rules.mdc"

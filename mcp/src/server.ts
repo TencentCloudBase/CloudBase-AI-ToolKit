@@ -124,7 +124,7 @@ export function createCloudBaseMcpServer(options?: {
   }, {
     capabilities: {
       tools: {},
-      logging: {},
+      ...(ide === 'CodeBuddy' ?  { logging:  {}}: {})
     },
   }) as ExtendedMcpServer;
 

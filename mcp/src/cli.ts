@@ -57,15 +57,19 @@ const isTestEnvironment = process.env.NODE_ENV === 'test' || process.env.VITEST 
 const enableTelemetry = !isTestEnvironment;
 
 // Parse command line arguments
-const { cloudMode, ide } = parseCommandLineArgs();
+let { cloudMode, ide } = parseCommandLineArgs();
 
 // Log startup information
 if (cloudMode) {
   info("Starting CloudBase MCP Server in cloud mode");
 }
+
+ide = ide  || process.env.INTEGRATION_IDE;
+
 if (ide) {
   info(`Integration IDE: ${ide}`);
 }
+
 
 // Create server instance with conditional telemetry and CLI options
 const server = createCloudBaseMcpServer({
