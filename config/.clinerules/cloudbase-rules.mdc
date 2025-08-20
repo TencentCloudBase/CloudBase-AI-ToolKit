@@ -109,7 +109,7 @@ alwaysApply: true
 
 1. **下载云开发 AI 规则或者其他模板**：推荐从模板开始新的项目，可以使用downloadTemplate 来下载，如果无法下载到当前目录，可以使用脚本来进行复制，注意隐藏文件也需要复制
 
-2. **小程序 TabBar等素材下载下载远程素材链接**：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，必须使用 downloadRemoteFile 工具下载文件到本地
+2. **小程序 TabBar等素材下载下载远程素材链接**：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，必须使用 downloadRemoteFile 工具下载文件到本地,可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择
 
 如果应用中需要远程链接，可以继续调用 uploadFile 上传后获得临时访问链接和云存储的 cloudId
 
