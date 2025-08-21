@@ -105,45 +105,73 @@ AI 会自动下载并更新最新的规则配置到你的项目目录。
 
 ### 如何全局安装 CloudBase AI ToolKit？
 
-如果你希望全局安装 CloudBase AI ToolKit 以避免每次使用 npx 下载，推荐使用 `npm-global-exec` 方式，这种方式更稳定且自动处理依赖：
+#### 遇到的问题
 
-**1. 检查环境配置**
-- 确保 Node.js 版本为 v18.15.0 及以上,macOS 用户且使用 nvm 管理 Node.js 的，请务必设置默认 Node 版本为 v18.15.0 及以上，避免不同终端版本不一致导致的问题。
-- 检查网络连接，建议设置 npm 源为腾讯镜像源：
-  ```bash
-  npm config set registry https://mirrors.cloud.tencent.com/npm/
-  ```
+在使用 CloudBase AI ToolKit 时，你是否遇到过以下问题？
 
-**2. 使用 npm-global-exec 工具安装 @cloudbase/cloudbase-mcp 到本地**
+- **安装速度慢** - 使用 `npx` 每次都要重新下载，等待时间过长
+- **配置复杂** - 需要手动配置 npm 源、Node.js 版本等环境依赖
+- **重复安装** - 在不同 AI IDE 中需要重复配置 MCP 服务
+- **网络问题** - npm 安装时经常遇到网络超时或下载失败
 
-2.1 在终端中执行如下命令
+#### 解决方案：CloudBase AI CLI 快速安装
+
+推荐使用 **CloudBase AI CLI** 的快速安装方式，一次性解决所有问题：
+
+- 🚀 **快速安装** - 相比 npm 安装通常需要几分钟，一键安装脚本只需几秒即可完成
+- 🛠️ **统一管理** - 一个命令管理多种 AI 编程 CLI 工具，包括内置的 CloudBase AI Toolkit MCP
+- 🌍 **无处不在** - 可在任意环境中运行，包括小程序开发者工具、VS Code、GitHub Actions 等
+- 🔧 **开箱即用** - 安装完成后自动配置 MCP 服务，无需额外配置
+
+#### 快速安装步骤
+
+**1. 使用一键安装脚本**
+
+Mac/Linux/Windows WSL 用户：
 ```bash
-npx -y npm-global-exec@latest @cloudbase/cloudbase-mcp@latest
+curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
 ```
 
-2.2 执行完成后，确认终端命令执行结果如下图，表示已安装成功 @cloudbase/cloudbase-mcp 且测试启动server 正常（确认后这里可以 ctrl+c 关掉）
-![](https://qcloudimg.tencent-cloud.cn/raw/223c92ffcb54fad9210ec6d77a61dcea.png)
+Windows PowerShell 用户：
+```powershell
+irm https://static.cloudbase.net/cli/install/install.ps1 | iex
+```
 
-> 可以在用户 home 主目录下找到 cloudbase-mcp 文件夹，确认里面是否正确安装了 @cloudbase/cloudbase-mcp
+**2. 验证安装**
 
-**3. 重新配置 MCP**
+安装完成后，CloudBase AI CLI 会自动安装 CloudBase AI Toolkit MCP 服务，并生成全局命令 `cloudbase-mcp`。
 
-3.1 重启 IDE
+**3. 配置 MCP**
 
-3.2 确保 MCP Server 的配置如下
+重启你的 AI IDE，然后修改 MCP 配置：
 
 ```json
 {
   "mcpServers": {
-	  "cloudbase": {
-		  "command": "npx",
-		  "args": ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
-		}
-	}
+    "cloudbase": {
+      "command": "cloudbase-mcp"
+    }
+  }
 }
 ```
 
-3.3 等待约10-20s，可以看到 CloudBase MCP 正常
+**4. 验证 MCP 服务**
+
+可以立即看到 CloudBase MCP 正常启动。
+
+#### 支持的 AI IDE
+
+CloudBase AI CLI 的快速安装方式适用于所有支持 MCP（Model Context Protocol）的 AI IDE，包括但不限于：
+
+- **Cursor** - 基于 VS Code 的 AI 编程助手
+- **WindSurf** - 腾讯云推出的 AI 编程工具
+- **CodeBuddy** - 智能代码助手
+- **Visual Studio Code** - 通过 CodeBuddy 插件支持
+- **Claude Code** - Anthropic 的 AI 编程环境
+- **GitHub Copilot** - 支持 MCP 的版本
+- **其他支持 MCP 的 AI IDE**
+
+这种统一的安装方式让你可以在不同的 AI IDE 之间无缝切换，无需重复配置。
 
 - CodeBuddy中正常配置效果
 ![](https://qcloudimg.tencent-cloud.cn/raw/3ad6cefbfee790ad3b42eea0cdb752cb.png)
@@ -153,6 +181,17 @@ npx -y npm-global-exec@latest @cloudbase/cloudbase-mcp@latest
 
 - Cursor 中正常配置效果
 ![](https://qcloudimg.tencent-cloud.cn/raw/344fe2c5a96a3e19c6cafc2bcbe73f96.png)
+
+#### 了解更多
+
+CloudBase AI CLI 不仅内置了 CloudBase AI Toolkit MCP，还支持多种主流 AI 编程工具：
+
+- **Claude Code** - Anthropic 的 AI 编程助手
+- **OpenAI Codex** - OpenAI 的代码生成工具  
+- **aider** - 开源的 AI 编程助手
+- **Qwen Code** - 通义灵码
+
+详细使用说明请参考：[CloudBase AI CLI 使用文档](/cli-v1/ai/introduce)
 
 ### MCP 配置不生效怎么办？
 
@@ -170,13 +209,28 @@ Safari 浏览器在某些情况下可能存在兼容性问题，影响授权流�
 
 ### 远程开发环境或服务端如何使用 MCP？
 
-如果你在远程开发环境中工作，或者需要在没有浏览器的服务端环境中直接调用 MCP，无法通过浏览器完成授权登录，可以使用环境变量来配置腾讯云密钥和环境信息。
+#### 遇到的问题
 
-全局安装安装脚本
+在远程开发环境中使用 CloudBase AI ToolKit 时，你是否遇到过这些挑战？
 
+- **无法浏览器授权** - 服务器环境没有图形界面，无法完成浏览器登录
+- **环境隔离** - 远程环境无法访问本地浏览器进行授权
+- **自动化部署** - CI/CD 流水线中需要无交互的配置方式
+- **权限管理** - 需要精确控制云开发资源的访问权限
+
+#### 解决方案：环境变量配置
+
+CloudBase AI CLI 支持通过环境变量进行无浏览器授权，完美解决远程环境的使用问题。
+
+#### 安装 CloudBase AI CLI
+
+使用 CloudBase AI CLI 的快速安装脚本：
+
+```bash
+curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
 ```
-npm i  @cloudbase/cloudbase-mcp@latest -g
-```
+
+安装完成后会自动生成 `cloudbase-mcp` 全局命令。
 
 **配置方法：**
 
@@ -185,10 +239,10 @@ npm i  @cloudbase/cloudbase-mcp@latest -g
 ```js
 {
   "mcpServers": {
-    "cloudbase-mcp": {
-    "command": "cloudbase-mcp",
-    "args": ["--integration-ide", "YOUR_IDE"]
-    "env": {
+    "cloudbase": {
+      "command": "cloudbase-mcp",
+      "args": ["--integration-ide", "YOUR_IDE"],
+      "env": {
         "TENCENTCLOUD_SECRETID": "腾讯云 SecretId",
         "TENCENTCLOUD_SECRETKEY": "腾讯云 SecretKey",
         "TENCENTCLOUD_SESSIONTOKEN": "腾讯云临时密钥Token，如果使用临时密钥才需要传入",
