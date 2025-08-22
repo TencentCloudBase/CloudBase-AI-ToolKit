@@ -21,6 +21,7 @@ function readToolsJson() {
 function escapeMd(text = '') {
   return String(text)
     .replace(/[\r\n]+/g, '<br/>')
+    .replace(/&/g, '&amp;')
     .replace(/\|/g, '\\|')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
@@ -74,14 +75,13 @@ function flattenSchemaRows(name, schema, isRequired) {
   const typeText = (schema.anyOf || schema.oneOf) && !schema.type ? renderUnion(schema) : typeOfSchema(schema);
   const enumText = renderEnum(schema);
   const defText = renderDefault(schema);
-  rows.push({
-    name,
-    type: typeText,
-    required: isRequired ? '是' : '',
-    desc: schema.description ? escapeMd(schema.description) : '',
-    enum: enumText ? escapeMd(enumText) : '',
-    def: defText ? escapeMd(defText) : ''
-  });
+  const baseDesc = schema.description ? escapeMd(schema.description) : '';
+  const extras = [
+    enumText ? `可填写的值: ${escapeMd(enumText)}` : '',
+    defText ? `默认值: ${escapeMd(defText)}` : ''
+  ].filter(Boolean).join('；');
+  const mergedDesc = [baseDesc, extras].filter(Boolean).join(' ');
+  rows.push({ name, type: typeText, required: isRequired ? '是' : '', desc: mergedDesc });
 
   if (schema.type === 'array' && schema.items) {
     const item = schema.items;
@@ -115,21 +115,29 @@ function renderToolDetails(tool) {
     lines.push('');
     lines.push('#### 参数');
     lines.push('');
-    lines.push('| 参数名 | 类型 | 必填 | 说明 | 枚举/常量 | 默认值 |');
-    lines.push('|--------|------|------|------|-----------|--------|');
+    lines.push('<table>');
+    lines.push('<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>');
+    lines.push('<tbody>');
     const allRows = [];
     for (const [name, propSchema] of Object.entries(props)) {
       allRows.push(...flattenSchemaRows(name, propSchema, requiredSet.has(name)));
     }
     for (const r of allRows) {
-      lines.push(`| \`${r.name}\` | ${r.type} | ${r.required} | ${r.desc} | ${r.enum} | ${r.def} |`);
+      lines.push(`<tr><td><code>${r.name}</code></td><td>${escapeMd(r.type)}</td><td>${r.required}</td><td>${r.desc}</td></tr>`);
     }
+    lines.push('</tbody>');
+    lines.push('</table>');
     lines.push('');
   } else {
     lines.push('');
     lines.push('#### 参数');
     lines.push('');
-    lines.push('无');
+    lines.push('<table>');
+    lines.push('<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>');
+    lines.push('<tbody>');
+    lines.push('<tr><td colspan="4">无</td></tr>');
+    lines.push('</tbody>');
+    lines.push('</table>');
     lines.push('');
   }
   lines.push('---');
@@ -149,11 +157,14 @@ function renderDoc(toolsJson) {
   lines.push('');
   lines.push('## 工具总览');
   lines.push('');
-  lines.push('| 名称 | 描述 |');
-  lines.push('|------|------|');
+  lines.push('<table>');
+  lines.push('<thead><tr><th>名称</th><th>描述</th></tr></thead>');
+  lines.push('<tbody>');
   for (const t of tools) {
-    lines.push(`| \`${t.name}\` | ${escapeMd(t.description || '')} |`);
+    lines.push(`<tr><td><code>${t.name}</code></td><td>${escapeMd(t.description || '')}</td></tr>`);
   }
+  lines.push('</tbody>');
+  lines.push('</table>');
   lines.push('');
   lines.push('---');
   lines.push('');
