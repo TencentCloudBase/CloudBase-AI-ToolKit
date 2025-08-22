@@ -57,7 +57,10 @@
 
 参数
 
-- `forceUpdate`: boolean  - 是否强制重新选择环境
+- `forceUpdate`
+    - type: boolean
+    - desc: 是否强制重新选择环境
+
 
 
 ### `logout`
@@ -65,7 +68,12 @@
 
 参数
 
-- `confirm`: string  (required) - 确认操作，默认传 yes; enum: const "yes"
+- `confirm`
+    - type: string
+    - required: true
+    - desc: 确认操作，默认传 yes
+    - enum: const "yes"
+
 
 
 ### `envQuery`
@@ -73,7 +81,12 @@
 
 参数
 
-- `action`: string  (required) - 查询类型：list=环境列表，info=当前环境信息，domains=安全域名列表; enum: "list", "info", "domains"
+- `action`
+    - type: string
+    - required: true
+    - desc: 查询类型：list=环境列表，info=当前环境信息，domains=安全域名列表
+    - enum: "list", "info", "domains"
+
 
 
 ### `envDomainManagement`
@@ -81,8 +94,18 @@
 
 参数
 
-- `action`: string  (required) - 操作类型：create=添加域名，delete=删除域名; enum: "create", "delete"
-- `domains`: array<string>  (required) - 安全域名数组
+- `action`
+    - type: string
+    - required: true
+    - desc: 操作类型：create=添加域名，delete=删除域名
+    - enum: "create", "delete"
+
+- `domains`
+    - type: array<string>
+    - required: true
+    - desc: 安全域名数组
+    - items: string
+
 
 
 ### `createCollection`
@@ -90,18 +113,50 @@
 
 参数
 
-- `action`: string  - 操作类型：create=创建(默认)，update=更新集合配置; enum: "create", "update"
-- `collectionName`: string  (required) - 云开发数据库集合名称
-- `options`: object  - 更新选项（action=update 时使用）
-  - `options.CreateIndexes`: array<object> 
-    - `options.CreateIndexes[].IndexName`: string  (required)
-    - `options.CreateIndexes[].MgoKeySchema`: object  (required)
-      - `options.CreateIndexes[].MgoKeySchema.MgoIsUnique`: boolean  (required)
-      - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys`: array<object>  (required)
-        - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Name`: string  (required)
-        - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Direction`: string  (required)
-  - `options.DropIndexes`: array<object> 
-    - `options.DropIndexes[].IndexName`: string  (required)
+- `action`
+    - type: string
+    - desc: 操作类型：create=创建(默认)，update=更新集合配置
+    - enum: "create", "update"
+
+- `collectionName`
+    - type: string
+    - required: true
+    - desc: 云开发数据库集合名称
+
+- `options`
+    - type: object
+    - desc: 更新选项（action=update 时使用）
+    - properties:
+        - `options.CreateIndexes`
+            - type: array<object>
+            - items: object
+                - `options.CreateIndexes[].IndexName`
+                    - type: string
+                    - required: true
+                - `options.CreateIndexes[].MgoKeySchema`
+                    - type: object
+                    - required: true
+                    - properties:
+                        - `options.CreateIndexes[].MgoKeySchema.MgoIsUnique`
+                            - type: boolean
+                            - required: true
+                        - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys`
+                            - type: array<object>
+                            - required: true
+                            - items: object
+                                - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Name`
+                                    - type: string
+                                    - required: true
+                                - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Direction`
+                                    - type: string
+                                    - required: true
+        - `options.DropIndexes`
+            - type: array<object>
+            - items: object
+                - `options.DropIndexes[].IndexName`
+                    - type: string
+                    - required: true
+
 
 
 ### `collectionQuery`
@@ -109,11 +164,28 @@
 
 参数
 
-- `action`: string  (required) - 操作类型：check=检查是否存在，describe=查看详情，list=列表查询，index_list=索引列表，index_check=检查索引是否存在; enum: "check", "describe", "list", "index_list", "index_check"
-- `collectionName`: string  - 集合名称（check、describe、index_list、index_check 操作时必填）
-- `indexName`: string  - 索引名称（index_check 操作时必填）
-- `limit`: number  - 返回数量限制（list操作时可选）
-- `offset`: number  - 偏移量（list操作时可选）
+- `action`
+    - type: string
+    - required: true
+    - desc: 操作类型：check=检查是否存在，describe=查看详情，list=列表查询，index_list=索引列表，index_check=检查索引是否存在
+    - enum: "check", "describe", "list", "index_list", "index_check"
+
+- `collectionName`
+    - type: string
+    - desc: 集合名称（check、describe、index_list、index_check 操作时必填）
+
+- `indexName`
+    - type: string
+    - desc: 索引名称（index_check 操作时必填）
+
+- `limit`
+    - type: number
+    - desc: 返回数量限制（list操作时可选）
+
+- `offset`
+    - type: number
+    - desc: 偏移量（list操作时可选）
+
 
 
 ### `updateCollection`
@@ -121,17 +193,46 @@
 
 参数
 
-- `collectionName`: string  (required) - 云开发数据库集合名称
-- `options`: object  (required) - 更新选项，支持创建和删除索引
-  - `options.CreateIndexes`: array<object> 
-    - `options.CreateIndexes[].IndexName`: string  (required)
-    - `options.CreateIndexes[].MgoKeySchema`: object  (required)
-      - `options.CreateIndexes[].MgoKeySchema.MgoIsUnique`: boolean  (required)
-      - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys`: array<object>  (required)
-        - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Name`: string  (required)
-        - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Direction`: string  (required)
-  - `options.DropIndexes`: array<object> 
-    - `options.DropIndexes[].IndexName`: string  (required)
+- `collectionName`
+    - type: string
+    - required: true
+    - desc: 云开发数据库集合名称
+
+- `options`
+    - type: object
+    - required: true
+    - desc: 更新选项，支持创建和删除索引
+    - properties:
+        - `options.CreateIndexes`
+            - type: array<object>
+            - items: object
+                - `options.CreateIndexes[].IndexName`
+                    - type: string
+                    - required: true
+                - `options.CreateIndexes[].MgoKeySchema`
+                    - type: object
+                    - required: true
+                    - properties:
+                        - `options.CreateIndexes[].MgoKeySchema.MgoIsUnique`
+                            - type: boolean
+                            - required: true
+                        - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys`
+                            - type: array<object>
+                            - required: true
+                            - items: object
+                                - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Name`
+                                    - type: string
+                                    - required: true
+                                - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Direction`
+                                    - type: string
+                                    - required: true
+        - `options.DropIndexes`
+            - type: array<object>
+            - items: object
+                - `options.DropIndexes[].IndexName`
+                    - type: string
+                    - required: true
+
 
 
 ### `checkIndexExists`
@@ -139,8 +240,16 @@
 
 参数
 
-- `collectionName`: string  (required) - 云开发数据库集合名称
-- `indexName`: string  (required) - 索引名称
+- `collectionName`
+    - type: string
+    - required: true
+    - desc: 云开发数据库集合名称
+
+- `indexName`
+    - type: string
+    - required: true
+    - desc: 索引名称
+
 
 
 ### `insertDocuments`
@@ -148,8 +257,17 @@
 
 参数
 
-- `collectionName`: string  (required) - 云开发数据库集合名称
-- `documents`: array<object>  (required) - 要插入的文档对象数组，每个文档都是对象
+- `collectionName`
+    - type: string
+    - required: true
+    - desc: 云开发数据库集合名称
+
+- `documents`
+    - type: array<object>
+    - required: true
+    - desc: 要插入的文档对象数组，每个文档都是对象
+    - items: object
+
 
 
 ### `queryDocuments`
@@ -157,12 +275,31 @@
 
 参数
 
-- `collectionName`: string  (required) - 云开发数据库集合名称
-- `query`: object \| string  - 查询条件（对象或字符串，推荐对象）
-- `projection`: object \| string  - 返回字段投影（对象或字符串，推荐对象）
-- `sort`: object \| string  - 排序条件（对象或字符串，推荐对象）
-- `limit`: number  - 返回数量限制
-- `offset`: number  - 跳过的记录数
+- `collectionName`
+    - type: string
+    - required: true
+    - desc: 云开发数据库集合名称
+
+- `query`
+    - type: object \| string
+    - desc: 查询条件（对象或字符串，推荐对象）
+
+- `projection`
+    - type: object \| string
+    - desc: 返回字段投影（对象或字符串，推荐对象）
+
+- `sort`
+    - type: object \| string
+    - desc: 排序条件（对象或字符串，推荐对象）
+
+- `limit`
+    - type: number
+    - desc: 返回数量限制
+
+- `offset`
+    - type: number
+    - desc: 跳过的记录数
+
 
 
 ### `updateDocuments`
@@ -170,11 +307,29 @@
 
 参数
 
-- `collectionName`: string  (required) - 云开发数据库集合名称
-- `query`: object \| string  (required) - 查询条件（对象或字符串，推荐对象）
-- `update`: object \| string  (required) - 更新内容（对象或字符串，推荐对象）
-- `isMulti`: boolean  - 是否更新多条记录
-- `upsert`: boolean  - 是否在不存在时插入
+- `collectionName`
+    - type: string
+    - required: true
+    - desc: 云开发数据库集合名称
+
+- `query`
+    - type: object \| string
+    - required: true
+    - desc: 查询条件（对象或字符串，推荐对象）
+
+- `update`
+    - type: object \| string
+    - required: true
+    - desc: 更新内容（对象或字符串，推荐对象）
+
+- `isMulti`
+    - type: boolean
+    - desc: 是否更新多条记录
+
+- `upsert`
+    - type: boolean
+    - desc: 是否在不存在时插入
+
 
 
 ### `deleteDocuments`
@@ -182,9 +337,20 @@
 
 参数
 
-- `collectionName`: string  (required) - 云开发数据库集合名称
-- `query`: object \| string  (required) - 查询条件（对象或字符串，推荐对象）
-- `isMulti`: boolean  - 是否删除多条记录
+- `collectionName`
+    - type: string
+    - required: true
+    - desc: 云开发数据库集合名称
+
+- `query`
+    - type: object \| string
+    - required: true
+    - desc: 查询条件（对象或字符串，推荐对象）
+
+- `isMulti`
+    - type: boolean
+    - desc: 是否删除多条记录
+
 
 
 ### `manageDataModel`
@@ -192,9 +358,21 @@
 
 参数
 
-- `action`: string  (required) - 操作类型：get=查询单个模型（含Schema字段列表、格式、关联关系），list=获取模型列表（不含Schema），docs=生成SDK使用文档; enum: "get", "list", "docs"
-- `name`: string  - 模型名称（get操作时必填）
-- `names`: array<string>  - 模型名称数组（list操作时可选，用于过滤）
+- `action`
+    - type: string
+    - required: true
+    - desc: 操作类型：get=查询单个模型（含Schema字段列表、格式、关联关系），list=获取模型列表（不含Schema），docs=生成SDK使用文档
+    - enum: "get", "list", "docs"
+
+- `name`
+    - type: string
+    - desc: 模型名称（get操作时必填）
+
+- `names`
+    - type: array<string>
+    - desc: 模型名称数组（list操作时可选，用于过滤）
+    - items: string
+
 
 
 ### `modifyDataModel`
@@ -202,10 +380,27 @@
 
 参数
 
-- `mermaidDiagram`: string  (required) - Mermaid classDiagram代码，描述数据模型结构。<br/>示例：<br/>classDiagram<br/>    class Student {<br/>        name: string <<姓名>><br/>        age: number = 18 <<年龄>><br/>        gender: x-enum = "男" <<性别>><br/>        classId: string <<班级ID>><br/>        identityId: string <<身份ID>><br/>        course: Course[] <<课程>><br/>        required() ["name"]<br/>        unique() ["name"]<br/>        enum_gender() ["男", "女"]<br/>        display_field() "name"<br/>    }<br/>    class Class {<br/>        className: string <<班级名称>><br/>        display_field() "className"<br/>    }<br/>    class Course {<br/>        name: string <<课程名称>><br/>        students: Student[] <<学生>><br/>        display_field() "name"<br/>    }<br/>    class Identity {<br/>        number: string <<证件号码>><br/>        display_field() "number"<br/>    }<br/>    %% 关联关系<br/>    Student "1" --> "1" Identity : studentId<br/>    Student "n" --> "1" Class : student2class<br/>    Student "n" --> "m" Course : course<br/>    Student "n" <-- "m" Course : students<br/>    %% 类的命名<br/>    note for Student "学生模型"<br/>    note for Class "班级模型"<br/>    note for Course "课程模型"<br/>    note for Identity "身份模型"<br/>
-- `action`: string  - 操作类型：create=创建新模型; enum: "create", "update"; default: "create"
-- `publish`: boolean  - 是否立即发布模型; default: false
-- `dbInstanceType`: string  - 数据库实例类型; default: "MYSQL"
+- `mermaidDiagram`
+    - type: string
+    - required: true
+    - desc: Mermaid classDiagram代码，描述数据模型结构。<br/>示例：<br/>classDiagram<br/>    class Student {<br/>        name: string <<姓名>><br/>        age: number = 18 <<年龄>><br/>        gender: x-enum = "男" <<性别>><br/>        classId: string <<班级ID>><br/>        identityId: string <<身份ID>><br/>        course: Course[] <<课程>><br/>        required() ["name"]<br/>        unique() ["name"]<br/>        enum_gender() ["男", "女"]<br/>        display_field() "name"<br/>    }<br/>    class Class {<br/>        className: string <<班级名称>><br/>        display_field() "className"<br/>    }<br/>    class Course {<br/>        name: string <<课程名称>><br/>        students: Student[] <<学生>><br/>        display_field() "name"<br/>    }<br/>    class Identity {<br/>        number: string <<证件号码>><br/>        display_field() "number"<br/>    }<br/>    %% 关联关系<br/>    Student "1" --> "1" Identity : studentId<br/>    Student "n" --> "1" Class : student2class<br/>    Student "n" --> "m" Course : course<br/>    Student "n" <-- "m" Course : students<br/>    %% 类的命名<br/>    note for Student "学生模型"<br/>    note for Class "班级模型"<br/>    note for Course "课程模型"<br/>    note for Identity "身份模型"<br/>
+
+- `action`
+    - type: string
+    - desc: 操作类型：create=创建新模型
+    - enum: "create", "update"
+    - default: "create"
+
+- `publish`
+    - type: boolean
+    - desc: 是否立即发布模型
+    - default: false
+
+- `dbInstanceType`
+    - type: string
+    - desc: 数据库实例类型
+    - default: "MYSQL"
+
 
 
 ### `getFunctionList`
@@ -213,11 +408,27 @@
 
 参数
 
-- `action`: string  - 操作类型：list=获取函数列表（默认），detail=获取函数详情; enum: "list", "detail"
-- `limit`: number  - 范围（list 操作时使用）
-- `offset`: number  - 偏移（list 操作时使用）
-- `name`: string  - 函数名称（detail 操作时必需）
-- `codeSecret`: string  - 代码保护密钥（detail 操作时使用）
+- `action`
+    - type: string
+    - desc: 操作类型：list=获取函数列表（默认），detail=获取函数详情
+    - enum: "list", "detail"
+
+- `limit`
+    - type: number
+    - desc: 范围（list 操作时使用）
+
+- `offset`
+    - type: number
+    - desc: 偏移（list 操作时使用）
+
+- `name`
+    - type: string
+    - desc: 函数名称（detail 操作时必需）
+
+- `codeSecret`
+    - type: string
+    - desc: 代码保护密钥（detail 操作时使用）
+
 
 
 ### `createFunction`
@@ -225,26 +436,80 @@
 
 参数
 
-- `func`: object  (required) - 函数配置
-  - `func.name`: string  (required) - 函数名称
-  - `func.timeout`: number  - 函数超时时间
-  - `func.envVariables`: object  - 环境变量
-  - `func.vpc`: object  - 私有网络配置
-    - `func.vpc.vpcId`: string  (required)
-    - `func.vpc.subnetId`: string  (required)
-  - `func.runtime`: string  - 运行时环境,建议指定为 'Nodejs18.15'，其他可选值：Nodejs18.15，Nodejs16.13，Nodejs14.18，Nodejs12.16，Nodejs10.15，Nodejs8.9
-  - `func.triggers`: array<object>  - Trigger configuration array
-    - `func.triggers[].name`: string  (required) - Trigger name
-    - `func.triggers[].type`: string  (required) - Trigger type, currently only supports 'timer'; enum: "timer"
-    - `func.triggers[].config`: string  (required) - Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. IMPORTANT: Must include exactly 7 fields (second minute hour day month week year). Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)
-  - `func.handler`: string  - 函数入口
-  - `func.ignore`: string \| array<string>  - 忽略文件
-  - `func.isWaitInstall`: boolean  - 是否等待依赖安装
-  - `func.layers`: array<object>  - Layer配置
-    - `func.layers[].name`: string  (required)
-    - `func.layers[].version`: number  (required)
-- `functionRootPath`: string  - 函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，注意：不要包含函数名本身，例如函数名为 'hello'，应传入 '/path/to/cloudfunctions'，而不是 '/path/to/cloudfunctions/hello'
-- `force`: boolean  (required) - 是否覆盖
+- `func`
+    - type: object
+    - required: true
+    - desc: 函数配置
+    - properties:
+        - `func.name`
+            - type: string
+            - required: true
+            - desc: 函数名称
+        - `func.timeout`
+            - type: number
+            - desc: 函数超时时间
+        - `func.envVariables`
+            - type: object
+            - desc: 环境变量
+        - `func.vpc`
+            - type: object
+            - desc: 私有网络配置
+            - properties:
+                - `func.vpc.vpcId`
+                    - type: string
+                    - required: true
+                - `func.vpc.subnetId`
+                    - type: string
+                    - required: true
+        - `func.runtime`
+            - type: string
+            - desc: 运行时环境,建议指定为 'Nodejs18.15'，其他可选值：Nodejs18.15，Nodejs16.13，Nodejs14.18，Nodejs12.16，Nodejs10.15，Nodejs8.9
+        - `func.triggers`
+            - type: array<object>
+            - desc: Trigger configuration array
+            - items: object
+                - `func.triggers[].name`
+                    - type: string
+                    - required: true
+                    - desc: Trigger name
+                - `func.triggers[].type`
+                    - type: string
+                    - required: true
+                    - desc: Trigger type, currently only supports 'timer'
+                    - enum: "timer"
+                - `func.triggers[].config`
+                    - type: string
+                    - required: true
+                    - desc: Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. IMPORTANT: Must include exactly 7 fields (second minute hour day month week year). Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)
+        - `func.handler`
+            - type: string
+            - desc: 函数入口
+        - `func.ignore`
+            - type: string \| array<string>
+            - desc: 忽略文件
+        - `func.isWaitInstall`
+            - type: boolean
+            - desc: 是否等待依赖安装
+        - `func.layers`
+            - type: array<object>
+            - desc: Layer配置
+            - items: object
+                - `func.layers[].name`
+                    - type: string
+                    - required: true
+                - `func.layers[].version`
+                    - type: number
+                    - required: true
+
+- `functionRootPath`
+    - type: string
+    - desc: 函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径，注意：不要包含函数名本身，例如函数名为 'hello'，应传入 '/path/to/cloudfunctions'，而不是 '/path/to/cloudfunctions/hello'
+
+- `force`
+    - type: boolean
+    - required: true
+    - desc: 是否覆盖
+
 
 
 ### `updateFunctionCode`
@@ -252,8 +517,16 @@
 
 参数
 
-- `name`: string  (required) - 函数名称
-- `functionRootPath`: string  (required) - 函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径
+- `name`
+    - type: string
+    - required: true
+    - desc: 函数名称
+
+- `functionRootPath`
+    - type: string
+    - required: true
+    - desc: 函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径
+
 
 
 ### `updateFunctionConfig`
@@ -261,13 +534,32 @@
 
 参数
 
-- `funcParam`: object  (required) - 函数配置
-  - `funcParam.name`: string  (required) - 函数名称
-  - `funcParam.timeout`: number  - 超时时间
-  - `funcParam.envVariables`: object  - 环境变量
-  - `funcParam.vpc`: object  - VPC配置
-    - `funcParam.vpc.vpcId`: string  (required)
-    - `funcParam.vpc.subnetId`: string  (required)
+- `funcParam`
+    - type: object
+    - required: true
+    - desc: 函数配置
+    - properties:
+        - `funcParam.name`
+            - type: string
+            - required: true
+            - desc: 函数名称
+        - `funcParam.timeout`
+            - type: number
+            - desc: 超时时间
+        - `funcParam.envVariables`
+            - type: object
+            - desc: 环境变量
+        - `funcParam.vpc`
+            - type: object
+            - desc: VPC配置
+            - properties:
+                - `funcParam.vpc.vpcId`
+                    - type: string
+                    - required: true
+                - `funcParam.vpc.subnetId`
+                    - type: string
+                    - required: true
+
 
 
 ### `invokeFunction`
@@ -275,8 +567,15 @@
 
 参数
 
-- `name`: string  (required) - 函数名称
-- `params`: object  - 调用参数
+- `name`
+    - type: string
+    - required: true
+    - desc: 函数名称
+
+- `params`
+    - type: object
+    - desc: 调用参数
+
 
 
 ### `getFunctionLogs`
@@ -284,13 +583,35 @@
 
 参数
 
-- `name`: string  (required) - 函数名称
-- `offset`: number  - 数据的偏移量，Offset+Limit 不能大于 10000
-- `limit`: number  - 返回数据的长度，Offset+Limit 不能大于 10000
-- `startTime`: string  - 查询的具体日期，例如：2017-05-16 20:00:00，只能与 EndTime 相差一天之内
-- `endTime`: string  - 查询的具体日期，例如：2017-05-16 20:59:59，只能与 StartTime 相差一天之内
-- `requestId`: string  - 执行该函数对应的 requestId
-- `qualifier`: string  - 函数版本，默认为 $LATEST
+- `name`
+    - type: string
+    - required: true
+    - desc: 函数名称
+
+- `offset`
+    - type: number
+    - desc: 数据的偏移量，Offset+Limit 不能大于 10000
+
+- `limit`
+    - type: number
+    - desc: 返回数据的长度，Offset+Limit 不能大于 10000
+
+- `startTime`
+    - type: string
+    - desc: 查询的具体日期，例如：2017-05-16 20:00:00，只能与 EndTime 相差一天之内
+
+- `endTime`
+    - type: string
+    - desc: 查询的具体日期，例如：2017-05-16 20:59:59，只能与 StartTime 相差一天之内
+
+- `requestId`
+    - type: string
+    - desc: 执行该函数对应的 requestId
+
+- `qualifier`
+    - type: string
+    - desc: 函数版本，默认为 $LATEST
+
 
 
 ### `getFunctionLogDetail`
@@ -298,9 +619,19 @@
 
 参数
 
-- `startTime`: string  - 查询的具体日期，例如：2017-05-16 20:00:00，只能与 EndTime 相差一天之内
-- `endTime`: string  - 查询的具体日期，例如：2017-05-16 20:59:59，只能与 StartTime 相差一天之内
-- `requestId`: string  (required) - 执行该函数对应的 requestId
+- `startTime`
+    - type: string
+    - desc: 查询的具体日期，例如：2017-05-16 20:00:00，只能与 EndTime 相差一天之内
+
+- `endTime`
+    - type: string
+    - desc: 查询的具体日期，例如：2017-05-16 20:59:59，只能与 StartTime 相差一天之内
+
+- `requestId`
+    - type: string
+    - required: true
+    - desc: 执行该函数对应的 requestId
+
 
 
 ### `manageFunctionTriggers`
@@ -308,13 +639,39 @@
 
 参数
 
-- `action`: string  (required) - 操作类型：create=创建触发器，delete=删除触发器; enum: "create", "delete"
-- `name`: string  (required) - 函数名
-- `triggers`: array<object>  - 触发器配置数组（创建时必需）
-  - `triggers[].name`: string  (required) - Trigger name
-  - `triggers[].type`: string  (required) - Trigger type, currently only supports 'timer'; enum: "timer"
-  - `triggers[].config`: string  (required) - Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. IMPORTANT: Must include exactly 7 fields (second minute hour day month week year). Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)
-- `triggerName`: string  - 触发器名称（删除时必需）
+- `action`
+    - type: string
+    - required: true
+    - desc: 操作类型：create=创建触发器，delete=删除触发器
+    - enum: "create", "delete"
+
+- `name`
+    - type: string
+    - required: true
+    - desc: 函数名
+
+- `triggers`
+    - type: array<object>
+    - desc: 触发器配置数组（创建时必需）
+    - items: object
+        - `triggers[].name`
+            - type: string
+            - required: true
+            - desc: Trigger name
+        - `triggers[].type`
+            - type: string
+            - required: true
+            - desc: Trigger type, currently only supports 'timer'
+            - enum: "timer"
+        - `triggers[].config`
+            - type: string
+            - required: true
+            - desc: Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. IMPORTANT: Must include exactly 7 fields (second minute hour day month week year). Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)
+
+- `triggerName`
+    - type: string
+    - desc: 触发器名称（删除时必需）
+
 
 
 ### `uploadFiles`
@@ -322,12 +679,30 @@
 
 参数
 
-- `localPath`: string  - 本地文件或文件夹路径，需要是绝对路径，例如 /tmp/files/data.txt
-- `cloudPath`: string  - 云端文件或文件夹路径，例如files/data.txt
-- `files`: array<object>  - 多文件上传配置; default: []
-  - `files[].localPath`: string  (required)
-  - `files[].cloudPath`: string  (required)
-- `ignore`: string \| array<string>  - 忽略文件模式
+- `localPath`
+    - type: string
+    - desc: 本地文件或文件夹路径，需要是绝对路径，例如 /tmp/files/data.txt
+
+- `cloudPath`
+    - type: string
+    - desc: 云端文件或文件夹路径，例如files/data.txt
+
+- `files`
+    - type: array<object>
+    - desc: 多文件上传配置
+    - default: []
+    - items: object
+        - `files[].localPath`
+            - type: string
+            - required: true
+        - `files[].cloudPath`
+            - type: string
+            - required: true
+
+- `ignore`
+    - type: string \| array<string>
+    - desc: 忽略文件模式
+
 
 
 ### `getWebsiteConfig`
@@ -341,8 +716,16 @@
 
 参数
 
-- `cloudPath`: string  (required) - 云端文件或文件夹路径
-- `isDir`: boolean  - 是否为文件夹; default: false
+- `cloudPath`
+    - type: string
+    - required: true
+    - desc: 云端文件或文件夹路径
+
+- `isDir`
+    - type: boolean
+    - desc: 是否为文件夹
+    - default: false
+
 
 
 ### `findFiles`
@@ -350,9 +733,19 @@
 
 参数
 
-- `prefix`: string  (required) - 匹配前缀
-- `marker`: string  - 起始对象键标记
-- `maxKeys`: number  - 单次返回最大条目数
+- `prefix`
+    - type: string
+    - required: true
+    - desc: 匹配前缀
+
+- `marker`
+    - type: string
+    - desc: 起始对象键标记
+
+- `maxKeys`
+    - type: number
+    - desc: 单次返回最大条目数
+
 
 
 ### `domainManagement`
@@ -360,29 +753,84 @@
 
 参数
 
-- `action`: string  (required) - 操作类型: create=绑定域名, delete=解绑域名, check=查询域名配置, modify=修改域名配置; enum: "create", "delete", "check", "modify"
-- `domain`: string  - 域名
-- `certId`: string  - 证书ID（绑定域名时必需）
-- `domains`: array<string>  - 域名列表（查询配置时使用）
-- `domainId`: number  - 域名ID（修改配置时必需）
-- `domainConfig`: object  - 域名配置（修改配置时使用）
-  - `domainConfig.Refer`: object 
-    - `domainConfig.Refer.Switch`: string  (required)
-    - `domainConfig.Refer.RefererRules`: array<object> 
-      - `domainConfig.Refer.RefererRules[].RefererType`: string  (required)
-      - `domainConfig.Refer.RefererRules[].Referers`: array<string>  (required)
-      - `domainConfig.Refer.RefererRules[].AllowEmpty`: boolean  (required)
-  - `domainConfig.Cache`: array<object> 
-    - `domainConfig.Cache[].RuleType`: string  (required)
-    - `domainConfig.Cache[].RuleValue`: string  (required)
-    - `domainConfig.Cache[].CacheTtl`: number  (required)
-  - `domainConfig.IpFilter`: object 
-    - `domainConfig.IpFilter.Switch`: string  (required)
-    - `domainConfig.IpFilter.FilterType`: string 
-    - `domainConfig.IpFilter.Filters`: array<string> 
-  - `domainConfig.IpFreqLimit`: object 
-    - `domainConfig.IpFreqLimit.Switch`: string  (required)
-    - `domainConfig.IpFreqLimit.Qps`: number 
+- `action`
+    - type: string
+    - required: true
+    - desc: 操作类型: create=绑定域名, delete=解绑域名, check=查询域名配置, modify=修改域名配置
+    - enum: "create", "delete", "check", "modify"
+
+- `domain`
+    - type: string
+    - desc: 域名
+
+- `certId`
+    - type: string
+    - desc: 证书ID（绑定域名时必需）
+
+- `domains`
+    - type: array<string>
+    - desc: 域名列表（查询配置时使用）
+    - items: string
+
+- `domainId`
+    - type: number
+    - desc: 域名ID（修改配置时必需）
+
+- `domainConfig`
+    - type: object
+    - desc: 域名配置（修改配置时使用）
+    - properties:
+        - `domainConfig.Refer`
+            - type: object
+            - properties:
+                - `domainConfig.Refer.Switch`
+                    - type: string
+                    - required: true
+                - `domainConfig.Refer.RefererRules`
+                    - type: array<object>
+                    - items: object
+                        - `domainConfig.Refer.RefererRules[].RefererType`
+                            - type: string
+                            - required: true
+                        - `domainConfig.Refer.RefererRules[].Referers`
+                            - type: array<string>
+                            - required: true
+                            - items: string
+                        - `domainConfig.Refer.RefererRules[].AllowEmpty`
+                            - type: boolean
+                            - required: true
+        - `domainConfig.Cache`
+            - type: array<object>
+            - items: object
+                - `domainConfig.Cache[].RuleType`
+                    - type: string
+                    - required: true
+                - `domainConfig.Cache[].RuleValue`
+                    - type: string
+                    - required: true
+                - `domainConfig.Cache[].CacheTtl`
+                    - type: number
+                    - required: true
+        - `domainConfig.IpFilter`
+            - type: object
+            - properties:
+                - `domainConfig.IpFilter.Switch`
+                    - type: string
+                    - required: true
+                - `domainConfig.IpFilter.FilterType`
+                    - type: string
+                - `domainConfig.IpFilter.Filters`
+                    - type: array<string>
+                    - items: string
+        - `domainConfig.IpFreqLimit`
+            - type: object
+            - properties:
+                - `domainConfig.IpFreqLimit.Switch`
+                    - type: string
+                    - required: true
+                - `domainConfig.IpFreqLimit.Qps`
+                    - type: number
+
 
 
 ### `uploadFile`
@@ -390,8 +838,16 @@
 
 参数
 
-- `localPath`: string  (required) - 本地文件路径，建议传入绝对路径，例如 /tmp/files/data.txt
-- `cloudPath`: string  (required) - 云端文件路径，例如 files/data.txt
+- `localPath`
+    - type: string
+    - required: true
+    - desc: 本地文件路径，建议传入绝对路径，例如 /tmp/files/data.txt
+
+- `cloudPath`
+    - type: string
+    - required: true
+    - desc: 云端文件路径，例如 files/data.txt
+
 
 
 ### `downloadTemplate`
@@ -429,9 +885,22 @@
 
 参数
 
-- `template`: string  (required) - 要下载的模板类型; enum: "react", "vue", "miniprogram", "uniapp", "rules"
-- `ide`: string  - 指定要下载的IDE类型，默认为all（下载所有IDE配置）; enum: "all", "cursor", "windsurf", "codebuddy", "claude-code", "cline", "gemini-cli", "opencode", "qwen-code", "baidu-comate", "openai-codex-cli", "augment-code", "github-copilot", "roocode", "tongyi-lingma", "trae", "vscode"; default: "all"
-- `overwrite`: boolean  - 是否覆盖已存在的文件，默认为false（不覆盖）
+- `template`
+    - type: string
+    - required: true
+    - desc: 要下载的模板类型
+    - enum: "react", "vue", "miniprogram", "uniapp", "rules"
+
+- `ide`
+    - type: string
+    - desc: 指定要下载的IDE类型，默认为all（下载所有IDE配置）
+    - enum: "all", "cursor", "windsurf", "codebuddy", "claude-code", "cline", "gemini-cli", "opencode", "qwen-code", "baidu-comate", "openai-codex-cli", "augment-code", "github-copilot", "roocode", "tongyi-lingma", "trae", "vscode"
+    - default: "all"
+
+- `overwrite`
+    - type: boolean
+    - desc: 是否覆盖已存在的文件，默认为false（不覆盖）
+
 
 
 ### `interactiveDialog`
@@ -439,11 +908,30 @@
 
 参数
 
-- `type`: string  (required) - 交互类型: clarify=需求澄清, confirm=任务确认; enum: "clarify", "confirm"
-- `message`: string  - 对话消息内容
-- `options`: array<string>  - 可选的预设选项
-- `forceUpdate`: boolean  - 是否强制更新环境ID配置
-- `risks`: array<string>  - 操作风险提示
+- `type`
+    - type: string
+    - required: true
+    - desc: 交互类型: clarify=需求澄清, confirm=任务确认
+    - enum: "clarify", "confirm"
+
+- `message`
+    - type: string
+    - desc: 对话消息内容
+
+- `options`
+    - type: array<string>
+    - desc: 可选的预设选项
+    - items: string
+
+- `forceUpdate`
+    - type: boolean
+    - desc: 是否强制更新环境ID配置
+
+- `risks`
+    - type: array<string>
+    - desc: 操作风险提示
+    - items: string
+
 
 
 ### `searchWeb`
@@ -451,7 +939,11 @@
 
 参数
 
-- `query`: string  (required) - 搜索关键词、问题或网址，支持自然语言
+- `query`
+    - type: string
+    - required: true
+    - desc: 搜索关键词、问题或网址，支持自然语言
+
 
 
 ### `searchKnowledgeBase`
@@ -459,12 +951,37 @@
 
 参数
 
-- `threshold`: number  - 相似性检索阈值; default: 0.5
-- `id`: string  (required) - 知识库范围，cloudbase=云开发全量知识，scf=云开发的云函数知识, miniprogram=小程序知识（不包含云开发与云函数知识）; enum: "cloudbase", "scf", "miniprogram"
-- `content`: string  (required) - 检索内容
-- `options`: object  - 其他选项
-  - `options.chunkExpand`: array<number>  - 指定返回的文档内容的展开长度,例如 [3,3]代表前后展开长度; default: [3,3]
-- `limit`: number  - 指定返回最相似的 Top K 的 K 的值; default: 5
+- `threshold`
+    - type: number
+    - desc: 相似性检索阈值
+    - default: 0.5
+
+- `id`
+    - type: string
+    - required: true
+    - desc: 知识库范围，cloudbase=云开发全量知识，scf=云开发的云函数知识, miniprogram=小程序知识（不包含云开发与云函数知识）
+    - enum: "cloudbase", "scf", "miniprogram"
+
+- `content`
+    - type: string
+    - required: true
+    - desc: 检索内容
+
+- `options`
+    - type: object
+    - desc: 其他选项
+    - properties:
+        - `options.chunkExpand`
+            - type: array<number>
+            - desc: 指定返回的文档内容的展开长度,例如 [3,3]代表前后展开长度
+            - default: [3,3]
+            - items: number
+
+- `limit`
+    - type: number
+    - desc: 指定返回最相似的 Top K 的 K 的值
+    - default: 5
+
 
 
 ### `createFunctionHTTPAccess`
@@ -472,8 +989,16 @@
 
 参数
 
-- `name`: string  (required) - 函数名
-- `path`: string  (required) - HTTP 访问路径
+- `name`
+    - type: string
+    - required: true
+    - desc: 函数名
+
+- `path`
+    - type: string
+    - required: true
+    - desc: HTTP 访问路径
+
 
 
 ### `downloadRemoteFile`
@@ -481,7 +1006,11 @@
 
 参数
 
-- `url`: string  (required) - 远程文件的 URL 地址
+- `url`
+    - type: string
+    - required: true
+    - desc: 远程文件的 URL 地址
+
 
 
 ### `readSecurityRule`
@@ -493,8 +1022,17 @@
 
 参数
 
-- `resourceType`: string  (required) - 资源类型：database=数据库集合，function=云函数，storage=存储桶; enum: "database", "function", "storage"
-- `resourceId`: string  (required) - 资源唯一标识。数据库为集合名，云函数为函数名，存储为桶名。
+- `resourceType`
+    - type: string
+    - required: true
+    - desc: 资源类型：database=数据库集合，function=云函数，storage=存储桶
+    - enum: "database", "function", "storage"
+
+- `resourceId`
+    - type: string
+    - required: true
+    - desc: 资源唯一标识。数据库为集合名，云函数为函数名，存储为桶名。
+
 
 
 ### `writeSecurityRule`
@@ -508,10 +1046,27 @@
 
 参数
 
-- `resourceType`: string  (required) - 资源类型：database=数据库集合，function=云函数，storage=存储桶; enum: "database", "function", "storage"
-- `resourceId`: string  (required) - 资源唯一标识。数据库为集合名，云函数为函数名，存储为桶名。
-- `aclTag`: string  (required) - 权限类别; enum: "READONLY", "PRIVATE", "ADMINWRITE", "ADMINONLY", "CUSTOM"
-- `rule`: string  - 自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填
+- `resourceType`
+    - type: string
+    - required: true
+    - desc: 资源类型：database=数据库集合，function=云函数，storage=存储桶
+    - enum: "database", "function", "storage"
+
+- `resourceId`
+    - type: string
+    - required: true
+    - desc: 资源唯一标识。数据库为集合名，云函数为函数名，存储为桶名。
+
+- `aclTag`
+    - type: string
+    - required: true
+    - desc: 权限类别
+    - enum: "READONLY", "PRIVATE", "ADMINWRITE", "ADMINONLY", "CUSTOM"
+
+- `rule`
+    - type: string
+    - desc: 自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填
+
 
 
 ### `activateInviteCode`
@@ -519,5 +1074,9 @@
 
 参数
 
-- `InviteCode`: string  (required) - 待激活的邀请码
+- `InviteCode`
+    - type: string
+    - required: true
+    - desc: 待激活的邀请码
+
 

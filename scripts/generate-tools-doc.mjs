@@ -62,34 +62,49 @@ function hasNestedProps(propSchema) {
   return propSchema && propSchema.type === 'object' && propSchema.properties && Object.keys(propSchema.properties).length > 0;
 }
 
-function renderSchemaAsBullets(name, schema, isRequired, indent = 0) {
+function renderSchemaAsBullets(name, schema, isRequired, indent = 0, isTopLevel = false) {
   const lines = [];
-  const pad = '  '.repeat(indent);
+  const pad = '    '.repeat(indent); // 4 spaces for clearer nesting
   const t = (schema.anyOf || schema.oneOf) && !schema.type ? renderUnion(schema) : typeOfSchema(schema);
   const enumText = renderEnum(schema);
   const defText = renderDefault(schema);
-  const desc = schema.description ? ` - ${escapeMd(schema.description)}` : '';
-  const req = isRequired ? ' (required)' : '';
+  const hasMeta = isRequired || schema.description || enumText || defText;
 
+  // Field title line
+  lines.push(`${pad}- \`${name}\``);
+
+  // Meta sub-bullets
+  const subPad = '    '.repeat(indent + 1);
+  lines.push(`${subPad}- type: ${escapeMd(t)}`);
+  if (isRequired) lines.push(`${subPad}- required: true`);
+  if (schema.description) lines.push(`${subPad}- desc: ${escapeMd(schema.description)}`);
+  if (enumText) lines.push(`${subPad}- enum: ${escapeMd(enumText)}`);
+  if (defText) lines.push(`${subPad}- default: ${escapeMd(defText)}`);
+
+  // Array items
   if (schema.type === 'array') {
     const itemType = schema.items ? ((schema.items.anyOf || schema.items.oneOf) && !schema.items.type ? renderUnion(schema.items) : typeOfSchema(schema.items)) : 'any';
-    lines.push(`${pad}- \`${name}\`: array<${escapeMd(itemType)}> ${req}${desc}${enumText ? `; enum: ${escapeMd(enumText)}` : ''}${defText ? `; default: ${escapeMd(defText)}` : ''}`);
+    lines.push(`${subPad}- items: ${escapeMd(itemType)}`);
     if (schema.items && schema.items.type === 'object' && schema.items.properties) {
       const itemReq = new Set(schema.items.required || []);
       for (const [childName, childSchema] of Object.entries(schema.items.properties)) {
-        lines.push(...renderSchemaAsBullets(`${name}[].${childName}`, childSchema, itemReq.has(childName), indent + 1));
+        lines.push(...renderSchemaAsBullets(`${name}[].${childName}`, childSchema, itemReq.has(childName), indent + 2));
       }
     }
-    return lines;
   }
 
-  lines.push(`${pad}- \`${name}\`: ${escapeMd(t)} ${req}${desc}${enumText ? `; enum: ${escapeMd(enumText)}` : ''}${defText ? `; default: ${escapeMd(defText)}` : ''}`);
+  // Object properties
   if (schema.type === 'object' && schema.properties) {
+    lines.push(`${subPad}- properties:`);
     const requiredSet = new Set(schema.required || []);
     for (const [childName, childSchema] of Object.entries(schema.properties)) {
-      lines.push(...renderSchemaAsBullets(`${name}.${childName}`, childSchema, requiredSet.has(childName), indent + 1));
+      lines.push(...renderSchemaAsBullets(`${name}.${childName}`, childSchema, requiredSet.has(childName), indent + 2));
     }
   }
+
+  // Add blank line after each top-level field for readability
+  if (isTopLevel) lines.push('');
+
   return lines;
 }
 
@@ -107,7 +122,7 @@ function renderToolDetails(tool) {
     lines.push('参数');
     lines.push('');
     for (const [name, propSchema] of Object.entries(props)) {
-      lines.push(...renderSchemaAsBullets(name, propSchema, requiredSet.has(name), 0));
+      lines.push(...renderSchemaAsBullets(name, propSchema, requiredSet.has(name), 0, true));
     }
     lines.push('');
   } else {
