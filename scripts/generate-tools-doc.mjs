@@ -7,17 +7,36 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-function readToolsJson() {
+const GITHUB_PAGE_URL = 'https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/blob/main/scripts/tools.json';
+const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/TencentCloudBase/CloudBase-AI-ToolKit/main/scripts/tools.json';
+
+async function readToolsJson() {
+  // Prefer remote source
+  try {
+    if (typeof fetch === 'function') {
+      const res = await fetch(GITHUB_RAW_URL, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`fetch failed with ${res.status}`);
+      const json = await res.json();
+      console.log(`🌐 使用远程 tools.json: ${GITHUB_PAGE_URL}`);
+      return json;
+    }
+  } catch (e) {
+    console.warn('⚠️ 远程获取 tools.json 失败，回退到本地文件。', e && e.message ? e.message : e);
+  }
+  // Fallback to local
   const toolsJsonPath = path.join(__dirname, 'tools.json');
   if (!fs.existsSync(toolsJsonPath)) {
     throw new Error(`tools.json not found at ${toolsJsonPath}. Please run scripts/generate-tools-json.mjs first.`);
   }
   const raw = fs.readFileSync(toolsJsonPath, 'utf8');
+  console.log(`📄 使用本地 tools.json: ${toolsJsonPath}`);
   return JSON.parse(raw);
 }
 
 function escapeMd(text = '') {
-  return String(text).replace(/\|/g, '\\|');
+  return String(text)
+    .replace(/[\r\n]+/g, '<br/>')
+    .replace(/\|/g, '\\|');
 }
 
 function typeOfSchema(schema) {
@@ -125,7 +144,7 @@ function renderDoc(toolsJson) {
   lines.push('');
   lines.push(`当前包含 ${tools.length} 个工具。`);
   lines.push('');
-  lines.push('源数据: `scripts/tools.json`');
+  lines.push(`源数据: [tools.json](${GITHUB_PAGE_URL})（离线回退: \`scripts/tools.json\`）`);
   lines.push('');
   lines.push('---');
   lines.push('');
