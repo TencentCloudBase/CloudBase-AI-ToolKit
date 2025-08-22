@@ -21,7 +21,9 @@ function readToolsJson() {
 function escapeMd(text = '') {
   return String(text)
     .replace(/[\r\n]+/g, '<br/>')
-    .replace(/\|/g, '\\|');
+    .replace(/\|/g, '\\|')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }
 
 function typeOfSchema(schema) {
@@ -29,7 +31,7 @@ function typeOfSchema(schema) {
   if (schema.type) {
     if (schema.type === 'array') {
       const itemType = schema.items ? typeOfSchema(schema.items) : 'any';
-      return `array<${itemType}>`;
+      return `array of ${itemType}`;
     }
     return schema.type;
   }
@@ -62,54 +64,42 @@ function hasNestedProps(propSchema) {
   return propSchema && propSchema.type === 'object' && propSchema.properties && Object.keys(propSchema.properties).length > 0;
 }
 
-function renderSchemaAsBullets(name, schema, isRequired, indent = 0, isTopLevel = false) {
-  const lines = [];
-  const maxIndent = 2; // cap visual nesting to avoid overly deep indentation
-  const cappedIndent = Math.min(indent, maxIndent);
-  const pad = '    '.repeat(cappedIndent); // 4 spaces for clearer nesting
-  const t = (schema.anyOf || schema.oneOf) && !schema.type ? renderUnion(schema) : typeOfSchema(schema);
+function renderSchemaAsHeadings(name, schema, isRequired, depth = 0) {
+  // Not used in table mode; kept for potential future use
+  return [];
+}
+
+function flattenSchemaRows(name, schema, isRequired) {
+  const rows = [];
+  const typeText = (schema.anyOf || schema.oneOf) && !schema.type ? renderUnion(schema) : typeOfSchema(schema);
   const enumText = renderEnum(schema);
   const defText = renderDefault(schema);
-  const hasMeta = isRequired || schema.description || enumText || defText;
+  rows.push({
+    name,
+    type: typeText,
+    required: isRequired ? '是' : '',
+    desc: schema.description ? escapeMd(schema.description) : '',
+    enum: enumText ? escapeMd(enumText) : '',
+    def: defText ? escapeMd(defText) : ''
+  });
 
-  // Field title line
-  lines.push(`${pad}- \`${name}\``);
-
-  // Meta sub-bullets
-  const subPad = '    '.repeat(Math.min(cappedIndent + 1, maxIndent));
-  lines.push(`${subPad}- type: ${escapeMd(t)}`);
-  if (isRequired) lines.push(`${subPad}- required: true`);
-  if (schema.description) lines.push(`${subPad}- desc: ${escapeMd(schema.description)}`);
-  if (enumText) lines.push(`${subPad}- enum: ${escapeMd(enumText)}`);
-  if (defText) lines.push(`${subPad}- default: ${escapeMd(defText)}`);
-
-  // Array items
-  if (schema.type === 'array') {
-    const itemType = schema.items ? ((schema.items.anyOf || schema.items.oneOf) && !schema.items.type ? renderUnion(schema.items) : typeOfSchema(schema.items)) : 'any';
-    lines.push(`${subPad}- items: ${escapeMd(itemType)}`);
-    if (schema.items && schema.items.type === 'object' && schema.items.properties) {
-      const itemReq = new Set(schema.items.required || []);
-      for (const [childName, childSchema] of Object.entries(schema.items.properties)) {
-        // keep child visuals at capped indent
-        lines.push(...renderSchemaAsBullets(`${name}[].${childName}`, childSchema, itemReq.has(childName), maxIndent));
+  if (schema.type === 'array' && schema.items) {
+    const item = schema.items;
+    if (item.type === 'object' && item.properties) {
+      const req = new Set(item.required || []);
+      for (const [k, v] of Object.entries(item.properties)) {
+        rows.push(...flattenSchemaRows(`${name}[].${k}`, v, req.has(k)));
       }
     }
   }
 
-  // Object properties
   if (schema.type === 'object' && schema.properties) {
-    lines.push(`${subPad}- properties:`);
-    const requiredSet = new Set(schema.required || []);
-    for (const [childName, childSchema] of Object.entries(schema.properties)) {
-      // keep child visuals at capped indent
-      lines.push(...renderSchemaAsBullets(`${name}.${childName}`, childSchema, requiredSet.has(childName), maxIndent));
+    const req = new Set(schema.required || []);
+    for (const [k, v] of Object.entries(schema.properties)) {
+      rows.push(...flattenSchemaRows(`${name}.${k}`, v, req.has(k)));
     }
   }
-
-  // Add blank line after each top-level field for readability
-  if (isTopLevel) lines.push('');
-
-  return lines;
+  return rows;
 }
 
 function renderToolDetails(tool) {
@@ -123,24 +113,33 @@ function renderToolDetails(tool) {
     const props = schema.properties;
     const requiredSet = new Set(schema.required || []);
     lines.push('');
-    lines.push('参数');
+    lines.push('#### 参数');
     lines.push('');
+    lines.push('| 参数名 | 类型 | 必填 | 说明 | 枚举/常量 | 默认值 |');
+    lines.push('|--------|------|------|------|-----------|--------|');
+    const allRows = [];
     for (const [name, propSchema] of Object.entries(props)) {
-      lines.push(...renderSchemaAsBullets(name, propSchema, requiredSet.has(name), 0, true));
+      allRows.push(...flattenSchemaRows(name, propSchema, requiredSet.has(name)));
+    }
+    for (const r of allRows) {
+      lines.push(`| \`${r.name}\` | ${r.type} | ${r.required} | ${r.desc} | ${r.enum} | ${r.def} |`);
     }
     lines.push('');
   } else {
     lines.push('');
-    lines.push('参数: 无参数');
+    lines.push('#### 参数');
+    lines.push('');
+    lines.push('无');
     lines.push('');
   }
+  lines.push('---');
   return lines.join('\n');
 }
 
 function renderDoc(toolsJson) {
   const { tools = [] } = toolsJson;
   const lines = [];
-  lines.push('# MCP 工具（自动生成）');
+  lines.push('# MCP 工具');
   lines.push('');
   lines.push(`当前包含 ${tools.length} 个工具。`);
   lines.push('');
