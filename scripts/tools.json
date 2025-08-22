@@ -91,32 +91,92 @@
       }
     },
     {
-      "name": "updateEnvInfo",
-      "description": "更新云开发环境信息",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "type": "string",
-            "description": "环境别名"
-          }
-        },
-        "required": [
-          "alias"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
       "name": "createCollection",
-      "description": "创建一个新的云开发数据库集合",
+      "description": "管理云开发数据库集合：默认创建。可通过 action 指定 update。",
       "inputSchema": {
         "type": "object",
         "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "create",
+              "update"
+            ],
+            "description": "操作类型：create=创建(默认)，update=更新集合配置"
+          },
           "collectionName": {
             "type": "string",
             "description": "云开发数据库集合名称"
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "CreateIndexes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "IndexName": {
+                      "type": "string"
+                    },
+                    "MgoKeySchema": {
+                      "type": "object",
+                      "properties": {
+                        "MgoIsUnique": {
+                          "type": "boolean"
+                        },
+                        "MgoIndexKeys": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "Name": {
+                                "type": "string"
+                              },
+                              "Direction": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "Name",
+                              "Direction"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "MgoIsUnique",
+                        "MgoIndexKeys"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "IndexName",
+                    "MgoKeySchema"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "DropIndexes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "IndexName": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "IndexName"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false,
+            "description": "更新选项（action=update 时使用）"
           }
         },
         "required": [
@@ -128,7 +188,7 @@
     },
     {
       "name": "collectionQuery",
-      "description": "数据库集合的查询操作，支持检查存在性、查看详情和列表查询。（原工具名：checkCollectionExists/describeCollection/listCollections，为兼容旧AI规则可继续使用这些名称）",
+      "description": "数据库集合的查询操作，支持检查存在性、查看详情、列表查询；并支持索引列表与检查。（兼容旧名称）",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -137,13 +197,19 @@
             "enum": [
               "check",
               "describe",
-              "list"
+              "list",
+              "index_list",
+              "index_check"
             ],
-            "description": "操作类型：check=检查是否存在，describe=查看详情，list=列表查询"
+            "description": "操作类型：check=检查是否存在，describe=查看详情，list=列表查询，index_list=索引列表，index_check=检查索引是否存在"
           },
           "collectionName": {
             "type": "string",
-            "description": "集合名称（check、describe操作时必填）"
+            "description": "集合名称（check、describe、index_list、index_check 操作时必填）"
+          },
+          "indexName": {
+            "type": "string",
+            "description": "索引名称（index_check 操作时必填）"
           },
           "limit": {
             "type": "number",
@@ -529,17 +595,33 @@
     },
     {
       "name": "getFunctionList",
-      "description": "获取云函数列表",
+      "description": "获取云函数列表或单个函数详情，通过 action 参数区分操作类型",
       "inputSchema": {
         "type": "object",
         "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "list",
+              "detail"
+            ],
+            "description": "操作类型：list=获取函数列表（默认），detail=获取函数详情"
+          },
           "limit": {
             "type": "number",
-            "description": "范围"
+            "description": "范围（list 操作时使用）"
           },
           "offset": {
             "type": "number",
-            "description": "偏移"
+            "description": "偏移（list 操作时使用）"
+          },
+          "name": {
+            "type": "string",
+            "description": "函数名称（detail 操作时必需）"
+          },
+          "codeSecret": {
+            "type": "string",
+            "description": "代码保护密钥（detail 操作时使用）"
           }
         },
         "additionalProperties": false,
@@ -767,28 +849,6 @@
       }
     },
     {
-      "name": "getFunctionDetail",
-      "description": "获取云函数详情",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "函数名称"
-          },
-          "codeSecret": {
-            "type": "string",
-            "description": "代码保护密钥"
-          }
-        },
-        "required": [
-          "name"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
       "name": "invokeFunction",
       "description": "调用云函数",
       "inputSchema": {
@@ -880,11 +940,19 @@
       }
     },
     {
-      "name": "createFunctionTriggers",
-      "description": "创建云函数触发器",
+      "name": "manageFunctionTriggers",
+      "description": "创建或删除云函数触发器，通过 action 参数区分操作类型",
       "inputSchema": {
         "type": "object",
         "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "create",
+              "delete"
+            ],
+            "description": "操作类型：create=创建触发器，delete=删除触发器"
+          },
           "name": {
             "type": "string",
             "description": "函数名"
@@ -917,35 +985,16 @@
               ],
               "additionalProperties": false
             },
-            "description": "Trigger configuration array"
-          }
-        },
-        "required": [
-          "name",
-          "triggers"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "deleteFunctionTrigger",
-      "description": "删除云函数触发器",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "函数名"
+            "description": "触发器配置数组（创建时必需）"
           },
           "triggerName": {
             "type": "string",
-            "description": "触发器名称"
+            "description": "触发器名称（删除时必需）"
           }
         },
         "required": [
-          "name",
-          "triggerName"
+          "action",
+          "name"
         ],
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"
