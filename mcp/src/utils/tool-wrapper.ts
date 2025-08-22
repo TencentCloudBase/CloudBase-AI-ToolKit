@@ -107,6 +107,7 @@ function createWrappedHandler(name: string, handler: any, server: ExtendedMcpSer
         const startTime = Date.now();
         let success = false;
         let errorMessage: string | undefined;
+        let requestId: string | undefined;
 
         try {
             debug(`开始执行工具: ${name}`, { args: sanitizeArgs(args) });
@@ -121,7 +122,7 @@ function createWrappedHandler(name: string, handler: any, server: ExtendedMcpSer
         } catch (error) {
             success = false;
             errorMessage = error instanceof Error ? error.message : String(error);
-
+            requestId = (typeof error === 'object' && error && 'requestId' in error) ? (error as any).requestId : '';
             debug(`工具执行失败: ${name}`, {
                 error: errorMessage,
                 duration: Date.now() - startTime
@@ -153,6 +154,7 @@ function createWrappedHandler(name: string, handler: any, server: ExtendedMcpSer
             reportToolCall({
                 toolName: name,
                 success,
+                
                 duration,
                 error: errorMessage,
                 inputParams: sanitizeArgs(args), // 添加入参上报

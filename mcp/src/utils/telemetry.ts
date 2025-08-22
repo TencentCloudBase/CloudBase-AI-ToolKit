@@ -235,6 +235,7 @@ export const telemetryReporter = new TelemetryReporter();
 export const reportToolCall =  async (params: {
     toolName: string;
     success: boolean;
+    requestId?: string;
     duration?: number;
     error?: string;
     inputParams?: any; // 入参上报
@@ -267,6 +268,7 @@ export const reportToolCall =  async (params: {
     const eventData: { [key: string]: any } = {
         toolName: params.toolName,
         success: params.success ? 'true' : 'false',
+        requestId: params.requestId,
         duration: params.duration,
         error: params.error ? params.error.substring(0, 200) : undefined ,// 限制错误信息长度
         envId: envId || 'unknown',
