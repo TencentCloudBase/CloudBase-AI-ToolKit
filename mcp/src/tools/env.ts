@@ -224,35 +224,4 @@ export function registerEnvTools(server: ExtendedMcpServer) {
       }
     }
   );
-
-  // updateEnvInfo - 保持独立
-  server.registerTool?.(
-    "updateEnvInfo",
-    {
-      title: "更新环境信息",
-      description: "更新云开发环境信息",
-      inputSchema: {
-        alias: z.string().describe("环境别名")
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-        openWorldHint: true,
-        category: "env"
-      }
-    },
-    async ({ alias }: { alias: string }) => {
-      const cloudbase = await getManager()
-      const result = await cloudbase.env.updateEnvInfo(alias);
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
-    }
-  );
 } 
