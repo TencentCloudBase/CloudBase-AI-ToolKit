@@ -80,7 +80,12 @@ function flattenSchemaRows(name, schema, isRequired) {
     enumText ? `可填写的值: ${escapeMd(enumText)}` : '',
     defText ? `默认值: ${escapeMd(defText)}` : ''
   ].filter(Boolean).join('；');
-  const mergedDesc = [baseDesc, extras].filter(Boolean).join(' ');
+  let mergedDesc = [baseDesc, extras].filter(Boolean).join(' ');
+  // For extremely long descriptions (e.g., mermaid diagram), move to details block per-tool
+  if (name === 'mermaidDiagram' && schema.description && schema.description.includes('示例：')) {
+    const [head] = schema.description.split('示例：');
+    mergedDesc = escapeMd(head.trim());
+  }
   rows.push({ name, type: typeText, required: isRequired ? '是' : '', desc: mergedDesc });
 
   if (schema.type === 'array' && schema.items) {
@@ -119,8 +124,23 @@ function renderToolDetails(tool) {
     lines.push('<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>');
     lines.push('<tbody>');
     const allRows = [];
+    const extrasBlocks = [];
     for (const [name, propSchema] of Object.entries(props)) {
       allRows.push(...flattenSchemaRows(name, propSchema, requiredSet.has(name)));
+      // Add long mermaid example block under the table
+      if (name === 'mermaidDiagram' && propSchema.description && propSchema.description.includes('示例：')) {
+        const example = propSchema.description.split('示例：')[1];
+        if (example) {
+          const code = String(example).trim();
+          extrasBlocks.push('<details><summary>示例</summary>');
+          extrasBlocks.push('');
+          extrasBlocks.push('```text');
+          extrasBlocks.push(code);
+          extrasBlocks.push('```');
+          extrasBlocks.push('</details>');
+          extrasBlocks.push('');
+        }
+      }
     }
     for (const r of allRows) {
       lines.push(`<tr><td><code>${r.name}</code></td><td>${escapeMd(r.type)}</td><td>${r.required}</td><td>${r.desc}</td></tr>`);
@@ -128,6 +148,9 @@ function renderToolDetails(tool) {
     lines.push('</tbody>');
     lines.push('</table>');
     lines.push('');
+    if (extrasBlocks.length > 0) {
+      lines.push(...extrasBlocks);
+    }
   } else {
     lines.push('');
     lines.push('#### 参数');

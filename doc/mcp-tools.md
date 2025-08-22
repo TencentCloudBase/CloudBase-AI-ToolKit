@@ -286,12 +286,55 @@
 <table>
 <thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>mermaidDiagram</code></td><td>string</td><td>是</td><td>Mermaid classDiagram代码，描述数据模型结构。&lt;br/&gt;示例：&lt;br/&gt;classDiagram&lt;br/&gt;    class Student {&lt;br/&gt;        name: string &lt;&lt;姓名&gt;&gt;&lt;br/&gt;        age: number = 18 &lt;&lt;年龄&gt;&gt;&lt;br/&gt;        gender: x-enum = "男" &lt;&lt;性别&gt;&gt;&lt;br/&gt;        classId: string &lt;&lt;班级ID&gt;&gt;&lt;br/&gt;        identityId: string &lt;&lt;身份ID&gt;&gt;&lt;br/&gt;        course: Course[] &lt;&lt;课程&gt;&gt;&lt;br/&gt;        required() ["name"]&lt;br/&gt;        unique() ["name"]&lt;br/&gt;        enum_gender() ["男", "女"]&lt;br/&gt;        display_field() "name"&lt;br/&gt;    }&lt;br/&gt;    class Class {&lt;br/&gt;        className: string &lt;&lt;班级名称&gt;&gt;&lt;br/&gt;        display_field() "className"&lt;br/&gt;    }&lt;br/&gt;    class Course {&lt;br/&gt;        name: string &lt;&lt;课程名称&gt;&gt;&lt;br/&gt;        students: Student[] &lt;&lt;学生&gt;&gt;&lt;br/&gt;        display_field() "name"&lt;br/&gt;    }&lt;br/&gt;    class Identity {&lt;br/&gt;        number: string &lt;&lt;证件号码&gt;&gt;&lt;br/&gt;        display_field() "number"&lt;br/&gt;    }&lt;br/&gt;    %% 关联关系&lt;br/&gt;    Student "1" --&gt; "1" Identity : studentId&lt;br/&gt;    Student "n" --&gt; "1" Class : student2class&lt;br/&gt;    Student "n" --&gt; "m" Course : course&lt;br/&gt;    Student "n" &lt;-- "m" Course : students&lt;br/&gt;    %% 类的命名&lt;br/&gt;    note for Student "学生模型"&lt;br/&gt;    note for Class "班级模型"&lt;br/&gt;    note for Course "课程模型"&lt;br/&gt;    note for Identity "身份模型"&lt;br/&gt;</td></tr>
+<tr><td><code>mermaidDiagram</code></td><td>string</td><td>是</td><td>Mermaid classDiagram代码，描述数据模型结构。</td></tr>
 <tr><td><code>action</code></td><td>string</td><td></td><td>操作类型：create=创建新模型 可填写的值: "create", "update"；默认值: "create"</td></tr>
 <tr><td><code>publish</code></td><td>boolean</td><td></td><td>是否立即发布模型 默认值: false</td></tr>
 <tr><td><code>dbInstanceType</code></td><td>string</td><td></td><td>数据库实例类型 默认值: "MYSQL"</td></tr>
 </tbody>
 </table>
+
+<details><summary>示例</summary>
+
+```text
+classDiagram
+    class Student {
+        name: string <<姓名>>
+        age: number = 18 <<年龄>>
+        gender: x-enum = "男" <<性别>>
+        classId: string <<班级ID>>
+        identityId: string <<身份ID>>
+        course: Course[] <<课程>>
+        required() ["name"]
+        unique() ["name"]
+        enum_gender() ["男", "女"]
+        display_field() "name"
+    }
+    class Class {
+        className: string <<班级名称>>
+        display_field() "className"
+    }
+    class Course {
+        name: string <<课程名称>>
+        students: Student[] <<学生>>
+        display_field() "name"
+    }
+    class Identity {
+        number: string <<证件号码>>
+        display_field() "number"
+    }
+
+    %% 关联关系
+    Student "1" --> "1" Identity : studentId
+    Student "n" --> "1" Class : student2class
+    Student "n" --> "m" Course : course
+    Student "n" <-- "m" Course : students
+    %% 类的命名
+    note for Student "学生模型"
+    note for Class "班级模型"
+    note for Course "课程模型"
+    note for Identity "身份模型"
+```
+</details>
 
 ---
 
