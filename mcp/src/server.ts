@@ -13,6 +13,7 @@ import { registerSecurityRuleTools } from "./tools/security-rule.js";
 import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
 import { registerGatewayTools } from "./tools/gateway.js";
 import { registerInviteCodeTools } from "./tools/invite-code.js";
+import { registerCloudRunTools } from "./tools/cloudrun.js";
 import { CloudBaseOptions } from "./types.js";
 import { enableCloudMode } from "./utils/cloud-mode.js";
 
@@ -41,6 +42,7 @@ const AVAILABLE_PLUGINS: Record<string, PluginDefinition> = {
   // miniprogram: { name: 'miniprogram', register: registerMiniprogramTools },
   'security-rule': { name: 'security-rule', register: registerSecurityRuleTools },
   'invite-code': { name: 'invite-code', register: registerInviteCodeTools },
+  cloudrun: { name: 'cloudrun', register: registerCloudRunTools },
 };
 
 /**

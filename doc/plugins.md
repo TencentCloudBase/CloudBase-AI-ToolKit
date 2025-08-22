@@ -25,6 +25,7 @@ CloudBase MCP 采用插件化架构，支持按需启用工具模块，解决 MC
 | `download` | 远程文件下载 |
 | `gateway` | API 网关管理 |
 | `miniprogram` | 小程序发布 (上传、预览、构建) |
+| `cloudrun` | 云托管服务 (容器部署、服务管理) |
 
 ## ⚙️ 插件配置
 
