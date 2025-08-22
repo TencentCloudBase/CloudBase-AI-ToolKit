@@ -128,34 +128,34 @@
     - desc: 更新选项（action=update 时使用）
     - properties:
         - `options.CreateIndexes`
-            - type: array<object>
-            - items: object
-                - `options.CreateIndexes[].IndexName`
-                    - type: string
-                    - required: true
-                - `options.CreateIndexes[].MgoKeySchema`
-                    - type: object
-                    - required: true
-                    - properties:
-                        - `options.CreateIndexes[].MgoKeySchema.MgoIsUnique`
-                            - type: boolean
-                            - required: true
-                        - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys`
-                            - type: array<object>
-                            - required: true
-                            - items: object
-                                - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Name`
-                                    - type: string
-                                    - required: true
-                                - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Direction`
-                                    - type: string
-                                    - required: true
+        - type: array<object>
+        - items: object
+        - `options.CreateIndexes[].IndexName`
+        - type: string
+        - required: true
+        - `options.CreateIndexes[].MgoKeySchema`
+        - type: object
+        - required: true
+        - properties:
+        - `options.CreateIndexes[].MgoKeySchema.MgoIsUnique`
+        - type: boolean
+        - required: true
+        - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys`
+        - type: array<object>
+        - required: true
+        - items: object
+        - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Name`
+        - type: string
+        - required: true
+        - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Direction`
+        - type: string
+        - required: true
         - `options.DropIndexes`
-            - type: array<object>
-            - items: object
-                - `options.DropIndexes[].IndexName`
-                    - type: string
-                    - required: true
+        - type: array<object>
+        - items: object
+        - `options.DropIndexes[].IndexName`
+        - type: string
+        - required: true
 
 
 
@@ -204,34 +204,34 @@
     - desc: 更新选项，支持创建和删除索引
     - properties:
         - `options.CreateIndexes`
-            - type: array<object>
-            - items: object
-                - `options.CreateIndexes[].IndexName`
-                    - type: string
-                    - required: true
-                - `options.CreateIndexes[].MgoKeySchema`
-                    - type: object
-                    - required: true
-                    - properties:
-                        - `options.CreateIndexes[].MgoKeySchema.MgoIsUnique`
-                            - type: boolean
-                            - required: true
-                        - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys`
-                            - type: array<object>
-                            - required: true
-                            - items: object
-                                - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Name`
-                                    - type: string
-                                    - required: true
-                                - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Direction`
-                                    - type: string
-                                    - required: true
+        - type: array<object>
+        - items: object
+        - `options.CreateIndexes[].IndexName`
+        - type: string
+        - required: true
+        - `options.CreateIndexes[].MgoKeySchema`
+        - type: object
+        - required: true
+        - properties:
+        - `options.CreateIndexes[].MgoKeySchema.MgoIsUnique`
+        - type: boolean
+        - required: true
+        - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys`
+        - type: array<object>
+        - required: true
+        - items: object
+        - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Name`
+        - type: string
+        - required: true
+        - `options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Direction`
+        - type: string
+        - required: true
         - `options.DropIndexes`
-            - type: array<object>
-            - items: object
-                - `options.DropIndexes[].IndexName`
-                    - type: string
-                    - required: true
+        - type: array<object>
+        - items: object
+        - `options.DropIndexes[].IndexName`
+        - type: string
+        - required: true
 
 
 
@@ -442,64 +442,64 @@
     - desc: 函数配置
     - properties:
         - `func.name`
-            - type: string
-            - required: true
-            - desc: 函数名称
+        - type: string
+        - required: true
+        - desc: 函数名称
         - `func.timeout`
-            - type: number
-            - desc: 函数超时时间
+        - type: number
+        - desc: 函数超时时间
         - `func.envVariables`
-            - type: object
-            - desc: 环境变量
+        - type: object
+        - desc: 环境变量
         - `func.vpc`
-            - type: object
-            - desc: 私有网络配置
-            - properties:
-                - `func.vpc.vpcId`
-                    - type: string
-                    - required: true
-                - `func.vpc.subnetId`
-                    - type: string
-                    - required: true
+        - type: object
+        - desc: 私有网络配置
+        - properties:
+        - `func.vpc.vpcId`
+        - type: string
+        - required: true
+        - `func.vpc.subnetId`
+        - type: string
+        - required: true
         - `func.runtime`
-            - type: string
-            - desc: 运行时环境,建议指定为 'Nodejs18.15'，其他可选值：Nodejs18.15，Nodejs16.13，Nodejs14.18，Nodejs12.16，Nodejs10.15，Nodejs8.9
+        - type: string
+        - desc: 运行时环境,建议指定为 'Nodejs18.15'，其他可选值：Nodejs18.15，Nodejs16.13，Nodejs14.18，Nodejs12.16，Nodejs10.15，Nodejs8.9
         - `func.triggers`
-            - type: array<object>
-            - desc: Trigger configuration array
-            - items: object
-                - `func.triggers[].name`
-                    - type: string
-                    - required: true
-                    - desc: Trigger name
-                - `func.triggers[].type`
-                    - type: string
-                    - required: true
-                    - desc: Trigger type, currently only supports 'timer'
-                    - enum: "timer"
-                - `func.triggers[].config`
-                    - type: string
-                    - required: true
-                    - desc: Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. IMPORTANT: Must include exactly 7 fields (second minute hour day month week year). Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)
+        - type: array<object>
+        - desc: Trigger configuration array
+        - items: object
+        - `func.triggers[].name`
+        - type: string
+        - required: true
+        - desc: Trigger name
+        - `func.triggers[].type`
+        - type: string
+        - required: true
+        - desc: Trigger type, currently only supports 'timer'
+        - enum: "timer"
+        - `func.triggers[].config`
+        - type: string
+        - required: true
+        - desc: Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. IMPORTANT: Must include exactly 7 fields (second minute hour day month week year). Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)
         - `func.handler`
-            - type: string
-            - desc: 函数入口
+        - type: string
+        - desc: 函数入口
         - `func.ignore`
-            - type: string \| array<string>
-            - desc: 忽略文件
+        - type: string \| array<string>
+        - desc: 忽略文件
         - `func.isWaitInstall`
-            - type: boolean
-            - desc: 是否等待依赖安装
+        - type: boolean
+        - desc: 是否等待依赖安装
         - `func.layers`
-            - type: array<object>
-            - desc: Layer配置
-            - items: object
-                - `func.layers[].name`
-                    - type: string
-                    - required: true
-                - `func.layers[].version`
-                    - type: number
-                    - required: true
+        - type: array<object>
+        - desc: Layer配置
+        - items: object
+        - `func.layers[].name`
+        - type: string
+        - required: true
+        - `func.layers[].version`
+        - type: number
+        - required: true
 
 - `functionRootPath`
     - type: string
@@ -540,25 +540,25 @@
     - desc: 函数配置
     - properties:
         - `funcParam.name`
-            - type: string
-            - required: true
-            - desc: 函数名称
+        - type: string
+        - required: true
+        - desc: 函数名称
         - `funcParam.timeout`
-            - type: number
-            - desc: 超时时间
+        - type: number
+        - desc: 超时时间
         - `funcParam.envVariables`
-            - type: object
-            - desc: 环境变量
+        - type: object
+        - desc: 环境变量
         - `funcParam.vpc`
-            - type: object
-            - desc: VPC配置
-            - properties:
-                - `funcParam.vpc.vpcId`
-                    - type: string
-                    - required: true
-                - `funcParam.vpc.subnetId`
-                    - type: string
-                    - required: true
+        - type: object
+        - desc: VPC配置
+        - properties:
+        - `funcParam.vpc.vpcId`
+        - type: string
+        - required: true
+        - `funcParam.vpc.subnetId`
+        - type: string
+        - required: true
 
 
 
@@ -655,18 +655,18 @@
     - desc: 触发器配置数组（创建时必需）
     - items: object
         - `triggers[].name`
-            - type: string
-            - required: true
-            - desc: Trigger name
+        - type: string
+        - required: true
+        - desc: Trigger name
         - `triggers[].type`
-            - type: string
-            - required: true
-            - desc: Trigger type, currently only supports 'timer'
-            - enum: "timer"
+        - type: string
+        - required: true
+        - desc: Trigger type, currently only supports 'timer'
+        - enum: "timer"
         - `triggers[].config`
-            - type: string
-            - required: true
-            - desc: Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. IMPORTANT: Must include exactly 7 fields (second minute hour day month week year). Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)
+        - type: string
+        - required: true
+        - desc: Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. IMPORTANT: Must include exactly 7 fields (second minute hour day month week year). Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)
 
 - `triggerName`
     - type: string
@@ -693,11 +693,11 @@
     - default: []
     - items: object
         - `files[].localPath`
-            - type: string
-            - required: true
+        - type: string
+        - required: true
         - `files[].cloudPath`
-            - type: string
-            - required: true
+        - type: string
+        - required: true
 
 - `ignore`
     - type: string \| array<string>
@@ -781,55 +781,55 @@
     - desc: 域名配置（修改配置时使用）
     - properties:
         - `domainConfig.Refer`
-            - type: object
-            - properties:
-                - `domainConfig.Refer.Switch`
-                    - type: string
-                    - required: true
-                - `domainConfig.Refer.RefererRules`
-                    - type: array<object>
-                    - items: object
-                        - `domainConfig.Refer.RefererRules[].RefererType`
-                            - type: string
-                            - required: true
-                        - `domainConfig.Refer.RefererRules[].Referers`
-                            - type: array<string>
-                            - required: true
-                            - items: string
-                        - `domainConfig.Refer.RefererRules[].AllowEmpty`
-                            - type: boolean
-                            - required: true
+        - type: object
+        - properties:
+        - `domainConfig.Refer.Switch`
+        - type: string
+        - required: true
+        - `domainConfig.Refer.RefererRules`
+        - type: array<object>
+        - items: object
+        - `domainConfig.Refer.RefererRules[].RefererType`
+        - type: string
+        - required: true
+        - `domainConfig.Refer.RefererRules[].Referers`
+        - type: array<string>
+        - required: true
+        - items: string
+        - `domainConfig.Refer.RefererRules[].AllowEmpty`
+        - type: boolean
+        - required: true
         - `domainConfig.Cache`
-            - type: array<object>
-            - items: object
-                - `domainConfig.Cache[].RuleType`
-                    - type: string
-                    - required: true
-                - `domainConfig.Cache[].RuleValue`
-                    - type: string
-                    - required: true
-                - `domainConfig.Cache[].CacheTtl`
-                    - type: number
-                    - required: true
+        - type: array<object>
+        - items: object
+        - `domainConfig.Cache[].RuleType`
+        - type: string
+        - required: true
+        - `domainConfig.Cache[].RuleValue`
+        - type: string
+        - required: true
+        - `domainConfig.Cache[].CacheTtl`
+        - type: number
+        - required: true
         - `domainConfig.IpFilter`
-            - type: object
-            - properties:
-                - `domainConfig.IpFilter.Switch`
-                    - type: string
-                    - required: true
-                - `domainConfig.IpFilter.FilterType`
-                    - type: string
-                - `domainConfig.IpFilter.Filters`
-                    - type: array<string>
-                    - items: string
+        - type: object
+        - properties:
+        - `domainConfig.IpFilter.Switch`
+        - type: string
+        - required: true
+        - `domainConfig.IpFilter.FilterType`
+        - type: string
+        - `domainConfig.IpFilter.Filters`
+        - type: array<string>
+        - items: string
         - `domainConfig.IpFreqLimit`
-            - type: object
-            - properties:
-                - `domainConfig.IpFreqLimit.Switch`
-                    - type: string
-                    - required: true
-                - `domainConfig.IpFreqLimit.Qps`
-                    - type: number
+        - type: object
+        - properties:
+        - `domainConfig.IpFreqLimit.Switch`
+        - type: string
+        - required: true
+        - `domainConfig.IpFreqLimit.Qps`
+        - type: number
 
 
 
@@ -972,10 +972,10 @@
     - desc: 其他选项
     - properties:
         - `options.chunkExpand`
-            - type: array<number>
-            - desc: 指定返回的文档内容的展开长度,例如 [3,3]代表前后展开长度
-            - default: [3,3]
-            - items: number
+        - type: array<number>
+        - desc: 指定返回的文档内容的展开长度,例如 [3,3]代表前后展开长度
+        - default: [3,3]
+        - items: number
 
 - `limit`
     - type: number

@@ -64,7 +64,9 @@ function hasNestedProps(propSchema) {
 
 function renderSchemaAsBullets(name, schema, isRequired, indent = 0, isTopLevel = false) {
   const lines = [];
-  const pad = '    '.repeat(indent); // 4 spaces for clearer nesting
+  const maxIndent = 2; // cap visual nesting to avoid overly deep indentation
+  const cappedIndent = Math.min(indent, maxIndent);
+  const pad = '    '.repeat(cappedIndent); // 4 spaces for clearer nesting
   const t = (schema.anyOf || schema.oneOf) && !schema.type ? renderUnion(schema) : typeOfSchema(schema);
   const enumText = renderEnum(schema);
   const defText = renderDefault(schema);
@@ -74,7 +76,7 @@ function renderSchemaAsBullets(name, schema, isRequired, indent = 0, isTopLevel 
   lines.push(`${pad}- \`${name}\``);
 
   // Meta sub-bullets
-  const subPad = '    '.repeat(indent + 1);
+  const subPad = '    '.repeat(Math.min(cappedIndent + 1, maxIndent));
   lines.push(`${subPad}- type: ${escapeMd(t)}`);
   if (isRequired) lines.push(`${subPad}- required: true`);
   if (schema.description) lines.push(`${subPad}- desc: ${escapeMd(schema.description)}`);
@@ -88,7 +90,8 @@ function renderSchemaAsBullets(name, schema, isRequired, indent = 0, isTopLevel 
     if (schema.items && schema.items.type === 'object' && schema.items.properties) {
       const itemReq = new Set(schema.items.required || []);
       for (const [childName, childSchema] of Object.entries(schema.items.properties)) {
-        lines.push(...renderSchemaAsBullets(`${name}[].${childName}`, childSchema, itemReq.has(childName), indent + 2));
+        // keep child visuals at capped indent
+        lines.push(...renderSchemaAsBullets(`${name}[].${childName}`, childSchema, itemReq.has(childName), maxIndent));
       }
     }
   }
@@ -98,7 +101,8 @@ function renderSchemaAsBullets(name, schema, isRequired, indent = 0, isTopLevel 
     lines.push(`${subPad}- properties:`);
     const requiredSet = new Set(schema.required || []);
     for (const [childName, childSchema] of Object.entries(schema.properties)) {
-      lines.push(...renderSchemaAsBullets(`${name}.${childName}`, childSchema, requiredSet.has(childName), indent + 2));
+      // keep child visuals at capped indent
+      lines.push(...renderSchemaAsBullets(`${name}.${childName}`, childSchema, requiredSet.has(childName), maxIndent));
     }
   }
 
