@@ -58,35 +58,39 @@ function renderDefault(schema) {
   return schema && schema.default !== undefined ? JSON.stringify(schema.default) : '';
 }
 
-function renderPropertyRow(name, propSchema, requiredSet) {
-  const isRequired = requiredSet.has(name) ? '是' : '';
-  let typeText = typeOfSchema(propSchema);
-  if ((propSchema.anyOf || propSchema.oneOf) && !propSchema.type) {
-    typeText = renderUnion(propSchema);
-  }
-  const enumText = renderEnum(propSchema);
-  const defaultText = renderDefault(propSchema);
-  const desc = escapeMd(propSchema.description || '');
-  return `| \`${name}\` | ${escapeMd(typeText)} | ${isRequired} | ${desc} | ${escapeMd(enumText)} | ${escapeMd(defaultText)} |`;
-}
-
 function hasNestedProps(propSchema) {
   return propSchema && propSchema.type === 'object' && propSchema.properties && Object.keys(propSchema.properties).length > 0;
 }
 
-function renderNestedProps(propName, propSchema) {
-  const nested = propSchema.properties || {};
-  const requiredSet = new Set(propSchema.required || []);
+function renderSchemaAsBullets(name, schema, isRequired, indent = 0) {
   const lines = [];
-  lines.push(`- 详细字段（${propName}）:`);
-  lines.push('');
-  lines.push('| 字段 | 类型 | 必填 | 说明 | 枚举/常量 | 默认值 |');
-  lines.push('|------|------|------|------|-----------|--------|');
-  for (const [k, v] of Object.entries(nested)) {
-    lines.push(renderPropertyRow(`${propName}.${k}`, v, requiredSet));
+  const pad = '  '.repeat(indent);
+  const t = (schema.anyOf || schema.oneOf) && !schema.type ? renderUnion(schema) : typeOfSchema(schema);
+  const enumText = renderEnum(schema);
+  const defText = renderDefault(schema);
+  const desc = schema.description ? ` - ${escapeMd(schema.description)}` : '';
+  const req = isRequired ? ' (required)' : '';
+
+  if (schema.type === 'array') {
+    const itemType = schema.items ? ((schema.items.anyOf || schema.items.oneOf) && !schema.items.type ? renderUnion(schema.items) : typeOfSchema(schema.items)) : 'any';
+    lines.push(`${pad}- \`${name}\`: array<${escapeMd(itemType)}> ${req}${desc}${enumText ? `; enum: ${escapeMd(enumText)}` : ''}${defText ? `; default: ${escapeMd(defText)}` : ''}`);
+    if (schema.items && schema.items.type === 'object' && schema.items.properties) {
+      const itemReq = new Set(schema.items.required || []);
+      for (const [childName, childSchema] of Object.entries(schema.items.properties)) {
+        lines.push(...renderSchemaAsBullets(`${name}[].${childName}`, childSchema, itemReq.has(childName), indent + 1));
+      }
+    }
+    return lines;
   }
-  lines.push('');
-  return lines.join('\n');
+
+  lines.push(`${pad}- \`${name}\`: ${escapeMd(t)} ${req}${desc}${enumText ? `; enum: ${escapeMd(enumText)}` : ''}${defText ? `; default: ${escapeMd(defText)}` : ''}`);
+  if (schema.type === 'object' && schema.properties) {
+    const requiredSet = new Set(schema.required || []);
+    for (const [childName, childSchema] of Object.entries(schema.properties)) {
+      lines.push(...renderSchemaAsBullets(`${name}.${childName}`, childSchema, requiredSet.has(childName), indent + 1));
+    }
+  }
+  return lines;
 }
 
 function renderToolDetails(tool) {
@@ -102,18 +106,10 @@ function renderToolDetails(tool) {
     lines.push('');
     lines.push('参数');
     lines.push('');
-    lines.push('| 参数名 | 类型 | 必填 | 说明 | 枚举/常量 | 默认值 |');
-    lines.push('|--------|------|------|------|-----------|--------|');
     for (const [name, propSchema] of Object.entries(props)) {
-      lines.push(renderPropertyRow(name, propSchema, requiredSet));
+      lines.push(...renderSchemaAsBullets(name, propSchema, requiredSet.has(name), 0));
     }
     lines.push('');
-    // Render nested object fields (one level)
-    for (const [name, propSchema] of Object.entries(props)) {
-      if (hasNestedProps(propSchema)) {
-        lines.push(renderNestedProps(name, propSchema));
-      }
-    }
   } else {
     lines.push('');
     lines.push('参数: 无参数');
