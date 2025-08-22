@@ -1,4 +1,5 @@
 ---
+cloudbaseAIVersion：1.8.36
 description: CloudBase AI 开发规则指南 - 提供场景化的最佳实践，确保开发质量
 globs: *
 alwaysApply: true
