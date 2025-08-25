@@ -1,6 +1,6 @@
 # MCP 工具
 
-当前包含 37 个工具。
+当前包含 39 个工具。
 
 源数据: [tools.json](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/blob/main/scripts/tools.json)
 
@@ -43,6 +43,8 @@
 <tr><td><code>interactiveDialog</code></td><td>统一的交互式对话工具，支持需求澄清和任务确认，当需要和用户确认下一步的操作的时候，可以调用这个工具的clarify，如果有敏感的操作，需要用户确认，可以调用这个工具的confirm</td></tr>
 <tr><td><code>searchWeb</code></td><td>使用联网来进行信息检索，如查询最新的新闻、文章、股价、天气等。支持自然语言查询，也可以直接输入网址获取网页内容</td></tr>
 <tr><td><code>searchKnowledgeBase</code></td><td>云开发知识库智能检索工具，支持云开发与云函数知识的向量查询</td></tr>
+<tr><td><code>queryCloudRun</code></td><td>查询云托管服务信息，支持获取服务列表、查询服务详情和获取可用模板列表。返回的服务信息包括服务名称、状态、访问类型、配置详情等。</td></tr>
+<tr><td><code>manageCloudRun</code></td><td>管理云托管服务，按开发顺序支持：初始化项目（可从模板开始，模板列表可通过 queryCloudRun 查询）、下载服务代码、本地运行（仅函数型服务）、部署代码、删除服务。部署可配置CPU、内存、实例数、访问类型等参数。删除操作需要确认，建议设置force=true。</td></tr>
 <tr><td><code>createFunctionHTTPAccess</code></td><td>创建云函数的 HTTP 访问</td></tr>
 <tr><td><code>downloadRemoteFile</code></td><td>下载远程文件到本地临时文件，返回一个系统的绝对路径</td></tr>
 <tr><td><code>readSecurityRule</code></td><td>读取指定资源（数据库集合、云函数、存储桶）的安全规则和权限类别。&lt;br/&gt;参数说明：&lt;br/&gt;- resourceType: 资源类型（database/function/storage）&lt;br/&gt;- resourceId: 资源唯一标识（集合名/函数名/桶名）</td></tr>
@@ -702,6 +704,59 @@ classDiagram
 <tr><td><code>options</code></td><td>object</td><td></td><td>其他选项</td></tr>
 <tr><td><code>options.chunkExpand</code></td><td>array of number</td><td></td><td>指定返回的文档内容的展开长度,例如 [3,3]代表前后展开长度 默认值: [3,3]</td></tr>
 <tr><td><code>limit</code></td><td>number</td><td></td><td>指定返回最相似的 Top K 的 K 的值 默认值: 5</td></tr>
+</tbody>
+</table>
+
+---
+
+### `queryCloudRun`
+查询云托管服务信息，支持获取服务列表、查询服务详情和获取可用模板列表。返回的服务信息包括服务名称、状态、访问类型、配置详情等。
+
+#### 参数
+
+<table>
+<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td><code>action</code></td><td>string</td><td>是</td><td>查询类型：list=获取云托管服务列表，detail=查询云托管服务详情，templates=获取云托管服务模板列表 可填写的值: "list", "detail", "templates"</td></tr>
+<tr><td><code>pageSize</code></td><td>number</td><td></td><td>每页数量，默认10，最大100 默认值: 10</td></tr>
+<tr><td><code>pageNum</code></td><td>number</td><td></td><td>页码，默认1 默认值: 1</td></tr>
+<tr><td><code>serverName</code></td><td>string</td><td></td><td>服务名称筛选，支持模糊匹配</td></tr>
+<tr><td><code>serverType</code></td><td>string</td><td></td><td>服务类型筛选：function=函数型云托管（简化开发，支持WebSocket/SSE/文件上传等），container=容器型服务（传统容器部署） 可填写的值: "function", "container"</td></tr>
+<tr><td><code>detailServerName</code></td><td>string</td><td></td><td>要查询的服务名称（detail操作时必需）</td></tr>
+</tbody>
+</table>
+
+---
+
+### `manageCloudRun`
+管理云托管服务，按开发顺序支持：初始化项目（可从模板开始，模板列表可通过 queryCloudRun 查询）、下载服务代码、本地运行（仅函数型服务）、部署代码、删除服务。部署可配置CPU、内存、实例数、访问类型等参数。删除操作需要确认，建议设置force=true。
+
+#### 参数
+
+<table>
+<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td><code>action</code></td><td>string</td><td>是</td><td>管理操作：init=初始化云托管代码项目（支持从模板开始，模板列表可通过 queryCloudRun 查询），download=下载云托管服务代码到本地，run=本地运行（仅支持函数型云托管服务），deploy=本地代码部署云托管服务，delete=删除指定的云托管服务 可填写的值: "init", "download", "run", "deploy", "delete"</td></tr>
+<tr><td><code>serverName</code></td><td>string</td><td>是</td><td>服务名称，将作为项目目录名或操作目标</td></tr>
+<tr><td><code>targetPath</code></td><td>string</td><td></td><td>本地代码路径（绝对路径，deploy/download/init操作时必需）</td></tr>
+<tr><td><code>serverConfig</code></td><td>object</td><td></td><td>服务配置项，用于部署时的服务参数设置</td></tr>
+<tr><td><code>serverConfig.OpenAccessTypes</code></td><td>array of string</td><td></td><td>公网访问类型数组：OA=办公网访问，PUBLIC=公网访问，MINIAPP=小程序访问，VPC=VPC访问</td></tr>
+<tr><td><code>serverConfig.Cpu</code></td><td>number</td><td></td><td>CPU规格，如0.25、0.5、1、2等，注意：内存规格必须是CPU规格的2倍</td></tr>
+<tr><td><code>serverConfig.Mem</code></td><td>number</td><td></td><td>内存规格，单位GB，如0.5、1、2、4等，注意：必须是CPU规格的2倍（如CPU=0.25时内存=0.5，CPU=1时内存=2）</td></tr>
+<tr><td><code>serverConfig.MinNum</code></td><td>number</td><td></td><td>最小实例数，最小值为0。设置后服务将始终保持至少指定数量的实例运行，即使没有请求也会保持运行状态，确保服务快速响应但会增加成本</td></tr>
+<tr><td><code>serverConfig.MaxNum</code></td><td>number</td><td></td><td>最大实例数，最小值为1。当请求量增加时，服务最多可以扩展到指定数量的实例，超过此数量后将拒绝新的请求</td></tr>
+<tr><td><code>serverConfig.Port</code></td><td>number</td><td></td><td>服务端口，函数型服务固定为3000</td></tr>
+<tr><td><code>serverConfig.EnvParams</code></td><td>object</td><td></td><td>环境变量，JSON格式字符串</td></tr>
+<tr><td><code>serverConfig.Dockerfile</code></td><td>string</td><td></td><td>Dockerfile文件名，如Dockerfile（仅容器型服务需要，函数型服务不需要）</td></tr>
+<tr><td><code>serverConfig.BuildDir</code></td><td>string</td><td></td><td>构建目录，指定代码构建的目录路径</td></tr>
+<tr><td><code>serverConfig.InternalAccess</code></td><td>boolean</td><td></td><td>内网访问开关，true=启用内网访问</td></tr>
+<tr><td><code>serverConfig.EntryPoint</code></td><td>string</td><td></td><td>Dockerfile EntryPoint参数，容器启动入口（仅容器型服务需要）</td></tr>
+<tr><td><code>serverConfig.Cmd</code></td><td>string</td><td></td><td>Dockerfile Cmd参数，容器启动命令（仅容器型服务需要）</td></tr>
+<tr><td><code>template</code></td><td>string</td><td></td><td>模板标识符，默认为helloworld，用于初始化项目 默认值: "helloworld"</td></tr>
+<tr><td><code>runOptions</code></td><td>object</td><td></td><td>本地运行参数（仅函数型云托管服务支持）</td></tr>
+<tr><td><code>runOptions.port</code></td><td>number</td><td></td><td>本地运行端口，仅函数型服务有效，默认3000 默认值: 3000</td></tr>
+<tr><td><code>runOptions.envParams</code></td><td>object</td><td></td><td>附加环境变量，仅本地运行时使用</td></tr>
+<tr><td><code>force</code></td><td>boolean</td><td></td><td>强制操作，跳过确认提示（默认false，删除操作时建议设为true） 默认值: false</td></tr>
 </tbody>
 </table>
 

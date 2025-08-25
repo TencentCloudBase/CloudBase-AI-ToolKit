@@ -18,12 +18,12 @@
 
 基于读写分离原则，设计2个核心工具：
 
-### 1. getCloudRunInfo (读操作)
+### 1. queryCloudRun (读操作)
 **功能**: 查询云托管服务列表、详情和模板信息
 **API**: `cloudbase.cloudrun.list()`, `cloudbase.cloudrun.detail()`, `cloudbase.cloudrun.getTemplates()`
 
 ```typescript
-interface GetCloudRunInfoInput {
+interface queryCloudRunInput {
   action: "list" | "detail" | "templates"; // 查询类型
   
   // list 操作参数
@@ -97,7 +97,7 @@ graph TD
     A[MCP Client] --> B[CloudRun Plugin]
     B --> C{Tool Router}
     
-    C -->|Read| D[getCloudRunInfo]
+    C -->|Read| D[queryCloudRun]
     C -->|Write| E[manageCloudRun]
     
     D --> F[CloudBase Manager]

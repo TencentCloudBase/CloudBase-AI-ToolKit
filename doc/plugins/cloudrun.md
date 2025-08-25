@@ -37,7 +37,7 @@ export CLOUDBASE_ENV_ID="your_env_id"
 
 ## Tools
 
-### getCloudRunInfo
+### queryCloudRun
 
 Query CloudRun service information including service list, details, and available templates.
 
@@ -80,12 +80,12 @@ Query CloudRun service information including service list, details, and availabl
 
 ### manageCloudRun
 
-Manage CloudRun services including deploy, download, delete, and initialize operations.
+Manage CloudRun services in development-friendly order: initialize (from templates), download, run locally (function services only), deploy, and delete.
 
 **Parameters:**
-- `action`: Management action (`deploy` | `download` | `delete` | `init`)
+- `action`: Management action (`init` | `download` | `run` | `deploy` | `delete`)
 - `serverName`: Service name (required)
-- `targetPath`: Local code path (absolute path, required for deploy/download/init)
+- `targetPath`: Local code path (absolute path, required for init/download/run/deploy)
 - `serverConfig`: Service configuration object (optional for deploy)
   - `OpenAccessTypes`: Access types array (`WEB`, `VPC`, `PRIVATE`)
   - `Cpu`: CPU specification (e.g., 0.25, 0.5, 1)
@@ -101,8 +101,43 @@ Manage CloudRun services including deploy, download, delete, and initialize oper
   - `Cmd`: Startup command
 - `template`: Template name for init (default: "helloworld")
 - `force`: Force operation, skip confirmation (default: false)
+- `runOptions`: Local run options (function services only)
+  - `port`: Local port (default: 3000)
+  - `envParams`: Extra environment variables map
 
 **Examples:**
+
+```typescript
+// Initialize new service from template
+{
+  "action": "init",
+  "serverName": "new-app",
+  "targetPath": "/path/to/new/project", 
+  "template": "nodejs"
+}
+```
+
+```typescript
+// Download service code
+{
+  "action": "download",
+  "serverName": "my-app",
+  "targetPath": "/path/to/download"
+}
+```
+
+```typescript
+// Run locally (function services only)
+{
+  "action": "run",
+  "serverName": "my-app",
+  "targetPath": "/workspace/my-app",
+  "runOptions": {
+    "port": 3000,
+    "envParams": { "NODE_ENV": "development" }
+  }
+}
+```
 
 ```typescript
 // Deploy service with configuration
@@ -122,21 +157,6 @@ Manage CloudRun services including deploy, download, delete, and initialize oper
       "API_URL": "https://api.example.com"
     }
   }
-}
-
-// Initialize new service from template
-{
-  "action": "init",
-  "serverName": "new-app",
-  "targetPath": "/path/to/new/project", 
-  "template": "nodejs"
-}
-
-// Download service code
-{
-  "action": "download",
-  "serverName": "my-app",
-  "targetPath": "/path/to/download"
 }
 
 // Delete service (requires force confirmation)
@@ -179,7 +199,26 @@ Manage CloudRun services including deploy, download, delete, and initialize oper
 }
 ```
 
-### 2. Deploy Service
+### 2. Download Code (optional)
+```typescript
+{
+  "action": "download",
+  "serverName": "my-new-app",
+  "targetPath": "/workspace/my-app"
+}
+```
+
+### 3. Run Locally (function services)
+```typescript
+{
+  "action": "run",
+  "serverName": "my-new-app",
+  "targetPath": "/workspace/my-app",
+  "runOptions": { "port": 3000 }
+}
+```
+
+### 4. Deploy Service
 ```typescript
 // Deploy with auto-scaling configuration
 {

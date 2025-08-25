@@ -1457,6 +1457,195 @@
       }
     },
     {
+      "name": "queryCloudRun",
+      "description": "查询云托管服务信息，支持获取服务列表、查询服务详情和获取可用模板列表。返回的服务信息包括服务名称、状态、访问类型、配置详情等。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "list",
+              "detail",
+              "templates"
+            ],
+            "description": "查询类型：list=获取云托管服务列表，detail=查询云托管服务详情，templates=获取云托管服务模板列表"
+          },
+          "pageSize": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 10,
+            "description": "每页数量，默认10，最大100"
+          },
+          "pageNum": {
+            "type": "number",
+            "minimum": 1,
+            "default": 1,
+            "description": "页码，默认1"
+          },
+          "serverName": {
+            "type": "string",
+            "description": "服务名称筛选，支持模糊匹配"
+          },
+          "serverType": {
+            "type": "string",
+            "enum": [
+              "function",
+              "container"
+            ],
+            "description": "服务类型筛选：function=函数型云托管（简化开发，支持WebSocket/SSE/文件上传等），container=容器型服务（传统容器部署）"
+          },
+          "detailServerName": {
+            "type": "string",
+            "description": "要查询的服务名称（detail操作时必需）"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "manageCloudRun",
+      "description": "管理云托管服务，按开发顺序支持：初始化项目（可从模板开始，模板列表可通过 queryCloudRun 查询）、下载服务代码、本地运行（仅函数型服务）、部署代码、删除服务。部署可配置CPU、内存、实例数、访问类型等参数。删除操作需要确认，建议设置force=true。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "init",
+              "download",
+              "run",
+              "deploy",
+              "delete"
+            ],
+            "description": "管理操作：init=初始化云托管代码项目（支持从模板开始，模板列表可通过 queryCloudRun 查询），download=下载云托管服务代码到本地，run=本地运行（仅支持函数型云托管服务），deploy=本地代码部署云托管服务，delete=删除指定的云托管服务"
+          },
+          "serverName": {
+            "type": "string",
+            "description": "服务名称，将作为项目目录名或操作目标"
+          },
+          "targetPath": {
+            "type": "string",
+            "description": "本地代码路径（绝对路径，deploy/download/init操作时必需）"
+          },
+          "serverConfig": {
+            "type": "object",
+            "properties": {
+              "OpenAccessTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "WEB",
+                    "VPC",
+                    "PRIVATE"
+                  ]
+                },
+                "description": "公网访问类型数组：OA=办公网访问，PUBLIC=公网访问，MINIAPP=小程序访问，VPC=VPC访问"
+              },
+              "Cpu": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "description": "CPU规格，如0.25、0.5、1、2等，注意：内存规格必须是CPU规格的2倍"
+              },
+              "Mem": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "description": "内存规格，单位GB，如0.5、1、2、4等，注意：必须是CPU规格的2倍（如CPU=0.25时内存=0.5，CPU=1时内存=2）"
+              },
+              "MinNum": {
+                "type": "number",
+                "minimum": 0,
+                "description": "最小实例数，最小值为0。设置后服务将始终保持至少指定数量的实例运行，即使没有请求也会保持运行状态，确保服务快速响应但会增加成本"
+              },
+              "MaxNum": {
+                "type": "number",
+                "minimum": 1,
+                "description": "最大实例数，最小值为1。当请求量增加时，服务最多可以扩展到指定数量的实例，超过此数量后将拒绝新的请求"
+              },
+              "Port": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 65535,
+                "description": "服务端口，函数型服务固定为3000"
+              },
+              "EnvParams": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "环境变量，JSON格式字符串"
+              },
+              "Dockerfile": {
+                "type": "string",
+                "description": "Dockerfile文件名，如Dockerfile（仅容器型服务需要，函数型服务不需要）"
+              },
+              "BuildDir": {
+                "type": "string",
+                "description": "构建目录，指定代码构建的目录路径"
+              },
+              "InternalAccess": {
+                "type": "boolean",
+                "description": "内网访问开关，true=启用内网访问"
+              },
+              "EntryPoint": {
+                "type": "string",
+                "description": "Dockerfile EntryPoint参数，容器启动入口（仅容器型服务需要）"
+              },
+              "Cmd": {
+                "type": "string",
+                "description": "Dockerfile Cmd参数，容器启动命令（仅容器型服务需要）"
+              }
+            },
+            "additionalProperties": false,
+            "description": "服务配置项，用于部署时的服务参数设置"
+          },
+          "template": {
+            "type": "string",
+            "default": "helloworld",
+            "description": "模板标识符，默认为helloworld，用于初始化项目"
+          },
+          "runOptions": {
+            "type": "object",
+            "properties": {
+              "port": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 65535,
+                "default": 3000,
+                "description": "本地运行端口，仅函数型服务有效，默认3000"
+              },
+              "envParams": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "附加环境变量，仅本地运行时使用"
+              }
+            },
+            "additionalProperties": false,
+            "description": "本地运行参数（仅函数型云托管服务支持）"
+          },
+          "force": {
+            "type": "boolean",
+            "default": false,
+            "description": "强制操作，跳过确认提示（默认false，删除操作时建议设为true）"
+          }
+        },
+        "required": [
+          "action",
+          "serverName"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
       "name": "createFunctionHTTPAccess",
       "description": "创建云函数的 HTTP 访问",
       "inputSchema": {

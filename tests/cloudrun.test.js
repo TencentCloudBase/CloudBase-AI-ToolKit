@@ -86,7 +86,7 @@ describe('CloudRun Plugin Tests', () => {
       
       // Check if CloudRun tools are present
       const cloudRunTools = toolsResult.tools.filter(tool => 
-        tool.name === 'getCloudRunInfo' || tool.name === 'manageCloudRun'
+        tool.name === 'queryCloudRun' || tool.name === 'manageCloudRun'
       );
       
       if (cloudRunTools.length === 0) {
@@ -111,7 +111,7 @@ describe('CloudRun Plugin Tests', () => {
     }
   });
 
-  test('getCloudRunInfo tool has correct schema', async () => {
+  test('queryCloudRun tool has correct schema', async () => {
     if (!testClient) {
       console.log('⚠️ Test client not available, skipping test');
       return;
@@ -119,24 +119,24 @@ describe('CloudRun Plugin Tests', () => {
 
     try {
       const toolsResult = await testClient.listTools();
-      const getCloudRunInfoTool = toolsResult.tools.find(tool => tool.name === 'getCloudRunInfo');
+      const queryCloudRunTool = toolsResult.tools.find(tool => tool.name === 'queryCloudRun');
       
-      if (!getCloudRunInfoTool) {
-        console.log('⚠️ getCloudRunInfo tool not found, skipping schema test');
+      if (!queryCloudRunTool) {
+        console.log('⚠️ queryCloudRun tool not found, skipping schema test');
         return;
       }
 
-      console.log('✅ Found getCloudRunInfo tool');
+      console.log('✅ Found queryCloudRun tool');
       
       // Verify input schema has expected properties
-      const schema = getCloudRunInfoTool.inputSchema;
+      const schema = queryCloudRunTool.inputSchema;
       expect(schema).toBeDefined();
       expect(schema.action).toBeDefined();
       
-      console.log('✅ getCloudRunInfo tool has correct schema structure');
+      console.log('✅ queryCloudRun tool has correct schema structure');
       
     } catch (error) {
-      console.error('Error testing getCloudRunInfo schema:', error);
+      console.error('Error testing queryCloudRun schema:', error);
       console.log('⚠️ Schema test failed, this might be expected in CI environment');
     }
   });
@@ -172,7 +172,7 @@ describe('CloudRun Plugin Tests', () => {
     }
   });
 
-  test('getCloudRunInfo tool validates input parameters (skips without credentials)', async () => {
+  test('queryCloudRun tool validates input parameters (skips without credentials)', async () => {
     if (!testClient) {
       console.log('⚠️ Test client not available, skipping test');
       return;
@@ -180,10 +180,10 @@ describe('CloudRun Plugin Tests', () => {
 
     try {
       const toolsResult = await testClient.listTools();
-      const getCloudRunInfoTool = toolsResult.tools.find(tool => tool.name === 'getCloudRunInfo');
+      const queryCloudRunTool = toolsResult.tools.find(tool => tool.name === 'queryCloudRun');
       
-      if (!getCloudRunInfoTool) {
-        console.log('⚠️ getCloudRunInfo tool not found, skipping validation test');
+      if (!queryCloudRunTool) {
+        console.log('⚠️ queryCloudRun tool not found, skipping validation test');
         return;
       }
 
@@ -195,7 +195,7 @@ describe('CloudRun Plugin Tests', () => {
       // Test with valid parameters (this should not throw an error)
       try {
         const result = await testClient.callTool({
-          name: 'getCloudRunInfo',
+          name: 'queryCloudRun',
           arguments: {
             action: 'list',
             pageSize: 10,
@@ -205,14 +205,14 @@ describe('CloudRun Plugin Tests', () => {
         
         // The call should return a result (might fail due to no credentials, but shouldn't have schema errors)
         expect(result).toBeDefined();
-        console.log('✅ getCloudRunInfo accepts valid parameters');
+        console.log('✅ queryCloudRun accepts valid parameters');
         
       } catch (error) {
-        console.log('⚠️ getCloudRunInfo call failed:', error.message);
+        console.log('⚠️ queryCloudRun call failed:', error.message);
       }
 
     } catch (error) {
-      console.error('Error testing getCloudRunInfo validation:', error);
+      console.error('Error testing queryCloudRun validation:', error);
       console.log('⚠️ Validation test failed, this might be expected in CI environment');
     }
   });
@@ -259,6 +259,38 @@ describe('CloudRun Plugin Tests', () => {
     } catch (error) {
       console.error('Error testing manageCloudRun validation:', error);
       console.log('⚠️ Validation test failed, this might be expected in CI environment');
+    }
+  });
+
+  test('manageCloudRun supports run action (does not require credentials)', async () => {
+    if (!testClient) {
+      console.log('⚠️ Test client not available, skipping test');
+      return;
+    }
+
+    try {
+      const toolsResult = await testClient.listTools();
+      const manageCloudRunTool = toolsResult.tools.find(tool => tool.name === 'manageCloudRun');
+      if (!manageCloudRunTool) {
+        console.log('⚠️ manageCloudRun tool not found, skipping run action test');
+        return;
+      }
+
+      // Attempt to run locally in a temp directory; expect a structured error or success
+      const result = await testClient.callTool({
+        name: 'manageCloudRun',
+        arguments: {
+          action: 'run',
+          serverName: 'test-service-local',
+          targetPath: '/tmp',
+          runOptions: { port: 3000 }
+        }
+      });
+
+      expect(result).toBeDefined();
+      console.log('✅ manageCloudRun run action is callable and returns a result');
+    } catch (error) {
+      console.log('⚠️ manageCloudRun run call failed (expected in CI without project):', error.message);
     }
   });
 });

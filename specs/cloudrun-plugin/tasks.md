@@ -8,7 +8,7 @@
   - 导入必要的依赖和类型定义
   - _需求: 需求1, 需求2, 需求3_
 
-- [ ] 2. 实现 getCloudRunInfo 工具（读操作）
+- [ ] 2. 实现 queryCloudRun 工具（读操作）
   - 实现服务列表查询功能 (list action)
   - 实现服务详情查询功能 (detail action)  
   - 实现模板查询功能 (templates action)

@@ -131,7 +131,7 @@
 
 | 工具标识                  | 功能描述                                  | 核心参数                                                                                     |
 |---------------------------|-----------------------------------------|---------------------------------------------------------------------------------------------|
-| `getCloudRunInfo`         | 查询云托管服务信息（列表、详情、模板）    | `action`（必填，查询类型：list/detail/templates），`serverName`（选填，服务名称），`pageSize`（选填，分页大小），`pageNum`（选填，页码），`detailServerName`（detail操作必填，服务名称） |
+| `queryCloudRun`         | 查询云托管服务信息（列表、详情、模板）    | `action`（必填，查询类型：list/detail/templates），`serverName`（选填，服务名称），`pageSize`（选填，分页大小），`pageNum`（选填，页码），`detailServerName`（detail操作必填，服务名称） |
 | `manageCloudRun`          | 管理云托管服务（部署、下载、删除、初始化） | `action`（必填，操作类型：deploy/download/delete/init），`serverName`（必填，服务名称），`targetPath`（必填，本地路径），`serverConfig`（选填，服务配置），`template`（选填，模板名称），`force`（选填，强制操作） |
 
 ---
