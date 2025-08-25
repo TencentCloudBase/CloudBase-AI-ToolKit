@@ -91,32 +91,92 @@
       }
     },
     {
-      "name": "updateEnvInfo",
-      "description": "更新云开发环境信息",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "type": "string",
-            "description": "环境别名"
-          }
-        },
-        "required": [
-          "alias"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
       "name": "createCollection",
-      "description": "创建一个新的云开发数据库集合",
+      "description": "管理云开发数据库集合：默认创建。可通过 action 指定 update。",
       "inputSchema": {
         "type": "object",
         "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "create",
+              "update"
+            ],
+            "description": "操作类型：create=创建(默认)，update=更新集合配置"
+          },
           "collectionName": {
             "type": "string",
             "description": "云开发数据库集合名称"
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "CreateIndexes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "IndexName": {
+                      "type": "string"
+                    },
+                    "MgoKeySchema": {
+                      "type": "object",
+                      "properties": {
+                        "MgoIsUnique": {
+                          "type": "boolean"
+                        },
+                        "MgoIndexKeys": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "Name": {
+                                "type": "string"
+                              },
+                              "Direction": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "Name",
+                              "Direction"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "MgoIsUnique",
+                        "MgoIndexKeys"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "IndexName",
+                    "MgoKeySchema"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "DropIndexes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "IndexName": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "IndexName"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false,
+            "description": "更新选项（action=update 时使用）"
           }
         },
         "required": [
@@ -128,7 +188,7 @@
     },
     {
       "name": "collectionQuery",
-      "description": "数据库集合的查询操作，支持检查存在性、查看详情和列表查询。（原工具名：checkCollectionExists/describeCollection/listCollections，为兼容旧AI规则可继续使用这些名称）",
+      "description": "数据库集合的查询操作，支持检查存在性、查看详情、列表查询；并支持索引列表与检查。（兼容旧名称）",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -137,13 +197,19 @@
             "enum": [
               "check",
               "describe",
-              "list"
+              "list",
+              "index_list",
+              "index_check"
             ],
-            "description": "操作类型：check=检查是否存在，describe=查看详情，list=列表查询"
+            "description": "操作类型：check=检查是否存在，describe=查看详情，list=列表查询，index_list=索引列表，index_check=检查索引是否存在"
           },
           "collectionName": {
             "type": "string",
-            "description": "集合名称（check、describe操作时必填）"
+            "description": "集合名称（check、describe、index_list、index_check 操作时必填）"
+          },
+          "indexName": {
+            "type": "string",
+            "description": "索引名称（index_check 操作时必填）"
           },
           "limit": {
             "type": "number",
@@ -274,18 +340,8 @@
       }
     },
     {
-      "name": "distribution",
-      "description": "查询数据库中云开发数据库集合的数据分布情况",
-      "inputSchema": {
-        "type": "object",
-        "properties": {},
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
       "name": "insertDocuments",
-      "description": "向云开发数据库集合中插入一个或多个文档",
+      "description": "向云开发数据库集合中插入一个或多个文档（支持对象数组）",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -296,9 +352,11 @@
           "documents": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "object",
+              "properties": {},
+              "additionalProperties": true
             },
-            "description": "要插入的文档JSON 字符串数组，每个文档都是 JSON字符串，注意不是JSON对象"
+            "description": "要插入的文档对象数组，每个文档都是对象"
           }
         },
         "required": [
@@ -311,7 +369,7 @@
     },
     {
       "name": "queryDocuments",
-      "description": "查询云开发数据库集合中的文档",
+      "description": "查询云开发数据库集合中的文档（支持对象参数）",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -320,16 +378,43 @@
             "description": "云开发数据库集合名称"
           },
           "query": {
-            "type": "string",
-            "description": "查询条件（JSON字符串）"
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": true
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "查询条件（对象或字符串，推荐对象）"
           },
           "projection": {
-            "type": "string",
-            "description": "返回字段投影（JSON字符串）"
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": true
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "返回字段投影（对象或字符串，推荐对象）"
           },
           "sort": {
-            "type": "string",
-            "description": "排序条件（JSON字符串）"
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": true
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "排序条件（对象或字符串，推荐对象）"
           },
           "limit": {
             "type": "number",
@@ -349,7 +434,7 @@
     },
     {
       "name": "updateDocuments",
-      "description": "更新云开发数据库集合中的文档",
+      "description": "更新云开发数据库集合中的文档（支持对象参数）",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -358,12 +443,30 @@
             "description": "云开发数据库集合名称"
           },
           "query": {
-            "type": "string",
-            "description": "查询条件（JSON字符串）"
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": true
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "查询条件（对象或字符串，推荐对象）"
           },
           "update": {
-            "type": "string",
-            "description": "更新内容（JSON字符串）"
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": true
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "更新内容（对象或字符串，推荐对象）"
           },
           "isMulti": {
             "type": "boolean",
@@ -385,7 +488,7 @@
     },
     {
       "name": "deleteDocuments",
-      "description": "删除云开发数据库集合中的文档",
+      "description": "删除云开发数据库集合中的文档（支持对象参数）",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -394,8 +497,17 @@
             "description": "云开发数据库集合名称"
           },
           "query": {
-            "type": "string",
-            "description": "查询条件（JSON字符串）"
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": true
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "查询条件（对象或字符串，推荐对象）"
           },
           "isMulti": {
             "type": "boolean",
@@ -445,18 +557,71 @@
       }
     },
     {
-      "name": "getFunctionList",
-      "description": "获取云函数列表",
+      "name": "modifyDataModel",
+      "description": "基于Mermaid classDiagram创建或更新数据模型。支持创建新模型和更新现有模型结构。内置异步任务监控，自动轮询直至完成或超时。",
       "inputSchema": {
         "type": "object",
         "properties": {
+          "mermaidDiagram": {
+            "type": "string",
+            "description": "Mermaid classDiagram代码，描述数据模型结构。\n示例：\nclassDiagram\n    class Student {\n        name: string <<姓名>>\n        age: number = 18 <<年龄>>\n        gender: x-enum = \"男\" <<性别>>\n        classId: string <<班级ID>>\n        identityId: string <<身份ID>>\n        course: Course[] <<课程>>\n        required() [\"name\"]\n        unique() [\"name\"]\n        enum_gender() [\"男\", \"女\"]\n        display_field() \"name\"\n    }\n    class Class {\n        className: string <<班级名称>>\n        display_field() \"className\"\n    }\n    class Course {\n        name: string <<课程名称>>\n        students: Student[] <<学生>>\n        display_field() \"name\"\n    }\n    class Identity {\n        number: string <<证件号码>>\n        display_field() \"number\"\n    }\n\n    %% 关联关系\n    Student \"1\" --> \"1\" Identity : studentId\n    Student \"n\" --> \"1\" Class : student2class\n    Student \"n\" --> \"m\" Course : course\n    Student \"n\" <-- \"m\" Course : students\n    %% 类的命名\n    note for Student \"学生模型\"\n    note for Class \"班级模型\"\n    note for Course \"课程模型\"\n    note for Identity \"身份模型\"\n"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "create",
+              "update"
+            ],
+            "default": "create",
+            "description": "操作类型：create=创建新模型"
+          },
+          "publish": {
+            "type": "boolean",
+            "default": false,
+            "description": "是否立即发布模型"
+          },
+          "dbInstanceType": {
+            "type": "string",
+            "default": "MYSQL",
+            "description": "数据库实例类型"
+          }
+        },
+        "required": [
+          "mermaidDiagram"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "getFunctionList",
+      "description": "获取云函数列表或单个函数详情，通过 action 参数区分操作类型",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "list",
+              "detail"
+            ],
+            "description": "操作类型：list=获取函数列表（默认），detail=获取函数详情"
+          },
           "limit": {
             "type": "number",
-            "description": "范围"
+            "description": "范围（list 操作时使用）"
           },
           "offset": {
             "type": "number",
-            "description": "偏移"
+            "description": "偏移（list 操作时使用）"
+          },
+          "name": {
+            "type": "string",
+            "description": "函数名称（detail 操作时必需）"
+          },
+          "codeSecret": {
+            "type": "string",
+            "description": "代码保护密钥（detail 操作时使用）"
           }
         },
         "additionalProperties": false,
@@ -506,7 +671,7 @@
               },
               "runtime": {
                 "type": "string",
-                "description": "运行时环境,建议指定为 'Nodejs18.15'，其他可选值：Nodejs16.13，Nodejs14.18，Nodejs12.16，Nodejs10.15，Nodejs8.9"
+                "description": "运行时环境,建议指定为 'Nodejs18.15'，其他可选值：Nodejs18.15，Nodejs16.13，Nodejs14.18，Nodejs12.16，Nodejs10.15，Nodejs8.9"
               },
               "triggers": {
                 "type": "array",
@@ -514,13 +679,19 @@
                   "type": "object",
                   "properties": {
                     "name": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Trigger name"
                     },
                     "type": {
-                      "type": "string"
+                      "type": "string",
+                      "enum": [
+                        "timer"
+                      ],
+                      "description": "Trigger type, currently only supports 'timer'"
                     },
                     "config": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. IMPORTANT: Must include exactly 7 fields (second minute hour day month week year). Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)"
                     }
                   },
                   "required": [
@@ -530,7 +701,7 @@
                   ],
                   "additionalProperties": false
                 },
-                "description": "触发器配置"
+                "description": "Trigger configuration array"
               },
               "handler": {
                 "type": "string",
@@ -678,28 +849,6 @@
       }
     },
     {
-      "name": "getFunctionDetail",
-      "description": "获取云函数详情",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "函数名称"
-          },
-          "codeSecret": {
-            "type": "string",
-            "description": "代码保护密钥"
-          }
-        },
-        "required": [
-          "name"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
       "name": "invokeFunction",
       "description": "调用云函数",
       "inputSchema": {
@@ -724,76 +873,86 @@
     },
     {
       "name": "getFunctionLogs",
-      "description": "获取云函数日志",
+      "description": "获取云函数日志基础信息（LogList），如需日志详情请用 RequestId 调用 getFunctionLogDetail 工具。此接口基于 manger-node 4.4.0+ 的 getFunctionLogsV2 实现，不返回具体日志内容。参数 offset+limit 不得大于 10000，startTime/endTime 间隔不得超过一天。",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "options": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "函数名称"
-              },
-              "offset": {
-                "type": "number",
-                "description": "偏移量"
-              },
-              "limit": {
-                "type": "number",
-                "description": "返回数量"
-              },
-              "order": {
-                "type": "string",
-                "enum": [
-                  "desc",
-                  "asc"
-                ],
-                "description": "排序方式: desc=降序, asc=升序"
-              },
-              "orderBy": {
-                "type": "string",
-                "enum": [
-                  "function_name",
-                  "duration",
-                  "mem_usage",
-                  "start_time"
-                ],
-                "description": "排序字段: function_name=函数名, duration=执行时长, mem_usage=内存使用, start_time=开始时间"
-              },
-              "startTime": {
-                "type": "string",
-                "description": "开始时间"
-              },
-              "endTime": {
-                "type": "string",
-                "description": "结束时间"
-              },
-              "requestId": {
-                "type": "string",
-                "description": "请求ID"
-              }
-            },
-            "required": [
-              "name"
-            ],
-            "additionalProperties": false,
-            "description": "日志查询选项"
+          "name": {
+            "type": "string",
+            "description": "函数名称"
+          },
+          "offset": {
+            "type": "number",
+            "description": "数据的偏移量，Offset+Limit 不能大于 10000"
+          },
+          "limit": {
+            "type": "number",
+            "description": "返回数据的长度，Offset+Limit 不能大于 10000"
+          },
+          "startTime": {
+            "type": "string",
+            "description": "查询的具体日期，例如：2017-05-16 20:00:00，只能与 EndTime 相差一天之内"
+          },
+          "endTime": {
+            "type": "string",
+            "description": "查询的具体日期，例如：2017-05-16 20:59:59，只能与 StartTime 相差一天之内"
+          },
+          "requestId": {
+            "type": "string",
+            "description": "执行该函数对应的 requestId"
+          },
+          "qualifier": {
+            "type": "string",
+            "description": "函数版本，默认为 $LATEST"
           }
         },
         "required": [
-          "options"
+          "name"
         ],
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"
       }
     },
     {
-      "name": "createFunctionTriggers",
-      "description": "创建云函数触发器",
+      "name": "getFunctionLogDetail",
+      "description": "根据 getFunctionLogs 返回的 RequestId 查询日志详情。参数 startTime、endTime、requestId，返回日志内容（LogJson 等）。仅支持 manger-node 4.4.0+。",
       "inputSchema": {
         "type": "object",
         "properties": {
+          "startTime": {
+            "type": "string",
+            "description": "查询的具体日期，例如：2017-05-16 20:00:00，只能与 EndTime 相差一天之内"
+          },
+          "endTime": {
+            "type": "string",
+            "description": "查询的具体日期，例如：2017-05-16 20:59:59，只能与 StartTime 相差一天之内"
+          },
+          "requestId": {
+            "type": "string",
+            "description": "执行该函数对应的 requestId"
+          }
+        },
+        "required": [
+          "requestId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "manageFunctionTriggers",
+      "description": "创建或删除云函数触发器，通过 action 参数区分操作类型",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "create",
+              "delete"
+            ],
+            "description": "操作类型：create=创建触发器，delete=删除触发器"
+          },
           "name": {
             "type": "string",
             "description": "函数名"
@@ -805,15 +964,18 @@
               "properties": {
                 "name": {
                   "type": "string",
-                  "description": "触发器名称"
+                  "description": "Trigger name"
                 },
                 "type": {
                   "type": "string",
-                  "description": "触发器类型"
+                  "enum": [
+                    "timer"
+                  ],
+                  "description": "Trigger type, currently only supports 'timer'"
                 },
                 "config": {
                   "type": "string",
-                  "description": "触发器配置"
+                  "description": "Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. IMPORTANT: Must include exactly 7 fields (second minute hour day month week year). Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)"
                 }
               },
               "required": [
@@ -823,35 +985,16 @@
               ],
               "additionalProperties": false
             },
-            "description": "触发器配置数组"
-          }
-        },
-        "required": [
-          "name",
-          "triggers"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "deleteFunctionTrigger",
-      "description": "删除云函数触发器",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "函数名"
+            "description": "触发器配置数组（创建时必需）"
           },
           "triggerName": {
             "type": "string",
-            "description": "触发器名称"
+            "description": "触发器名称（删除时必需）"
           }
         },
         "required": [
-          "name",
-          "triggerName"
+          "action",
+          "name"
         ],
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"
@@ -1142,7 +1285,7 @@
     },
     {
       "name": "downloadTemplate",
-      "description": "自动下载并部署CloudBase项目模板。\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n工具会自动下载模板到临时目录，解压后如果检测到WORKSPACE_FOLDER_PATHS环境变量，则复制到项目目录。",
+      "description": "自动下载并部署CloudBase项目模板。\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n支持的IDE类型:\n- all: 下载所有IDE配置（默认）\n- cursor: Cursor AI编辑器\n- windsurf: WindSurf AI编辑器\n- codebuddy: CodeBuddy AI编辑器\n- claude-code: Claude Code AI编辑器\n- cline: Cline AI编辑器\n- gemini-cli: Gemini CLI\n- opencode: OpenCode AI编辑器\n- qwen-code: 通义灵码\n- baidu-comate: 百度Comate\n- openai-codex-cli: OpenAI Codex CLI\n- augment-code: Augment Code\n- github-copilot: GitHub Copilot\n- roocode: RooCode AI编辑器\n- tongyi-lingma: 通义灵码\n- trae: Trae AI编辑器\n- vscode: Visual Studio Code\n\n特别说明：\n- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.8.34），便于后续维护和版本追踪\n- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1156,6 +1299,30 @@
               "rules"
             ],
             "description": "要下载的模板类型"
+          },
+          "ide": {
+            "type": "string",
+            "enum": [
+              "all",
+              "cursor",
+              "windsurf",
+              "codebuddy",
+              "claude-code",
+              "cline",
+              "gemini-cli",
+              "opencode",
+              "qwen-code",
+              "baidu-comate",
+              "openai-codex-cli",
+              "augment-code",
+              "github-copilot",
+              "roocode",
+              "tongyi-lingma",
+              "trae",
+              "vscode"
+            ],
+            "default": "all",
+            "description": "指定要下载的IDE类型，默认为all（下载所有IDE配置）"
           },
           "overwrite": {
             "type": "boolean",
@@ -1290,6 +1457,195 @@
       }
     },
     {
+      "name": "queryCloudRun",
+      "description": "查询云托管服务信息，支持获取服务列表、查询服务详情和获取可用模板列表。返回的服务信息包括服务名称、状态、访问类型、配置详情等。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "list",
+              "detail",
+              "templates"
+            ],
+            "description": "查询类型：list=获取云托管服务列表，detail=查询云托管服务详情，templates=获取云托管服务模板列表"
+          },
+          "pageSize": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 10,
+            "description": "每页数量，默认10，最大100"
+          },
+          "pageNum": {
+            "type": "number",
+            "minimum": 1,
+            "default": 1,
+            "description": "页码，默认1"
+          },
+          "serverName": {
+            "type": "string",
+            "description": "服务名称筛选，支持模糊匹配"
+          },
+          "serverType": {
+            "type": "string",
+            "enum": [
+              "function",
+              "container"
+            ],
+            "description": "服务类型筛选：function=函数型云托管（简化开发，支持WebSocket/SSE/文件上传等），container=容器型服务（传统容器部署）"
+          },
+          "detailServerName": {
+            "type": "string",
+            "description": "要查询的服务名称（detail操作时必需）"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "manageCloudRun",
+      "description": "管理云托管服务，按开发顺序支持：初始化项目（可从模板开始，模板列表可通过 queryCloudRun 查询）、下载服务代码、本地运行（仅函数型服务）、部署代码、删除服务。部署可配置CPU、内存、实例数、访问类型等参数。删除操作需要确认，建议设置force=true。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "init",
+              "download",
+              "run",
+              "deploy",
+              "delete"
+            ],
+            "description": "管理操作：init=初始化云托管代码项目（支持从模板开始，模板列表可通过 queryCloudRun 查询），download=下载云托管服务代码到本地，run=本地运行（仅支持函数型云托管服务），deploy=本地代码部署云托管服务，delete=删除指定的云托管服务"
+          },
+          "serverName": {
+            "type": "string",
+            "description": "服务名称，将作为项目目录名或操作目标"
+          },
+          "targetPath": {
+            "type": "string",
+            "description": "本地代码路径（绝对路径，deploy/download/init操作时必需）"
+          },
+          "serverConfig": {
+            "type": "object",
+            "properties": {
+              "OpenAccessTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "WEB",
+                    "VPC",
+                    "PRIVATE"
+                  ]
+                },
+                "description": "公网访问类型数组：OA=办公网访问，PUBLIC=公网访问，MINIAPP=小程序访问，VPC=VPC访问"
+              },
+              "Cpu": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "description": "CPU规格，如0.25、0.5、1、2等，注意：内存规格必须是CPU规格的2倍"
+              },
+              "Mem": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "description": "内存规格，单位GB，如0.5、1、2、4等，注意：必须是CPU规格的2倍（如CPU=0.25时内存=0.5，CPU=1时内存=2）"
+              },
+              "MinNum": {
+                "type": "number",
+                "minimum": 0,
+                "description": "最小实例数，最小值为0。设置后服务将始终保持至少指定数量的实例运行，即使没有请求也会保持运行状态，确保服务快速响应但会增加成本"
+              },
+              "MaxNum": {
+                "type": "number",
+                "minimum": 1,
+                "description": "最大实例数，最小值为1。当请求量增加时，服务最多可以扩展到指定数量的实例，超过此数量后将拒绝新的请求"
+              },
+              "Port": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 65535,
+                "description": "服务端口，函数型服务固定为3000"
+              },
+              "EnvParams": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "环境变量，JSON格式字符串"
+              },
+              "Dockerfile": {
+                "type": "string",
+                "description": "Dockerfile文件名，如Dockerfile（仅容器型服务需要，函数型服务不需要）"
+              },
+              "BuildDir": {
+                "type": "string",
+                "description": "构建目录，指定代码构建的目录路径"
+              },
+              "InternalAccess": {
+                "type": "boolean",
+                "description": "内网访问开关，true=启用内网访问"
+              },
+              "EntryPoint": {
+                "type": "string",
+                "description": "Dockerfile EntryPoint参数，容器启动入口（仅容器型服务需要）"
+              },
+              "Cmd": {
+                "type": "string",
+                "description": "Dockerfile Cmd参数，容器启动命令（仅容器型服务需要）"
+              }
+            },
+            "additionalProperties": false,
+            "description": "服务配置项，用于部署时的服务参数设置"
+          },
+          "template": {
+            "type": "string",
+            "default": "helloworld",
+            "description": "模板标识符，默认为helloworld，用于初始化项目"
+          },
+          "runOptions": {
+            "type": "object",
+            "properties": {
+              "port": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 65535,
+                "default": 3000,
+                "description": "本地运行端口，仅函数型服务有效，默认3000"
+              },
+              "envParams": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "附加环境变量，仅本地运行时使用"
+              }
+            },
+            "additionalProperties": false,
+            "description": "本地运行参数（仅函数型云托管服务支持）"
+          },
+          "force": {
+            "type": "boolean",
+            "default": false,
+            "description": "强制操作，跳过确认提示（默认false，删除操作时建议设为true）"
+          }
+        },
+        "required": [
+          "action",
+          "serverName"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
       "name": "createFunctionHTTPAccess",
       "description": "创建云函数的 HTTP 访问",
       "inputSchema": {
@@ -1331,346 +1687,90 @@
       }
     },
     {
-      "name": "uploadMiniprogramCode",
-      "description": "上传小程序代码到微信平台",
+      "name": "readSecurityRule",
+      "description": "读取指定资源（数据库集合、云函数、存储桶）的安全规则和权限类别。\n\n参数说明：\n- resourceType: 资源类型（database/function/storage）\n- resourceId: 资源唯一标识（集合名/函数名/桶名）",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "appId": {
-            "type": "string",
-            "description": "小程序 appId"
-          },
-          "projectPath": {
-            "type": "string",
-            "description": "项目路径"
-          },
-          "version": {
-            "type": "string",
-            "description": "版本号"
-          },
-          "desc": {
-            "type": "string",
-            "description": "版本描述"
-          },
-          "setting": {
-            "type": "object",
-            "properties": {
-              "es6": {
-                "type": "boolean",
-                "description": "是否启用 ES6 转 ES5"
-              },
-              "es7": {
-                "type": "boolean",
-                "description": "是否启用 ES7 转 ES5"
-              },
-              "minify": {
-                "type": "boolean",
-                "description": "是否压缩代码"
-              },
-              "minifyWXSS": {
-                "type": "boolean",
-                "description": "是否压缩 WXSS"
-              },
-              "minifyJS": {
-                "type": "boolean",
-                "description": "是否压缩 JS"
-              },
-              "autoPrefixWXSS": {
-                "type": "boolean",
-                "description": "是否自动补全 WXSS"
-              }
-            },
-            "additionalProperties": false,
-            "description": "编译设置"
-          },
-          "robot": {
-            "type": "number",
-            "description": "机器人编号，1-30"
-          },
-          "type": {
+          "resourceType": {
             "type": "string",
             "enum": [
-              "miniProgram",
-              "miniGame"
+              "database",
+              "function",
+              "storage"
             ],
-            "description": "项目类型"
+            "description": "资源类型：database=数据库集合，function=云函数，storage=存储桶"
+          },
+          "resourceId": {
+            "type": "string",
+            "description": "资源唯一标识。数据库为集合名，云函数为函数名，存储为桶名。"
           }
         },
         "required": [
-          "appId",
-          "projectPath",
-          "version"
+          "resourceType",
+          "resourceId"
         ],
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"
       }
     },
     {
-      "name": "previewMiniprogramCode",
-      "description": "预览小程序代码并生成二维码",
+      "name": "writeSecurityRule",
+      "description": "设置指定资源（数据库集合、云函数、存储桶）的安全规则。\n\n参数说明：\n- resourceType: 资源类型（database/function/storage）\n- resourceId: 资源唯一标识（集合名/函数名/桶名）\n- aclTag: 权限类别（READONLY/PRIVATE/ADMINWRITE/ADMINONLY/CUSTOM）\n- rule: 自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "appId": {
-            "type": "string",
-            "description": "小程序 appId"
-          },
-          "projectPath": {
-            "type": "string",
-            "description": "项目路径"
-          },
-          "desc": {
-            "type": "string",
-            "description": "预览描述"
-          },
-          "setting": {
-            "type": "object",
-            "properties": {
-              "es6": {
-                "type": "boolean",
-                "description": "是否启用 ES6 转 ES5"
-              },
-              "es7": {
-                "type": "boolean",
-                "description": "是否启用 ES7 转 ES5"
-              },
-              "minify": {
-                "type": "boolean",
-                "description": "是否压缩代码"
-              },
-              "minifyWXSS": {
-                "type": "boolean",
-                "description": "是否压缩 WXSS"
-              },
-              "minifyJS": {
-                "type": "boolean",
-                "description": "是否压缩 JS"
-              },
-              "autoPrefixWXSS": {
-                "type": "boolean",
-                "description": "是否自动补全 WXSS"
-              }
-            },
-            "additionalProperties": false,
-            "description": "编译设置"
-          },
-          "robot": {
-            "type": "number",
-            "description": "机器人编号，1-30"
-          },
-          "type": {
+          "resourceType": {
             "type": "string",
             "enum": [
-              "miniProgram",
-              "miniGame"
+              "database",
+              "function",
+              "storage"
             ],
-            "description": "项目类型"
+            "description": "资源类型：database=数据库集合，function=云函数，storage=存储桶"
           },
-          "qrcodeFormat": {
+          "resourceId": {
+            "type": "string",
+            "description": "资源唯一标识。数据库为集合名，云函数为函数名，存储为桶名。"
+          },
+          "aclTag": {
             "type": "string",
             "enum": [
-              "image",
-              "base64",
-              "terminal"
+              "READONLY",
+              "PRIVATE",
+              "ADMINWRITE",
+              "ADMINONLY",
+              "CUSTOM"
             ],
-            "description": "二维码格式"
+            "description": "权限类别"
           },
-          "qrcodeOutputDest": {
+          "rule": {
             "type": "string",
-            "description": "二维码输出路径"
-          },
-          "pagePath": {
-            "type": "string",
-            "description": "预览页面路径"
-          },
-          "searchQuery": {
-            "type": "string",
-            "description": "预览页面参数"
+            "description": "自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填"
           }
         },
         "required": [
-          "appId",
-          "projectPath"
+          "resourceType",
+          "resourceId",
+          "aclTag"
         ],
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"
       }
     },
     {
-      "name": "buildMiniprogramNpm",
-      "description": "构建小程序 npm 包",
+      "name": "activateInviteCode",
+      "description": "云开发 AI编程激励计划，通过邀请码激活用户激励。",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "appId": {
+          "InviteCode": {
             "type": "string",
-            "description": "小程序 appId"
-          },
-          "projectPath": {
-            "type": "string",
-            "description": "项目路径"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "miniProgram",
-              "miniGame"
-            ],
-            "description": "项目类型"
-          },
-          "robot": {
-            "type": "number",
-            "description": "机器人编号，1-30"
-          },
-          "ignores": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "忽略文件列表"
+            "description": "待激活的邀请码"
           }
         },
         "required": [
-          "appId",
-          "projectPath"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "getMiniprogramProjectConfig",
-      "description": "获取小程序项目配置信息",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "appId": {
-            "type": "string",
-            "description": "小程序 appId"
-          },
-          "projectPath": {
-            "type": "string",
-            "description": "项目路径"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "miniProgram",
-              "miniGame"
-            ],
-            "description": "项目类型"
-          }
-        },
-        "required": [
-          "appId",
-          "projectPath"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "getMiniprogramSourceMap",
-      "description": "获取最近上传版本的 SourceMap，用于生产环境错误调试",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "appId": {
-            "type": "string",
-            "description": "小程序 appId"
-          },
-          "projectPath": {
-            "type": "string",
-            "description": "项目路径"
-          },
-          "robot": {
-            "type": "number",
-            "description": "指定使用哪一个 ci 机器人，可选值：1~30"
-          },
-          "sourceMapSavePath": {
-            "type": "string",
-            "description": "SourceMap 保存路径"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "miniProgram",
-              "miniGame"
-            ],
-            "description": "项目类型"
-          }
-        },
-        "required": [
-          "appId",
-          "projectPath",
-          "robot",
-          "sourceMapSavePath"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "checkMiniprogramCodeQuality",
-      "description": "检查小程序代码质量，生成质量报告（需要 miniprogram-ci 1.9.11+）",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "appId": {
-            "type": "string",
-            "description": "小程序 appId"
-          },
-          "projectPath": {
-            "type": "string",
-            "description": "项目路径"
-          },
-          "saveReportPath": {
-            "type": "string",
-            "description": "质量报告保存路径"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "miniProgram",
-              "miniGame"
-            ],
-            "description": "项目类型"
-          }
-        },
-        "required": [
-          "appId",
-          "projectPath",
-          "saveReportPath"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "packMiniprogramNpmManually",
-      "description": "自定义 node_modules 位置的小程序 npm 构建，支持复杂项目结构",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "packageJsonPath": {
-            "type": "string",
-            "description": "希望被构建的 node_modules 对应的 package.json 的路径"
-          },
-          "miniprogramNpmDistDir": {
-            "type": "string",
-            "description": "被构建 miniprogram_npm 的目标位置"
-          },
-          "ignores": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "指定需要排除的规则"
-          }
-        },
-        "required": [
-          "packageJsonPath",
-          "miniprogramNpmDistDir"
+          "InviteCode"
         ],
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"

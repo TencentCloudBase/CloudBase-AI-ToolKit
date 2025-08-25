@@ -547,14 +547,30 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
 
   // 创建闭包函数来获取 CloudBase Manager
   const getManager = () => getCloudBaseManager({ cloudBaseOptions });
-  // 创建云开发数据库集合
+  // 创建/更新 云开发数据库集合（向后兼容：默认create）
   server.registerTool?.(
     "createCollection",
     {
       title: "创建数据库集合",
-      description: "创建一个新的云开发数据库集合",
+      description: "管理云开发数据库集合：默认创建。可通过 action 指定 update。",
       inputSchema: {
-        collectionName: z.string().describe("云开发数据库集合名称")
+        action: z.enum(["create", "update"]).optional().describe("操作类型：create=创建(默认)，update=更新集合配置"),
+        collectionName: z.string().describe("云开发数据库集合名称"),
+        options: z.object({
+          CreateIndexes: z.array(z.object({
+            IndexName: z.string(),
+            MgoKeySchema: z.object({
+              MgoIsUnique: z.boolean(),
+              MgoIndexKeys: z.array(z.object({
+                Name: z.string(),
+                Direction: z.string()
+              }))
+            })
+          })).optional(),
+          DropIndexes: z.array(z.object({
+            IndexName: z.string()
+          })).optional()
+        }).optional().describe("更新选项（action=update 时使用）")
       },
       annotations: {
         readOnlyHint: false,
@@ -564,22 +580,47 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
         category: "database"
       }
     },
-    async ({ collectionName }: { collectionName: string }) => {
+    async ({ action = "create", collectionName, options }: { action?: "create" | "update"; collectionName: string; options?: any }) => {
       try {
         const cloudbase = await getManager()
-        const result = await cloudbase.database.createCollection(collectionName);
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify({
-                success: true,
-                requestId: result.RequestId,
-                message: "云开发数据库集合创建成功"
-              }, null, 2)
-            }
-          ]
-        };
+        if (action === "create") {
+          const result = await cloudbase.database.createCollection(collectionName);
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify({
+                  success: true,
+                  requestId: result.RequestId,
+                  action,
+                  message: "云开发数据库集合创建成功"
+                }, null, 2)
+              }
+            ]
+          };
+        }
+
+        if (action === "update") {
+          if (!options) {
+            throw new Error("更新集合时必须提供 options");
+          }
+          const result = await cloudbase.database.updateCollection(collectionName, options);
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify({
+                  success: true,
+                  requestId: result.RequestId,
+                  action,
+                  message: "云开发数据库集合更新成功"
+                }, null, 2)
+              }
+            ]
+          };
+        }
+
+        throw new Error(`不支持的操作类型: ${action}`);
       } catch (error: any) {
         return {
           content: [
@@ -587,8 +628,9 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
               type: "text",
               text: JSON.stringify({
                 success: false,
+                action,
                 error: error.message,
-                message: "云开发数据库集合创建失败"
+                message: "集合创建/更新操作失败"
               }, null, 2)
             }
           ]
@@ -597,15 +639,16 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
     }
   );
 
-  // collectionQuery - 集合查询（合并 checkCollectionExists + describeCollection + listCollections）
+  // collectionQuery - 集合查询（check/describe/list）并扩展索引查询（index_list/index_check）
   server.registerTool?.(
     "collectionQuery",
     {
       title: "集合查询",
-      description: "数据库集合的查询操作，支持检查存在性、查看详情和列表查询。（原工具名：checkCollectionExists/describeCollection/listCollections，为兼容旧AI规则可继续使用这些名称）",
+      description: "数据库集合的查询操作，支持检查存在性、查看详情、列表查询；并支持索引列表与检查。（兼容旧名称）",
       inputSchema: {
-        action: z.enum(["check", "describe", "list"]).describe("操作类型：check=检查是否存在，describe=查看详情，list=列表查询"),
-        collectionName: z.string().optional().describe("集合名称（check、describe操作时必填）"),
+        action: z.enum(["check", "describe", "list", "index_list", "index_check"]).describe("操作类型：check=检查是否存在，describe=查看详情，list=列表查询，index_list=索引列表，index_check=检查索引是否存在"),
+        collectionName: z.string().optional().describe("集合名称（check、describe、index_list、index_check 操作时必填）"),
+        indexName: z.string().optional().describe("索引名称（index_check 操作时必填）"),
         limit: z.number().optional().describe("返回数量限制（list操作时可选）"),
         offset: z.number().optional().describe("偏移量（list操作时可选）")
       },
@@ -615,9 +658,10 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
         category: "database"
       }
     },
-    async ({ action, collectionName, limit, offset }: { 
-      action: "check" | "describe" | "list", 
+    async ({ action, collectionName, indexName, limit, offset }: { 
+      action: "check" | "describe" | "list" | "index_list" | "index_check", 
       collectionName?: string, 
+      indexName?: string,
       limit?: number, 
       offset?: number 
     }) => {
@@ -675,6 +719,41 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
                   collections: result.Collections,
                   pager: result.Pager,
                   message: "获取云开发数据库集合列表成功"
+                }, null, 2)
+              }]
+            };
+
+          case "index_list":
+            if (!collectionName) {
+              throw new Error("获取索引列表时必须提供 collectionName");
+            }
+            result = await cloudbase.database.describeCollection(collectionName);
+            return {
+              content: [{
+                type: "text",
+                text: JSON.stringify({
+                  success: true,
+                  requestId: result.RequestId,
+                  indexNum: result.IndexNum,
+                  indexes: result.Indexes,
+                  message: "获取索引列表成功"
+                }, null, 2)
+              }]
+            };
+
+          case "index_check":
+            if (!collectionName || !indexName) {
+              throw new Error("检查索引时必须提供 collectionName 和 indexName");
+            }
+            result = await cloudbase.database.checkIndexExists(collectionName, indexName);
+            return {
+              content: [{
+                type: "text",
+                text: JSON.stringify({
+                  success: true,
+                  exists: result.Exists,
+                  requestId: result.RequestId,
+                  message: result.Exists ? "索引已存在" : "索引不存在"
                 }, null, 2)
               }]
             };

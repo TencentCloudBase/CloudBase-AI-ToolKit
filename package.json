@@ -8,7 +8,9 @@
     "release:alpha": "standard-version --prerelease alpha",
     "release:beta": "standard-version --prerelease beta",
     "release:rc": "standard-version --prerelease rc",
-    "check:readme-sync": "node scripts/check-readme-sync.js"
+    "check:readme-sync": "node scripts/check-readme-sync.js",
+    "build:tools-json": "cd mcp && npm run build && cd .. && node scripts/generate-tools-json.mjs",
+    "build:tools-doc": "node scripts/generate-tools-doc.mjs"
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.16.0",
