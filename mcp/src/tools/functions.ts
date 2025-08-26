@@ -64,15 +64,18 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
   // 创建闭包函数来获取 CloudBase Manager
   const getManager = () => getCloudBaseManager({ cloudBaseOptions });
 
-  // getFunctionList - 获取云函数列表(推荐)
+  // getFunctionList - 获取云函数列表或详情(推荐)
   server.registerTool?.(
     "getFunctionList",
     {
-      title: "查询云函数列表",
-      description: "获取云函数列表",
+      title: "查询云函数列表或详情",
+      description: "获取云函数列表或单个函数详情，通过 action 参数区分操作类型",
       inputSchema: {
-        limit: z.number().optional().describe("范围"),
-        offset: z.number().optional().describe("偏移")
+        action: z.enum(["list", "detail"]).optional().describe("操作类型：list=获取函数列表（默认），detail=获取函数详情"),
+        limit: z.number().optional().describe("范围（list 操作时使用）"),
+        offset: z.number().optional().describe("偏移（list 操作时使用）"),
+        name: z.string().optional().describe("函数名称（detail 操作时必需）"),
+        codeSecret: z.string().optional().describe("代码保护密钥（detail 操作时使用）")
       },
       annotations: {
         readOnlyHint: true,
@@ -80,18 +83,48 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         category: "functions"
       }
     },
-    async ({ limit, offset }: { limit?: number; offset?: number }) => {
+    async ({ 
+      action = "list", 
+      limit, 
+      offset, 
+      name, 
+      codeSecret 
+    }: { 
+      action?: "list" | "detail"; 
+      limit?: number; 
+      offset?: number; 
+      name?: string; 
+      codeSecret?: string; 
+    }) => {
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
-      const result = await cloudbase.functions.getFunctionList(limit, offset);
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
+      
+      if (action === "list") {
+        const result = await cloudbase.functions.getFunctionList(limit, offset);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(result, null, 2)
+            }
+          ]
+        };
+      } else if (action === "detail") {
+        if (!name) {
+          throw new Error("获取函数详情时，name 参数是必需的");
+        }
+        const result = await cloudbase.functions.getFunctionDetail(name, codeSecret);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(result, null, 2)
+            }
+          ]
+        };
+      } else {
+        throw new Error(`不支持的操作类型: ${action}`);
+      }
     }
   );
 
@@ -294,36 +327,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
     }
   );
 
-  // getFunctionDetail - 获取函数详情
-  server.registerTool?.(
-    "getFunctionDetail",
-    {
-      title: "获取云函数详情",
-      description: "获取云函数详情",
-      inputSchema: {
-        name: z.string().describe("函数名称"),
-        codeSecret: z.string().optional().describe("代码保护密钥")
-      },
-      annotations: {
-        readOnlyHint: true,
-        openWorldHint: true,
-        category: "functions"
-      }
-    },
-    async ({ name, codeSecret }: { name: string; codeSecret?: string }) => {
-      // 使用闭包中的 cloudBaseOptions
-      const cloudbase = await getManager();
-      const result = await cloudbase.functions.getFunctionDetail(name, codeSecret);
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
-    }
-  );
+
 
   // invokeFunction - 调用函数
   server.registerTool?.(
@@ -445,19 +449,21 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
     }
   );
 
-  // createFunctionTriggers - 创建函数触发器
+  // manageFunctionTriggers - 管理云函数触发器（创建/删除）
   server.registerTool?.(
-    "createFunctionTriggers",
+    "manageFunctionTriggers",
     {
-      title: "创建云函数触发器",
-      description: "创建云函数触发器",
+      title: "管理云函数触发器",
+      description: "创建或删除云函数触发器，通过 action 参数区分操作类型",
       inputSchema: {
+        action: z.enum(["create", "delete"]).describe("操作类型：create=创建触发器，delete=删除触发器"),
         name: z.string().describe("函数名"),
         triggers: z.array(z.object({
           name: z.string().describe("Trigger name"),
           type: z.enum(SUPPORTED_TRIGGER_TYPES).describe("Trigger type, currently only supports 'timer'"),
           config: z.string().describe("Trigger configuration. For timer triggers, use cron expression format: second minute hour day month week year. IMPORTANT: Must include exactly 7 fields (second minute hour day month week year). Examples: '0 0 2 1 * * *' (monthly), '0 30 9 * * * *' (daily at 9:30 AM)")
-        })).describe("Trigger configuration array")
+        })).optional().describe("触发器配置数组（创建时必需）"),
+        triggerName: z.string().optional().describe("触发器名称（删除时必需）")
       },
       annotations: {
         readOnlyHint: false,
@@ -467,51 +473,44 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         category: "functions"
       }
     },
-    async ({ name, triggers }: { name: string; triggers: any[] }) => {
+    async ({ action, name, triggers, triggerName }: { 
+      action: "create" | "delete"; 
+      name: string; 
+      triggers?: any[]; 
+      triggerName?: string; 
+    }) => {
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
-      const result = await cloudbase.functions.createFunctionTriggers(name, triggers);
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
-    }
-  );
-
-  // deleteFunctionTrigger - 删除函数触发器
-  server.registerTool?.(
-    "deleteFunctionTrigger",
-    {
-      title: "删除云函数触发器",
-      description: "删除云函数触发器",
-      inputSchema: {
-        name: z.string().describe("函数名"),
-        triggerName: z.string().describe("触发器名称")
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: true,
-        idempotentHint: true,
-        openWorldHint: true,
-        category: "functions"
+      
+      if (action === "create") {
+        if (!triggers || triggers.length === 0) {
+          throw new Error("创建触发器时，triggers 参数是必需的");
+        }
+        const result = await cloudbase.functions.createFunctionTriggers(name, triggers);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(result, null, 2)
+            }
+          ]
+        };
+      } else if (action === "delete") {
+        if (!triggerName) {
+          throw new Error("删除触发器时，triggerName 参数是必需的");
+        }
+        const result = await cloudbase.functions.deleteFunctionTrigger(name, triggerName);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(result, null, 2)
+            }
+          ]
+        };
+      } else {
+        throw new Error(`不支持的操作类型: ${action}`);
       }
-    },
-    async ({ name, triggerName }: { name: string; triggerName: string }) => {
-      // 使用闭包中的 cloudBaseOptions
-      const cloudbase = await getCloudBaseManager({ cloudBaseOptions });
-      const result = await cloudbase.functions.deleteFunctionTrigger(name, triggerName);
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
     }
   );
 

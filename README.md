@@ -31,7 +31,7 @@ When coding in **Cursor/VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Cla
 
 | 🚀 **Core Capabilities** | 🛠️ **Supported Platforms** |
 |---|---|
-| 🤖 **AI-Powered Development**: AI auto-generates code and architecture<br>☁️ **Cloud Integration**: One-click access to database, cloud functions, static hosting<br>⚡ **Rapid Deployment**: Full-stack apps online in minutes | **Web Apps**: Modern frontend + static hosting<br>**WeChat Mini-Programs**: Cloud-native mini-program solutions<br>**Backend Services**: Cloud database + serverless functions + cloud hosting |
+| 🤖 **AI-Powered Development**: AI auto-generates code and architecture<br>☁️ **Cloud Integration**: One-click access to database, cloud functions, static hosting<br>⚡ **Rapid Deployment**: Full-stack apps online in minutes<br>🤖 **AI Agent Development**: Create and deploy personalized AI applications | **Web Apps**: Modern frontend + static hosting<br>**WeChat Mini-Programs**: Cloud-native mini-program solutions<br>**Backend Services**: Cloud database + serverless functions + cloud hosting<br>**AI Agents**: Function-based cloud hosting for AI applications |
 
 📚 [Quick Start](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/getting-started) | 🛠️ [IDE Setup](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/) | 🎨 [Project Templates](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates) | 📖 [Development Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/development) | 🎮 [Use Cases](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/examples) | 🎓 [Tutorials](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials) | 🔌 [Plugin System](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins) | 🔧 [MCP Tools](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/mcp-tools) | ❓ [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)
 
@@ -42,6 +42,7 @@ When coding in **Cursor/VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Cla
 - **🤖 AI-Native** - Rule library designed for AI programming tools, generates code following CloudBase best practices
 - **🚀 One-Click Deploy** - MCP automated deployment to Tencent CloudBase platform, Serverless architecture without server management
 - **📱 Full-Stack Apps** - Web + Mini-programs + Database + Backend integration, supports multiple app types and backend hosting
+- **🤖 AI Agent Development** - Create personalized AI applications based on function-based cloud hosting, supports SSE streaming responses
 - **🔧 Smart Debugging** - AI automatically reviews logs and fixes issues, reducing operational costs
 - **⚡ Lightning Fast** - Domestic CDN acceleration, faster access than overseas platforms
 - **📚 Knowledge Retrieval** - Built-in intelligent vector search for CloudBase and WeChat Mini-Program professional knowledge bases

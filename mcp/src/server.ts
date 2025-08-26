@@ -13,6 +13,7 @@ import { registerSecurityRuleTools } from "./tools/security-rule.js";
 import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
 import { registerGatewayTools } from "./tools/gateway.js";
 import { registerInviteCodeTools } from "./tools/invite-code.js";
+import { registerCloudRunTools } from "./tools/cloudrun.js";
 import { CloudBaseOptions } from "./types.js";
 import { enableCloudMode } from "./utils/cloud-mode.js";
 
@@ -24,7 +25,7 @@ interface PluginDefinition {
 }
 
 // 默认插件列表
-const DEFAULT_PLUGINS = ['env', 'database', 'functions', 'hosting', 'storage', 'setup', 'interactive', 'rag', 'gateway', 'download', 'security-rule', 'invite-code'];
+const DEFAULT_PLUGINS = ['env', 'database', 'functions', 'hosting', 'storage', 'setup', 'interactive', 'rag', 'cloudrun', 'gateway', 'download', 'security-rule', 'invite-code'];
 
 // 可用插件映射
 const AVAILABLE_PLUGINS: Record<string, PluginDefinition> = {
@@ -41,6 +42,7 @@ const AVAILABLE_PLUGINS: Record<string, PluginDefinition> = {
   // miniprogram: { name: 'miniprogram', register: registerMiniprogramTools },
   'security-rule': { name: 'security-rule', register: registerSecurityRuleTools },
   'invite-code': { name: 'invite-code', register: registerInviteCodeTools },
+  cloudrun: { name: 'cloudrun', register: registerCloudRunTools },
 };
 
 /**

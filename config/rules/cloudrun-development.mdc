@@ -1,0 +1,213 @@
+---
+description: 云托管（CloudBase Run）后端开发规则（函数型/容器型）
+globs: ["**/*.js", "**/*.ts", "**/*.py", "**/*.go", "**/*.java", "**/*.php", "**/Dockerfile"]
+alwaysApply: false
+---
+
+# 云托管（CloudBase Run）AI 开发规则
+
+面向 AI 助理与工程协作，提供「何时用、怎么用」的最简规则与工具工作流。
+
+## 1. 何时使用云托管（适用场景）
+
+- 需要长连接能力：WebSocket / SSE / 服务器推送。
+- 需要长时间执行或常驻进程：不适合云函数的长任务、后台任务。
+- 需要指定运行环境/系统依赖：自定义镜像、特定系统库。
+- 使用多语言/任意框架：如 Java、Go、PHP、.NET、Python、Node.js 等。
+- 需要稳定对外服务与弹性伸缩：按量计费、可缩容到 0。
+- 需要私网/内网访问：VPC/PRIVATE 访问、小程序 `callContainer` 内网直连。
+- 需要开发 AI 智能体：基于函数型云托管开发个性化 AI 应用。
+
+## 2. 模式选择（快速对比）
+
+- 函数型：上手最快，内置 HTTP/WebSocket/SSE，端口固定 3000；本地运行受工具支持。
+- 容器型：任意语言与运行时，需 Dockerfile；本地运行不在本工具支持范围。
+
+### 模式对比清单
+
+| 维度 | 函数型 | 容器型 |
+| --- | --- | --- |
+| 语言/框架 | Node.js（通过 `@cloudbase/functions-framework` 承载） | 任意语言/运行时（Java/Go/PHP/.NET/Python/Node.js 等） |
+| 运行方式 | 函数框架加载函数（Runtime） | Docker 镜像启动进程 |
+| 端口 | 固定 3000 | 应用自行监听 `PORT`（部署时由平台注入） |
+| Dockerfile | 不需要 | 必须（且可本地构建通过） |
+| 本地运行 | 支持（工具内置） | 不支持（建议用 Docker 自行调试） |
+| 典型场景 | WebSocket/SSE/流式响应、表单/文件、低时延、单实例多函数、共享内存 | 任意系统依赖/语言、已有容器化应用迁移 |
+
+## 3. 开发硬性要求（务必满足）
+
+- 必须监听 `PORT` 环境变量（容器内真实端口）。
+- 无状态服务：数据写入外部（DB/存储/缓存）。
+- 请求外禁止后台常驻线程/进程。
+- 依赖最小化、镜像瘦身；缩短冷启动和部署时长。
+- 资源约束：`Mem = 2 × CPU`（如 0.25 vCPU → 0.5 GB）。
+- 访问控制：仅 Web 场景开启公网；小程序优先内网直连，建议关闭公网。
+
+## 4. 工具（白话说明 & 读写分离）
+
+- 用来“看信息”的：`queryCloudRun`
+  - `list`：我有哪些服务？可按名称/类型过滤
+  - `detail`：某个服务现在的配置、版本、访问地址
+  - `templates`：可直接用的起步模板
+- 用来“做事情”的：`manageCloudRun`
+  - `init`：创建本地项目（可选模板）
+  - `download`：把已有服务的代码拉到本地
+  - `run`：本地跑起来（仅函数型，支持普通函数和Agent模式）
+  - `deploy`：把本地代码部署到云托管
+  - `delete`：删除服务（需要显式确认）
+  - `createAgent`：创建 AI 智能体（基于函数型云托管）
+- 重要参数（只记这几个）
+  - `targetPath`：本地目录（必须是绝对路径）
+  - `serverConfig`：CPU/Mem/实例数/访问类型/环境变量等部署参数
+  - `runOptions`：本地运行端口与临时环境变量（函数型），支持 `runMode: 'normal' | 'agent'`
+  - `agentConfig`：Agent 配置（agentName、botTag、description、template）
+  - 删除一定要带 `force: true`，否则不会执行
+
+## 5. 核心工作流（先懂步骤，再看示例）
+
+1) 选模式
+  - 需要多语言/已有容器/Docker：选“容器型”
+  - 需要长连接/流式/低时延/多函数共存：优先“函数型”
+2) 初始化本地项目
+  - 通用：用模板 `init`（函数型/容器型都可从模板起步）
+  - 容器型务必“检查或生成 Dockerfile”：
+    - Node.js 最小示例：
+      ```dockerfile
+      FROM node:18-alpine
+      WORKDIR /app
+      COPY package*.json ./
+      RUN npm ci --omit=dev
+      COPY . .
+      ENV NODE_ENV=production
+      EXPOSE 3000
+      CMD ["node","server.js"]
+      ```
+    - Python 最小示例：
+      ```dockerfile
+      FROM python:3.11-slim
+      WORKDIR /app
+      COPY requirements.txt ./
+      RUN pip install -r requirements.txt --no-cache-dir
+      COPY . .
+      ENV PORT=3000
+      EXPOSE 3000
+      CMD ["python","app.py"]
+      ```
+3) 本地运行（仅函数型）
+  - 通过 `run` 自动使用 `npm run dev/start` 或入口文件
+4) 配置访问
+  - 根据需要设置 `OpenAccessTypes`（WEB/VPC/PRIVATE）；Web 场景配好安全域名与认证
+5) 部署
+  - `deploy` 时指定 CPU/Mem/实例数/环境变量等
+6) 验证
+  - 用 `detail` 确认访问地址与配置是否符合预期
+
+1) 选模板/看服务
+```json
+{ "name": "queryCloudRun", "arguments": { "action": "templates" } }
+```
+```json
+{ "name": "queryCloudRun", "arguments": { "action": "detail", "detailServerName": "my-svc" } }
+```
+
+2) 初始化项目
+```json
+{ "name": "manageCloudRun", "arguments": { "action": "init", "serverName": "my-svc", "targetPath": "/abs/ws/my-svc", "template": "helloworld" } }
+```
+
+3) 下载代码（可选）
+```json
+{ "name": "manageCloudRun", "arguments": { "action": "download", "serverName": "my-svc", "targetPath": "/abs/ws/my-svc" } }
+```
+
+4) 本地运行（仅函数型）
+```json
+{ "name": "manageCloudRun", "arguments": { "action": "run", "serverName": "my-svc", "targetPath": "/abs/ws/my-svc", "runOptions": { "port": 3000 } } }
+```
+
+5) 部署上线
+```json
+{ "name": "manageCloudRun", "arguments": { "action": "deploy", "serverName": "my-svc", "targetPath": "/abs/ws/my-svc", "serverConfig": { "OpenAccessTypes": ["WEB"], "Cpu": 0.5, "Mem": 1, "MinNum": 0, "MaxNum": 5 } } }
+```
+
+6) 创建 AI 智能体（可选）
+```json
+{ "name": "manageCloudRun", "arguments": { "action": "createAgent", "serverName": "my-agent", "targetPath": "/abs/ws/agents", "agentConfig": { "agentName": "MyAgent", "botTag": "demo", "description": "我的智能体", "template": "blank" } } }
+```
+
+7) 运行智能体（可选）
+```json
+{ "name": "manageCloudRun", "arguments": { "action": "run", "serverName": "my-agent", "targetPath": "/abs/ws/agents/my-agent", "runOptions": { "port": 3000, "runMode": "agent" } } }
+```
+
+## 6. 最佳实践（强烈建议）
+
+- 优先 PRIVATE/VPC 或小程序内网 `callContainer`，减少公网暴露。
+- Web 必须用 CloudBase Web SDK 认证；小程序由平台鉴权。
+- 机密通过环境变量下发；多环境（dev/stg/prod）分离配置。
+- 部署前后用 `queryCloudRun.detail` 校验配置与可达性。
+- 镜像分层可复用、体积小；监测启动时延与内存占用。
+- Agent 开发：使用 `@cloudbase/aiagent-framework`，支持 SSE 流式响应，BotId 格式为 `ibot-{name}-{tag}`。
+
+## 7. 快速排查
+
+- 访问失败：检查 OpenAccessTypes/域名/端口、实例是否缩容为 0。  
+- 部署失败：校验 Dockerfile/构建日志/镜像体积与 CPU/Mem 配比。  
+- 本地运行失败：仅支持函数型；需 `package.json` 的 `dev`/`start` 或入口 `index.js|app.js|server.js`。  
+- 性能抖动：减小依赖与初始化；适当提高 MinNum；优化冷启动。
+- Agent 运行失败：检查 `@cloudbase/aiagent-framework` 依赖、BotId 格式、SSE 响应格式。
+
+## 8. 函数型云托管（Function 模式）要点（精简）
+
+- 定义：云托管 + 函数框架（`@cloudbase/functions-framework`）+ 函数代码，让容器服务开发像写云函数一样简单。
+- 何时选择：需要 WebSocket/SSE/文件上传/流式响应；需要长任务或连接 DB/消息队列；需要单实例多函数与共享内存、低时延与更好日志/调试。
+- Agent 模式：基于函数型云托管开发 AI 智能体，使用 `@cloudbase/aiagent-framework`，支持 SSE 流式响应和个性化 AI 应用。
+- 工具支持：本地运行仅支持函数型（`manageCloudRun` → `run`）；部署用 `manageCloudRun` → `deploy`；查询用 `queryCloudRun`。
+- 迁移提示：与云函数调用链/运行时不同，迁移需少量改造（含客户端调用方式）。
+- 可移植性：基于函数框架，可在本地/主机/Docker 运行，非云托管需自管构建与部署。
+
+
+## 9. 服务调用方式（精简示例）
+
+- HTTP 直接访问（WEB 公网开启时）
+```bash
+curl -L "https://<your-service-domain>"
+```
+
+- 微信小程序（内网直连，建议关闭公网）
+```js
+// app.js（确保已 wx.cloud.init()）
+const res = await wx.cloud.callContainer({
+  config: { env: "<envId>" },
+  path: "/",
+  method: "GET",
+  header: { "X-WX-SERVICE": "<serviceName>" }
+});
+```
+
+- Web（JS SDK，需配置安全域名与认证）
+```js
+import cloudbase from "@cloudbase/js-sdk";
+const app = cloudbase.init({ env: "<envId>" });
+await app.auth().toDefaultLoginPage();
+const res = await app.callContainer({
+  name: "<serviceName>", method: "POST", path: "/api",
+  header: { "Content-Type": "application/json" },
+  data: { key: "value" }
+});
+```
+
+- Node.js（服务端/云函数内调用）
+```js
+import tcb from "@cloudbase/node-sdk";
+const app = tcb.init({});
+const res = await app.callContainer({
+  name: "<serviceName>", method: "GET", path: "/health",
+  timeout: 5000
+});
+```
+
+- 建议
+  - Mini Program/Server 侧优先内网（VPC/PRIVATE）调用，减少暴露面。
+  - Web 场景需开启 WEB、公网域名与安全域名，并使用 SDK 认证。
+
