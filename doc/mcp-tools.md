@@ -39,12 +39,12 @@
 <tr><td><code>findFiles</code></td><td>搜索静态网站托管的文件</td></tr>
 <tr><td><code>domainManagement</code></td><td>统一的域名管理工具，支持绑定、解绑、查询和修改域名配置</td></tr>
 <tr><td><code>uploadFile</code></td><td>上传文件到云存储（区别于静态网站托管，云存储更适合存储业务数据文件）</td></tr>
-<tr><td><code>downloadTemplate</code></td><td>自动下载并部署CloudBase项目模板。&lt;br/&gt;支持的模板:&lt;br/&gt;- react: React + CloudBase 全栈应用模板&lt;br/&gt;- vue: Vue + CloudBase 全栈应用模板&lt;br/&gt;- miniprogram: 微信小程序 + 云开发模板  &lt;br/&gt;- uniapp: UniApp + CloudBase 跨端应用模板&lt;br/&gt;- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置&lt;br/&gt;支持的IDE类型:&lt;br/&gt;- all: 下载所有IDE配置（默认）&lt;br/&gt;- cursor: Cursor AI编辑器&lt;br/&gt;- windsurf: WindSurf AI编辑器&lt;br/&gt;- codebuddy: CodeBuddy AI编辑器&lt;br/&gt;- claude-code: Claude Code AI编辑器&lt;br/&gt;- cline: Cline AI编辑器&lt;br/&gt;- gemini-cli: Gemini CLI&lt;br/&gt;- opencode: OpenCode AI编辑器&lt;br/&gt;- qwen-code: 通义灵码&lt;br/&gt;- baidu-comate: 百度Comate&lt;br/&gt;- openai-codex-cli: OpenAI Codex CLI&lt;br/&gt;- augment-code: Augment Code&lt;br/&gt;- github-copilot: GitHub Copilot&lt;br/&gt;- roocode: RooCode AI编辑器&lt;br/&gt;- tongyi-lingma: 通义灵码&lt;br/&gt;- trae: Trae AI编辑器&lt;br/&gt;- vscode: Visual Studio Code&lt;br/&gt;特别说明：&lt;br/&gt;- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.8.34），便于后续维护和版本追踪&lt;br/&gt;- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）</td></tr>
+<tr><td><code>downloadTemplate</code></td><td>自动下载并部署CloudBase项目模板。&lt;br/&gt;支持的模板:&lt;br/&gt;- react: React + CloudBase 全栈应用模板&lt;br/&gt;- vue: Vue + CloudBase 全栈应用模板&lt;br/&gt;- miniprogram: 微信小程序 + 云开发模板  &lt;br/&gt;- uniapp: UniApp + CloudBase 跨端应用模板&lt;br/&gt;- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置&lt;br/&gt;支持的IDE类型:&lt;br/&gt;- all: 下载所有IDE配置（默认）&lt;br/&gt;- cursor: Cursor AI编辑器&lt;br/&gt;- windsurf: WindSurf AI编辑器&lt;br/&gt;- codebuddy: CodeBuddy AI编辑器&lt;br/&gt;- claude-code: Claude Code AI编辑器&lt;br/&gt;- cline: Cline AI编辑器&lt;br/&gt;- gemini-cli: Gemini CLI&lt;br/&gt;- opencode: OpenCode AI编辑器&lt;br/&gt;- qwen-code: 通义灵码&lt;br/&gt;- baidu-comate: 百度Comate&lt;br/&gt;- openai-codex-cli: OpenAI Codex CLI&lt;br/&gt;- augment-code: Augment Code&lt;br/&gt;- github-copilot: GitHub Copilot&lt;br/&gt;- roocode: RooCode AI编辑器&lt;br/&gt;- tongyi-lingma: 通义灵码&lt;br/&gt;- trae: Trae AI编辑器&lt;br/&gt;- vscode: Visual Studio Code&lt;br/&gt;特别说明：&lt;br/&gt;- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.8.38），便于后续维护和版本追踪&lt;br/&gt;- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）</td></tr>
 <tr><td><code>interactiveDialog</code></td><td>统一的交互式对话工具，支持需求澄清和任务确认，当需要和用户确认下一步的操作的时候，可以调用这个工具的clarify，如果有敏感的操作，需要用户确认，可以调用这个工具的confirm</td></tr>
 <tr><td><code>searchWeb</code></td><td>使用联网来进行信息检索，如查询最新的新闻、文章、股价、天气等。支持自然语言查询，也可以直接输入网址获取网页内容</td></tr>
 <tr><td><code>searchKnowledgeBase</code></td><td>云开发知识库智能检索工具，支持云开发与云函数知识的向量查询</td></tr>
 <tr><td><code>queryCloudRun</code></td><td>查询云托管服务信息，支持获取服务列表、查询服务详情和获取可用模板列表。返回的服务信息包括服务名称、状态、访问类型、配置详情等。</td></tr>
-<tr><td><code>manageCloudRun</code></td><td>管理云托管服务，按开发顺序支持：初始化项目（可从模板开始，模板列表可通过 queryCloudRun 查询）、下载服务代码、本地运行（仅函数型服务，支持普通函数和Agent模式）、部署代码、删除服务、创建Agent（基于函数型云托管开发AI智能体）。部署可配置CPU、内存、实例数、访问类型等参数。删除操作需要确认，建议设置force=true。</td></tr>
+<tr><td><code>manageCloudRun</code></td><td>管理云托管服务，按开发顺序支持：初始化项目（可从模板开始，模板列表可通过 queryCloudRun 查询）、下载服务代码、本地运行（仅函数型服务）、部署代码、删除服务。部署可配置CPU、内存、实例数、访问类型等参数。删除操作需要确认，建议设置force=true。</td></tr>
 <tr><td><code>createFunctionHTTPAccess</code></td><td>创建云函数的 HTTP 访问</td></tr>
 <tr><td><code>downloadRemoteFile</code></td><td>下载远程文件到本地临时文件，返回一个系统的绝对路径</td></tr>
 <tr><td><code>readSecurityRule</code></td><td>读取指定资源（数据库集合、云函数、存储桶）的安全规则和权限类别。&lt;br/&gt;参数说明：&lt;br/&gt;- resourceType: 资源类型（database/function/storage）&lt;br/&gt;- resourceId: 资源唯一标识（集合名/函数名/桶名）</td></tr>
@@ -642,7 +642,7 @@ classDiagram
 - vscode: Visual Studio Code
 
 特别说明：
-- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.8.34），便于后续维护和版本追踪
+- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.8.38），便于后续维护和版本追踪
 - 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）
 
 #### 参数
@@ -717,12 +717,12 @@ classDiagram
 <table>
 <thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>action</code></td><td>string</td><td>是</td><td>查询类型：list=获取云托管服务列表，detail=查询云托管服务详情，templates=获取云托管服务模板列表 可填写的值: "list", "detail", "templates"</td></tr>
-<tr><td><code>pageSize</code></td><td>number</td><td></td><td>每页数量，默认10，最大100 默认值: 10</td></tr>
-<tr><td><code>pageNum</code></td><td>number</td><td></td><td>页码，默认1 默认值: 1</td></tr>
-<tr><td><code>serverName</code></td><td>string</td><td></td><td>服务名称筛选，支持模糊匹配</td></tr>
-<tr><td><code>serverType</code></td><td>string</td><td></td><td>服务类型筛选：function=函数型云托管（简化开发，支持WebSocket/SSE/文件上传等），container=容器型服务（传统容器部署） 可填写的值: "function", "container"</td></tr>
-<tr><td><code>detailServerName</code></td><td>string</td><td></td><td>要查询的服务名称（detail操作时必需）</td></tr>
+<tr><td><code>action</code></td><td>string</td><td>是</td><td>查询操作类型：list=获取云托管服务列表（支持分页和筛选），detail=查询指定服务的详细信息（包括配置、版本、访问地址等），templates=获取可用的项目模板列表（用于初始化新项目） 可填写的值: "list", "detail", "templates"</td></tr>
+<tr><td><code>pageSize</code></td><td>number</td><td></td><td>分页大小，控制每页返回的服务数量。取值范围：1-100，默认值：10。建议根据网络性能和显示需求调整 默认值: 10</td></tr>
+<tr><td><code>pageNum</code></td><td>number</td><td></td><td>页码，用于分页查询。从1开始，默认值：1。配合pageSize使用可实现分页浏览 默认值: 1</td></tr>
+<tr><td><code>serverName</code></td><td>string</td><td></td><td>服务名称筛选条件，支持模糊匹配。例如：输入"test"可匹配"test-service"、"my-test-app"等服务名称。留空则查询所有服务</td></tr>
+<tr><td><code>serverType</code></td><td>string</td><td></td><td>服务类型筛选条件：function=函数型云托管（简化开发模式，支持WebSocket/SSE/文件上传等特性，适合快速开发），container=容器型服务（传统容器部署模式，支持任意语言和框架，适合复杂应用） 可填写的值: "function", "container"</td></tr>
+<tr><td><code>detailServerName</code></td><td>string</td><td></td><td>要查询详细信息的服务名称。当action为detail时必需提供，必须是已存在的服务名称。可通过list操作获取可用的服务名称列表</td></tr>
 </tbody>
 </table>
 
@@ -736,27 +736,34 @@ classDiagram
 <table>
 <thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>action</code></td><td>string</td><td>是</td><td>管理操作：init=初始化云托管代码项目（支持从模板开始，模板列表可通过 queryCloudRun 查询），download=下载云托管服务代码到本地，run=本地运行（仅支持函数型云托管服务），deploy=本地代码部署云托管服务，delete=删除指定的云托管服务 可填写的值: "init", "download", "run", "deploy", "delete"</td></tr>
-<tr><td><code>serverName</code></td><td>string</td><td>是</td><td>服务名称，将作为项目目录名或操作目标</td></tr>
-<tr><td><code>targetPath</code></td><td>string</td><td></td><td>本地代码路径（绝对路径，deploy/download/init操作时必需）</td></tr>
-<tr><td><code>serverConfig</code></td><td>object</td><td></td><td>服务配置项，用于部署时的服务参数设置</td></tr>
-<tr><td><code>serverConfig.OpenAccessTypes</code></td><td>array of string</td><td></td><td>公网访问类型数组：OA=办公网访问，PUBLIC=公网访问，MINIAPP=小程序访问，VPC=VPC访问</td></tr>
-<tr><td><code>serverConfig.Cpu</code></td><td>number</td><td></td><td>CPU规格，如0.25、0.5、1、2等，注意：内存规格必须是CPU规格的2倍</td></tr>
-<tr><td><code>serverConfig.Mem</code></td><td>number</td><td></td><td>内存规格，单位GB，如0.5、1、2、4等，注意：必须是CPU规格的2倍（如CPU=0.25时内存=0.5，CPU=1时内存=2）</td></tr>
-<tr><td><code>serverConfig.MinNum</code></td><td>number</td><td></td><td>最小实例数，最小值为0。设置后服务将始终保持至少指定数量的实例运行，即使没有请求也会保持运行状态，确保服务快速响应但会增加成本</td></tr>
-<tr><td><code>serverConfig.MaxNum</code></td><td>number</td><td></td><td>最大实例数，最小值为1。当请求量增加时，服务最多可以扩展到指定数量的实例，超过此数量后将拒绝新的请求</td></tr>
-<tr><td><code>serverConfig.Port</code></td><td>number</td><td></td><td>服务端口，函数型服务固定为3000</td></tr>
-<tr><td><code>serverConfig.EnvParams</code></td><td>object</td><td></td><td>环境变量，JSON格式字符串</td></tr>
-<tr><td><code>serverConfig.Dockerfile</code></td><td>string</td><td></td><td>Dockerfile文件名，如Dockerfile（仅容器型服务需要，函数型服务不需要）</td></tr>
-<tr><td><code>serverConfig.BuildDir</code></td><td>string</td><td></td><td>构建目录，指定代码构建的目录路径</td></tr>
-<tr><td><code>serverConfig.InternalAccess</code></td><td>boolean</td><td></td><td>内网访问开关，true=启用内网访问</td></tr>
-<tr><td><code>serverConfig.EntryPoint</code></td><td>string</td><td></td><td>Dockerfile EntryPoint参数，容器启动入口（仅容器型服务需要）</td></tr>
-<tr><td><code>serverConfig.Cmd</code></td><td>string</td><td></td><td>Dockerfile Cmd参数，容器启动命令（仅容器型服务需要）</td></tr>
-<tr><td><code>template</code></td><td>string</td><td></td><td>模板标识符，默认为helloworld，用于初始化项目 默认值: "helloworld"</td></tr>
-<tr><td><code>runOptions</code></td><td>object</td><td></td><td>本地运行参数（仅函数型云托管服务支持）</td></tr>
-<tr><td><code>runOptions.port</code></td><td>number</td><td></td><td>本地运行端口，仅函数型服务有效，默认3000 默认值: 3000</td></tr>
-<tr><td><code>runOptions.envParams</code></td><td>object</td><td></td><td>附加环境变量，仅本地运行时使用</td></tr>
-<tr><td><code>force</code></td><td>boolean</td><td></td><td>强制操作，跳过确认提示（默认false，删除操作时建议设为true） 默认值: false</td></tr>
+<tr><td><code>action</code></td><td>string</td><td>是</td><td>云托管服务管理操作类型：init=从模板初始化新的云托管项目代码（在targetPath目录下创建以serverName命名的子目录，支持多种语言和框架模板），download=从云端下载现有服务的代码到本地进行开发，run=在本地运行函数型云托管服务（用于开发和调试，仅支持函数型服务），deploy=将本地代码部署到云端云托管服务（支持函数型和容器型），delete=删除指定的云托管服务（不可恢复，需要确认），createAgent=创建函数型Agent（基于函数型云托管开发AI智能体） 可填写的值: "init", "download", "run", "deploy", "delete", "createAgent"</td></tr>
+<tr><td><code>serverName</code></td><td>string</td><td>是</td><td>云托管服务名称，用于标识和管理服务。命名规则：支持大小写字母、数字、连字符和下划线，必须以字母开头，长度3-45个字符。在init操作中会作为在targetPath下创建的子目录名，在其他操作中作为目标服务名</td></tr>
+<tr><td><code>targetPath</code></td><td>string</td><td></td><td>本地代码路径，必须是绝对路径。在deploy操作中指定要部署的代码目录，在download操作中指定下载目标目录，在init操作中指定云托管服务的上级目录（会在该目录下创建以serverName命名的子目录）。建议约定：项目根目录下的cloudrun/目录，例如：/Users/username/projects/my-project/cloudrun</td></tr>
+<tr><td><code>serverConfig</code></td><td>object</td><td></td><td>服务配置项，用于部署时设置服务的运行参数。包括资源规格、访问权限、环境变量等配置。不提供时使用默认配置</td></tr>
+<tr><td><code>serverConfig.OpenAccessTypes</code></td><td>array of string</td><td></td><td>公网访问类型配置，控制服务的访问权限：WEB=公网访问（默认，可通过HTTPS域名访问），VPC=私有网络访问（仅同VPC内可访问），PRIVATE=内网访问（仅云开发环境内可访问）。可配置多个类型</td></tr>
+<tr><td><code>serverConfig.Cpu</code></td><td>number</td><td></td><td>CPU规格配置，单位为核。可选值：0.25、0.5、1、2、4、8等。注意：内存规格必须是CPU规格的2倍（如CPU=0.25时内存=0.5，CPU=1时内存=2）。影响服务性能和计费</td></tr>
+<tr><td><code>serverConfig.Mem</code></td><td>number</td><td></td><td>内存规格配置，单位为GB。可选值：0.5、1、2、4、8、16等。注意：必须是CPU规格的2倍。影响服务性能和计费</td></tr>
+<tr><td><code>serverConfig.MinNum</code></td><td>number</td><td></td><td>最小实例数配置，控制服务的最小运行实例数量。设置为0时支持缩容到0（无请求时不产生费用），设置为大于0时始终保持指定数量的实例运行（确保快速响应但会增加成本）</td></tr>
+<tr><td><code>serverConfig.MaxNum</code></td><td>number</td><td></td><td>最大实例数配置，控制服务的最大运行实例数量。当请求量增加时，服务最多可以扩展到指定数量的实例，超过此数量后将拒绝新的请求。建议根据业务峰值设置</td></tr>
+<tr><td><code>serverConfig.Port</code></td><td>number</td><td></td><td>服务监听端口配置。函数型服务固定为3000，容器型服务可自定义。服务代码必须监听此端口才能正常接收请求</td></tr>
+<tr><td><code>serverConfig.EnvParams</code></td><td>object</td><td></td><td>环境变量配置，用于传递配置信息给服务代码。格式为键值对，如{"DATABASE_URL":"mysql://..."}。敏感信息建议使用环境变量而非硬编码</td></tr>
+<tr><td><code>serverConfig.Dockerfile</code></td><td>string</td><td></td><td>Dockerfile文件名配置，仅容器型服务需要。指定用于构建容器镜像的Dockerfile文件路径，默认为项目根目录下的Dockerfile</td></tr>
+<tr><td><code>serverConfig.BuildDir</code></td><td>string</td><td></td><td>构建目录配置，指定代码构建的目录路径。当代码结构与标准不同时使用，默认为项目根目录</td></tr>
+<tr><td><code>serverConfig.InternalAccess</code></td><td>boolean</td><td></td><td>内网访问开关配置，控制是否启用内网访问。true=启用内网访问（可通过云开发SDK直接调用），false=关闭内网访问（仅公网访问）</td></tr>
+<tr><td><code>serverConfig.EntryPoint</code></td><td>string</td><td></td><td>Dockerfile EntryPoint参数配置，仅容器型服务需要。指定容器启动时的入口程序，如["node","app.js"]</td></tr>
+<tr><td><code>serverConfig.Cmd</code></td><td>string</td><td></td><td>Dockerfile Cmd参数配置，仅容器型服务需要。指定容器启动时的默认命令，如["npm","start"]</td></tr>
+<tr><td><code>template</code></td><td>string</td><td></td><td>项目模板标识符，用于指定初始化项目时使用的模板。可通过queryCloudRun的templates操作获取可用模板列表。常用模板：helloworld=Hello World示例，nodejs=Node.js项目模板，python=Python项目模板等 默认值: "helloworld"</td></tr>
+<tr><td><code>runOptions</code></td><td>object</td><td></td><td>本地运行参数配置，仅函数型云托管服务支持。用于配置本地开发环境的运行参数，不影响云端部署</td></tr>
+<tr><td><code>runOptions.port</code></td><td>number</td><td></td><td>本地运行端口配置，仅函数型服务有效。指定服务在本地运行时监听的端口号，默认3000。确保端口未被其他程序占用 默认值: 3000</td></tr>
+<tr><td><code>runOptions.envParams</code></td><td>object</td><td></td><td>本地运行时的附加环境变量配置，用于本地开发和调试。格式为键值对，如{"DEBUG":"true","LOG_LEVEL":"debug"}。这些变量仅在本地运行时生效</td></tr>
+<tr><td><code>runOptions.runMode</code></td><td>string</td><td></td><td>运行模式：normal=普通函数模式，agent=Agent模式（用于AI智能体开发） 可填写的值: "normal", "agent"；默认值: "normal"</td></tr>
+<tr><td><code>runOptions.agentId</code></td><td>string</td><td></td><td>Agent ID，在agent模式下使用，用于标识特定的Agent实例</td></tr>
+<tr><td><code>agentConfig</code></td><td>object</td><td></td><td>Agent配置项，仅在createAgent操作时使用</td></tr>
+<tr><td><code>agentConfig.agentName</code></td><td>string</td><td>是</td><td>Agent名称，用于生成BotId</td></tr>
+<tr><td><code>agentConfig.botTag</code></td><td>string</td><td></td><td>Bot标签，用于生成BotId，不提供时自动生成</td></tr>
+<tr><td><code>agentConfig.description</code></td><td>string</td><td></td><td>Agent描述信息</td></tr>
+<tr><td><code>agentConfig.template</code></td><td>string</td><td></td><td>Agent模板类型，默认为blank（空白模板） 默认值: "blank"</td></tr>
+<tr><td><code>force</code></td><td>boolean</td><td></td><td>强制操作开关，用于跳过确认提示。默认false（需要确认），设置为true时跳过所有确认步骤。删除操作时强烈建议设置为true以避免误操作 默认值: false</td></tr>
 </tbody>
 </table>
 
