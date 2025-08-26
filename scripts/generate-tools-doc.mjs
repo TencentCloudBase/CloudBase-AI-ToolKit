@@ -24,7 +24,9 @@ function escapeMd(text = '') {
     .replace(/&/g, '&amp;')
     .replace(/\|/g, '\\|')
     .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+    .replace(/>/g, '&gt;')
+    .replace(/\{/g, '&#123;')
+    .replace(/\}/g, '&#125;');
 }
 
 function typeOfSchema(schema) {

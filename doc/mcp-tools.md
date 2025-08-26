@@ -746,7 +746,7 @@ classDiagram
 <tr><td><code>serverConfig.MinNum</code></td><td>number</td><td></td><td>最小实例数配置，控制服务的最小运行实例数量。设置为0时支持缩容到0（无请求时不产生费用），设置为大于0时始终保持指定数量的实例运行（确保快速响应但会增加成本）</td></tr>
 <tr><td><code>serverConfig.MaxNum</code></td><td>number</td><td></td><td>最大实例数配置，控制服务的最大运行实例数量。当请求量增加时，服务最多可以扩展到指定数量的实例，超过此数量后将拒绝新的请求。建议根据业务峰值设置</td></tr>
 <tr><td><code>serverConfig.Port</code></td><td>number</td><td></td><td>服务监听端口配置。函数型服务固定为3000，容器型服务可自定义。服务代码必须监听此端口才能正常接收请求</td></tr>
-<tr><td><code>serverConfig.EnvParams</code></td><td>object</td><td></td><td>环境变量配置，用于传递配置信息给服务代码。格式为键值对，如{"DATABASE_URL":"mysql://..."}。敏感信息建议使用环境变量而非硬编码</td></tr>
+<tr><td><code>serverConfig.EnvParams</code></td><td>object</td><td></td><td>环境变量配置，用于传递配置信息给服务代码。格式为键值对，如&#123;"DATABASE_URL":"mysql://..."&#125;。敏感信息建议使用环境变量而非硬编码</td></tr>
 <tr><td><code>serverConfig.Dockerfile</code></td><td>string</td><td></td><td>Dockerfile文件名配置，仅容器型服务需要。指定用于构建容器镜像的Dockerfile文件路径，默认为项目根目录下的Dockerfile</td></tr>
 <tr><td><code>serverConfig.BuildDir</code></td><td>string</td><td></td><td>构建目录配置，指定代码构建的目录路径。当代码结构与标准不同时使用，默认为项目根目录</td></tr>
 <tr><td><code>serverConfig.InternalAccess</code></td><td>boolean</td><td></td><td>内网访问开关配置，控制是否启用内网访问。true=启用内网访问（可通过云开发SDK直接调用），false=关闭内网访问（仅公网访问）</td></tr>
@@ -755,7 +755,7 @@ classDiagram
 <tr><td><code>template</code></td><td>string</td><td></td><td>项目模板标识符，用于指定初始化项目时使用的模板。可通过queryCloudRun的templates操作获取可用模板列表。常用模板：helloworld=Hello World示例，nodejs=Node.js项目模板，python=Python项目模板等 默认值: "helloworld"</td></tr>
 <tr><td><code>runOptions</code></td><td>object</td><td></td><td>本地运行参数配置，仅函数型云托管服务支持。用于配置本地开发环境的运行参数，不影响云端部署</td></tr>
 <tr><td><code>runOptions.port</code></td><td>number</td><td></td><td>本地运行端口配置，仅函数型服务有效。指定服务在本地运行时监听的端口号，默认3000。确保端口未被其他程序占用 默认值: 3000</td></tr>
-<tr><td><code>runOptions.envParams</code></td><td>object</td><td></td><td>本地运行时的附加环境变量配置，用于本地开发和调试。格式为键值对，如{"DEBUG":"true","LOG_LEVEL":"debug"}。这些变量仅在本地运行时生效</td></tr>
+<tr><td><code>runOptions.envParams</code></td><td>object</td><td></td><td>本地运行时的附加环境变量配置，用于本地开发和调试。格式为键值对，如&#123;"DEBUG":"true","LOG_LEVEL":"debug"&#125;。这些变量仅在本地运行时生效</td></tr>
 <tr><td><code>runOptions.runMode</code></td><td>string</td><td></td><td>运行模式：normal=普通函数模式，agent=Agent模式（用于AI智能体开发） 可填写的值: "normal", "agent"；默认值: "normal"</td></tr>
 <tr><td><code>runOptions.agentId</code></td><td>string</td><td></td><td>Agent ID，在agent模式下使用，用于标识特定的Agent实例</td></tr>
 <tr><td><code>agentConfig</code></td><td>object</td><td></td><td>Agent配置项，仅在createAgent操作时使用</td></tr>
