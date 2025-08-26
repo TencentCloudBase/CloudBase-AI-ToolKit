@@ -56,7 +56,8 @@
   "license": "MIT",
   "dependencies": {
     "@cloudbase/cals": "^1.2.18-alpha.1",
-    "@cloudbase/manager-node": "^4.4.5",
+    "@cloudbase/functions-framework": "^1.14.0",
+    "@cloudbase/manager-node": "^4.4.8",
     "@cloudbase/mcp": "^1.0.0-beta.25",
     "@cloudbase/toolbox": "^0.7.8",
     "@modelcontextprotocol/sdk": "1.13.1",

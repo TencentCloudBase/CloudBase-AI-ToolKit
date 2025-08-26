@@ -1,6 +1,10 @@
-# 云托管（CloudRun）使用指南
+# 云托管开发部署
 
-云托管让你可以轻松部署和运行各种后端服务，支持长连接、文件上传、多语言等场景。这个插件已经默认启用，你只需要用自然语言告诉 AI 你想要做什么。
+CloudBase AI ToolKit 内置支持云托管开发部署功能，云托管让你可以轻松部署和运行各种后端服务，支持长连接、文件上传、多语言等场景。这个插件已经默认启用，你只需要用自然语言告诉 AI 你想要做什么。
+
+## 新增功能：AI 智能体开发
+
+现在支持基于函数型云托管开发 AI 智能体，让你可以快速创建和部署个性化的 AI 应用。
 
 ## 什么时候用云托管？
 
@@ -8,6 +12,7 @@
 - **实时通信**：WebSocket、SSE、流式响应
 - **长任务**：后台处理
 - **多语言**：Java、Go、PHP、Python、Node.js 等
+- **AI 智能体**：个性化 AI 应用开发
 
 ## 两种模式怎么选？
 
@@ -37,6 +42,11 @@
 部署 my-service，开启公网访问，CPU 0.5 核，内存 1GB
 ```
 
+### 5. 创建 AI 智能体
+```
+创建一个名为 my-agent 的智能体，用于客服对话
+```
+
 ## 常见场景
 
 ### 小程序后端
@@ -62,6 +72,11 @@
 ### PHP Laravel 应用
 ```
 部署一个 Laravel 应用，提供完整的 Web 后台管理
+```
+
+### AI 智能体应用
+```
+创建一个智能体，用于处理用户咨询和提供个性化服务
 ```
 
 ## 访问你的服务
@@ -92,4 +107,38 @@ const res = await app.callContainer({
 **直接 HTTP 访问**：
 ```bash
 curl https://your-service-domain.com
+```
+
+## AI 智能体开发
+
+### 创建智能体
+```
+创建一个名为 customer-service 的智能体，用于客服对话
+```
+
+### 本地运行智能体
+```
+在本地运行 customer-service 智能体，端口 3000
+```
+
+### 调用智能体
+```js
+// Web 应用调用
+const app = cloudbase.init({ env: "your-env-id" });
+const ai = app.ai();
+const res = await ai.bot.sendMessage({
+  botId: "ibot-customer-service-demo",
+  msg: "你好，我需要帮助"
+});
+for await (let x of res.textStream) {
+  console.log(x);
+}
+```
+
+```bash
+# 命令行测试
+curl 'http://127.0.0.1:3000/v1/aibot/bots/ibot-customer-service-demo/send-message' \
+  -H 'Accept: text/event-stream' \
+  -H 'Content-Type: application/json' \
+  --data-raw '{"msg":"你好"}'
 ```

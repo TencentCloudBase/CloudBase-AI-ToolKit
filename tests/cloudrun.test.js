@@ -283,7 +283,10 @@ describe('CloudRun Plugin Tests', () => {
           action: 'run',
           serverName: 'test-service-local',
           targetPath: '/tmp',
-          runOptions: { port: 3000 }
+          runOptions: { 
+            port: 3000,
+            runMode: 'normal'
+          }
         }
       });
 
@@ -291,6 +294,43 @@ describe('CloudRun Plugin Tests', () => {
       console.log('✅ manageCloudRun run action is callable and returns a result');
     } catch (error) {
       console.log('⚠️ manageCloudRun run call failed (expected in CI without project):', error.message);
+    }
+  });
+
+  test('manageCloudRun supports createAgent action (does not require credentials)', async () => {
+    if (!testClient) {
+      console.log('⚠️ Test client not available, skipping test');
+      return;
+    }
+
+    try {
+      const toolsResult = await testClient.listTools();
+      const manageCloudRunTool = toolsResult.tools.find(tool => tool.name === 'manageCloudRun');
+      if (!manageCloudRunTool) {
+        console.log('⚠️ manageCloudRun tool not found, skipping createAgent action test');
+        return;
+      }
+
+      // Attempt to create agent in a temp directory; expect a structured error or success
+      const result = await testClient.callTool({
+        name: 'manageCloudRun',
+        arguments: {
+          action: 'createAgent',
+          serverName: 'test-agent',
+          targetPath: '/tmp',
+          agentConfig: {
+            agentName: 'TestAgent',
+            botTag: 'test',
+            description: 'Test Agent for testing',
+            template: 'blank'
+          }
+        }
+      });
+
+      expect(result).toBeDefined();
+      console.log('✅ manageCloudRun createAgent action is callable and returns a result');
+    } catch (error) {
+      console.log('⚠️ manageCloudRun createAgent call failed (expected in CI without project):', error.message);
     }
   });
 });

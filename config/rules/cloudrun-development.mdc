@@ -16,6 +16,7 @@ alwaysApply: false
 - 使用多语言/任意框架：如 Java、Go、PHP、.NET、Python、Node.js 等。
 - 需要稳定对外服务与弹性伸缩：按量计费、可缩容到 0。
 - 需要私网/内网访问：VPC/PRIVATE 访问、小程序 `callContainer` 内网直连。
+- 需要开发 AI 智能体：基于函数型云托管开发个性化 AI 应用。
 
 ## 2. 模式选择（快速对比）
 
@@ -51,13 +52,15 @@ alwaysApply: false
 - 用来“做事情”的：`manageCloudRun`
   - `init`：创建本地项目（可选模板）
   - `download`：把已有服务的代码拉到本地
-  - `run`：本地跑起来（仅函数型）
+  - `run`：本地跑起来（仅函数型，支持普通函数和Agent模式）
   - `deploy`：把本地代码部署到云托管
   - `delete`：删除服务（需要显式确认）
+  - `createAgent`：创建 AI 智能体（基于函数型云托管）
 - 重要参数（只记这几个）
   - `targetPath`：本地目录（必须是绝对路径）
   - `serverConfig`：CPU/Mem/实例数/访问类型/环境变量等部署参数
-  - `runOptions`：本地运行端口与临时环境变量（函数型）
+  - `runOptions`：本地运行端口与临时环境变量（函数型），支持 `runMode: 'normal' | 'agent'`
+  - `agentConfig`：Agent 配置（agentName、botTag、description、template）
   - 删除一定要带 `force: true`，否则不会执行
 
 ## 5. 核心工作流（先懂步骤，再看示例）
@@ -127,6 +130,16 @@ alwaysApply: false
 { "name": "manageCloudRun", "arguments": { "action": "deploy", "serverName": "my-svc", "targetPath": "/abs/ws/my-svc", "serverConfig": { "OpenAccessTypes": ["WEB"], "Cpu": 0.5, "Mem": 1, "MinNum": 0, "MaxNum": 5 } } }
 ```
 
+6) 创建 AI 智能体（可选）
+```json
+{ "name": "manageCloudRun", "arguments": { "action": "createAgent", "serverName": "my-agent", "targetPath": "/abs/ws/agents", "agentConfig": { "agentName": "MyAgent", "botTag": "demo", "description": "我的智能体", "template": "blank" } } }
+```
+
+7) 运行智能体（可选）
+```json
+{ "name": "manageCloudRun", "arguments": { "action": "run", "serverName": "my-agent", "targetPath": "/abs/ws/agents/my-agent", "runOptions": { "port": 3000, "runMode": "agent" } } }
+```
+
 ## 6. 最佳实践（强烈建议）
 
 - 优先 PRIVATE/VPC 或小程序内网 `callContainer`，减少公网暴露。
@@ -134,6 +147,7 @@ alwaysApply: false
 - 机密通过环境变量下发；多环境（dev/stg/prod）分离配置。
 - 部署前后用 `queryCloudRun.detail` 校验配置与可达性。
 - 镜像分层可复用、体积小；监测启动时延与内存占用。
+- Agent 开发：使用 `@cloudbase/aiagent-framework`，支持 SSE 流式响应，BotId 格式为 `ibot-{name}-{tag}`。
 
 ## 7. 快速排查
 
@@ -141,11 +155,13 @@ alwaysApply: false
 - 部署失败：校验 Dockerfile/构建日志/镜像体积与 CPU/Mem 配比。  
 - 本地运行失败：仅支持函数型；需 `package.json` 的 `dev`/`start` 或入口 `index.js|app.js|server.js`。  
 - 性能抖动：减小依赖与初始化；适当提高 MinNum；优化冷启动。
+- Agent 运行失败：检查 `@cloudbase/aiagent-framework` 依赖、BotId 格式、SSE 响应格式。
 
 ## 8. 函数型云托管（Function 模式）要点（精简）
 
 - 定义：云托管 + 函数框架（`@cloudbase/functions-framework`）+ 函数代码，让容器服务开发像写云函数一样简单。
 - 何时选择：需要 WebSocket/SSE/文件上传/流式响应；需要长任务或连接 DB/消息队列；需要单实例多函数与共享内存、低时延与更好日志/调试。
+- Agent 模式：基于函数型云托管开发 AI 智能体，使用 `@cloudbase/aiagent-framework`，支持 SSE 流式响应和个性化 AI 应用。
 - 工具支持：本地运行仅支持函数型（`manageCloudRun` → `run`）；部署用 `manageCloudRun` → `deploy`；查询用 `queryCloudRun`。
 - 迁移提示：与云函数调用链/运行时不同，迁移需少量改造（含客户端调用方式）。
 - 可移植性：基于函数框架，可在本地/主机/Docker 运行，非云托管需自管构建与部署。

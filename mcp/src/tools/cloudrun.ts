@@ -4,6 +4,7 @@ import { ExtendedMcpServer } from '../server.js';
 import path from 'path';
 import fs from 'fs';
 import { spawn } from 'child_process';
+import { runCLI } from '@cloudbase/functions-framework';
 
 // CloudRun service types
 export const CLOUDRUN_SERVICE_TYPES = ['function', 'container'] as const;
@@ -15,51 +16,61 @@ export type CloudRunAccessType = typeof CLOUDRUN_ACCESS_TYPES[number];
 
 // Input schema for queryCloudRun tool
 const queryCloudRunInputSchema = {
-  action: z.enum(['list', 'detail', 'templates']).describe('查询类型：list=获取云托管服务列表，detail=查询云托管服务详情，templates=获取云托管服务模板列表'),
+  action: z.enum(['list', 'detail', 'templates']).describe('查询操作类型：list=获取云托管服务列表（支持分页和筛选），detail=查询指定服务的详细信息（包括配置、版本、访问地址等），templates=获取可用的项目模板列表（用于初始化新项目）'),
   
   // List operation parameters
-  pageSize: z.number().min(1).max(100).optional().default(10).describe('每页数量，默认10，最大100'),
-  pageNum: z.number().min(1).optional().default(1).describe('页码，默认1'),
-  serverName: z.string().optional().describe('服务名称筛选，支持模糊匹配'),
-  serverType: z.enum(CLOUDRUN_SERVICE_TYPES).optional().describe('服务类型筛选：function=函数型云托管（简化开发，支持WebSocket/SSE/文件上传等），container=容器型服务（传统容器部署）'),
+  pageSize: z.number().min(1).max(100).optional().default(10).describe('分页大小，控制每页返回的服务数量。取值范围：1-100，默认值：10。建议根据网络性能和显示需求调整'),
+  pageNum: z.number().min(1).optional().default(1).describe('页码，用于分页查询。从1开始，默认值：1。配合pageSize使用可实现分页浏览'),
+  serverName: z.string().optional().describe('服务名称筛选条件，支持模糊匹配。例如：输入"test"可匹配"test-service"、"my-test-app"等服务名称。留空则查询所有服务'),
+  serverType: z.enum(CLOUDRUN_SERVICE_TYPES).optional().describe('服务类型筛选条件：function=函数型云托管（简化开发模式，支持WebSocket/SSE/文件上传等特性，适合快速开发），container=容器型服务（传统容器部署模式，支持任意语言和框架，适合复杂应用）'),
   
   // Detail operation parameters
-  detailServerName: z.string().optional().describe('要查询的服务名称（detail操作时必需）'),
+  detailServerName: z.string().optional().describe('要查询详细信息的服务名称。当action为detail时必需提供，必须是已存在的服务名称。可通过list操作获取可用的服务名称列表'),
 };
 
 // Input schema for manageCloudRun tool
 const ManageCloudRunInputSchema = {
-  action: z.enum(['init', 'download', 'run', 'deploy', 'delete']).describe('管理操作：init=初始化云托管代码项目（支持从模板开始，模板列表可通过 queryCloudRun 查询），download=下载云托管服务代码到本地，run=本地运行（仅支持函数型云托管服务），deploy=本地代码部署云托管服务，delete=删除指定的云托管服务'),
-  serverName: z.string().describe('服务名称，将作为项目目录名或操作目标'),
+  action: z.enum(['init', 'download', 'run', 'deploy', 'delete', 'createAgent']).describe('云托管服务管理操作类型：init=从模板初始化新的云托管项目代码（在targetPath目录下创建以serverName命名的子目录，支持多种语言和框架模板），download=从云端下载现有服务的代码到本地进行开发，run=在本地运行函数型云托管服务（用于开发和调试，仅支持函数型服务），deploy=将本地代码部署到云端云托管服务（支持函数型和容器型），delete=删除指定的云托管服务（不可恢复，需要确认），createAgent=创建函数型Agent（基于函数型云托管开发AI智能体）'),
+  serverName: z.string().describe('云托管服务名称，用于标识和管理服务。命名规则：支持大小写字母、数字、连字符和下划线，必须以字母开头，长度3-45个字符。在init操作中会作为在targetPath下创建的子目录名，在其他操作中作为目标服务名'),
   
   // Deploy operation parameters
-  targetPath: z.string().optional().describe('本地代码路径（绝对路径，deploy/download/init操作时必需）'),
+  targetPath: z.string().optional().describe('本地代码路径，必须是绝对路径。在deploy操作中指定要部署的代码目录，在download操作中指定下载目标目录，在init操作中指定云托管服务的上级目录（会在该目录下创建以serverName命名的子目录）。建议约定：项目根目录下的cloudrun/目录，例如：/Users/username/projects/my-project/cloudrun'),
   serverConfig: z.object({
-    OpenAccessTypes: z.array(z.enum(CLOUDRUN_ACCESS_TYPES)).optional().describe('公网访问类型数组：OA=办公网访问，PUBLIC=公网访问，MINIAPP=小程序访问，VPC=VPC访问'),
-    Cpu: z.number().positive().optional().describe('CPU规格，如0.25、0.5、1、2等，注意：内存规格必须是CPU规格的2倍'),
-    Mem: z.number().positive().optional().describe('内存规格，单位GB，如0.5、1、2、4等，注意：必须是CPU规格的2倍（如CPU=0.25时内存=0.5，CPU=1时内存=2）'),
-    MinNum: z.number().min(0).optional().describe('最小实例数，最小值为0。设置后服务将始终保持至少指定数量的实例运行，即使没有请求也会保持运行状态，确保服务快速响应但会增加成本'),
-    MaxNum: z.number().min(1).optional().describe('最大实例数，最小值为1。当请求量增加时，服务最多可以扩展到指定数量的实例，超过此数量后将拒绝新的请求'),
-    Port: z.number().min(1).max(65535).optional().describe('服务端口，函数型服务固定为3000'),
-    EnvParams: z.record(z.string()).optional().describe('环境变量，JSON格式字符串'),
-    Dockerfile: z.string().optional().describe('Dockerfile文件名，如Dockerfile（仅容器型服务需要，函数型服务不需要）'),
-    BuildDir: z.string().optional().describe('构建目录，指定代码构建的目录路径'),
-    InternalAccess: z.boolean().optional().describe('内网访问开关，true=启用内网访问'),
-    EntryPoint: z.string().optional().describe('Dockerfile EntryPoint参数，容器启动入口（仅容器型服务需要）'),
-    Cmd: z.string().optional().describe('Dockerfile Cmd参数，容器启动命令（仅容器型服务需要）'),
-  }).optional().describe('服务配置项，用于部署时的服务参数设置'),
+    OpenAccessTypes: z.array(z.enum(CLOUDRUN_ACCESS_TYPES)).optional().describe('公网访问类型配置，控制服务的访问权限：WEB=公网访问（默认，可通过HTTPS域名访问），VPC=私有网络访问（仅同VPC内可访问），PRIVATE=内网访问（仅云开发环境内可访问）。可配置多个类型'),
+    Cpu: z.number().positive().optional().describe('CPU规格配置，单位为核。可选值：0.25、0.5、1、2、4、8等。注意：内存规格必须是CPU规格的2倍（如CPU=0.25时内存=0.5，CPU=1时内存=2）。影响服务性能和计费'),
+    Mem: z.number().positive().optional().describe('内存规格配置，单位为GB。可选值：0.5、1、2、4、8、16等。注意：必须是CPU规格的2倍。影响服务性能和计费'),
+    MinNum: z.number().min(0).optional().describe('最小实例数配置，控制服务的最小运行实例数量。设置为0时支持缩容到0（无请求时不产生费用），设置为大于0时始终保持指定数量的实例运行（确保快速响应但会增加成本）'),
+    MaxNum: z.number().min(1).optional().describe('最大实例数配置，控制服务的最大运行实例数量。当请求量增加时，服务最多可以扩展到指定数量的实例，超过此数量后将拒绝新的请求。建议根据业务峰值设置'),
+    Port: z.number().min(1).max(65535).optional().describe('服务监听端口配置。函数型服务固定为3000，容器型服务可自定义。服务代码必须监听此端口才能正常接收请求'),
+    EnvParams: z.record(z.string()).optional().describe('环境变量配置，用于传递配置信息给服务代码。格式为键值对，如{"DATABASE_URL":"mysql://..."}。敏感信息建议使用环境变量而非硬编码'),
+    Dockerfile: z.string().optional().describe('Dockerfile文件名配置，仅容器型服务需要。指定用于构建容器镜像的Dockerfile文件路径，默认为项目根目录下的Dockerfile'),
+    BuildDir: z.string().optional().describe('构建目录配置，指定代码构建的目录路径。当代码结构与标准不同时使用，默认为项目根目录'),
+    InternalAccess: z.boolean().optional().describe('内网访问开关配置，控制是否启用内网访问。true=启用内网访问（可通过云开发SDK直接调用），false=关闭内网访问（仅公网访问）'),
+    EntryPoint: z.string().optional().describe('Dockerfile EntryPoint参数配置，仅容器型服务需要。指定容器启动时的入口程序，如["node","app.js"]'),
+    Cmd: z.string().optional().describe('Dockerfile Cmd参数配置，仅容器型服务需要。指定容器启动时的默认命令，如["npm","start"]'),
+  }).optional().describe('服务配置项，用于部署时设置服务的运行参数。包括资源规格、访问权限、环境变量等配置。不提供时使用默认配置'),
   
   // Init operation parameters
-  template: z.string().optional().default('helloworld').describe('模板标识符，默认为helloworld，用于初始化项目'),
+  template: z.string().optional().default('helloworld').describe('项目模板标识符，用于指定初始化项目时使用的模板。可通过queryCloudRun的templates操作获取可用模板列表。常用模板：helloworld=Hello World示例，nodejs=Node.js项目模板，python=Python项目模板等'),
   
   // Run operation parameters (function services only)
   runOptions: z.object({
-    port: z.number().min(1).max(65535).optional().default(3000).describe('本地运行端口，仅函数型服务有效，默认3000'),
-    envParams: z.record(z.string()).optional().describe('附加环境变量，仅本地运行时使用')
-  }).optional().describe('本地运行参数（仅函数型云托管服务支持）'),
+    port: z.number().min(1).max(65535).optional().default(3000).describe('本地运行端口配置，仅函数型服务有效。指定服务在本地运行时监听的端口号，默认3000。确保端口未被其他程序占用'),
+    envParams: z.record(z.string()).optional().describe('本地运行时的附加环境变量配置，用于本地开发和调试。格式为键值对，如{"DEBUG":"true","LOG_LEVEL":"debug"}。这些变量仅在本地运行时生效'),
+    runMode: z.enum(['normal', 'agent']).optional().default('normal').describe('运行模式：normal=普通函数模式，agent=Agent模式（用于AI智能体开发）'),
+    agentId: z.string().optional().describe('Agent ID，在agent模式下使用，用于标识特定的Agent实例')
+  }).optional().describe('本地运行参数配置，仅函数型云托管服务支持。用于配置本地开发环境的运行参数，不影响云端部署'),
+  
+  // Agent creation parameters
+  agentConfig: z.object({
+    agentName: z.string().describe('Agent名称，用于生成BotId'),
+    botTag: z.string().optional().describe('Bot标签，用于生成BotId，不提供时自动生成'),
+    description: z.string().optional().describe('Agent描述信息'),
+    template: z.string().optional().default('blank').describe('Agent模板类型，默认为blank（空白模板）')
+  }).optional().describe('Agent配置项，仅在createAgent操作时使用'),
   
   // Common parameters
-  force: z.boolean().optional().default(false).describe('强制操作，跳过确认提示（默认false，删除操作时建议设为true）'),
+  force: z.boolean().optional().default(false).describe('强制操作开关，用于跳过确认提示。默认false（需要确认），设置为true时跳过所有确认步骤。删除操作时强烈建议设置为true以避免误操作'),
 };
 
 type queryCloudRunInput = {
@@ -72,7 +83,7 @@ type queryCloudRunInput = {
 };
 
 type ManageCloudRunInput = {
-  action: 'init' | 'download' | 'run' | 'deploy' | 'delete';
+  action: 'init' | 'download' | 'run' | 'deploy' | 'delete' | 'createAgent';
   serverName: string;
   targetPath?: string;
   serverConfig?: any;
@@ -81,8 +92,51 @@ type ManageCloudRunInput = {
   runOptions?: {
     port?: number;
     envParams?: Record<string, string>;
+    runMode?: 'normal' | 'agent';
+    agentId?: string;
+  };
+  agentConfig?: {
+    agentName: string;
+    botTag?: string;
+    description?: string;
+    template?: string;
   };
 };
+
+/**
+ * Check if a project is an Agent project
+ * @param projectPath Project directory path
+ * @returns true if it's an Agent project
+ */
+function checkIfAgentProject(projectPath: string): boolean {
+  try {
+    // Check if package.json exists and contains @cloudbase/aiagent-framework dependency
+    const packageJsonPath = path.join(projectPath, 'package.json');
+    if (fs.existsSync(packageJsonPath)) {
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+      const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
+      if (dependencies['@cloudbase/aiagent-framework']) {
+        return true;
+      }
+    }
+    
+    // Check if index.js contains Agent-related code
+    const indexJsPath = path.join(projectPath, 'index.js');
+    if (fs.existsSync(indexJsPath)) {
+      const content = fs.readFileSync(indexJsPath, 'utf8');
+      if (content.includes('@cloudbase/aiagent-framework') || 
+          content.includes('BotRunner') || 
+          content.includes('IBot') ||
+          content.includes('BotCore')) {
+        return true;
+      }
+    }
+    
+    return false;
+  } catch (error) {
+    return false;
+  }
+}
 
 /**
  * Validate and normalize file path
@@ -313,15 +367,210 @@ export function registerCloudRunTools(server: ExtendedMcpServer) {
         }
         
         switch (input.action) {
+          case 'createAgent': {
+            if (!targetPath) {
+              throw new Error("targetPath is required for createAgent operation");
+            }
+            
+            if (!input.agentConfig) {
+              throw new Error("agentConfig is required for createAgent operation");
+            }
+            
+            const { agentName, botTag, description, template = 'blank' } = input.agentConfig;
+            
+            // Generate BotId
+            const botId = botTag ? `ibot-${agentName}-${botTag}` : `ibot-${agentName}-${Date.now()}`;
+            
+            // Create Agent using CloudBase Manager
+            const agentResult = await manager.agent.createFunctionAgent(targetPath, {
+              Name: agentName,
+              BotId: botId,
+              Introduction: description || `Agent created by ${agentName}`,
+              Avatar: undefined
+            });
+            
+            // Create project directory
+            const projectDir = path.join(targetPath, input.serverName);
+            if (!fs.existsSync(projectDir)) {
+              fs.mkdirSync(projectDir, { recursive: true });
+            }
+            
+            // Generate package.json
+            const packageJson = {
+              name: input.serverName,
+              version: "1.0.0",
+              description: description || `Agent created by ${agentName}`,
+              main: "index.js",
+              scripts: {
+                "dev": "tcb cloudrun run --runMode=agent -w",
+                "deploy": "tcb cloudrun deploy",
+                "start": "node index.js"
+              },
+              dependencies: {
+                "@cloudbase/aiagent-framework": "^1.0.0-beta.10"
+              },
+              devDependencies: {
+                "@cloudbase/cli": "^2.6.16"
+              }
+            };
+            
+            fs.writeFileSync(path.join(projectDir, 'package.json'), JSON.stringify(packageJson, null, 2));
+            
+            // Generate index.js with Agent template
+            const indexJsContent = `const { IBot } = require("@cloudbase/aiagent-framework");
+const { BotRunner } = require("@cloudbase/aiagent-framework");
+
+const ANSWER = "你好，我是一个智能体，但我只会说这一句话。";
+
+/**
+ * @typedef {import('@cloudbase/aiagent-framework').IAbstractBot} IAbstractBot
+ * 
+ * @class
+ * @implements {IAbstractBot}
+ */
+class MyBot extends IBot {
+  async sendMessage() {
+    return new Promise((res) => {
+      // 创建个字符数组
+      const charArr = ANSWER.split("");
+      const interval = setInterval(() => {
+        // 定时循环从数组中去一个字符
+        const char = charArr.shift();
+        if (typeof char === "string") {
+          // 有字符时，发送 SSE 消息给客户端
+          this.sseSender.send({ data: { content: char } });
+        } else {
+          // 字符用光后，结束定时循环
+          clearInterval(interval);
+          // 结束 SSE
+          this.sseSender.end();
+          res();
+        }
+      }, 50);
+    });
+  }
+}
+
+/**
+ * 类型完整定义请参考：https://docs.cloudbase.net/cbrf/how-to-writing-functions-code#%E5%AE%8C%E6%95%B4%E7%A4%BA%E4%BE%8B
+ * "{demo: string}"" 为 event 参数的示例类型声明，请根据实际情况进行修改
+ * 需要 \`pnpm install\` 安装依赖后类型提示才会生效
+ * 
+ * @type {import('@cloudbase/functions-typings').TcbEventFunction<unknown>}
+ */
+exports.main = function (event, context) {
+  return BotRunner.run(event, context, new MyBot(context));
+};
+`;
+            
+            fs.writeFileSync(path.join(projectDir, 'index.js'), indexJsContent);
+            
+            // Generate cloudbaserc.json
+            const cloudbasercContent = {
+              envId: process.env.TCB_ENV_ID || '',
+              cloudrun: { 
+                name: input.serverName 
+              }
+            };
+            
+            fs.writeFileSync(path.join(projectDir, 'cloudbaserc.json'), JSON.stringify(cloudbasercContent, null, 2));
+            
+            // Generate README.md
+            const readmeContent = `# ${agentName} Agent
+
+这是一个基于函数型云托管的 AI 智能体。
+
+## 开发
+
+\`\`\`bash
+# 安装依赖
+npm install
+
+# 本地开发
+npm run dev
+
+# 部署
+npm run deploy
+\`\`\`
+
+## 调用方式
+
+### 命令行测试
+\`\`\`bash
+curl 'http://127.0.0.1:3000/v1/aibot/bots/${botId}/send-message' \\
+  -H 'Accept: text/event-stream' \\
+  -H 'Content-Type: application/json' \\
+  --data-raw '{"msg":"hi"}'
+\`\`\`
+
+### Web 调用
+\`\`\`html
+<script src="//static.cloudbase.net/cloudbase-js-sdk/2.9.0/cloudbase.full.js"></script>
+<script>
+const app = cloudbase.init({ env: "your-env-id" });
+const auth = app.auth();
+await auth.signInAnonymously();
+const ai = app.ai();
+const res = await ai.bot.sendMessage({
+  botId: "${botId}",
+  msg: "hi",
+});
+for await (let x of res.textStream) {
+  console.log(x);
+}
+</script>
+\`\`\`
+`;
+            
+            fs.writeFileSync(path.join(projectDir, 'README.md'), readmeContent);
+            
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify({
+                    success: true,
+                    data: {
+                      agentName: agentName,
+                      botId: botId,
+                      projectDir: projectDir,
+                      serverName: input.serverName,
+                      template: template,
+                      filesCreated: ['package.json', 'index.js', 'cloudbaserc.json', 'README.md']
+                    },
+                    message: `Successfully created Agent '${agentName}' with BotId '${botId}' in ${projectDir}`
+                  }, null, 2)
+                }
+              ]
+            };
+          }
+          
           case 'deploy': {
             if (!targetPath) {
               throw new Error("targetPath is required for deploy operation");
+            }
+            
+            // Determine service type automatically
+            let serverType: 'function' | 'container';
+            try {
+              // First try to get existing service details
+              const details = await cloudrunService.detail({ serverName: input.serverName });
+              serverType = details.BaseInfo?.ServerType || 'function';
+            } catch (e) {
+              // If service doesn't exist, determine by project structure
+              const dockerfilePath = path.join(targetPath, 'Dockerfile');
+              if (fs.existsSync(dockerfilePath)) {
+                serverType = 'container';
+              } else {
+                serverType = 'function';
+              }
             }
             
             const deployParams: any = {
               serverName: input.serverName,
               targetPath: targetPath,
               force: input.force,
+              serverType: serverType,
             };
             
             // Add server configuration if provided
@@ -330,6 +579,21 @@ export function registerCloudRunTools(server: ExtendedMcpServer) {
             }
             
             const result = await cloudrunService.deploy(deployParams);
+            
+            // Generate cloudbaserc.json configuration file
+            const cloudbasercPath = path.join(targetPath, 'cloudbaserc.json');
+            const cloudbasercContent = {
+              envId: process.env.TCB_ENV_ID || '',
+              cloudrun: { 
+                name: input.serverName 
+              }
+            };
+            
+            try {
+              fs.writeFileSync(cloudbasercPath, JSON.stringify(cloudbasercContent, null, 2));
+            } catch (error) {
+              // Ignore cloudbaserc.json creation errors
+            }
             
             return {
               content: [
@@ -340,9 +604,11 @@ export function registerCloudRunTools(server: ExtendedMcpServer) {
                     data: {
                       serviceName: input.serverName,
                       status: 'deployed',
-                      deployPath: targetPath
+                      deployPath: targetPath,
+                      serverType: serverType,
+                      cloudbasercGenerated: true
                     },
-                    message: `Successfully deployed service '${input.serverName}' from ${targetPath}`
+                    message: `Successfully deployed ${serverType} service '${input.serverName}' from ${targetPath}`
                   }, null, 2)
                 }
               ]
@@ -360,72 +626,101 @@ export function registerCloudRunTools(server: ExtendedMcpServer) {
               throw new Error("Local run is only supported for function-type CloudRun services. Container services are not supported.");
             }
 
-            // Prevent duplicate runs per serviceName
+            // Check if this is an Agent project
+            const isAgent = checkIfAgentProject(targetPath);
+            const runMode = input.runOptions?.runMode || (isAgent ? 'agent' : 'normal');
+
+            // Check if service is already running and verify process exists
             if (runningProcesses.has(input.serverName)) {
               const existingPid = runningProcesses.get(input.serverName)!;
-              return {
-                content: [
-                  {
-                    type: "text",
-                    text: JSON.stringify({
-                      success: true,
-                      data: {
-                        serviceName: input.serverName,
-                        status: 'running',
-                        pid: existingPid,
-                        cwd: targetPath
-                      },
-                      message: `Service '${input.serverName}' is already running locally (pid=${existingPid})`
-                    }, null, 2)
-                  }
-                ]
-              };
-            }
-
-            const pkgJsonPath = path.join(targetPath, 'package.json');
-            let command: string;
-            let args: string[] = [];
-            if (fs.existsSync(pkgJsonPath)) {
               try {
-                const pkg = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
-                if (pkg.scripts && typeof pkg.scripts.dev === 'string') {
-                  command = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-                  args = ['run', 'dev'];
-                } else if (pkg.scripts && typeof pkg.scripts.start === 'string') {
-                  command = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-                  args = ['run', 'start'];
-                } else {
-                  command = process.execPath; // node
-                  const fallback = ['index.js', 'app.js', 'server.js']
-                    .map(f => path.join(targetPath, f))
-                    .find(p => fs.existsSync(p));
-                  if (!fallback) {
-                    throw new Error("Cannot determine how to run locally. Define 'dev' or 'start' script in package.json or provide an index.js/app.js/server.js entry.");
-                  }
-                  args = [fallback];
-                }
-              } catch (e: any) {
-                throw new Error(`Invalid package.json: ${e.message}`);
+                // Check if process actually exists
+                process.kill(existingPid, 0);
+                return {
+                  content: [
+                    {
+                      type: "text",
+                      text: JSON.stringify({
+                        success: true,
+                        data: {
+                          serviceName: input.serverName,
+                          status: 'running',
+                          pid: existingPid,
+                          cwd: targetPath
+                        },
+                        message: `Service '${input.serverName}' is already running locally (pid=${existingPid})`
+                      }, null, 2)
+                    }
+                  ]
+                };
+              } catch (error) {
+                // Process doesn't exist, remove from tracking
+                runningProcesses.delete(input.serverName);
               }
-            } else {
-              // No package.json, try Node entry files
-              command = process.execPath; // node
-              const fallback = ['index.js', 'app.js', 'server.js']
-                .map(f => path.join(targetPath, f))
-                .find(p => fs.existsSync(p));
-              if (!fallback) {
-                throw new Error("package.json not found and no runnable entry (index.js/app.js/server.js). Cannot run locally.");
-              }
-              args = [fallback];
             }
 
             const runPort = input.runOptions?.port ?? 3000;
             const extraEnv = input.runOptions?.envParams ?? {};
-            const child = spawn(command, args, {
-              cwd: targetPath,
-              env: { ...process.env, PORT: String(runPort), ...extraEnv },
-              stdio: 'ignore',
-              detached: true
+            
+            // Set environment variables for functions-framework
+            const env = { 
+              ...process.env, 
+              PORT: String(runPort), 
+              ...extraEnv,
+              // Add functions-framework specific environment variables
+              ENABLE_CORS: 'true',
+              ALLOWED_ORIGINS: '*'
+            };
+
+            // Choose execution method based on run mode
+            let child;
+            let command;
+            
+            if (runMode === 'agent') {
+              // For Agent mode, use a different approach since functions-framework doesn't support Agent mode
+              // We'll use a custom script that sets up the Agent environment
+              command = `node -e "
+                const { runCLI } = require('@cloudbase/functions-framework');
+                process.env.PORT = '${runPort}';
+                process.env.ENABLE_CORS = 'true';
+                process.env.ALLOWED_ORIGINS = '*';
+                process.env.RUN_MODE = 'agent';
+                ${Object.entries(extraEnv).map(([key, value]) => `process.env.${key} = '${value}';`).join('\n')}
+                runCLI();
+              "`;
+              
+              child = spawn(process.execPath, ['-e', command], {
+                cwd: targetPath,
+                env,
+                stdio: ['ignore', 'pipe', 'pipe'],
+                detached: true
+              });
+            } else {
+              // Normal function mode
+              command = `node -e "
+                const { runCLI } = require('@cloudbase/functions-framework');
+                process.env.PORT = '${runPort}';
+                process.env.ENABLE_CORS = 'true';
+                process.env.ALLOWED_ORIGINS = '*';
+                ${Object.entries(extraEnv).map(([key, value]) => `process.env.${key} = '${value}';`).join('\n')}
+                runCLI();
+              "`;
+              
+              child = spawn(process.execPath, ['-e', command], {
+                cwd: targetPath,
+                env,
+                stdio: ['ignore', 'pipe', 'pipe'],
+                detached: true
+              });
+            }
+
+            // Handle process exit to clean up tracking
+            child.on('exit', (code, signal) => {
+              runningProcesses.delete(input.serverName);
+            });
+
+            child.on('error', (error) => {
+              runningProcesses.delete(input.serverName);
             });
 
             child.unref();
@@ -445,10 +740,12 @@ export function registerCloudRunTools(server: ExtendedMcpServer) {
                       status: 'running',
                       pid: child.pid,
                       port: runPort,
-                      command: [command, ...args].join(' '),
+                      runMode: runMode,
+                      isAgent: isAgent,
+                      command: command,
                       cwd: targetPath
                     },
-                    message: `Started local run for service '${input.serverName}' on port ${runPort} (pid=${child.pid})`
+                    message: `Started local run for ${runMode} service '${input.serverName}' on port ${runPort} (pid=${child.pid})`
                   }, null, 2)
                 }
               ]
@@ -465,6 +762,21 @@ export function registerCloudRunTools(server: ExtendedMcpServer) {
               targetPath: targetPath,
             });
             
+            // Generate cloudbaserc.json configuration file
+            const cloudbasercPath = path.join(targetPath, 'cloudbaserc.json');
+            const cloudbasercContent = {
+              envId: process.env.TCB_ENV_ID || '',
+              cloudrun: { 
+                name: input.serverName 
+              }
+            };
+            
+            try {
+              fs.writeFileSync(cloudbasercPath, JSON.stringify(cloudbasercContent, null, 2));
+            } catch (error) {
+              // Ignore cloudbaserc.json creation errors
+            }
+            
             return {
               content: [
                 {
@@ -474,7 +786,8 @@ export function registerCloudRunTools(server: ExtendedMcpServer) {
                     data: {
                       serviceName: input.serverName,
                       downloadPath: targetPath,
-                      filesCount: 0
+                      filesCount: 0,
+                      cloudbasercGenerated: true
                     },
                     message: `Successfully downloaded service '${input.serverName}' to ${targetPath}`
                   }, null, 2)
@@ -531,6 +844,21 @@ export function registerCloudRunTools(server: ExtendedMcpServer) {
               template: input.template,
             });
             
+            // Generate cloudbaserc.json configuration file
+            const cloudbasercPath = path.join(targetPath, input.serverName, 'cloudbaserc.json');
+            const cloudbasercContent = {
+              envId: process.env.TCB_ENV_ID || '',
+              cloudrun: { 
+                name: input.serverName 
+              }
+            };
+            
+            try {
+              fs.writeFileSync(cloudbasercPath, JSON.stringify(cloudbasercContent, null, 2));
+            } catch (error) {
+              // Ignore cloudbaserc.json creation errors
+            }
+            
             return {
               content: [
                 {
@@ -541,7 +869,8 @@ export function registerCloudRunTools(server: ExtendedMcpServer) {
                       serviceName: input.serverName,
                       template: input.template,
                       initPath: targetPath,
-                      projectDir: result.projectDir || targetPath
+                      projectDir: result.projectDir || path.join(targetPath, input.serverName),
+                      cloudbasercGenerated: true
                     },
                     message: `Successfully initialized service '${input.serverName}' with template '${input.template}' at ${targetPath}`
                   }, null, 2)

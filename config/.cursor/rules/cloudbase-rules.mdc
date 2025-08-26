@@ -14,6 +14,7 @@ alwaysApply: true
 首先需要识别当前的开发场景类型：
 - **Web 项目**：React/Vue/原生 JS 等前端项目
 - **微信小程序**：小程序云开发项目  
+- **云托管项目**：CloudBase Run 后端服务项目（支持 Java/Go/Python/Node.js/PHP/.NET 等任意语言，适合 WebSocket 长连接、长耗时任务、需要连接数据库/消息队列等场景）
 - **数据库相关**：涉及数据操作的项目
 - **UI 设计**：需要界面设计的项目
 
@@ -23,6 +24,7 @@ alwaysApply: true
 **📋 场景规则映射表（必须遵守）：**
 - **Web 项目** → 必读：`rules/web-development.mdc` + `rules/cloudbase-platform.mdc`
 - **微信小程序** → 必读：`rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc`
+- **云托管项目** → 必读：`rules/cloudrun-development.mdc` + `rules/cloudbase-platform.mdc`
 - **数据库操作** → 额外读：`rules/database.mdc`
 - **UI 设计** → 额外读：`rules/ui-design.mdc`
 
@@ -213,6 +215,11 @@ alwaysApply: true
 - 避免忽略专业规则文件的指导
 - 重要技术方案建议与用户确认
 
+### 🔄 质量保障
+如发现开发不符合规范，可以：
+- 指出具体问题点
+- 要求重新执行规则检查流程
+- 明确指定需要遵循的规则文件
 ### 🔄 质量保障
 如发现开发不符合规范，可以：
 - 指出具体问题点
