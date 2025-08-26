@@ -158,27 +158,7 @@ function validateAndNormalizePath(inputPath: string): string {
 /**
  * Format CloudRun service info for display
  */
-function formatServiceInfo(service: any) {
-  return {
-    serviceName: service.ServiceName || service.ServerName,
-    serviceType: service.ServiceType || service.ServerType,
-    status: service.Status,
-    region: service.Region,
-    createTime: service.CreateTime,
-    updateTime: service.UpdateTime,
-    cpu: service.Cpu,
-    memory: service.Mem,
-    instances: {
-      min: service.MinNum,
-      max: service.MaxNum,
-      current: service.RunningVersions?.length || 0
-    },
-    accessTypes: service.OpenAccessTypes || [],
-    ...(service.Port && { port: service.Port }),
-    ...(service.EntryPoint && { entryPoint: service.EntryPoint }),
-    ...(service.EnvParams && { envVariables: service.EnvParams }),
-  };
-}
+
 
 /**
  * Register CloudRun tools with the MCP server
@@ -238,7 +218,7 @@ export function registerCloudRunTools(server: ExtendedMcpServer) {
                   text: JSON.stringify({
                     success: true,
                     data: {
-                      services: result.ServerList?.map(formatServiceInfo) || [],
+                      services: result.ServerList || [],
                       pagination: {
                         total: result.Total || 0,
                         pageSize: input.pageSize,
@@ -279,9 +259,7 @@ export function registerCloudRunTools(server: ExtendedMcpServer) {
                   text: JSON.stringify({
                     success: true,
                     data: {
-                      service: formatServiceInfo(result),
-                      versions: (result as any).Versions || [],
-                      accessUrls: (result as any).AccessUrls || []
+                      service: result
                     },
                     message: `Retrieved details for service '${serverName}'`
                   }, null, 2)
@@ -300,8 +278,7 @@ export function registerCloudRunTools(server: ExtendedMcpServer) {
                   text: JSON.stringify({
                     success: true,
                     data: {
-                      templates: result || [],
-                      categories: []
+                      templates: result || []
                     },
                     message: `Found ${result?.length || 0} available templates`
                   }, null, 2)
