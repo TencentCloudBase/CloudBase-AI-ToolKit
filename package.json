@@ -1,6 +1,6 @@
 {
   "name": "cloudbase-ai-toolkit",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "scripts": {
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s --commit-path . --preset-config ./.versionrc.json",
     "changelog:first": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 --commit-path . --preset-config ./.versionrc.json",
