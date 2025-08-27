@@ -1903,7 +1903,7 @@ export class InteractiveServer {
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 24px;
-            white-space: pre;
+            white-space: pre-wrap;
             font-size: 15px;
             line-height: 1.6;
             color: var(--text-primary);
@@ -2546,7 +2546,7 @@ export class InteractiveServer {
             animation: fadeInUp 0.8s ease-out 0.4s both;
             position: relative;
             overflow: scroll;
-            white-space: pre;
+            white-space: pre-wrap;
             max-height: 300px;
         }
         
