@@ -6,7 +6,7 @@ export default defineConfig({
     env: {
       NODE_ENV: 'test',
       VITEST: 'true',
-      CLOUDBASE_MCP_TELEMETRY_DISABLED: 'true'
+      // CLOUDBASE_MCP_TELEMETRY_DISABLED: 'true'
     },
     // 使用 Node.js 环境进行测试
     environment: 'node',
