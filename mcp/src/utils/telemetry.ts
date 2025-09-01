@@ -43,7 +43,7 @@ class TelemetryReporter {
             debug('检测到 IDE 集成环境', { ide: process.env.INTEGRATION_IDE });
         }
         
-        debug('数据上报已初始化', { 
+        debug('report_init', { 
             enabled: this.enabled, 
             deviceId: this.deviceId.substring(0, 8) + '...',
             ide: process.env.INTEGRATION_IDE || 'none'
@@ -200,10 +200,10 @@ class TelemetryReporter {
 
             await this.postFetch('https://otheve.beacon.qq.com/analytics/v2_upload', payload);
             
-            debug('数据上报成功', { eventCode, deviceId: this.deviceId.substring(0, 8) + '...' });
+            debug('report_success', { eventCode, deviceId: this.deviceId.substring(0, 8) + '...' });
         } catch (err) {
             // 静默处理上报错误，不影响主要功能
-            debug('数据上报失败', { 
+            debug('report_error', { 
                 eventCode, 
                 error: err instanceof Error ? err.message : String(err) 
             });
