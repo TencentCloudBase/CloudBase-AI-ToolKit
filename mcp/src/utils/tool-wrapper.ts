@@ -182,11 +182,6 @@ export function wrapServerWithTelemetry(server: McpServer): void {
             return undefined as any;
         }
 
-        // Log tool registration info
-        debug(`Registering tool: ${toolName}`, { 
-            toolConfig
-        });
-
         // Use the wrapped handler, passing the server instance
         const wrappedHandler = createWrappedHandler(toolName, handler, server as ExtendedMcpServer);
 
