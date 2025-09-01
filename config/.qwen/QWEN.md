@@ -110,7 +110,7 @@ alwaysApply: true
   - _需求: 相关的需求点的编号
 
 ```
-</workflow>
+</spec_workflow>
 
 ## 🔄 开发工作流程
 
