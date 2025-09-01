@@ -77,7 +77,9 @@ const IDE_FILE_MAPPINGS: Record<string, string[]> = {
     ".windsurf/rules/cloudbase-rules.md"
   ],
   "codebuddy": [
-    ".rules/cloudbase-rules.md"
+    ".rules/cloudbase-rules.md",
+    "CODEBUDDY.md",
+    ".mcp.json"
   ],
   "claude-code": [
     "CLAUDE.md",
