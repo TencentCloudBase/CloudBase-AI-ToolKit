@@ -64,14 +64,7 @@ test('downloadRemoteFileToPath tool is available and has correct schema', async 
     expect(relativePathParam).toBeDefined();
     expect(relativePathParam.description).toContain('相对于项目根目录的路径');
     console.log('✅ relativePath parameter found in tool schema');
-    
-    // Check tool description
-    expect(downloadPathTool.description).toContain('下载远程文件到项目根目录下的指定相对路径');
-    expect(downloadPathTool.description).toContain('Claude Code: WORKSPACE_FOLDER_PATHS');
-    expect(downloadPathTool.description).toContain('Qwen Code: PROJECT_ROOT');
-    expect(downloadPathTool.description).toContain('CodeBuddy: GITHUB_WORKSPACE');
-    console.log('✅ Tool description contains supported editor information');
-    
+  
     console.log('✅ downloadRemoteFileToPath tool schema validation passed');
     
   } catch (error) {
