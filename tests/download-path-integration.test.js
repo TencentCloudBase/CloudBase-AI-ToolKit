@@ -70,7 +70,8 @@ test('downloadRemoteFileToPath tool is available and has correct schema', async 
     expect(downloadPathTool.description).toContain('Claude Code: WORKSPACE_FOLDER_PATHS');
     expect(downloadPathTool.description).toContain('Qwen Code: PROJECT_ROOT');
     expect(downloadPathTool.description).toContain('CodeBuddy: GITHUB_WORKSPACE');
-    console.log('✅ Tool description contains supported editor information');
+    expect(downloadPathTool.description).toContain('小程序的 Tabbar 等素材图片');
+    console.log('✅ Tool description contains supported editor information and usage examples');
     
     console.log('✅ downloadRemoteFileToPath tool schema validation passed');
     
