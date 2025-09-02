@@ -1,16 +1,15 @@
-import { z } from "zod";
-import * as fsPromises from "fs/promises";
-import * as fs from "fs";
-import * as path from "path";
-import * as os from "os";
 import * as crypto from "crypto";
-import * as https from "https";
+import * as fs from "fs";
+import * as fsPromises from "fs/promises";
 import * as http from "http";
-import { URL } from "url";
+import * as https from "https";
 import * as net from "net";
+import * as os from "os";
+import * as path from "path";
+import { URL } from "url";
+import { z } from "zod";
 
 import * as dns from "dns";
-import { getCloudBaseManager } from '../cloudbase-manager.js'
 import { ExtendedMcpServer } from '../server.js';
 
 // 常量定义
@@ -25,6 +24,53 @@ const ALLOWED_CONTENT_TYPES = [
   "application/zip",
   "application/x-zip-compressed"
 ];
+
+// 获取项目根目录
+function getProjectRoot(): string {
+  // 优先级：环境变量 > 当前工作目录
+  return process.env.WORKSPACE_FOLDER_PATHS || 
+         process.env.PROJECT_ROOT || 
+         process.env.GITHUB_WORKSPACE || 
+         process.env.CI_PROJECT_DIR || 
+         process.env.BUILD_SOURCESDIRECTORY || 
+         process.cwd();
+}
+
+// 验证相对路径是否安全（不允许路径遍历）
+function isPathSafe(relativePath: string): boolean {
+  // 检查是否包含路径遍历操作
+  if (relativePath.includes('..') || 
+      relativePath.includes('~') || 
+      path.isAbsolute(relativePath)) {
+    return false;
+  }
+  
+  // 检查路径是否规范化后仍然安全
+  const normalizedPath = path.normalize(relativePath);
+  if (normalizedPath.startsWith('..') || 
+      normalizedPath.startsWith('/') || 
+      normalizedPath.startsWith('\\')) {
+    return false;
+  }
+  
+  return true;
+}
+
+// 计算最终下载路径
+function calculateDownloadPath(relativePath: string): string {
+  const projectRoot = getProjectRoot();
+  const finalPath = path.join(projectRoot, relativePath);
+  
+  // 确保最终路径在项目根目录内
+  const normalizedProjectRoot = path.resolve(projectRoot);
+  const normalizedFinalPath = path.resolve(finalPath);
+  
+  if (!normalizedFinalPath.startsWith(normalizedProjectRoot)) {
+    throw new Error('相对路径超出项目根目录范围');
+  }
+  
+  return finalPath;
+}
 
 // 检查是否为内网 IP
 function isPrivateIP(ip: string): boolean {
@@ -174,7 +220,80 @@ async function isUrlAndContentTypeSafe(url: string, contentType: string): Promis
   }
 }
 
-// 下载文件
+// 下载文件到指定路径
+function downloadFileToPath(url: string, targetPath: string): Promise<{
+  filePath: string;
+  contentType: string;
+  fileSize: number;
+}> {
+  return new Promise((resolve, reject) => {
+    const client = url.startsWith('https:') ? https : http;
+    
+    client.get(url, async (res) => {
+      if (res.statusCode !== 200) {
+        reject(new Error(`HTTP Error: ${res.statusCode}`));
+        return;
+      }
+      
+      const contentType = res.headers['content-type'] || '';
+      const contentLength = parseInt(res.headers['content-length'] || '0', 10);
+      const contentDisposition = res.headers['content-disposition'];
+      
+      // 安全检查
+      if (!await isUrlAndContentTypeSafe(url, contentType)) {
+        reject(new Error('不安全的 URL 或内容类型，或者目标为内网地址'));
+        return;
+      }
+      
+      // 文件大小检查
+      if (contentLength > MAX_FILE_SIZE) {
+        reject(new Error(`文件大小 ${contentLength} 字节超过 ${MAX_FILE_SIZE} 字节限制`));
+        return;
+      }
+      
+      // 确保目标目录存在
+      const targetDir = path.dirname(targetPath);
+      try {
+        await fsPromises.mkdir(targetDir, { recursive: true });
+      } catch (error) {
+        reject(new Error(`无法创建目标目录: ${error instanceof Error ? error.message : '未知错误'}`));
+        return;
+      }
+      
+      // 创建写入流
+      const fileStream = fs.createWriteStream(targetPath);
+      let downloadedSize = 0;
+      
+      res.on('data', (chunk) => {
+        downloadedSize += chunk.length;
+        if (downloadedSize > MAX_FILE_SIZE) {
+          fileStream.destroy();
+          fsPromises.unlink(targetPath).catch(() => {});
+          reject(new Error(`文件大小超过 ${MAX_FILE_SIZE} 字节限制`));
+        }
+      });
+      
+      res.pipe(fileStream);
+      
+      fileStream.on('finish', () => {
+        resolve({
+          filePath: targetPath,
+          contentType,
+          fileSize: downloadedSize
+        });
+      });
+      
+      fileStream.on('error', (error: NodeJS.ErrnoException) => {
+        fsPromises.unlink(targetPath).catch(() => {});
+        reject(error);
+      });
+    }).on('error', (error: NodeJS.ErrnoException) => {
+      reject(error);
+    });
+  });
+}
+
+// 下载文件到临时目录（保持向后兼容）
 function downloadFile(url: string): Promise<{
   filePath: string;
   contentType: string;
@@ -244,12 +363,12 @@ function downloadFile(url: string): Promise<{
 }
 
 export function registerDownloadTools(server: ExtendedMcpServer) {
-  // downloadRemoteFile - 下载远程文件 (cloud-incompatible)
+  // downloadRemoteFile - 下载远程文件到临时目录 (cloud-incompatible)
   server.registerTool(
     "downloadRemoteFile",
     {
-      title: "下载远程文件",
-      description: "下载远程文件到本地临时文件，返回一个系统的绝对路径",
+      title: "下载远程文件到临时目录",
+      description: "下载远程文件到本地临时文件，返回一个系统的绝对路径。适用于需要临时处理文件的场景。",
       inputSchema: {
         url: z.string().describe("远程文件的 URL 地址")
       },
@@ -274,7 +393,8 @@ export function registerDownloadTools(server: ExtendedMcpServer) {
                 filePath: result.filePath,
                 contentType: result.contentType,
                 fileSize: result.fileSize,
-                message: "文件下载成功"
+                message: "文件下载成功到临时目录",
+                note: "文件保存在临时目录中，请注意及时处理"
               }, null, 2)
             }
           ]
@@ -288,6 +408,89 @@ export function registerDownloadTools(server: ExtendedMcpServer) {
                 success: false,
                 error: error.message,
                 message: "文件下载失败"
+              }, null, 2)
+            }
+          ]
+        };
+      }
+    }
+  );
+
+  // downloadRemoteFileToPath - 下载远程文件到指定路径 (cloud-incompatible)
+  server.registerTool(
+    "downloadRemoteFileToPath",
+    {
+      title: "下载远程文件到指定路径",
+      description: "下载远程文件到项目根目录下的指定相对路径。例如：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择来下载。",
+      inputSchema: {
+        url: z.string().describe("远程文件的 URL 地址"),
+        relativePath: z.string().describe("相对于项目根目录的路径，例如：'assets/images/logo.png' 或 'docs/api.md'。不允许使用 ../ 等路径遍历操作。")
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: true,
+        category: "download"
+      }
+    },
+    async ({ url, relativePath }: { url: string; relativePath: string }) => {
+      try {
+        // 验证相对路径安全性
+        if (!isPathSafe(relativePath)) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify({
+                  success: false,
+                  error: "不安全的相对路径",
+                  message: "相对路径包含路径遍历操作（../）或绝对路径，出于安全考虑已拒绝",
+                  suggestion: "请使用项目根目录下的相对路径，例如：'assets/images/logo.png'"
+                }, null, 2)
+              }
+            ]
+          };
+        }
+
+        // 计算最终下载路径
+        const targetPath = calculateDownloadPath(relativePath);
+        const projectRoot = getProjectRoot();
+        
+        console.log(`📁 项目根目录: ${projectRoot}`);
+        console.log(`📁 相对路径: ${relativePath}`);
+        console.log(`📁 最终路径: ${targetPath}`);
+        
+        // 下载文件到指定路径
+        const result = await downloadFileToPath(url, targetPath);
+        
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                success: true,
+                filePath: result.filePath,
+                relativePath: relativePath,
+                contentType: result.contentType,
+                fileSize: result.fileSize,
+                projectRoot: projectRoot,
+                message: "文件下载成功到指定路径",
+                note: `文件已保存到项目目录: ${relativePath}`
+              }, null, 2)
+            }
+          ]
+        };
+      } catch (error: any) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                success: false,
+                error: error.message,
+                message: "文件下载失败",
+                suggestion: "请检查相对路径是否正确，确保不包含 ../ 等路径遍历操作"
               }, null, 2)
             }
           ]

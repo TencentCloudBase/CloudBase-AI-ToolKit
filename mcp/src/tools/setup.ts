@@ -1,12 +1,11 @@
-import { z } from "zod";
+import AdmZip from "adm-zip";
 import * as fs from "fs";
 import * as fsPromises from "fs/promises";
-import * as path from "path";
-import * as os from "os";
-import * as https from "https";
 import * as http from "http";
-import { execSync } from "child_process";
-import AdmZip from "adm-zip";
+import * as https from "https";
+import * as os from "os";
+import * as path from "path";
+import { z } from "zod";
 import { ExtendedMcpServer } from '../server.js';
 
 
@@ -409,7 +408,7 @@ export function registerSetupTools(server: ExtendedMcpServer) {
         const workingDir = await createFilteredDirectory(extractDir, filteredFiles, ide);
 
         // 检查是否需要复制到项目目录
-        const workspaceFolder = process.env.WORKSPACE_FOLDER_PATHS;
+        const workspaceFolder = process.env.WORKSPACE_FOLDER_PATHS || process.cwd();
         let finalFiles: string[] = [];
         let createdCount = 0;
         let overwrittenCount = 0;
