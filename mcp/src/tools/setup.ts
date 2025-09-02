@@ -319,6 +319,31 @@ function filterFilesByIDE(files: string[], ide: string): string[] {
   return files.filter(file => !filesToExclude.includes(file));
 }
 
+// 创建过滤后的目录结构
+async function createFilteredDirectory(extractDir: string, filteredFiles: string[], ide: string): Promise<string> {
+  if (ide === "all") {
+    return extractDir; // 如果选择所有IDE，直接返回原目录
+  }
+  
+  // 创建新的过滤后目录
+  const filteredDir = path.join(path.dirname(extractDir), 'filtered');
+  await fsPromises.mkdir(filteredDir, { recursive: true });
+  
+  // 只复制过滤后的文件到新目录
+  for (const relativePath of filteredFiles) {
+    const srcPath = path.join(extractDir, relativePath);
+    const destPath = path.join(filteredDir, relativePath);
+    
+    // 创建目标目录
+    await fsPromises.mkdir(path.dirname(destPath), { recursive: true });
+    
+    // 复制文件
+    await fsPromises.copyFile(srcPath, destPath);
+  }
+  
+  return filteredDir;
+}
+
 export function registerSetupTools(server: ExtendedMcpServer) {
   // downloadTemplate - 下载项目模板 (cloud-incompatible)
   server.registerTool(
@@ -380,6 +405,9 @@ export function registerSetupTools(server: ExtendedMcpServer) {
         // 根据IDE类型过滤文件
         const filteredFiles = filterFilesByIDE(extractedFiles, ide);
 
+        // 创建过滤后的目录结构（当选择特定IDE时）
+        const workingDir = await createFilteredDirectory(extractDir, filteredFiles, ide);
+
         // 检查是否需要复制到项目目录
         const workspaceFolder = process.env.WORKSPACE_FOLDER_PATHS;
         let finalFiles: string[] = [];
@@ -391,7 +419,7 @@ export function registerSetupTools(server: ExtendedMcpServer) {
         if (workspaceFolder) {
           let protectedCount = 0;
           for (const relativePath of filteredFiles) {
-            const srcPath = path.join(extractDir, relativePath);
+            const srcPath = path.join(workingDir, relativePath);
             const destPath = path.join(workspaceFolder, relativePath);
             
             const copyResult = await copyFile(srcPath, destPath, overwrite, template);
@@ -416,8 +444,11 @@ export function registerSetupTools(server: ExtendedMcpServer) {
           // 添加IDE过滤信息
           const ideInfo = IDE_DESCRIPTIONS[ide] || ide;
           results.push(`✅ ${templateConfig.description} (${ideInfo}) 同步完成`);
-          results.push(`📁 临时目录: ${extractDir}`);
+          results.push(`📁 临时目录: ${workingDir}`);
           results.push(`🔍 文件过滤: ${extractedFiles.length} → ${filteredFiles.length} 个文件`);
+          if (ide !== "all") {
+            results.push(`✨ 已过滤IDE配置，仅保留 ${ideInfo} 相关文件`);
+          }
           
           const stats: string[] = [];
           if (createdCount > 0) stats.push(`新建 ${createdCount} 个文件`);
@@ -433,11 +464,14 @@ export function registerSetupTools(server: ExtendedMcpServer) {
             results.push(`🔄 覆盖模式: ${overwrite ? '启用' : '禁用'}`);
           }
         } else {
-          finalFiles = filteredFiles.map(relativePath => path.join(extractDir, relativePath));
+          finalFiles = filteredFiles.map(relativePath => path.join(workingDir, relativePath));
           const ideInfo = IDE_DESCRIPTIONS[ide] || ide;
           results.push(`✅ ${templateConfig.description} (${ideInfo}) 下载完成`);
-          results.push(`📁 保存在临时目录: ${extractDir}`);
+          results.push(`📁 保存在临时目录: ${workingDir}`);
           results.push(`🔍 文件过滤: ${extractedFiles.length} → ${filteredFiles.length} 个文件`);
+          if (ide !== "all") {
+            results.push(`✨ 已过滤IDE配置，仅保留 ${ideInfo} 相关文件`);
+          }
           results.push('💡 如需将模板（包括隐藏文件）复制到项目目录，请确保复制时包含所有隐藏文件。');
         }
 
