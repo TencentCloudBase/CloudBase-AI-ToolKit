@@ -1,6 +1,7 @@
+import fsSync from 'fs';
 import fs from 'fs/promises';
-import path from 'path';
 import os from 'os';
+import path from 'path';
 
 export enum LogLevel {
   DEBUG = 0,
@@ -45,8 +46,8 @@ class Logger {
     this.useConsole = options.console ?? false;
     this.maxLogFiles = options.maxLogFiles ?? 30; // 默认保留30天的日志
     
-    // 设置日志目录
-    this.logDir = options.logDir ?? path.join(os.tmpdir(), 'cloudbase-mcp-logs');
+    // 设置日志目录 - 使用 homedir 确保跨系统兼容
+    this.logDir = options.logDir ?? path.join(os.homedir(), '.cloudbase-mcp', 'logs');
     
     // 基础日志文件名（不含日期）
     this.baseLogFile = options.logFile ?? 'cloudbase-mcp.log';
@@ -54,8 +55,28 @@ class Logger {
     // 程序退出时确保日志写入完成
     this.setupExitHandlers();
     
-    // 异步初始化日志目录
+    // 立即尝试创建目录（同步方式）
+    this.ensureLogDirSync();
+    
+    // 异步初始化日志目录（作为备份）
     this.initLogDir();
+  }
+
+  private ensureLogDirSync() {
+    try {
+      // 使用同步方式创建目录
+      if (!fsSync.existsSync(this.logDir)) {
+        fsSync.mkdirSync(this.logDir, { recursive: true });
+        console.log(`日志目录创建成功（同步）: ${this.logDir}`);
+      } else {
+        console.log(`日志目录已存在（同步）: ${this.logDir}`);
+      }
+    } catch (error) {
+      console.error(`同步创建日志目录失败: ${this.logDir}`, error instanceof Error ? error.message : String(error));
+      // 如果同步创建失败，回退到 homedir 下的备用目录
+      this.logDir = path.join(os.homedir(), '.cloudbase-mcp', 'logs-fallback');
+      console.log(`回退到备用目录: ${this.logDir}`);
+    }
   }
 
   private async initLogDir() {
@@ -83,9 +104,9 @@ class Logger {
     } catch (error) {
       console.error(`创建日志目录失败: ${this.logDir}`, error instanceof Error ? error.message : String(error));
       
-      // 如果创建目录失败，回退到临时目录
-      const fallbackDir = os.tmpdir();
-      console.log(`回退到临时目录: ${fallbackDir}`);
+      // 如果创建目录失败，回退到 homedir 下的备用目录
+      const fallbackDir = path.join(os.homedir(), '.cloudbase-mcp', 'logs-fallback');
+      console.log(`回退到备用目录: ${fallbackDir}`);
       this.logDir = fallbackDir;
     }
   }

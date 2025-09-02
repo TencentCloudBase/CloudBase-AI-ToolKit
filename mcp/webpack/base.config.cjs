@@ -66,7 +66,7 @@ function createBaseConfig() {
       }),
     ],
     optimization: {
-      minimize: true, // 启用压缩来减小文件体积
+      minimize: false, // 启用压缩来减小文件体积
     },
     stats: {
       warnings: false, // 忽略循环依赖警告
