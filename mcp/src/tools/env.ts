@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { getCloudBaseManager, resetCloudBaseManagerCache } from '../cloudbase-manager.js'
-import { logout } from '../auth.js'
-import { clearUserEnvId, _promptAndSetEnvironmentId } from './interactive.js'
-import { debug } from '../utils/logger.js'
+import { logout } from '../auth.js';
+import { getCloudBaseManager, resetCloudBaseManagerCache } from '../cloudbase-manager.js';
 import { ExtendedMcpServer } from '../server.js';
+import { debug } from '../utils/logger.js';
+import { _promptAndSetEnvironmentId, clearUserEnvId } from './interactive.js';
 
 export function registerEnvTools(server: ExtendedMcpServer) {
   // 获取 cloudBaseOptions，如果没有则为 undefined
@@ -109,14 +109,14 @@ export function registerEnvTools(server: ExtendedMcpServer) {
     }
   );
 
-  // envQuery - 环境查询（合并 listEnvs + getEnvInfo + getEnvAuthDomains）
+  // envQuery - 环境查询（合并 listEnvs + getEnvInfo + getEnvAuthDomains + getWebsiteConfig）
   server.registerTool?.(
     "envQuery",
     {
       title: "环境查询",
-      description: "查询云开发环境相关信息，支持查询环境列表、当前环境信息和安全域名。（原工具名：listEnvs/getEnvInfo/getEnvAuthDomains，为兼容旧AI规则可继续使用这些名称）",
+      description: "查询云开发环境相关信息，支持查询环境列表、当前环境信息、安全域名和静态网站托管配置。（原工具名：listEnvs/getEnvInfo/getEnvAuthDomains/getWebsiteConfig，为兼容旧AI规则可继续使用这些名称）",
       inputSchema: {
-        action: z.enum(["list", "info", "domains"]).describe("查询类型：list=环境列表，info=当前环境信息，domains=安全域名列表")
+        action: z.enum(["list", "info", "domains", "hosting"]).describe("查询类型：list=环境列表，info=当前环境信息，domains=安全域名列表，hosting=静态网站托管配置")
       },
       annotations: {
         readOnlyHint: true,
@@ -124,7 +124,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
         category: "env"
       }
     },
-    async ({ action }: { action: "list" | "info" | "domains" }) => {
+    async ({ action }: { action: "list" | "info" | "domains" | "hosting" }) => {
       try {
         let result;
 
@@ -149,6 +149,11 @@ export function registerEnvTools(server: ExtendedMcpServer) {
           case "domains":
             const cloudbaseDomains = await getManager();
             result = await cloudbaseDomains.env.getEnvAuthDomains();
+            break;
+
+          case "hosting":
+            const cloudbaseHosting = await getManager();
+            result = await cloudbaseHosting.hosting.getWebsiteConfig();
             break;
 
           default:
