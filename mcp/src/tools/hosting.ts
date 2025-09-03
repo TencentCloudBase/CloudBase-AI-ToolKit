@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getCloudBaseManager } from '../cloudbase-manager.js'
+import { getCloudBaseManager } from '../cloudbase-manager.js';
 import { ExtendedMcpServer } from '../server.js';
 
 
@@ -79,32 +79,7 @@ export function registerHostingTools(server: ExtendedMcpServer) {
     }
   );
 
-  // getWebsiteConfig - 获取静态网站托管配置
-  server.registerTool?.(
-    "getWebsiteConfig",
-    {
-      title: "查询静态托管配置",
-      description: "获取静态网站托管配置",
-      inputSchema: {},
-      annotations: {
-        readOnlyHint: true,
-        openWorldHint: true,
-        category: "hosting"
-      }
-    },
-    async () => {
-      const cloudbase = await getManager()
-      const result = await cloudbase.hosting.getWebsiteConfig();
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
-    }
-  );
+
 
   // deleteFiles - 删除静态网站托管文件
   server.registerTool?.(
