@@ -1,6 +1,6 @@
 # MCP 工具
 
-当前包含 39 个工具。
+当前包含 40 个工具。
 
 源数据: [tools.json](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/blob/main/scripts/tools.json)
 
@@ -13,7 +13,7 @@
 <tbody>
 <tr><td><code>login</code></td><td>登录云开发环境并选择要使用的环境</td></tr>
 <tr><td><code>logout</code></td><td>退出云开发环境</td></tr>
-<tr><td><code>envQuery</code></td><td>查询云开发环境相关信息，支持查询环境列表、当前环境信息和安全域名。（原工具名：listEnvs/getEnvInfo/getEnvAuthDomains，为兼容旧AI规则可继续使用这些名称）</td></tr>
+<tr><td><code>envQuery</code></td><td>查询云开发环境相关信息，支持查询环境列表、当前环境信息、安全域名和静态网站托管配置。（原工具名：listEnvs/getEnvInfo/getEnvAuthDomains/getWebsiteConfig，为兼容旧AI规则可继续使用这些名称）</td></tr>
 <tr><td><code>envDomainManagement</code></td><td>管理云开发环境的安全域名，支持添加和删除操作。（原工具名：createEnvDomain/deleteEnvDomain，为兼容旧AI规则可继续使用这些名称）</td></tr>
 <tr><td><code>createCollection</code></td><td>管理云开发数据库集合：默认创建。可通过 action 指定 update。</td></tr>
 <tr><td><code>collectionQuery</code></td><td>数据库集合的查询操作，支持检查存在性、查看详情、列表查询；并支持索引列表与检查。（兼容旧名称）</td></tr>
@@ -34,19 +34,20 @@
 <tr><td><code>getFunctionLogDetail</code></td><td>根据 getFunctionLogs 返回的 RequestId 查询日志详情。参数 startTime、endTime、requestId，返回日志内容（LogJson 等）。仅支持 manger-node 4.4.0+。</td></tr>
 <tr><td><code>manageFunctionTriggers</code></td><td>创建或删除云函数触发器，通过 action 参数区分操作类型</td></tr>
 <tr><td><code>uploadFiles</code></td><td>上传文件到静态网站托管</td></tr>
-<tr><td><code>getWebsiteConfig</code></td><td>获取静态网站托管配置</td></tr>
 <tr><td><code>deleteFiles</code></td><td>删除静态网站托管的文件或文件夹</td></tr>
 <tr><td><code>findFiles</code></td><td>搜索静态网站托管的文件</td></tr>
 <tr><td><code>domainManagement</code></td><td>统一的域名管理工具，支持绑定、解绑、查询和修改域名配置</td></tr>
-<tr><td><code>uploadFile</code></td><td>上传文件到云存储（区别于静态网站托管，云存储更适合存储业务数据文件）</td></tr>
-<tr><td><code>downloadTemplate</code></td><td>自动下载并部署CloudBase项目模板。&lt;br/&gt;支持的模板:&lt;br/&gt;- react: React + CloudBase 全栈应用模板&lt;br/&gt;- vue: Vue + CloudBase 全栈应用模板&lt;br/&gt;- miniprogram: 微信小程序 + 云开发模板  &lt;br/&gt;- uniapp: UniApp + CloudBase 跨端应用模板&lt;br/&gt;- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置&lt;br/&gt;支持的IDE类型:&lt;br/&gt;- all: 下载所有IDE配置（默认）&lt;br/&gt;- cursor: Cursor AI编辑器&lt;br/&gt;- windsurf: WindSurf AI编辑器&lt;br/&gt;- codebuddy: CodeBuddy AI编辑器&lt;br/&gt;- claude-code: Claude Code AI编辑器&lt;br/&gt;- cline: Cline AI编辑器&lt;br/&gt;- gemini-cli: Gemini CLI&lt;br/&gt;- opencode: OpenCode AI编辑器&lt;br/&gt;- qwen-code: 通义灵码&lt;br/&gt;- baidu-comate: 百度Comate&lt;br/&gt;- openai-codex-cli: OpenAI Codex CLI&lt;br/&gt;- augment-code: Augment Code&lt;br/&gt;- github-copilot: GitHub Copilot&lt;br/&gt;- roocode: RooCode AI编辑器&lt;br/&gt;- tongyi-lingma: 通义灵码&lt;br/&gt;- trae: Trae AI编辑器&lt;br/&gt;- vscode: Visual Studio Code&lt;br/&gt;特别说明：&lt;br/&gt;- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.8.38），便于后续维护和版本追踪&lt;br/&gt;- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）</td></tr>
+<tr><td><code>queryStorage</code></td><td>查询云存储信息，支持列出目录文件、获取文件信息、获取临时下载链接等只读操作。返回的文件信息包括文件名、大小、修改时间、下载链接等。</td></tr>
+<tr><td><code>manageStorage</code></td><td>管理云存储文件，支持上传文件/目录、下载文件/目录、删除文件/目录等操作。删除操作需要设置force=true进行确认，防止误删除重要文件。</td></tr>
+<tr><td><code>downloadTemplate</code></td><td>自动下载并部署CloudBase项目模板。&lt;br/&gt;支持的模板:&lt;br/&gt;- react: React + CloudBase 全栈应用模板&lt;br/&gt;- vue: Vue + CloudBase 全栈应用模板&lt;br/&gt;- miniprogram: 微信小程序 + 云开发模板  &lt;br/&gt;- uniapp: UniApp + CloudBase 跨端应用模板&lt;br/&gt;- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置&lt;br/&gt;支持的IDE类型:&lt;br/&gt;- all: 下载所有IDE配置（默认）&lt;br/&gt;- cursor: Cursor AI编辑器&lt;br/&gt;- windsurf: WindSurf AI编辑器&lt;br/&gt;- codebuddy: CodeBuddy AI编辑器&lt;br/&gt;- claude-code: Claude Code AI编辑器&lt;br/&gt;- cline: Cline AI编辑器&lt;br/&gt;- gemini-cli: Gemini CLI&lt;br/&gt;- opencode: OpenCode AI编辑器&lt;br/&gt;- qwen-code: 通义灵码&lt;br/&gt;- baidu-comate: 百度Comate&lt;br/&gt;- openai-codex-cli: OpenAI Codex CLI&lt;br/&gt;- augment-code: Augment Code&lt;br/&gt;- github-copilot: GitHub Copilot&lt;br/&gt;- roocode: RooCode AI编辑器&lt;br/&gt;- tongyi-lingma: 通义灵码&lt;br/&gt;- trae: Trae AI编辑器&lt;br/&gt;- vscode: Visual Studio Code&lt;br/&gt;特别说明：&lt;br/&gt;- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.8.41），便于后续维护和版本追踪&lt;br/&gt;- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）</td></tr>
 <tr><td><code>interactiveDialog</code></td><td>统一的交互式对话工具，支持需求澄清和任务确认，当需要和用户确认下一步的操作的时候，可以调用这个工具的clarify，如果有敏感的操作，需要用户确认，可以调用这个工具的confirm</td></tr>
 <tr><td><code>searchWeb</code></td><td>使用联网来进行信息检索，如查询最新的新闻、文章、股价、天气等。支持自然语言查询，也可以直接输入网址获取网页内容</td></tr>
 <tr><td><code>searchKnowledgeBase</code></td><td>云开发知识库智能检索工具，支持云开发与云函数知识的向量查询</td></tr>
 <tr><td><code>queryCloudRun</code></td><td>查询云托管服务信息，支持获取服务列表、查询服务详情和获取可用模板列表。返回的服务信息包括服务名称、状态、访问类型、配置详情等。</td></tr>
 <tr><td><code>manageCloudRun</code></td><td>管理云托管服务，按开发顺序支持：初始化项目（可从模板开始，模板列表可通过 queryCloudRun 查询）、下载服务代码、本地运行（仅函数型服务）、部署代码、删除服务。部署可配置CPU、内存、实例数、访问类型等参数。删除操作需要确认，建议设置force=true。</td></tr>
 <tr><td><code>createFunctionHTTPAccess</code></td><td>创建云函数的 HTTP 访问</td></tr>
-<tr><td><code>downloadRemoteFile</code></td><td>下载远程文件到本地临时文件，返回一个系统的绝对路径</td></tr>
+<tr><td><code>downloadRemoteFile</code></td><td>下载远程文件到本地临时文件，返回一个系统的绝对路径。适用于需要临时处理文件的场景。</td></tr>
+<tr><td><code>downloadRemoteFileToPath</code></td><td>下载远程文件到项目根目录下的指定相对路径。Claude Code: WORKSPACE_FOLDER_PATHS, Qwen Code: PROJECT_ROOT, CodeBuddy: GITHUB_WORKSPACE。例如：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择来下载。</td></tr>
 <tr><td><code>readSecurityRule</code></td><td>读取指定资源（数据库集合、云函数、存储桶）的安全规则和权限类别。&lt;br/&gt;参数说明：&lt;br/&gt;- resourceType: 资源类型（database/function/storage）&lt;br/&gt;- resourceId: 资源唯一标识（集合名/函数名/桶名）</td></tr>
 <tr><td><code>writeSecurityRule</code></td><td>设置指定资源（数据库集合、云函数、存储桶）的安全规则。&lt;br/&gt;参数说明：&lt;br/&gt;- resourceType: 资源类型（database/function/storage）&lt;br/&gt;- resourceId: 资源唯一标识（集合名/函数名/桶名）&lt;br/&gt;- aclTag: 权限类别（READONLY/PRIVATE/ADMINWRITE/ADMINONLY/CUSTOM）&lt;br/&gt;- rule: 自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填</td></tr>
 <tr><td><code>activateInviteCode</code></td><td>云开发 AI编程激励计划，通过邀请码激活用户激励。</td></tr>
@@ -86,14 +87,14 @@
 ---
 
 ### `envQuery`
-查询云开发环境相关信息，支持查询环境列表、当前环境信息和安全域名。（原工具名：listEnvs/getEnvInfo/getEnvAuthDomains，为兼容旧AI规则可继续使用这些名称）
+查询云开发环境相关信息，支持查询环境列表、当前环境信息、安全域名和静态网站托管配置。（原工具名：listEnvs/getEnvInfo/getEnvAuthDomains/getWebsiteConfig，为兼容旧AI规则可继续使用这些名称）
 
 #### 参数
 
 <table>
 <thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>action</code></td><td>string</td><td>是</td><td>查询类型：list=环境列表，info=当前环境信息，domains=安全域名列表 可填写的值: "list", "info", "domains"</td></tr>
+<tr><td><code>action</code></td><td>string</td><td>是</td><td>查询类型：list=环境列表，info=当前环境信息，domains=安全域名列表，hosting=静态网站托管配置 可填写的值: "list", "info", "domains", "hosting"</td></tr>
 </tbody>
 </table>
 
@@ -516,20 +517,6 @@ classDiagram
 
 ---
 
-### `getWebsiteConfig`
-获取静态网站托管配置
-
-#### 参数
-
-<table>
-<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
-<tbody>
-<tr><td colspan="4">无</td></tr>
-</tbody>
-</table>
-
----
-
 ### `deleteFiles`
 删除静态网站托管的文件或文件夹
 
@@ -597,16 +584,35 @@ classDiagram
 
 ---
 
-### `uploadFile`
-上传文件到云存储（区别于静态网站托管，云存储更适合存储业务数据文件）
+### `queryStorage`
+查询云存储信息，支持列出目录文件、获取文件信息、获取临时下载链接等只读操作。返回的文件信息包括文件名、大小、修改时间、下载链接等。
 
 #### 参数
 
 <table>
 <thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
 <tbody>
+<tr><td><code>action</code></td><td>string</td><td>是</td><td>查询操作类型：list=列出目录下的所有文件，info=获取指定文件的详细信息，url=获取文件的临时下载链接 可填写的值: "list", "info", "url"</td></tr>
+<tr><td><code>cloudPath</code></td><td>string</td><td>是</td><td>云端文件路径，例如 files/data.txt 或 files/（目录）</td></tr>
+<tr><td><code>maxAge</code></td><td>number</td><td></td><td>临时链接有效期，单位为秒，取值范围：1-86400，默认值：3600（1小时） 默认值: 3600</td></tr>
+</tbody>
+</table>
+
+---
+
+### `manageStorage`
+管理云存储文件，支持上传文件/目录、下载文件/目录、删除文件/目录等操作。删除操作需要设置force=true进行确认，防止误删除重要文件。
+
+#### 参数
+
+<table>
+<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td><code>action</code></td><td>string</td><td>是</td><td>管理操作类型：upload=上传文件或目录，download=下载文件或目录，delete=删除文件或目录 可填写的值: "upload", "download", "delete"</td></tr>
 <tr><td><code>localPath</code></td><td>string</td><td>是</td><td>本地文件路径，建议传入绝对路径，例如 /tmp/files/data.txt</td></tr>
 <tr><td><code>cloudPath</code></td><td>string</td><td>是</td><td>云端文件路径，例如 files/data.txt</td></tr>
+<tr><td><code>force</code></td><td>boolean</td><td></td><td>强制操作开关，删除操作时建议设置为true以确认删除，默认false 默认值: false</td></tr>
+<tr><td><code>isDirectory</code></td><td>boolean</td><td></td><td>是否为目录操作，true=目录操作，false=文件操作，默认false 默认值: false</td></tr>
 </tbody>
 </table>
 
@@ -642,7 +648,7 @@ classDiagram
 - vscode: Visual Studio Code
 
 特别说明：
-- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.8.38），便于后续维护和版本追踪
+- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.8.41），便于后续维护和版本追踪
 - 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）
 
 #### 参数
@@ -785,7 +791,7 @@ classDiagram
 ---
 
 ### `downloadRemoteFile`
-下载远程文件到本地临时文件，返回一个系统的绝对路径
+下载远程文件到本地临时文件，返回一个系统的绝对路径。适用于需要临时处理文件的场景。
 
 #### 参数
 
@@ -793,6 +799,21 @@ classDiagram
 <thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
 <tbody>
 <tr><td><code>url</code></td><td>string</td><td>是</td><td>远程文件的 URL 地址</td></tr>
+</tbody>
+</table>
+
+---
+
+### `downloadRemoteFileToPath`
+下载远程文件到项目根目录下的指定相对路径。Claude Code: WORKSPACE_FOLDER_PATHS, Qwen Code: PROJECT_ROOT, CodeBuddy: GITHUB_WORKSPACE。例如：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择来下载。
+
+#### 参数
+
+<table>
+<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td><code>url</code></td><td>string</td><td>是</td><td>远程文件的 URL 地址</td></tr>
+<tr><td><code>relativePath</code></td><td>string</td><td>是</td><td>相对于项目根目录的路径，例如：'assets/images/logo.png' 或 'docs/api.md'。不允许使用 ../ 等路径遍历操作。</td></tr>
 </tbody>
 </table>
 
