@@ -30,7 +30,7 @@ const auth = app.auth();
 // 检查当前登录状态
 let loginState = await auth.getLoginState();
 
-if (loginState && loginState.isLoggedIn) {
+if (loginState && loginState.user) {
   // 已登录
   const user = await auth.getCurrentUser();
   console.log('当前用户:', user);

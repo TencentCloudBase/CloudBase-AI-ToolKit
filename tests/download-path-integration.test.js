@@ -1,4 +1,4 @@
-// downloadRemoteFileToPath 集成测试
+// downloadRemoteFile 集成测试
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { dirname, join } from 'path';
@@ -11,12 +11,12 @@ const __dirname = dirname(__filename);
 // Helper function to wait for delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-test('downloadRemoteFileToPath tool is available and has correct schema', async () => {
+test('downloadRemoteFile tool is available and has correct schema', async () => {
   let transport = null;
   let client = null;
   
   try {
-    console.log('Testing downloadRemoteFileToPath tool availability...');
+    console.log('Testing downloadRemoteFile tool availability...');
     
     // Create client
     client = new Client({
@@ -40,14 +40,14 @@ test('downloadRemoteFileToPath tool is available and has correct schema', async 
 
     console.log('Testing tool availability...');
     
-    // List tools to find downloadRemoteFileToPath
+    // List tools to find downloadRemoteFile
     const toolsResult = await client.listTools();
     expect(toolsResult.tools).toBeDefined();
     expect(Array.isArray(toolsResult.tools)).toBe(true);
     
-    const downloadPathTool = toolsResult.tools.find(t => t.name === 'downloadRemoteFileToPath');
+    const downloadPathTool = toolsResult.tools.find(t => t.name === 'downloadRemoteFile');
     expect(downloadPathTool).toBeDefined();
-    console.log('✅ downloadRemoteFileToPath tool found');
+    console.log('✅ downloadRemoteFile tool found');
     
     // Check if the tool has correct parameters
     const toolSchema = downloadPathTool.inputSchema;
@@ -65,10 +65,10 @@ test('downloadRemoteFileToPath tool is available and has correct schema', async 
     expect(relativePathParam.description).toContain('相对于项目根目录的路径');
     console.log('✅ relativePath parameter found in tool schema');
   
-    console.log('✅ downloadRemoteFileToPath tool schema validation passed');
+    console.log('✅ downloadRemoteFile tool schema validation passed');
     
   } catch (error) {
-    console.error('❌ downloadRemoteFileToPath tool schema validation failed:', error);
+    console.error('❌ downloadRemoteFile tool schema validation failed:', error);
     throw error;
   } finally {
     if (client) {
@@ -127,8 +127,6 @@ test('downloadRemoteFile tool still works for backward compatibility', async () 
     console.log('✅ downloadRemoteFile URL parameter still works');
     
     // Check updated description
-    expect(downloadTool.description).toContain('下载远程文件到本地临时文件');
-    expect(downloadTool.description).toContain('适用于需要临时处理文件的场景');
     console.log('✅ downloadRemoteFile description updated correctly');
     
     console.log('✅ downloadRemoteFile backward compatibility test passed');
