@@ -95,7 +95,11 @@ export function shouldRegisterTool(toolName: string): boolean {
     'clearUserEnvId',
     
     // Interactive tools - local server and file operations
-    'interactiveDialog'
+    'interactiveDialog',
+    // CloudRun tools - local file operations
+    'manageCloudRun',
+    // Download tools - local file downloads
+    'manageStorage',
   ];
 
   const shouldRegister = !cloudIncompatibleTools.includes(toolName);
