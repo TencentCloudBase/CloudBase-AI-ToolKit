@@ -1,6 +1,6 @@
 # CloudBase AI ToolKit - AI-Powered Cloud Development Platform
 
-![CloudBase AI ToolKit](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/cloudbase-ai-toolkit.png)
+![CloudBase AI ToolKit](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit/-/git/raw/main/scripts/assets/toolkit-better.gif)
 
 ## 🚀 Turn AI Prompts into Deployable Applications
 
