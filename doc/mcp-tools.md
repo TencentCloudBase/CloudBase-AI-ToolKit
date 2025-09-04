@@ -1,6 +1,6 @@
 # MCP 工具
 
-当前包含 40 个工具。
+当前包含 39 个工具。
 
 源数据: [tools.json](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/blob/main/scripts/tools.json)
 
@@ -46,8 +46,7 @@
 <tr><td><code>queryCloudRun</code></td><td>查询云托管服务信息，支持获取服务列表、查询服务详情和获取可用模板列表。返回的服务信息包括服务名称、状态、访问类型、配置详情等。</td></tr>
 <tr><td><code>manageCloudRun</code></td><td>管理云托管服务，按开发顺序支持：初始化项目（可从模板开始，模板列表可通过 queryCloudRun 查询）、下载服务代码、本地运行（仅函数型服务）、部署代码、删除服务。部署可配置CPU、内存、实例数、访问类型等参数。删除操作需要确认，建议设置force=true。</td></tr>
 <tr><td><code>createFunctionHTTPAccess</code></td><td>创建云函数的 HTTP 访问</td></tr>
-<tr><td><code>downloadRemoteFile</code></td><td>下载远程文件到本地临时文件，返回一个系统的绝对路径。适用于需要临时处理文件的场景。</td></tr>
-<tr><td><code>downloadRemoteFileToPath</code></td><td>下载远程文件到项目根目录下的指定相对路径。Claude Code: WORKSPACE_FOLDER_PATHS, Qwen Code: PROJECT_ROOT, CodeBuddy: GITHUB_WORKSPACE。例如：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择来下载。</td></tr>
+<tr><td><code>downloadRemoteFile</code></td><td>下载远程文件到项目根目录下的指定相对路径。例如：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择来下载。</td></tr>
 <tr><td><code>readSecurityRule</code></td><td>读取指定资源（数据库集合、云函数、存储桶）的安全规则和权限类别。&lt;br/&gt;参数说明：&lt;br/&gt;- resourceType: 资源类型（database/function/storage）&lt;br/&gt;- resourceId: 资源唯一标识（集合名/函数名/桶名）</td></tr>
 <tr><td><code>writeSecurityRule</code></td><td>设置指定资源（数据库集合、云函数、存储桶）的安全规则。&lt;br/&gt;参数说明：&lt;br/&gt;- resourceType: 资源类型（database/function/storage）&lt;br/&gt;- resourceId: 资源唯一标识（集合名/函数名/桶名）&lt;br/&gt;- aclTag: 权限类别（READONLY/PRIVATE/ADMINWRITE/ADMINONLY/CUSTOM）&lt;br/&gt;- rule: 自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填</td></tr>
 <tr><td><code>activateInviteCode</code></td><td>云开发 AI编程激励计划，通过邀请码激活用户激励。</td></tr>
@@ -791,21 +790,7 @@ classDiagram
 ---
 
 ### `downloadRemoteFile`
-下载远程文件到本地临时文件，返回一个系统的绝对路径。适用于需要临时处理文件的场景。
-
-#### 参数
-
-<table>
-<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
-<tbody>
-<tr><td><code>url</code></td><td>string</td><td>是</td><td>远程文件的 URL 地址</td></tr>
-</tbody>
-</table>
-
----
-
-### `downloadRemoteFileToPath`
-下载远程文件到项目根目录下的指定相对路径。Claude Code: WORKSPACE_FOLDER_PATHS, Qwen Code: PROJECT_ROOT, CodeBuddy: GITHUB_WORKSPACE。例如：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择来下载。
+下载远程文件到项目根目录下的指定相对路径。例如：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择来下载。
 
 #### 参数
 

@@ -363,65 +363,11 @@ function downloadFile(url: string): Promise<{
 }
 
 export function registerDownloadTools(server: ExtendedMcpServer) {
-  // downloadRemoteFile - 下载远程文件到临时目录 (cloud-incompatible)
   server.registerTool(
     "downloadRemoteFile",
     {
-      title: "下载远程文件到临时目录",
-      description: "下载远程文件到本地临时文件，返回一个系统的绝对路径。适用于需要临时处理文件的场景。",
-      inputSchema: {
-        url: z.string().describe("远程文件的 URL 地址")
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-        openWorldHint: true,
-        category: "download"
-      }
-    },
-    async ({ url }: { url: string }) => {
-      try {
-        const result = await downloadFile(url);
-        
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify({
-                success: true,
-                filePath: result.filePath,
-                contentType: result.contentType,
-                fileSize: result.fileSize,
-                message: "文件下载成功到临时目录",
-                note: "文件保存在临时目录中，请注意及时处理"
-              }, null, 2)
-            }
-          ]
-        };
-      } catch (error: any) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify({
-                success: false,
-                error: error.message,
-                message: "文件下载失败"
-              }, null, 2)
-            }
-          ]
-        };
-      }
-    }
-  );
-
-  // downloadRemoteFileToPath - 下载远程文件到指定路径 (cloud-incompatible)
-  server.registerTool(
-    "downloadRemoteFileToPath",
-    {
       title: "下载远程文件到指定路径",
-      description: "下载远程文件到项目根目录下的指定相对路径。Claude Code: WORKSPACE_FOLDER_PATHS, Qwen Code: PROJECT_ROOT, CodeBuddy: GITHUB_WORKSPACE。例如：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择来下载。",
+      description: "下载远程文件到项目根目录下的指定相对路径。例如：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择来下载。",
       inputSchema: {
         url: z.string().describe("远程文件的 URL 地址"),
         relativePath: z.string().describe("相对于项目根目录的路径，例如：'assets/images/logo.png' 或 'docs/api.md'。不允许使用 ../ 等路径遍历操作。")

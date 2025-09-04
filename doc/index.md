@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![CloudBase AI ToolKit](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/cloudbase-ai-toolkit.png)
+![CloudBase AI ToolKit](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit/-/git/raw/main/scripts/assets/toolkit-better.gif)
 
 **
 🪐 用 AI IDE 一键生成、部署和托管你的全栈 Web 应用与小程序、数据库和后端服务，无需运维，极速上线你的创意 💫**
@@ -48,6 +48,9 @@
 🚩 **快速上手 CloudBase AI ToolKit**
 
 ## 🚀 推荐方式：CloudBase AI CLI（最简单）
+
+
+![](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit/-/git/raw/main/scripts/assets/cli-better.gif)
 
 CloudBase AI CLI 是一个集成多种主流 AI 编程工具的统一命令行工具，支持内置模型和自定义模型，让你能够通过一个简单的命令使用 Claude Code、OpenAI Codex、aider、Qwen Code 等 AI 编程助手，同时内置 CloudBase AI Toolkit，支持从开发到部署的完整流程，支持在任意环境中运行。
 

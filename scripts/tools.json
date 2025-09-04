@@ -1757,25 +1757,7 @@
     },
     {
       "name": "downloadRemoteFile",
-      "description": "下载远程文件到本地临时文件，返回一个系统的绝对路径。适用于需要临时处理文件的场景。",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "description": "远程文件的 URL 地址"
-          }
-        },
-        "required": [
-          "url"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "downloadRemoteFileToPath",
-      "description": "下载远程文件到项目根目录下的指定相对路径。Claude Code: WORKSPACE_FOLDER_PATHS, Qwen Code: PROJECT_ROOT, CodeBuddy: GITHUB_WORKSPACE。例如：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择来下载。",
+      "description": "下载远程文件到项目根目录下的指定相对路径。例如：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择来下载。",
       "inputSchema": {
         "type": "object",
         "properties": {
