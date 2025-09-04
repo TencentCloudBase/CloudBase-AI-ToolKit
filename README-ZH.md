@@ -1,7 +1,7 @@
 <div align="center">
 
 
-![](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/cloudbase-ai-toolkit.png)
+![](scripts/assets/toolkit-better.gif)
 
 
 # 🌟 CloudBase AI ToolKit
@@ -78,6 +78,9 @@ CloudBase AI CLI 是一个集成多种主流 AI 编程工具的统一命令行�
 - 🌍 **无处不在** - 可在任意环境中运行，包括小程序开发者工具、VS Code、GitHub Actions 等
 
 **一键安装**
+
+![](scripts/assets/cli-better.gif)
+
 ```bash
 # Mac/Linux/Windows 的 WSL
 curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
