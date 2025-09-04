@@ -39,7 +39,7 @@
     },
     {
       "name": "envQuery",
-      "description": "查询云开发环境相关信息，支持查询环境列表、当前环境信息和安全域名。（原工具名：listEnvs/getEnvInfo/getEnvAuthDomains，为兼容旧AI规则可继续使用这些名称）",
+      "description": "查询云开发环境相关信息，支持查询环境列表、当前环境信息、安全域名和静态网站托管配置。（原工具名：listEnvs/getEnvInfo/getEnvAuthDomains/getWebsiteConfig，为兼容旧AI规则可继续使用这些名称）",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -48,9 +48,10 @@
             "enum": [
               "list",
               "info",
-              "domains"
+              "domains",
+              "hosting"
             ],
-            "description": "查询类型：list=环境列表，info=当前环境信息，domains=安全域名列表"
+            "description": "查询类型：list=环境列表，info=当前环境信息，domains=安全域名列表，hosting=静态网站托管配置"
           }
         },
         "required": [
@@ -1055,16 +1056,6 @@
       }
     },
     {
-      "name": "getWebsiteConfig",
-      "description": "获取静态网站托管配置",
-      "inputSchema": {
-        "type": "object",
-        "properties": {},
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
       "name": "deleteFiles",
       "description": "删除静态网站托管的文件或文件夹",
       "inputSchema": {
@@ -1261,11 +1252,55 @@
       }
     },
     {
-      "name": "uploadFile",
-      "description": "上传文件到云存储（区别于静态网站托管，云存储更适合存储业务数据文件）",
+      "name": "queryStorage",
+      "description": "查询云存储信息，支持列出目录文件、获取文件信息、获取临时下载链接等只读操作。返回的文件信息包括文件名、大小、修改时间、下载链接等。",
       "inputSchema": {
         "type": "object",
         "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "list",
+              "info",
+              "url"
+            ],
+            "description": "查询操作类型：list=列出目录下的所有文件，info=获取指定文件的详细信息，url=获取文件的临时下载链接"
+          },
+          "cloudPath": {
+            "type": "string",
+            "description": "云端文件路径，例如 files/data.txt 或 files/（目录）"
+          },
+          "maxAge": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 86400,
+            "default": 3600,
+            "description": "临时链接有效期，单位为秒，取值范围：1-86400，默认值：3600（1小时）"
+          }
+        },
+        "required": [
+          "action",
+          "cloudPath"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "manageStorage",
+      "description": "管理云存储文件，支持上传文件/目录、下载文件/目录、删除文件/目录等操作。删除操作需要设置force=true进行确认，防止误删除重要文件。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "upload",
+              "download",
+              "delete"
+            ],
+            "description": "管理操作类型：upload=上传文件或目录，download=下载文件或目录，delete=删除文件或目录"
+          },
           "localPath": {
             "type": "string",
             "description": "本地文件路径，建议传入绝对路径，例如 /tmp/files/data.txt"
@@ -1273,9 +1308,20 @@
           "cloudPath": {
             "type": "string",
             "description": "云端文件路径，例如 files/data.txt"
+          },
+          "force": {
+            "type": "boolean",
+            "default": false,
+            "description": "强制操作开关，删除操作时建议设置为true以确认删除，默认false"
+          },
+          "isDirectory": {
+            "type": "boolean",
+            "default": false,
+            "description": "是否为目录操作，true=目录操作，false=文件操作，默认false"
           }
         },
         "required": [
+          "action",
           "localPath",
           "cloudPath"
         ],
@@ -1285,7 +1331,7 @@
     },
     {
       "name": "downloadTemplate",
-      "description": "自动下载并部署CloudBase项目模板。\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n支持的IDE类型:\n- all: 下载所有IDE配置（默认）\n- cursor: Cursor AI编辑器\n- windsurf: WindSurf AI编辑器\n- codebuddy: CodeBuddy AI编辑器\n- claude-code: Claude Code AI编辑器\n- cline: Cline AI编辑器\n- gemini-cli: Gemini CLI\n- opencode: OpenCode AI编辑器\n- qwen-code: 通义灵码\n- baidu-comate: 百度Comate\n- openai-codex-cli: OpenAI Codex CLI\n- augment-code: Augment Code\n- github-copilot: GitHub Copilot\n- roocode: RooCode AI编辑器\n- tongyi-lingma: 通义灵码\n- trae: Trae AI编辑器\n- vscode: Visual Studio Code\n\n特别说明：\n- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.8.38），便于后续维护和版本追踪\n- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）",
+      "description": "自动下载并部署CloudBase项目模板。\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n支持的IDE类型:\n- all: 下载所有IDE配置（默认）\n- cursor: Cursor AI编辑器\n- windsurf: WindSurf AI编辑器\n- codebuddy: CodeBuddy AI编辑器\n- claude-code: Claude Code AI编辑器\n- cline: Cline AI编辑器\n- gemini-cli: Gemini CLI\n- opencode: OpenCode AI编辑器\n- qwen-code: 通义灵码\n- baidu-comate: 百度Comate\n- openai-codex-cli: OpenAI Codex CLI\n- augment-code: Augment Code\n- github-copilot: GitHub Copilot\n- roocode: RooCode AI编辑器\n- tongyi-lingma: 通义灵码\n- trae: Trae AI编辑器\n- vscode: Visual Studio Code\n\n特别说明：\n- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.8.41），便于后续维护和版本追踪\n- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1711,7 +1757,7 @@
     },
     {
       "name": "downloadRemoteFile",
-      "description": "下载远程文件到本地临时文件，返回一个系统的绝对路径",
+      "description": "下载远程文件到本地临时文件，返回一个系统的绝对路径。适用于需要临时处理文件的场景。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1722,6 +1768,29 @@
         },
         "required": [
           "url"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "downloadRemoteFileToPath",
+      "description": "下载远程文件到项目根目录下的指定相对路径。Claude Code: WORKSPACE_FOLDER_PATHS, Qwen Code: PROJECT_ROOT, CodeBuddy: GITHUB_WORKSPACE。例如：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择来下载。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "远程文件的 URL 地址"
+          },
+          "relativePath": {
+            "type": "string",
+            "description": "相对于项目根目录的路径，例如：'assets/images/logo.png' 或 'docs/api.md'。不允许使用 ../ 等路径遍历操作。"
+          }
+        },
+        "required": [
+          "url",
+          "relativePath"
         ],
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"

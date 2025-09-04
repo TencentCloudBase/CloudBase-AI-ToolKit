@@ -1,6 +1,6 @@
 <div align="center">
 
-![](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/banner-en%20(1).png)
+![](scripts/assets/toolkit-better.gif)
 
 # 🌟 CloudBase AI ToolKit
 
@@ -72,6 +72,9 @@ CloudBase AI CLI is a unified command-line tool that integrates multiple mainstr
 - 🌍 **Everywhere** - Can run in any environment, including mini-program developer tools, VS Code, GitHub Actions, etc.
 
 **One-Click Installation**
+
+![](scripts/assets/cli-better.gif)
+
 ```bash
 # Mac/Linux/Windows WSL
 curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
