@@ -1,12 +1,12 @@
-import { z } from "zod";
-import { getInteractiveServer } from "../interactive-server.js";
-import { getCloudBaseManager } from '../cloudbase-manager.js';
-import { getLoginState } from '../auth.js';
-import { debug, info, warn, error } from '../utils/logger.js';
 import fs from 'fs/promises';
-import path from 'path';
 import os from 'os';
+import path from 'path';
+import { z } from "zod";
+import { getLoginState } from '../auth.js';
+import { getCloudBaseManager } from '../cloudbase-manager.js';
+import { getInteractiveServer } from "../interactive-server.js";
 import { ExtendedMcpServer } from '../server.js';
+import { debug, warn } from '../utils/logger.js';
 
 
 export function registerInteractiveTools(server: ExtendedMcpServer) {

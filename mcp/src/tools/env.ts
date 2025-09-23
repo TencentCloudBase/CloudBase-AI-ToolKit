@@ -38,10 +38,6 @@ export function registerEnvTools(server: ExtendedMcpServer) {
           return { content: [{ type: "text", text: error }] };
         }
 
-        if (noEnvs) {
-          return { content: [{ type: "text", text: "当前账户下暂无可用的云开发环境，请先在腾讯云控制台创建环境 https://tcb.cloud.tencent.com/dev?from=AIToolkit" }] };
-        }
-
         if (cancelled) {
           return { content: [{ type: "text", text: "用户取消了登录" }] };
         }
@@ -131,12 +127,12 @@ export function registerEnvTools(server: ExtendedMcpServer) {
         switch (action) {
           case "list":
             try {
-              const cloudbaseList = await getCloudBaseManager({ cloudBaseOptions, requireEnvId: false });
+              const cloudbaseList = await getCloudBaseManager({ cloudBaseOptions, requireEnvId: true });
               result = await cloudbaseList.env.listEnvs();
             } catch (error) {
               debug('获取环境列表时出错:', error);
               return { content: 
-                [{ type: "text", text: "当前账户下暂无可用的云开发环境，请先在腾讯云控制台创建环境 https://tcb.cloud.tencent.com/dev?from=AIToolkit \n错误信息:" + (error instanceof Error ? error.message : String(error)) }] 
+                [{ type: "text", text: "获取环境列表时出错: " + (error instanceof Error ? error.message : String(error)) }] 
               };
             }
             break;
