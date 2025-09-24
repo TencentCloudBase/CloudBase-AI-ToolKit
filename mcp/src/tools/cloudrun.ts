@@ -10,7 +10,7 @@ export const CLOUDRUN_SERVICE_TYPES = ['function', 'container'] as const;
 export type CloudRunServiceType = typeof CLOUDRUN_SERVICE_TYPES[number];
 
 // CloudRun access types
-export const CLOUDRUN_ACCESS_TYPES = ['WEB', 'VPC', 'PRIVATE'] as const;
+export const CLOUDRUN_ACCESS_TYPES = ['OA', 'PUBLIC', 'MINIAPP', 'VPC'] as const;
 export type CloudRunAccessType = typeof CLOUDRUN_ACCESS_TYPES[number];
 
 // Input schema for queryCloudRun tool
@@ -35,18 +35,24 @@ const ManageCloudRunInputSchema = {
   // Deploy operation parameters
   targetPath: z.string().optional().describe('本地代码路径，必须是绝对路径。在deploy操作中指定要部署的代码目录，在download操作中指定下载目标目录，在init操作中指定云托管服务的上级目录（会在该目录下创建以serverName命名的子目录）。建议约定：项目根目录下的cloudrun/目录，例如：/Users/username/projects/my-project/cloudrun'),
   serverConfig: z.object({
-    OpenAccessTypes: z.array(z.enum(CLOUDRUN_ACCESS_TYPES)).optional().describe('公网访问类型配置，控制服务的访问权限：WEB=公网访问（默认，可通过HTTPS域名访问），VPC=私有网络访问（仅同VPC内可访问），PRIVATE=内网访问（仅云开发环境内可访问）。可配置多个类型'),
+    OpenAccessTypes: z.array(z.enum(CLOUDRUN_ACCESS_TYPES)).optional().describe('公网访问类型配置，控制服务的访问权限：OA=办公网访问，PUBLIC=公网访问（默认，可通过HTTPS域名访问），MINIAPP=小程序访问，VPC=VPC访问（仅同VPC内可访问）。可配置多个类型'),
     Cpu: z.number().positive().optional().describe('CPU规格配置，单位为核。可选值：0.25、0.5、1、2、4、8等。注意：内存规格必须是CPU规格的2倍（如CPU=0.25时内存=0.5，CPU=1时内存=2）。影响服务性能和计费'),
     Mem: z.number().positive().optional().describe('内存规格配置，单位为GB。可选值：0.5、1、2、4、8、16等。注意：必须是CPU规格的2倍。影响服务性能和计费'),
     MinNum: z.number().min(0).optional().describe('最小实例数配置，控制服务的最小运行实例数量。设置为0时支持缩容到0（无请求时不产生费用），设置为大于0时始终保持指定数量的实例运行（确保快速响应但会增加成本）。建议设置为1以降低冷启动延迟，提升用户体验'),
     MaxNum: z.number().min(1).optional().describe('最大实例数配置，控制服务的最大运行实例数量。当请求量增加时，服务最多可以扩展到指定数量的实例，超过此数量后将拒绝新的请求。建议根据业务峰值设置'),
+    PolicyDetails: z.array(z.object({
+      PolicyType: z.enum(['cpu', 'mem', 'cpu/mem']).describe('扩缩容类型：cpu=基于CPU使用率扩缩容，mem=基于内存使用率扩缩容，cpu/mem=基于CPU和内存使用率扩缩容'),
+      PolicyThreshold: z.number().min(1).max(100).describe('扩缩容阈值，单位为百分比。如60表示当资源使用率达到60%时触发扩缩容')
+    })).optional().describe('扩缩容配置数组，用于配置服务的自动扩缩容策略。可配置多个扩缩容策略'),
+    CustomLogs: z.string().optional().describe('自定义日志配置，用于配置服务的日志收集和存储策略'),
     Port: z.number().min(1).max(65535).optional().describe('服务监听端口配置。函数型服务固定为3000，容器型服务可自定义。服务代码必须监听此端口才能正常接收请求'),
-    EnvParams: z.record(z.string()).optional().describe('环境变量配置，用于传递配置信息给服务代码。格式为键值对，如{"DATABASE_URL":"mysql://..."}。敏感信息建议使用环境变量而非硬编码'),
+    EnvParams: z.string().optional().describe('环境变量配置，JSON字符串格式。用于传递配置信息给服务代码，如\'{"DATABASE_URL":"mysql://...","NODE_ENV":"production"}\'。敏感信息建议使用环境变量而非硬编码'),
     Dockerfile: z.string().optional().describe('Dockerfile文件名配置，仅容器型服务需要。指定用于构建容器镜像的Dockerfile文件路径，默认为项目根目录下的Dockerfile'),
     BuildDir: z.string().optional().describe('构建目录配置，指定代码构建的目录路径。当代码结构与标准不同时使用，默认为项目根目录'),
-    InternalAccess: z.boolean().optional().describe('内网访问开关配置，控制是否启用内网访问。true=启用内网访问（可通过云开发SDK直接调用），false=关闭内网访问（仅公网访问）'),
-    EntryPoint: z.string().optional().describe('Dockerfile EntryPoint参数配置，仅容器型服务需要。指定容器启动时的入口程序，如["node","app.js"]'),
-    Cmd: z.string().optional().describe('Dockerfile Cmd参数配置，仅容器型服务需要。指定容器启动时的默认命令，如["npm","start"]'),
+    InternalAccess: z.string().optional().describe('内网访问开关配置，控制是否启用内网访问。true=启用内网访问（可通过云开发SDK直接调用），false=关闭内网访问（仅公网访问）'),
+    InternalDomain: z.string().optional().describe('内网域名配置，用于配置服务的内网访问域名。仅在启用内网访问时有效'),
+    EntryPoint: z.array(z.string()).optional().describe('Dockerfile EntryPoint参数配置，仅容器型服务需要。指定容器启动时的入口程序数组，如["node","app.js"]'),
+    Cmd: z.array(z.string()).optional().describe('Dockerfile Cmd参数配置，仅容器型服务需要。指定容器启动时的默认命令数组，如["npm","start"]'),
   }).optional().describe('服务配置项，用于部署时设置服务的运行参数。包括资源规格、访问权限、环境变量等配置。不提供时使用默认配置'),
   
   // Init operation parameters
@@ -575,7 +581,7 @@ for await (let x of res.textStream) {
             
             // Add server configuration if provided
             if (input.serverConfig) {
-              Object.assign(deployParams, input.serverConfig);
+              deployParams.serverConfig = input.serverConfig;
             }
             
             const result = await cloudrunService.deploy(deployParams);
