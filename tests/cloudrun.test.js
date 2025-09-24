@@ -1,9 +1,9 @@
 // CloudRun plugin integration tests
-import { test, expect, describe, beforeAll, afterAll } from 'vitest';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
-import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -350,7 +350,7 @@ describe('CloudRun Plugin Unit Tests', () => {
       Mem: 1,
       MinNum: 1,
       MaxNum: 10,
-      OpenAccessTypes: ['WEB'],
+      OpenAccessTypes: ['PUBLIC'],
       Port: 3000,
       EntryPoint: 'index.js',
       EnvParams: { NODE_ENV: 'production' }
@@ -373,7 +373,7 @@ describe('CloudRun Plugin Unit Tests', () => {
 
   test('CloudRun service types are correctly defined', () => {
     const expectedServiceTypes = ['function', 'container'];
-    const expectedAccessTypes = ['WEB', 'VPC', 'PRIVATE'];
+    const expectedAccessTypes = ['OA', 'PUBLIC', 'MINIAPP', 'VPC'];
 
     expectedServiceTypes.forEach(type => {
       expect(typeof type).toBe('string');
