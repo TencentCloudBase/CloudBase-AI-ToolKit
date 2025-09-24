@@ -1,5 +1,5 @@
 ---
-description: 云开发云数据库（NoSQL）参考指南
+description: 云开发云数据库（NoSQL）参考指南，涉及到 CloudBase 的 db 数据库集合必须参考这个
 alwaysApply: false
 ---
 # 数据库操作规则

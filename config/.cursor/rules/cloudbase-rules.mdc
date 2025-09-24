@@ -30,9 +30,10 @@ alwaysApply: true
 
 **📋 场景规则映射表（必须遵守）：**
 - **Web 项目** → 必读：`rules/web-development.mdc` + `rules/cloudbase-platform.mdc`
-- **微信小程序** → 必读：`rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc`
-- **云托管项目** → 必读：`rules/cloudrun-development.mdc` + `rules/cloudbase-platform.mdc`
+- **微信小程序（小程序+ CloudBase）** → 必读：`rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc`
+- **云托管项目（部署后端服务）** → 必读：`rules/cloudrun-development.mdc` + `rules/cloudbase-platform.mdc`
 - **数据库操作** → 额外读：`rules/database.mdc`
+- **MySQL数据库操作** → 额外读：`rules/data-model-creation.mdc`
 - **UI 设计** → 额外读：`rules/ui-design.mdc`
 
 ### 3. 开发确认
@@ -135,7 +136,9 @@ alwaysApply: true
 ### 部署流程
 1. **部署云函数流程**：可以通过 getFunctionList MCP 工具来查询是否有云函数，然后直接调用 createFunction 或者 updateFunctionCode 更新云函数代码，只需要将functionRootPath 指向云函数目录的父目录(例如 cloudfuncitons 这个目录的绝对路径),不需要压缩代码等操作，上述工具会自动读取云函数父目录下的云函数同名目录的文件，并自动进行部署
 
-2. **部署静态托管流程**：通过使用 uploadFiles 工具部署，部署完毕后提醒用户 CDN 有几分钟缓存，可以生成一个带有随机 queryString 的markdown 格式 访问链接
+2. **部署云托管流程**：对于非云函数的后端服务（Java、Go、PHP、Python、Node.js等），使用 manageCloudRun 工具进行部署。确保后端代码支持 CORS，准备好 Dockerfile，然后调用 manageCloudRun 进行容器化部署
+
+3. **部署静态托管流程**：通过使用 uploadFiles 工具部署，部署完毕后提醒用户 CDN 有几分钟缓存，可以生成一个带有随机 queryString 的markdown 格式 访问链接
 
 
 ### 文档生成规则

@@ -1,5 +1,5 @@
-import  { AuthSupevisor } from  '@cloudbase/toolbox'
-import { debug,error } from './utils/logger.js';
+import { AuthSupevisor } from '@cloudbase/toolbox';
+import { debug } from './utils/logger.js';
 
 const auth = AuthSupevisor.getInstance({
 })
@@ -23,9 +23,9 @@ export async function getLoginState() {
     
     const loginState = await auth.getLoginState()
     if (!loginState) {
-        debug('loginByApiSecret')
        await auth.loginByWebAuth({})
        const loginState = await auth.getLoginState()
+       debug('loginByWebAuth',loginState)
        return loginState
     } else {
         return loginState

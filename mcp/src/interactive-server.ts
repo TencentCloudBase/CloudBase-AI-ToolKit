@@ -1,8 +1,8 @@
 import express from 'express';
 import http from 'http';
-import { WebSocketServer, WebSocket } from 'ws';
 import open from 'open';
-import { debug, info, warn, error, getLogs, getLoggerStatus, clearLogs } from './utils/logger.js';
+import { WebSocket, WebSocketServer } from 'ws';
+import { clearLogs, debug, error, getLoggerStatus, getLogs, info, warn } from './utils/logger.js';
 
 // 动态导入 open 模块，兼容 ESM/CJS 环境
 async function openUrl(url: string, options?: any, server?: any) {
@@ -939,8 +939,8 @@ export class InteractiveServer {
         </div>
 
         <div class="content">
-            <h1 class="content-title">选择云开发环境</h1>
-            <p class="content-subtitle">请选择您要使用的云开发环境</p>
+            <h1 class="content-title">选择 CloudBase 环境</h1>
+            <p class="content-subtitle">请选择您要使用的 CloudBase 环境</p>
             
             <div class="env-list" id="envList">
                 ${(envs || []).length > 0 ? 
@@ -957,8 +957,8 @@ export class InteractiveServer {
                     `).join('') :
                     `
                     <div class="empty-state">
-                        <h3 class="empty-title">暂无云开发环境</h3>
-                        <p class="empty-message">当前没有可用的云开发 CloudBase 环境，请新建后重新在 AI 对话中重试</p>
+                        <h3 class="empty-title">暂无 CloudBase 环境</h3>
+                        <p class="empty-message">当前没有可用的 CloudBase 环境，请新建后重新在 AI 对话中重试</p>
                         <button class="btn btn-primary create-env-btn" onclick="createNewEnv()">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 5v14M5 12h14"/>
@@ -997,7 +997,7 @@ export class InteractiveServer {
                     </svg>
                 </div>
                 <h2 class="success-title">环境配置成功！</h2>
-                <p class="success-message">已成功选择云开发环境</p>
+                <p class="success-message">已成功选择 CloudBase 环境</p>
                 <div class="selected-env-info">
                     <span class="env-label">环境 ID:</span>
                     <span class="env-value" id="selectedEnvDisplay"></span>
