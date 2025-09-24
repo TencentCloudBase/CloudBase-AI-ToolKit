@@ -8,7 +8,7 @@
 
 **用 AI IDE 一键生成、部署和托管你的全栈 Web 应用与小程序、数据库和后端服务，无需运维，极速上线你的创意**
 
-**Languages:** [English](README.md) | **中文**
+**Languages:** [English](README-EN.md) | **中文**
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
