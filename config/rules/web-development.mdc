@@ -1,5 +1,5 @@
 ---
-description: Web 前端项目开发规则
+description: Web 前端项目开发规则，开发 web 前端页面必须参考这个规则
 globs: ["**/*.html", "**/*.js", "**/*.ts", "**/*.jsx", "**/*.tsx", "**/*.vue"]
 alwaysApply: false
 ---

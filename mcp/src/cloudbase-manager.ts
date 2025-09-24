@@ -1,9 +1,9 @@
-import { getLoginState } from './auth.js'
-import { loadEnvIdFromUserConfig, saveEnvIdToUserConfig, autoSetupEnvironmentId } from './tools/interactive.js'
 import CloudBase from "@cloudbase/manager-node";
-import { debug, error } from './utils/logger.js';
+import { getLoginState } from './auth.js';
+import { autoSetupEnvironmentId, loadEnvIdFromUserConfig, saveEnvIdToUserConfig } from './tools/interactive.js';
 import { CloudBaseOptions } from './types.js';
-const ENV_ID_TIMEOUT = 600000; // 600 seconds
+import { debug, error } from './utils/logger.js';
+const ENV_ID_TIMEOUT = 60000000; // 60000 seconds
 
 // 统一的环境ID管理类
 class EnvironmentManager {

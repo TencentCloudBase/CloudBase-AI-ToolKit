@@ -1,10 +1,9 @@
-import { z } from "zod";
-import { getCloudBaseManager } from '../cloudbase-manager.js'
-import { ExtendedMcpServer } from '../server.js';
-import path from 'path';
-import fs from 'fs';
 import { spawn } from 'child_process';
-import { runCLI } from '@cloudbase/functions-framework';
+import fs from 'fs';
+import path from 'path';
+import { z } from "zod";
+import { getCloudBaseManager } from '../cloudbase-manager.js';
+import { ExtendedMcpServer } from '../server.js';
 
 // CloudRun service types
 export const CLOUDRUN_SERVICE_TYPES = ['function', 'container'] as const;
@@ -22,7 +21,7 @@ const queryCloudRunInputSchema = {
   pageSize: z.number().min(1).max(100).optional().default(10).describe('分页大小，控制每页返回的服务数量。取值范围：1-100，默认值：10。建议根据网络性能和显示需求调整'),
   pageNum: z.number().min(1).optional().default(1).describe('页码，用于分页查询。从1开始，默认值：1。配合pageSize使用可实现分页浏览'),
   serverName: z.string().optional().describe('服务名称筛选条件，支持模糊匹配。例如：输入"test"可匹配"test-service"、"my-test-app"等服务名称。留空则查询所有服务'),
-  serverType: z.enum(CLOUDRUN_SERVICE_TYPES).optional().describe('服务类型筛选条件：function=函数型云托管（简化开发模式，支持WebSocket/SSE/文件上传等特性，适合快速开发），container=容器型服务（传统容器部署模式，支持任意语言和框架，适合复杂应用）'),
+  serverType: z.enum(CLOUDRUN_SERVICE_TYPES).optional().describe('服务类型筛选条件：function=函数型云托管（仅支持Node.js，有特殊的开发要求和限制，适合简单的API服务），container=容器型服务（推荐使用，支持任意语言和框架如Java/Go/Python/PHP/.NET等，适合大多数应用场景）'),
   
   // Detail operation parameters
   detailServerName: z.string().optional().describe('要查询详细信息的服务名称。当action为detail时必需提供，必须是已存在的服务名称。可通过list操作获取可用的服务名称列表'),
@@ -39,7 +38,7 @@ const ManageCloudRunInputSchema = {
     OpenAccessTypes: z.array(z.enum(CLOUDRUN_ACCESS_TYPES)).optional().describe('公网访问类型配置，控制服务的访问权限：WEB=公网访问（默认，可通过HTTPS域名访问），VPC=私有网络访问（仅同VPC内可访问），PRIVATE=内网访问（仅云开发环境内可访问）。可配置多个类型'),
     Cpu: z.number().positive().optional().describe('CPU规格配置，单位为核。可选值：0.25、0.5、1、2、4、8等。注意：内存规格必须是CPU规格的2倍（如CPU=0.25时内存=0.5，CPU=1时内存=2）。影响服务性能和计费'),
     Mem: z.number().positive().optional().describe('内存规格配置，单位为GB。可选值：0.5、1、2、4、8、16等。注意：必须是CPU规格的2倍。影响服务性能和计费'),
-    MinNum: z.number().min(0).optional().describe('最小实例数配置，控制服务的最小运行实例数量。设置为0时支持缩容到0（无请求时不产生费用），设置为大于0时始终保持指定数量的实例运行（确保快速响应但会增加成本）'),
+    MinNum: z.number().min(0).optional().describe('最小实例数配置，控制服务的最小运行实例数量。设置为0时支持缩容到0（无请求时不产生费用），设置为大于0时始终保持指定数量的实例运行（确保快速响应但会增加成本）。建议设置为1以降低冷启动延迟，提升用户体验'),
     MaxNum: z.number().min(1).optional().describe('最大实例数配置，控制服务的最大运行实例数量。当请求量增加时，服务最多可以扩展到指定数量的实例，超过此数量后将拒绝新的请求。建议根据业务峰值设置'),
     Port: z.number().min(1).max(65535).optional().describe('服务监听端口配置。函数型服务固定为3000，容器型服务可自定义。服务代码必须监听此端口才能正常接收请求'),
     EnvParams: z.record(z.string()).optional().describe('环境变量配置，用于传递配置信息给服务代码。格式为键值对，如{"DATABASE_URL":"mysql://..."}。敏感信息建议使用环境变量而非硬编码'),
@@ -71,6 +70,7 @@ const ManageCloudRunInputSchema = {
   
   // Common parameters
   force: z.boolean().optional().default(false).describe('强制操作开关，用于跳过确认提示。默认false（需要确认），设置为true时跳过所有确认步骤。删除操作时强烈建议设置为true以避免误操作'),
+  serverType: z.enum(CLOUDRUN_SERVICE_TYPES).optional().describe('服务类型配置：function=函数型云托管（仅支持Node.js，有特殊的开发要求和限制，适合简单的API服务），container=容器型服务（推荐使用，支持任意语言和框架如Java/Go/Python/PHP/.NET等，适合大多数应用场景）。不提供时自动检测：1)现有服务类型 2)有Dockerfile→container 3)有@cloudbase/aiagent-framework依赖→function 4)其他情况→container'),
 };
 
 type queryCloudRunInput = {
@@ -89,6 +89,7 @@ type ManageCloudRunInput = {
   serverConfig?: any;
   template?: string;
   force?: boolean;
+  serverType?: CloudRunServiceType;
   runOptions?: {
     port?: number;
     envParams?: Record<string, string>;
@@ -527,19 +528,41 @@ for await (let x of res.textStream) {
               throw new Error("targetPath is required for deploy operation");
             }
             
-            // Determine service type automatically
+            // Determine service type - use input.serverType if provided, otherwise auto-detect
             let serverType: 'function' | 'container';
-            try {
-              // First try to get existing service details
-              const details = await cloudrunService.detail({ serverName: input.serverName });
-              serverType = details.BaseInfo?.ServerType || 'function';
-            } catch (e) {
-              // If service doesn't exist, determine by project structure
-              const dockerfilePath = path.join(targetPath, 'Dockerfile');
-              if (fs.existsSync(dockerfilePath)) {
-                serverType = 'container';
-              } else {
-                serverType = 'function';
+            if (input.serverType) {
+              serverType = input.serverType;
+            } else {
+              try {
+                // First try to get existing service details
+                const details = await cloudrunService.detail({ serverName: input.serverName });
+                serverType = details.BaseInfo?.ServerType || 'container';
+              } catch (e) {
+                // If service doesn't exist, determine by project structure
+                const dockerfilePath = path.join(targetPath, 'Dockerfile');
+                if (fs.existsSync(dockerfilePath)) {
+                  serverType = 'container';
+                } else {
+                  // Check if it's a Node.js function project (has package.json with specific structure)
+                  const packageJsonPath = path.join(targetPath, 'package.json');
+                  if (fs.existsSync(packageJsonPath)) {
+                    try {
+                      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+                      // If it has function-specific dependencies or scripts, treat as function
+                      if (packageJson.dependencies?.['@cloudbase/aiagent-framework'] || 
+                          packageJson.scripts?.['dev']?.includes('cloudrun run')) {
+                        serverType = 'function';
+                      } else {
+                        serverType = 'container';
+                      }
+                    } catch (parseError) {
+                      serverType = 'container';
+                    }
+                  } else {
+                    // No package.json, default to container
+                    serverType = 'container';
+                  }
+                }
               }
             }
             
