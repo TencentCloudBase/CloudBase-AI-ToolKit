@@ -40,6 +40,12 @@ MCP_TARGETS=(
     ".mcp.json"
 )
 
+# Commands 目录硬链接
+COMMANDS_SOURCE="config/.claude/commands"
+COMMANDS_TARGETS=(
+    "commands"
+)
+
 echo -e "${BLUE}🔧 CloudBase AI 配置文件硬链接修复工具${NC}"
 echo "=================================================="
 
@@ -150,3 +156,40 @@ echo -e "\n${BLUE}📋 所有硬链接文件:${NC}"
 find . -samefile "$MCP_SOURCE" | sort
 
 echo -e "\n${GREEN}✨ MCP 硬链接修复完成！现在修改任何一个文件都会同步到所有其他文件。${NC}"
+
+# 处理 Commands 目录硬链接
+echo -e "\n${BLUE}📁 处理 Commands 目录: $COMMANDS_SOURCE${NC}"
+
+# 检查源目录是否存在
+if [ ! -d "$COMMANDS_SOURCE" ]; then
+    echo -e "${RED}❌ 错误: 源目录 $COMMANDS_SOURCE 不存在${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}✅ 源目录存在: $COMMANDS_SOURCE${NC}"
+
+# 检查目标目录状态
+for target in "${COMMANDS_TARGETS[@]}"; do
+    if [ -d "$target" ]; then
+        echo -e "${YELLOW}⚠️  $target (目录已存在)${NC}"
+        echo -e "${YELLOW}❓ 是否删除现有目录并创建硬链接？ [y/N]${NC}"
+        read -r response
+        if [[ "$response" =~ ^[Yy]$ ]]; then
+            echo -e "${YELLOW}🗑️  删除现有目录: $target${NC}"
+            rm -rf "$target"
+        else
+            echo -e "${BLUE}🚫 跳过目录 $target${NC}"
+            continue
+        fi
+    fi
+    
+    # 创建硬链接
+    echo -e "${YELLOW}🔄 创建硬链接: $target${NC}"
+    if ln "$COMMANDS_SOURCE" "$target" 2>/dev/null; then
+        echo -e "${GREEN}✅ Commands 目录硬链接创建成功${NC}"
+    else
+        echo -e "${RED}❌ Commands 目录硬链接创建失败${NC}"
+    fi
+done
+
+echo -e "\n${GREEN}✨ Commands 硬链接修复完成！${NC}"

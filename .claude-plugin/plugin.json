@@ -20,5 +20,10 @@
     "miniprogram",
     "web-development"
   ],
+  "commands": [
+    "./config/.claude/commands/spec.md",
+    "./config/.claude/commands/no_spec.md",
+    "./config/.claude/commands/prototype.md"
+  ],
   "mcpServers": "./.mcp.json"
 }
