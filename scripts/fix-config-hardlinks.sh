@@ -34,28 +34,37 @@ TARGET_FILES=(
     "config/CODEBUDDY.md"
 )
 
+# MCP 配置文件硬链接
+MCP_SOURCE="config/.mcp.json"
+MCP_TARGETS=(
+    ".mcp.json"
+)
+
 echo -e "${BLUE}🔧 CloudBase AI 配置文件硬链接修复工具${NC}"
 echo "=================================================="
 
+# 处理 MCP 配置文件硬链接
+echo -e "\n${BLUE}📁 处理 MCP 配置文件: $MCP_SOURCE${NC}"
+
 # 检查源文件是否存在
-if [ ! -f "$SOURCE_FILE" ]; then
-    echo -e "${RED}❌ 错误: 源文件 $SOURCE_FILE 不存在${NC}"
+if [ ! -f "$MCP_SOURCE" ]; then
+    echo -e "${RED}❌ 错误: 源文件 $MCP_SOURCE 不存在${NC}"
     exit 1
 fi
 
-echo -e "${GREEN}✅ 源文件存在: $SOURCE_FILE${NC}"
+echo -e "${GREEN}✅ 源文件存在: $MCP_SOURCE${NC}"
 
 # 获取源文件的 inode
-SOURCE_INODE=$(ls -i "$SOURCE_FILE" | awk '{print $1}')
+SOURCE_INODE=$(ls -i "$MCP_SOURCE" | awk '{print $1}')
 echo -e "${BLUE}📋 源文件 inode: $SOURCE_INODE${NC}"
 
 # 检查当前硬链接状态
-echo -e "\n${YELLOW}🔍 检查当前硬链接状态...${NC}"
+echo -e "${YELLOW}🔍 检查 MCP 硬链接状态...${NC}"
 
 BROKEN_LINKS=()
 CORRECT_LINKS=()
 
-for target in "${TARGET_FILES[@]}"; do
+for target in "${MCP_TARGETS[@]}"; do
     if [ -f "$target" ]; then
         target_inode=$(ls -i "$target" | awk '{print $1}')
         if [ "$target_inode" = "$SOURCE_INODE" ]; then
@@ -73,7 +82,7 @@ done
 
 # 如果所有文件都正确链接，则退出
 if [ ${#BROKEN_LINKS[@]} -eq 0 ]; then
-    echo -e "\n${GREEN}🎉 所有配置文件都已正确硬链接！${NC}"
+    echo -e "\n${GREEN}🎉 所有 MCP 配置文件都已正确硬链接！${NC}"
     echo -e "${BLUE}📊 总共 $((${#CORRECT_LINKS[@]} + 1)) 个硬链接${NC}"
     exit 0
 fi
@@ -115,7 +124,7 @@ for target in "${BROKEN_LINKS[@]}"; do
     fi
     
     # 创建硬链接
-    if ln "$SOURCE_FILE" "$target" 2>/dev/null; then
+    if ln "$MCP_SOURCE" "$target" 2>/dev/null; then
         echo -e "   ${GREEN}✅ 硬链接创建成功${NC}"
         ((FIXED_COUNT++))
     else
@@ -133,11 +142,11 @@ fi
 
 # 最终验证
 echo -e "\n${BLUE}🔍 最终验证硬链接状态...${NC}"
-total_links=$(ls -l "$SOURCE_FILE" | awk '{print $2}')
+total_links=$(ls -l "$MCP_SOURCE" | awk '{print $2}')
 echo -e "${GREEN}🎉 总硬链接数: $total_links${NC}"
 
 # 显示所有链接的文件
 echo -e "\n${BLUE}📋 所有硬链接文件:${NC}"
-find config -samefile "$SOURCE_FILE" | sort
+find . -samefile "$MCP_SOURCE" | sort
 
-echo -e "\n${GREEN}✨ 硬链接修复完成！现在修改任何一个文件都会同步到所有其他文件。${NC}"
+echo -e "\n${GREEN}✨ MCP 硬链接修复完成！现在修改任何一个文件都会同步到所有其他文件。${NC}"

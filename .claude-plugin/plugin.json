@@ -1,0 +1,24 @@
+{
+  "name": "cloudbase-ai-toolkit",
+  "version": "1.8.44",
+  "description": "Tencent CloudBase MCP Server - AI-powered development toolkit for building and deploying full-stack applications, mini-programs, and cloud functions to Tencent CloudBase platform",
+  "author": {
+    "name": "TencentCloudBase",
+    "email": "bookerzhao@tencent.com",
+    "url": "https://github.com/TencentCloudBase"
+  },
+  "homepage": "https://github.com/TencentCloudBase/CloudBase-AI-ToolKit",
+  "repository": "https://github.com/TencentCloudBase/CloudBase-AI-ToolKit",
+  "license": "MIT",
+  "keywords": [
+    "cloudbase",
+    "tencent-cloud",
+    "mcp",
+    "ai-toolkit",
+    "deployment",
+    "serverless",
+    "miniprogram",
+    "web-development"
+  ],
+  "mcpServers": "./.mcp.json"
+}
