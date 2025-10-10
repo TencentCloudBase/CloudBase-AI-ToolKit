@@ -1,5 +1,6 @@
 ---
 description: 数据模型AI建模和创建专业规则，当用户需要创建和管理 MYSQL 数据库的时候必须参考此规则
+capabilities: ["data-modeling", "mysql", "mermaid", "database-design", "er-diagram", "schema-design"]
 alwaysApply: false
 ---
 # 数据模型AI建模专业规则

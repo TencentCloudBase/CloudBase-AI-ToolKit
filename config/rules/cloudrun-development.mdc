@@ -1,5 +1,6 @@
 ---
 description: 云托管（CloudBase Run）后端开发规则（函数型/容器型），当用户需要部署后端服务的时候必须参考此规则
+capabilities: ["cloudrun", "backend", "docker", "serverless", "container", "cloud-function", "deployment"]
 globs: ["**/*.js", "**/*.ts", "**/*.py", "**/*.go", "**/*.java", "**/*.php", "**/Dockerfile"]
 alwaysApply: false
 ---

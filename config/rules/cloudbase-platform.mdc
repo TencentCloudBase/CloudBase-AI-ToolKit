@@ -1,5 +1,6 @@
 ---
 description: 云开发 CloudBase 平台知识和最佳实践
+capabilities: ["cloudbase-platform", "static-hosting", "cloud-storage", "authentication", "cloud-functions", "best-practices"]
 alwaysApply: true
 ---
 

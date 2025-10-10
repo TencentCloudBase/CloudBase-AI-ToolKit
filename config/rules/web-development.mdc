@@ -1,5 +1,6 @@
 ---
 description: Web 前端项目开发规则，开发 web 前端页面必须参考这个规则
+capabilities: ["web-development", "frontend", "static-hosting", "cloudbase-sdk", "vite", "react", "vue"]
 globs: ["**/*.html", "**/*.js", "**/*.ts", "**/*.jsx", "**/*.tsx", "**/*.vue"]
 alwaysApply: false
 ---

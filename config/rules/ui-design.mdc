@@ -1,5 +1,6 @@
 ---
 description: 页面设计和UI规范，web 前端和小程序页面设计必须参考这个
+capabilities: ["ui-design", "ux", "prototype", "interface-design", "styling", "responsive-design"]
 globs: ["**/*.css", "**/*.scss", "**/*.less", "**/*.wxml", "**/*.html", "**/*.vue", "**/*.jsx", "**/*.tsx"]
 alwaysApply: false
 ---

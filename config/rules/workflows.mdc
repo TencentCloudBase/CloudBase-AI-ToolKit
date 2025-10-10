@@ -1,5 +1,6 @@
 ---
 description: 云开发 MCP 开发工作流程和部署流程
+capabilities: ["workflow", "deployment", "mcp-tools", "cloud-functions-deployment", "static-hosting-deployment"]
 alwaysApply: false
 ---
 
