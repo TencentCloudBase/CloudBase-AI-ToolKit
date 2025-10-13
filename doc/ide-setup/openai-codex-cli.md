@@ -55,33 +55,11 @@ npm install -g @openai/codex
 > [!TIP] 
 > 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
-如果使用模板项目，MCP 配置已经预置完成。如果不是从模板开始，有两种配置方式：
 
-#### 方式一：使用项目配置文件（推荐）
-
-在项目根目录创建 `.codex/config.toml` 文件：
-
-```toml
-[mcp_servers.cloudbase]
-command = "npx"
-args = ["npm-global-exec@latest", "@cloudbase/cloudbase-mcp@latest"]
-env = { INTEGRATION_IDE = "CodeX" }
-```
-
-然后启动时指定配置文件：
+在命令行执行如下命令，来全局安装 MCP
 
 ```bash
-codex --config .codex/config.toml
-```
-
-#### 方式二：全局配置
-
-在用户主目录创建 `~/.codex/config.toml` 文件：
-
-```toml
-[mcp_servers.cloudbase]
-command = "npx"
-args = ["@cloudbase/cloudbase-mcp@latest"]
+codex mcp add cloudbase -- npx npm-global-exec@latest @cloudbase/cloudbase-mcp@latest
 ```
 
 ### 步骤 3：启用 AI 规则
