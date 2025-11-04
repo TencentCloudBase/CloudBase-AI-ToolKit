@@ -6,7 +6,7 @@
 
 **Instantly generate, deploy, and host your full-stack Web apps, mini-programs, databases, and backend services with AI IDE—no DevOps required, launch your ideas at lightning speed**
 
-**Languages:** [中文](README.md) | **English**
+**Languages:** [中文](README-ZH.md) | **English**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm version](https://badge.fury.io/js/%40cloudbase%2Fcloudbase-mcp.svg)](https://www.npmjs.com/package/@cloudbase/cloudbase-mcp)
