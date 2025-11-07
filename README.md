@@ -74,7 +74,7 @@
 > curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
 > 
 > # Windows PowerShell
-> irm https://static.cloudbase.net/cli/install/install.ps1 | iex
+> npm install @cloudbase/cli@latest -g
 > ```
 > 
 > 安装后运行 `tcb ai` 即可开始使用
@@ -98,7 +98,6 @@
 
 
 ### 支持的 AI IDE
-
 
 
 | 工具 | 支持平台 | 查看指引 |
@@ -135,7 +134,8 @@
 - 一键部署到云端
 ```
 
-![][image-ai-native]
+<img width="1032" height="776" alt="f1" src="https://github.com/user-attachments/assets/62e6dd9d-9c53-4668-841d-0ac1985a75e0" />
+
 
 ### ⚡ 一键部署
 
@@ -149,7 +149,8 @@
 - 自动返回访问链接
 ```
 
-![][image-deploy]
+<img width="1032" height="776" alt="f2" src="https://github.com/user-attachments/assets/20e0493a-fa50-4c03-b4ac-3dc584eb4ccb" />
+
 
 ### 🏗️ 全栈应用
 
@@ -161,9 +162,8 @@
 | **微信小程序** | 原生/UniApp | 小程序发布 |
 | **后端服务** | Node.js/Python | 云函数/云托管 |
 
-![][image-fullstack]
+<img width="1032" height="776" alt="f3" src="https://github.com/user-attachments/assets/1c50fed3-3223-4cd6-8534-885dc798c08e" />
 
-![][image-agent]
 
 ### 🔍 智能问题诊断
 
@@ -177,7 +177,8 @@
 - 自动重新部署
 ```
 
-![][image-debug]
+<img width="1032" height="776" alt="f5" src="https://github.com/user-attachments/assets/5a61714a-ddcf-448a-8740-983bbad9d2b9" />
+
 
 ### 📚 知识检索
 
@@ -190,7 +191,8 @@
 - 提供代码示例
 ```
 
-![][image-knowledge]
+<img width="1032" height="776" alt="f6" src="https://github.com/user-attachments/assets/9ccb6b39-1f76-46b8-8b10-b076bfdcc37f" />
+
 
 ### ⚙️ 灵活工作流
 
@@ -201,7 +203,8 @@
 /no_spec - 快速迭代（直接实现）
 ```
 
-![][image-workflow]
+<img width="1032" height="776" alt="f7" src="https://github.com/user-attachments/assets/30a0632c-92e9-4f6d-8da9-10aef044d516" />
+
 
 ## 📦 安装配置
 
@@ -217,7 +220,7 @@
 
 ```bash
 # 安装
-curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
+npm install @cloudbase/cli@latest -g
 
 # 使用
 tcb ai
