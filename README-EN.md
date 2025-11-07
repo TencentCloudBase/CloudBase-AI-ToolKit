@@ -1,310 +1,285 @@
-<div align="center">
+<div align="center"><a name="readme-top"></a>
 
 ![](scripts/assets/toolkit-better.gif)
 
-# CloudBase AI ToolKit
+<h1>CloudBase AI ToolKit</h1>
 
-**Instantly generate, deploy, and host your full-stack Web apps, mini-programs, databases, and backend services with AI IDE—no DevOps required, launch your ideas at lightning speed**
+**Cloud development toolkit designed for AI coding tools**<br/>
+Let AI help you generate code and automatically deploy to the cloud, no DevOps required, launch at lightning speed
 
-**Languages:** [中文](README.md) | **English**
+**Languages:** [中文](README.md) | **English** · [Documentation][docs] · [Changelog][changelog] · [Report Issues][github-issues-link]
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![npm version](https://badge.fury.io/js/%40cloudbase%2Fcloudbase-mcp.svg)](https://www.npmjs.com/package/@cloudbase/cloudbase-mcp)
-[![NPM Downloads](https://img.shields.io/npm/dw/%40cloudbase%2Fcloudbase-mcp)](https://www.npmjs.com/package/@cloudbase/cloudbase-mcp)
-[![GitHub stars](https://img.shields.io/github/stars/TencentCloudBase/CloudBase-AI-ToolKit?style=social&v=1)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/TencentCloudBase/CloudBase-AI-ToolKit?style=social&v=1)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/network/members)
+<!-- SHIELD GROUP -->
 
-[![GitHub issues](https://img.shields.io/github/issues/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/pulls)
-[![GitHub last commit](https://img.shields.io/github/last-commit/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/commits)
-[![GitHub contributors](https://img.shields.io/github/contributors/TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/graphs/contributors)
-[![CNB Mirror](https://img.shields.io/badge/CNB-CloudBase--AI--ToolKit-blue?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHJ4PSIyIiBmaWxsPSIjM0I4MkY2Ii8+PHBhdGggZD0iTTUgM0g3VjVINSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNNSA3SDdWOUg1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==)](https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/TencentCloudBase/CloudBase-AI-ToolKit)
+[![][npm-version-shield]][npm-link]
+[![][npm-downloads-shield]][npm-link]
+[![][github-stars-shield]][github-stars-link]
+[![][github-forks-shield]][github-forks-link]
+[![][github-issues-shield]][github-issues-link]
+[![][github-license-shield]][github-license-link]
+[![][github-contributors-shield]][github-contributors-link]
+[![][cnb-shield]][cnb-link]
+[![][deepwiki-shield]][deepwiki-link]
 
-When coding in **Cursor/VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Claude Code/OpenAI Codex CLI** and other AI programming tools, it automatically helps you generate deployable full-stack apps + mini-programs, and publish them to Tencent CloudBase with one click.
+**Share CloudBase AI ToolKit with your friends**
 
-**Full Video Demo**
+[![][share-x-shield]][share-x-link]
+[![][share-telegram-shield]][share-telegram-link]
+[![][share-weibo-shield]][share-weibo-link]
 
-<a href="https://www.bilibili.com/video/BV1hpjvzGESg/" target="_blank">
-  <img style="max-width:  min(600px, 100%); height: auto;" src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/video-banner.png" alt="Video Demo" />
-</a>
+<sup>Make cloud development your best partner in AI coding tools</sup>
 
-| **Core Capabilities** | **Supported Platforms** |
-|---|---|
-| **AI-Powered Development**: AI auto-generates code and architecture<br>**Cloud Integration**: One-click access to database, cloud functions, static hosting<br>**Rapid Deployment**: Full-stack apps online in minutes | **Web Apps**: Modern frontend + static hosting<br>**WeChat Mini-Programs**: Cloud-native mini-program solutions<br>**Backend Services**: Cloud database + serverless functions + cloud hosting |
+[![][github-trending-shield]][github-trending-url]
 
-[Quick Start](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/getting-started) | [IDE Setup](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/) | [Project Templates](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates) | [Development Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/development) | [Use Cases](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/examples) | [Tutorials](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials) | [Plugin System](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins) | [MCP Tools](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/mcp-tools) | [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)
+![][image-overview]
 
 </div>
 
-## Key Features
+<details>
+<summary><kbd>Table of Contents</kbd></summary>
 
-- **AI-Native** - Rule library designed for AI programming tools, generates code following CloudBase best practices
-- **One-Click Deploy** - MCP automated deployment to Tencent CloudBase platform, Serverless architecture without server management
-- **Full-Stack Apps** - Web + Mini-programs + Database + Backend integration, supports multiple app types and backend hosting
-- **Smart Debugging** - AI automatically reviews logs and fixes issues, reducing operational costs
-- **Lightning Fast** - Domestic CDN acceleration, faster access than overseas platforms
-- **Knowledge Retrieval** - Built-in intelligent vector search for CloudBase and WeChat Mini-Program professional knowledge bases
-- **Smart Upgrade** - Auto-detect version differences and provide upgrade guidance, ensuring users always use the latest features
-- **Flexible Workflow** - Support for /spec and /no_spec commands, intelligently choose development mode based on task complexity
+- [Quick Start](#quick-start)
+- [Core Features](#core-features)
+- [Installation & Configuration](#installation--configuration)
+- [Use Cases](#use-cases)
+- [MCP Tools](#mcp-tools)
+- [More Resources](#more-resources)
 
-> [!TIP]
-> 
-> **Built-in Spec Workflow: Make AI programming more engineering-oriented**
-> 
-> - Built-in Kiro-style Spec workflow, supports Cursor, Claude Code, and other mainstream AI IDEs
-> - Clear requirements, design, and tasks, auto-generates requirements.md, design.md, tasks.md
-> - Move beyond "slot machine" vibe coding, development process is controllable and traceable
-> - Let AI assist in sorting out requirements, design solutions, and task breakdowns, while humans focus on decision-making and review
-> 
-> **Spec workflow is built into CloudBase AI rules**, download the latest template or let AI download CloudBase AI rules in the current project to get it
-
----
-
-## Get Started with CloudBase AI ToolKit
-
-### Recommended: CloudBase AI CLI (Simplest)
-
-CloudBase AI CLI is a unified command-line tool that integrates multiple mainstream AI programming tools, supporting built-in models and custom models. It allows you to use Claude Code, OpenAI Codex, aider, Qwen Code, and other AI programming assistants with a simple command, while built-in CloudBase AI Toolkit supports the complete workflow from development to deployment, and can run in any environment.
-
-**Core Advantages:**
-- **Unified Management** - One command to manage multiple AI programming CLI tools, no need to switch between tools
-- **Multi-Model Support** - Support for built-in and custom large models, including Kimi K2, Zhipu GLM-4.5, etc.
-- **One-Click Development & Deployment** - Complete workflow from code generation to cloud deployment, supporting Web apps, mini-programs, and backend services
-- **Everywhere** - Can run in any environment, including mini-program developer tools, VS Code, GitHub Actions, etc.
-
-**One-Click Installation**
-
-![](scripts/assets/cli-better.gif)
-
-```bash
-# Mac/Linux/Windows WSL
-curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
-
-# Windows PowerShell
-irm https://static.cloudbase.net/cli/install/install.ps1 | iex
-```
-
-**Start Using**
-```bash
-tcb ai
-```
-
-On first launch, the configuration wizard will guide you through AI tool selection and configuration. After configuration, you can start using AI tools for assisted development. You can run `tcb ai --setup` later to switch tools and models.
-
-[View complete usage documentation](https://docs.cloudbase.net/cli-v1/ai/introduce) | [Try Now](https://docs.cloudbase.net/cli-v1/ai/introduce) | [Full-Stack Mini-Program Development Case Tutorial](https://docs.cloudbase.net/practices/ai-cli-mini-program)
-
-### Other IDE Configuration Methods
-
-If you use other AI IDEs, please refer to the configuration guides below:
-
----
+</details>
 
 ## Quick Start
 
-### 0. Prerequisites
+### One-Line Configuration, Start Using Immediately
 
-<details>
-<summary>Install an AI development tool</summary>
+In AI IDEs that support MCP (Cursor, WindSurf, CodeBuddy, etc.), just add one line of configuration:
 
-For example, [Cursor](https://www.cursor.com/) | [WindSurf](https://windsurf.com/editor) | [CodeBuddy](https://copilot.tencent.com/), etc. See the [Supported AI IDE List](#2-configure-your-ai-ide).
-
-</details>
-
-<details>
-<summary>Enable CloudBase Environment</summary>
-
-Visit the [Tencent CloudBase Console](https://tcb.cloud.tencent.com/dev) to enable your environment. New users can try it for free.
-
-</details>
-
-<details>
-<summary>Install Node.js v18.15.0 or above</summary>
-
-Make sure your computer has Node.js v18.15.0 or above. Download the latest version from the [Node.js official site](https://nodejs.org/).
-
-</details>
-
-<details>
-<summary>Optional: Set npm registry</summary>
-
-To speed up dependency downloads, set npm registry to Tencent mirror. Run in your terminal:
-
-```bash
-npm config set registry https://mirrors.cloud.tencent.com/npm/
+```json
+{
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
+    }
+  }
+}
 ```
-
-This will speed up downloads, especially in mainland China.
-</details>
-
-<details>
-<summary>Optional: Clear npx cache</summary>
-Due to a bug in npx, you may need to clear its cache if you encounter installation issues. Run:
-
-```
-npx clear-npx-cache
-```
-</details>
-
-### 1. Initialize or Enhance Your Project
-
-We provide project templates with best CloudBase practices and AI IDE rules. Two recommended ways:
-
-#### For New Projects
-
-Choose a template and initialize in one click:
-
-- **WeChat Mini-Program + CloudBase**  
-  [Download Code](https://static.cloudbase.net/cloudbase-examples/miniprogram-cloudbase-miniprogram-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-miniprogram-template)
-
-- **React Web App + CloudBase**  
-  [Download Code](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-react-template)
-
-- **Vue Web App + CloudBase**  
-  [Download Code](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-vue-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-vue-template)
-
-- **UniApp Cross-Platform + CloudBase**  
-  [Download Code](https://static.cloudbase.net/cloudbase-examples/universal-cloudbase-uniapp-template.zip?v=2025053001) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/universal/cloudbase-uniapp-template)
-
-- **Universal CloudBase Template**: Not limited to any language or framework, includes CloudBase AI rules and MCP, suitable for any CloudBase project
-
-  [Download Code](https://static.cloudbase.net/cloudbase-examples/web-cloudbase-project.zip) ｜ [Source Code](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/cloudbase-project)
-
-#### Enhance Existing Projects
-
-If you already have a project, after configuring MCP, just tell the AI "Download CloudBase AI rules in the current project" to automatically download and complete the AI editor rule configuration in your project directory.
-
-If you only want to download specific IDE config files to avoid project file confusion, you can specify the IDE type:
-```
-Download CloudBase AI rules in the current project, only include Cursor config
-Download CloudBase AI rules in the current project, only include WindSurf config
-Download CloudBase AI rules in the current project, only include Claude Code config
-```
-
-### 2. Configure Your AI IDE
 
 > [!TIP]
-> If you use a template project, all configs are preset. If not, follow the instructions below to add the required config manually.
+> **Recommended: CloudBase AI CLI**
+> 
+> One-click installation, automatic configuration, supports multiple AI programming tools:
+> 
+> ```bash
+> # Mac/Linux/WSL
+> curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
+> 
+> # Windows PowerShell
+> npm install @cloudbase/cli@latest -g
+> ```
+> 
+> After installation, run `tcb ai` to start using
+> 
+> [View complete documentation](https://docs.cloudbase.net/cli-v1/ai/introduce) | [Detailed case tutorial](https://docs.cloudbase.net/practices/ai-cli-mini-program)
 
-All the following tools support CloudBase AI ToolKit. Choose your tool and follow the guide:
+### First Time Use
 
-| Tool | Platform | Guide |
+1. **Login to CloudBase**
+   ```
+   Login to CloudBase
+   ```
+   AI will automatically open the login interface and guide environment selection
+
+2. **Start Developing**
+   ```
+   Build a two-player online Gomoku game website, support online battle, and deploy it
+   ```
+   AI will automatically generate code, deploy to the cloud, and return the access link
+
+
+
+### Supported AI IDEs
+
+
+| Tool | Supported Platform | Guide |
 |------|----------|----------|
 | [CloudBase AI CLI](https://docs.cloudbase.net/cli-v1/ai/introduce) | CLI | [Guide](https://docs.cloudbase.net/cli-v1/ai/introduce) |
 | [Cursor](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) | Standalone IDE| [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor) |
-| [WindSurf](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) | Standalone IDE, VSCode, JetBrains | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) |
-| [CodeBuddy](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) | Standalone IDE (CloudBase built-in), VS Code, JetBrains, WeChat DevTools | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) |
-| [CLINE](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) | VS Code | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) |
-| [GitHub Copilot](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) | VS Code | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) |
+| [WindSurf](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) | Standalone IDE, VSCode, JetBrains Plugin | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/windsurf) |
+| [CodeBuddy](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) | Standalone IDE (CloudBase built-in), VS Code, JetBrains, WeChat DevTools| [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/codebuddy) |
+| [CLINE](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) | VS Code Plugin | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cline) |
+| [GitHub Copilot](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) | VS Code Plugin | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/github-copilot) |
 | [Trae](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/trae) | Standalone IDE | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/trae) |
-| [Tongyi Lingma](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/tongyi-lingma) | Standalone IDE, VS Code, JetBrains | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/tongyi-lingma) |
-| [RooCode](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/roocode) | VS Code | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/roocode) |
-| [Baidu Comate](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/baidu-comate) | VS Code, JetBrains | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/baidu-comate) |
-| [Augment Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/augment-code) | VS Code, JetBrains | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/augment-code) |
+| [Tongyi Lingma](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/tongyi-lingma) | Standalone IDE, VS Code, JetBrains Plugin | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/tongyi-lingma) |
+| [RooCode](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/roocode) | VS Code Plugin | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/roocode) |
+| [Baidu Comate](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/baidu-comate) | VS Code, JetBrains Plugin| [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/baidu-comate) |
+| [Augment Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/augment-code) | VS Code, JetBrains Plugin | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/augment-code) |
 | [Claude Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/claude-code) | CLI | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/claude-code) |
 | [Gemini CLI](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/gemini-cli) | CLI | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/gemini-cli) |
 | [OpenAI Codex CLI](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli) | CLI | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli) |
 | [OpenCode](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/opencode) | CLI | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/opencode) |
 | [Qwen Code](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/qwen-code) | CLI | [Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/qwen-code) |
 
-### 3. Start Developing
 
-Before you start, just tell the AI:
 
-```
-Login to CloudBase
-```
-The AI will automatically pop up the Tencent Cloud login and environment selection.
+## Core Features
 
-To switch environments later, say:
+### AI-Native Development
 
-```
-Logout CloudBase
-```
+**Designed for AI programming tools, generates code following cloud development best practices**
 
-The AI will clear the local config. You can ask the AI to login again anytime.
-
-After login, you can confirm the AI is connected:
-
-```
-Query current CloudBase environment info
+```markdown
+Prompt: Generate a user login feature
+- AI automatically generates code following CloudBase standards
+- Auto-configure database, cloud functions, security rules
+- One-click deploy to cloud
 ```
 
-Describe your requirements to the AI and start developing:
+<img width="1032" height="776" alt="f1" src="https://github.com/user-attachments/assets/62e6dd9d-9c53-4668-841d-0ac1985a75e0" />
 
-```
-Build a two-player online Gomoku game website, support online battle, and deploy it
-```
 
-The AI will automatically:
-- Generate frontend and backend code
-- Deploy to CloudBase
-- Return the online access link
+### One-Click Deploy
 
-If you encounter errors during development, send the error message to the AI for troubleshooting:
+**MCP automated deployment, Serverless architecture without purchasing servers**
 
-```
-There was an error: xxxx
+```markdown
+Prompt: Deploy current project to CloudBase
+- Auto-detect project type (Web/Mini-program/Backend)
+- Intelligent deployment parameter configuration
+- Real-time deployment progress display
+- Auto-return access link
 ```
 
-You can also ask the AI to debug and modify code using cloud function logs:
+<img width="1032" height="776" alt="f2" src="https://github.com/user-attachments/assets/20e0493a-fa50-4c03-b4ac-3dc584eb4ccb" />
 
+
+### Full-Stack Applications
+
+**Web + Mini-programs + Database + Backend integration**
+
+| Application Type | Tech Stack | Deployment Method |
+|---------|--------|---------|
+| **Web Apps** | React/Vue/Next.js | Static Hosting + CDN |
+| **WeChat Mini-Programs** | Native/UniApp | Mini-program Publishing |
+| **Backend Services** | Node.js/Python | Cloud Functions/Cloud Run |
+
+<img width="1032" height="776" alt="f3" src="https://github.com/user-attachments/assets/1c50fed3-3223-4cd6-8534-885dc798c08e" />
+
+
+### Smart Issue Diagnosis
+
+**AI automatically views logs and fixes issues**
+
+```markdown
+Prompt: There's an error: xxxx
+- AI automatically views cloud function logs
+- Analyze error causes
+- Generate fix code
+- Auto redeploy
 ```
-The cloud function code does not meet the requirements, the requirement is xxx, please check the logs and data for debugging and fix it
+
+<img width="1032" height="776" alt="f5" src="https://github.com/user-attachments/assets/5a61714a-ddcf-448a-8740-983bbad9d2b9" />
+
+
+### Knowledge Retrieval
+
+**Built-in intelligent vector search for CloudBase, WeChat Mini-Program and other professional knowledge bases**
+
+```markdown
+Prompt: How to use cloud database to achieve real-time data synchronization?
+- Intelligent search CloudBase knowledge base
+- Return relevant documentation and best practices
+- Provide code examples
 ```
 
-## Plugin System
+<img width="1032" height="776" alt="f6" src="https://github.com/user-attachments/assets/9ccb6b39-1f76-46b8-8b10-b076bfdcc37f" />
 
-CloudBase MCP uses a plugin architecture. [See detailed docs](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins)
 
-### Quick Config
+### Flexible Workflow
+
+**Support /spec and /no_spec commands, intelligently choose based on task complexity**
+
+```markdown
+/spec - Complete workflow (Requirements → Design → Tasks → Implementation)
+/no_spec - Fast iteration (Direct implementation)
+```
+
+<img width="1032" height="776" alt="f7" src="https://github.com/user-attachments/assets/30a0632c-92e9-4f6d-8da9-10aef044d516" />
+
+
+## Installation & Configuration
+
+### Prerequisites
+
+- Node.js v18.15.0 or above
+- Enabled [Tencent CloudBase Environment](https://tcb.cloud.tencent.com/dev)
+- Installed AI IDE that supports MCP ([View supported IDEs](#supported-ai-ides))
+
+### Configuration Methods
+
+#### Method 1: CloudBase AI CLI (Recommended)
+
+```bash
+# Install
+npm install @cloudbase/cli@latest -g
+
+# Use
+tcb ai
+```
+
+#### Method 2: Manual MCP Configuration
+
+Add MCP configuration according to your AI IDE:
+
+<details>
+<summary><b>Cursor</b></summary>
+
+Add to `.cursor/mcp.json`:
 
 ```json
 {
-  "env": {
-    "CLOUDBASE_MCP_PLUGINS_ENABLED": "env,database,functions,hosting"
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
+    }
   }
 }
 ```
 
-## Tutorials
+</details>
 
-### Articles
+<details>
+<summary><b>WindSurf</b></summary>
 
-#### CloudBase AI CLI Case Studies
-- [Develop a Neighborhood Item Recycling Mini-Program with CloudBase AI CLI](https://docs.cloudbase.net/practices/ai-cli-mini-program) - Detailed case tutorial showing how to use CloudBase AI CLI to develop a complete mini-program project from scratch
+Add to `.windsurf/settings.json`:
 
-#### Full-Stack Web Apps
-- [One-stop development of card flip game with CodeBuddy IDE + CloudBase](https://mp.weixin.qq.com/s/2EM3RBzdQUCdfld2CglWgg)
-- [Develop a WeChat mini-game in 1 hour with CloudBase AI Toolkit](https://cloud.tencent.com/developer/article/2532595)
-- [AI Coding Power Combo: Cursor + Cloudbase-AI-Toolkit Game Dev](https://juejin.cn/post/7518783423277695028#comment)
-- [Launched a co-op Overcooked game in 2 days](https://mp.weixin.qq.com/s/nKfhHUf8w-EVKvA0u1rdeg)
-- [CloudBase AI Toolkit: Build a hospital intern scheduling system, goodbye painful excel tables](https://cloud.tencent.com/developer/article/2538023)
-- [No server, how to cloud deploy full-stack projects](https://cloud.tencent.com/developer/article/2537971)
-- [Quickly create a programmer's exclusive business card website](https://cloud.tencent.com/developer/article/2536273)
+```json
+{
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
+    }
+  }
+}
+```
 
-#### Full-Stack Mini-Programs
-- [I built a "hot words" mini-program with CloudBase AI ToolKit in one day](https://cloud.tencent.com/developer/article/2537907)
-- [Use AI to create your exclusive "cloud library" mini-program!](https://cloud.tencent.com/developer/article/2535789)
-- [One person challenges full-stack development resume mini-program](https://cloud.tencent.com/developer/article/2535894)
-- [I used AI to develop and launch a mini-program: Worry Relief Box](https://mp.weixin.qq.com/s/DYekRheNQ2u8LAl_F830fA)
-- [From zero to full-stack dev in the AI era: Figma + Cursor + Cloudbase for WeChat mini-programs](https://mp.weixin.qq.com/s/nT2JsKnwBiup1imniCr2jA)
+</details>
 
-### App Projects
-- [Resume Assistant Mini-Program](https://gitcode.com/qq_33681891/resume_template)
-- [Gomoku Online Game](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/gomoku-game)
-- [Overcooked Co-op Game](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/overcooked-game)
-- [E-commerce Admin Panel](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/ecommerce-management-backend)
-- [Short Video Mini-Program](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-ai-video)
-- [Dating Mini-Program](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/dating)
+<details>
+<summary><b>CodeBuddy</b></summary>
 
-### Video Tutorials
-- [CloudBase: Use AI to develop an Overcooked game](https://www.bilibili.com/video/BV1v5KAzwEf9/)
-- [Software 3.0: Best AI Programming Partner CloudBase AI ToolKit, WeChat Mini-Program Example](https://www.bilibili.com/video/BV15gKdz1E5N/)
-- [Use AiCoding to challenge full-stack development resume mini-program](https://www.bilibili.com/video/BV1D23Nz1Ec3/)
-- [5 minutes to create a programmer's exclusive business card website locally](https://www.bilibili.com/video/BV19y3EzsEHQ/?vd_source=c8763f6ab9c7c6f7f760ad7ea9157011)
+CodeBuddy has CloudBase MCP built-in, no configuration needed.
 
----
+</details>
+
+<details>
+<summary><b>Other IDEs</b></summary>
+
+View [Complete configuration guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/) for other IDE configuration methods.
+
+</details>
+
 
 ## Use Cases
 
@@ -318,12 +293,11 @@ CloudBase MCP uses a plugin architecture. [See detailed docs](https://docs.cloud
 **Demo:** [Gomoku Game](https://cloud1-5g39elugeec5ba0f-1300855855.tcloudbaseapp.com/gobang/#/)
 
 <details>
-<summary>See development screenshots</summary>
+<summary>View development screenshots</summary>
 
-| Development | Final Result |
+| Development Process | Final Result |
 |---------|---------|
-| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-001.png" width="400" alt="Dev Screenshot 1"> | <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-004.png" width="400" alt="Gomoku Game Result"> |
-| <img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-002.png" width="400" alt="Dev Screenshot 2"> | Supports two-player online battle<br>Real-time board sync |
+| ![][image-case1-dev] | ![][image-case1-result] |
 
 </details>
 
@@ -335,166 +309,170 @@ CloudBase MCP uses a plugin architecture. [See detailed docs](https://docs.cloud
 3. Import to WeChat DevTools to publish
 
 <details>
-<summary>See dev screenshots and mini-program preview</summary>
+<summary>View development screenshots and mini-program preview</summary>
 
-<table>
-<tr>
-<td width="50%">
-<b>Dev Screenshots</b><br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-005.png" width="100%" alt="AI Pet Mini-Program Dev Screenshot">
-<br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-003.png" width="100%" alt="Mini-Program Dev Process">
-</td>
-<td width="50%">
-<b>Mini-Program Preview</b><br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-006.png" width="200" alt="Mini-Program UI 1">
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-007.png" width="200" alt="Mini-Program UI 2">
-<br><br>
-<b>Experience QR Code</b><br>
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-008.png" width="150" alt="Mini-Program QR Code">
-</td>
-</tr>
-</table>
+![][image-case2]
 
 </details>
 
 ### Case 3: Smart Issue Diagnosis
 
-When an app has issues:
-1. AI automatically checks cloud function logs
-2. Analyzes error causes and generates fix code
-3. Auto redeploys
+When an app has issues, AI automatically views logs, analyzes errors, and generates fix code.
 
 <details>
-<summary>See smart diagnosis process</summary>
+<summary>View smart diagnosis process</summary>
 
-<div align="center">
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-009.png" width="600" alt="Smart Diagnosis Process">
-<br>
-<i>AI auto-analyzes logs and generates fixes</i>
-</div>
+![][image-case3]
 
 </details>
 
----
+## MCP Tools
 
-## Why Choose CloudBase?
+**39 tools** covering environment management, database, cloud functions, static hosting, mini-program publishing, and other core features.
 
-- **Lightning Fast Deployment**: Domestic nodes, faster than overseas
-- **Stable & Reliable**: Trusted by 3.3 million developers
-- **Developer Friendly**: Full-stack platform for the AI era, supports auto environment config
-- **Cost-Effective**: Serverless architecture, free for new users during development
+| Category | Tools | Core Features |
+|------|------|----------|
+| **Environment** | 4 | Login authentication, environment query, domain management |
+| **Database** | 11 | Collection management, document CRUD, indexes, data models |
+| **Cloud Functions** | 9 | Create, update, invoke, logs, triggers |
+| **Static Hosting** | 5 | File upload, domain configuration, website deployment |
+| **Mini-Program** | 7 | Upload, preview, build, configuration, debugging |
+| **Tool Support** | 4 | Templates, knowledge base search, web search, interactive dialogs |
 
-## FAQ
+[View complete tool documentation](doc/mcp-tools.md) | [Tool specification JSON](scripts/tools.json)
 
-For migration, integration, and other common questions, see the [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq).
+## More Resources
+
+### Documentation
+
+- [Quick Start](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/getting-started)
+- [IDE Configuration Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/)
+- [Project Templates](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates)
+- [Development Guide](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/development)
+- [Plugin System](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins)
+- [FAQ](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq)
+
+### Tutorials
+
+#### Articles
+- [Develop a Neighborhood Item Recycling Mini-Program with CloudBase AI CLI](https://docs.cloudbase.net/practices/ai-cli-mini-program)
+- [One-stop development of card flip game with CodeBuddy IDE + CloudBase](https://mp.weixin.qq.com/s/2EM3RBzdQUCdfld2CglWgg)
+- [Develop a WeChat mini-game in 1 hour](https://cloud.tencent.com/developer/article/2532595)
+- [More tutorials...](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials)
+
+#### Videos
+- [CloudBase: Use AI to develop an Overcooked game](https://www.bilibili.com/video/BV1v5KAzwEf9/)
+- [Software 3.0: Best AI Programming Partner](https://www.bilibili.com/video/BV15gKdz1E5N/)
+- [More videos...](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials)
+
+### Project Cases
+
+- [Gomoku Online Game](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/gomoku-game)
+- [Overcooked Co-op Game](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/overcooked-game)
+- [E-commerce Admin Panel](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/ecommerce-management-backend)
+- [More cases...](https://github.com/TencentCloudBase/awesome-cloudbase-examples)
 
 ## Community
-
-Need help or want to share? Join our community!
 
 ### WeChat Group
 
 <div align="center">
-<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/toolkit-qrcode.png" width="200" alt="WeChat Group QR">
+<img src="https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/toolkit-qrcode.png" width="200" alt="WeChat Group QR Code">
 <br>
-<i>Scan to join the WeChat tech group</i>
+<i>Scan to join WeChat tech exchange group</i>
 </div>
 
-**In the group you can:**
-- Share your AI + CloudBase projects
-- Tech exchange and Q&A
-- Get the latest updates and best practices
-- Join product discussions and suggestions
-
-### Other Channels
+### Other Communication Channels
 
 | Platform | Link | Description |
 |------|------|------|
-| **Docs** | [Docs](https://docs.cloudbase.net/) | Full CloudBase docs |
-| **Issue Feedback** | [Submit Issue](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues) | Bug reports & feature requests |
+| **Official Documentation** | [View Documentation](https://docs.cloudbase.net/) | Complete CloudBase documentation |
+| **Issue Feedback** | [Submit Issue](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues) | Bug reports and feature requests |
 
-### Community Events
-
-- **Weekly Tech Sharing**: Best practices for AI + CloudBase
-- **Project Showcases**: Show off your AI-powered projects
-- **Q&A**: Tencent CloudBase team answers questions
-- **Feature Previews**: Try new features first
-
-## CloudBase MCP Tools Overview
-
-There are **39 tools** covering environment management, database, cloud functions, hosting, mini-program publishing, and more.
-
-**Full tool docs**: [See MCP tool details](doc/mcp-tools.md) | [Tool spec JSON](scripts/tools.json)
-
-### Tool Categories
-
-| Category | Count | Main Features |
-|------|----------|----------|
-| **Env Mgmt** | 4 | Login, env info, domain mgmt |
-| **Database** | 11 | Collection mgmt, CRUD, indexes, data models |
-| **Cloud Functions** | 9 | Create, update, invoke, logs, triggers |
-| **Hosting** | 5 | File upload, domain config, site deploy |
-| **File Ops** | 2 | Remote download, cloud storage upload |
-| **Mini-Program** | 7 | Upload, preview, build, config, debug, QA |
-| **Tool Support** | 4 | Templates, knowledge search, web search, dialogs |
-| **HTTP Access** | 1 | HTTP function access |
-
-### Tool Highlights
-
-| Type | Name | Highlights |
-|----------|----------|----------|
-| **Auth** | `login` / `logout` | One-click CloudBase login, auto env selection |
-| **Env Query** | `envQuery` | **Merged Tool** - env list, info, domain in one |
-| **Database** | `collectionQuery` | **Merged Tool** - existence, detail, list mgmt |
-| **Cloud Functions** | `createFunction` | Full config, auto deps install, trigger setup |
-| **Hosting** | `uploadFiles` | Batch upload, smart ignore, CDN acceleration |
-| **AI Enhanced** | `searchKnowledgeBase` | Vector search CloudBase KB, smart Q&A |
-
-### Tool Optimization
-
-We optimized from 40 to 36 tools, added 3 mini-program debug tools, now 39 tools in total, with better experience via merging and full mini-program toolchain.
-
-**Want details for each tool?** See [MCP tool docs](doc/mcp-tools.md)
-
-## Architecture
-
-```mermaid
-graph TD
-    A[Developer] --> B[AI IDE]
-    B -->|Use| C[CloudBase AI Rules]
-    C --> D[Generate Code]
-    B -->|Call| E[CloudBase MCP]
-    E --> F{Deploy Check}
-    F -->|Success| G[CloudBase Platform]
-    F -->|Fail| H[Return Logs]
-    H --> I[AI Fix]
-    I --> E
-    G --> J[Online App]
-    J --> K[Web/Mini-Program/API]
-```
-
-## Telemetry
-
-To improve product experience, CloudBase AI ToolKit collects anonymous usage stats:
-
-- **Collected**: Tool calls, basic env info (OS, Node.js version, etc.)
-- **Privacy**: No code or file paths collected, only for product improvement
-
-Set `CLOUDBASE_MCP_TELEMETRY_DISABLED=true` to disable telemetry.
-
-## Contributing
-
-PRs and issues welcome! See our [Contributing Guide](CONTRIBUTING.md) for how to get involved.
-
-## License
-
-[MIT](LICENSE) © TencentCloudBase
-
----
-
-If you find this project helpful, please give us a Star!
+## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=TencentCloudBase/CloudBase-AI-ToolKit&type=Timeline)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
 
-![Alt](https://repobeats.axiom.co/api/embed/60598d4f0cad83043b6317528e0fa0691122003d.svg "Repobeats analytics image")
+---
+
+<div align="center">
+
+**If this project is helpful to you, please give us a Star!**
+
+[![][github-stars-shield]][github-stars-link]
+
+[MIT](LICENSE) © TencentCloudBase
+
+</div>
+
+<!-- Image Placeholders - These images need to be generated or replaced -->
+<!-- 
+Design style constraints (all images follow uniformly):
+- Modern flat design, simple and vibrant
+- Background color: Pure black #000000 (unified black background)
+- Theme color gradient: #67E9E9 → #4896FF → #2BCCCC (maintained)
+- Vibrant accent colors: Moderate use of #FFD93D (yellow), #6BCF7F (green) as accents
+- Simple geometric shapes (circles, rectangles, lines), no text
+- Use geometric shapes and icons to express concepts, abstract UI skeleton
+- Promotional video style, modern UI skeleton
+- Smooth lines, moderate light effects, balanced color scheme
+
+Prompt templates (all images without text, pure geometric shapes and icons):
+- image-overview: "Abstract UI skeleton diagram, modern style, pure black background #000000, theme colors #67E9E9 #4896FF #2BCCCC gradient, moderate vibrant accent colors, use geometric shapes (circles, rectangles, smooth lines) and icons to express AI IDE, code generation, cloud deployment flow, no text, promotional video style, modern UI skeleton"
+- image-ai-native: "Abstract code generation interface skeleton, modern style, pure black background, theme color cyan blue gradient, use rectangles to represent code blocks, circles to represent AI icons, smooth lines to represent connections, no text, promotional video style, simple geometric shapes"
+- image-deploy: "Abstract deployment interface skeleton, modern style, pure black background, theme color gradient, use circular progress indicators, rectangular progress bars, smooth lines to express deployment flow, no text, promotional video style, modern UI skeleton"
+- image-fullstack: "Abstract full-stack architecture skeleton diagram, modern style, pure black background, theme color gradient, use circular nodes to represent different services (Web/Mini-program/Backend/Database), smooth lines connect to express integration relationships, geometric shapes iconized expression, no text, promotional video style"
+- image-agent: "Abstract AI agent interface skeleton, modern style, pure black background, theme color gradient, use circles to represent Agent, rectangles to represent configuration cards, smooth lines to express data flow, geometric shapes iconized, no text, promotional video style, modern UI skeleton"
+- image-debug: "Abstract issue diagnosis interface skeleton, modern style, pure black background, theme color gradient, use rectangles to represent log cards, circles to represent status indicators, smooth lines to express analysis flow, geometric shapes iconized, no text, promotional video style"
+- image-knowledge: "Abstract knowledge retrieval interface skeleton, modern style, pure black background, theme color gradient, use rectangular cards to represent search results, circles to represent search icons, smooth lines to express relationships, geometric shapes iconized, no text, promotional video style, modern UI skeleton"
+- image-workflow: "Abstract workflow selection interface skeleton, modern style, pure black background, theme color gradient, use circular buttons to represent two modes, rectangular panels to represent options, smooth lines to express flow, geometric shapes iconized, no text, promotional video style"
+- image-case1-dev: "Abstract game development interface skeleton, modern style, pure black background, theme color gradient, use geometric shapes to represent code editor, game interface elements, no text, promotional video style, modern UI skeleton"
+- image-case1-result: "Abstract game interface skeleton, modern style, pure black background, theme color gradient, use circles and rectangles to represent game elements, geometric shapes iconized expression, no text, promotional video style"
+- image-case2: "Abstract mini-program development interface skeleton, modern style, pure black background, theme color gradient, use rectangles to represent mini-program interface, circles to represent function modules, geometric shapes iconized, no text, promotional video style, modern UI skeleton"
+- image-case3: "Abstract issue diagnosis interface skeleton, modern style, pure black background, theme color gradient, use rectangles to represent log cards, circles to represent status, smooth lines to express diagnosis flow, geometric shapes iconized, no text, promotional video style"
+-->
+
+[image-overview]: https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/video-banner.png
+[image-ai-native]: https://via.placeholder.com/800x400/3B82F6/FFFFFF?text=AI+Native+Development
+[image-deploy]: https://via.placeholder.com/800x400/10B981/FFFFFF?text=One-Click+Deploy
+[image-fullstack]: https://via.placeholder.com/800x400/8B5CF6/FFFFFF?text=Full-Stack+Application
+[image-agent]: https://via.placeholder.com/800x400/EC4899/FFFFFF?text=AI+Agent+Development
+[image-debug]: https://via.placeholder.com/800x400/F59E0B/FFFFFF?text=Smart+Debugging
+[image-knowledge]: https://via.placeholder.com/800x400/06B6D4/FFFFFF?text=Knowledge+Search
+[image-workflow]: https://via.placeholder.com/800x400/6366F1/FFFFFF?text=Flexible+Workflow
+[image-case1-dev]: https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-001.png
+[image-case1-result]: https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-004.png
+[image-case2]: https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-005.png
+[image-case3]: https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/turbo-deploy/turbo-deploy-009.png
+
+<!-- Links -->
+[docs]: https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/
+[changelog]: https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/releases
+[github-issues-link]: https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues
+[github-stars-link]: https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/stargazers
+[github-forks-link]: https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/network/members
+[github-trending-url]: https://github.com/trending
+[npm-link]: https://www.npmjs.com/package/@cloudbase/cloudbase-mcp
+[cnb-link]: https://cnb.cool/tencent/cloud/cloudbase/CloudBase-AI-ToolKit
+[deepwiki-link]: https://deepwiki.com/TencentCloudBase/CloudBase-AI-ToolKit
+
+<!-- Shields -->
+[npm-version-shield]: https://img.shields.io/npm/v/@cloudbase/cloudbase-mcp?color=3B82F6&label=npm&logo=npm&style=flat-square
+[npm-downloads-shield]: https://img.shields.io/npm/dw/@cloudbase/cloudbase-mcp?color=10B981&label=downloads&logo=npm&style=flat-square
+[github-stars-shield]: https://img.shields.io/github/stars/TencentCloudBase/CloudBase-AI-ToolKit?color=F59E0B&label=stars&logo=github&style=flat-square
+[github-forks-shield]: https://img.shields.io/github/forks/TencentCloudBase/CloudBase-AI-ToolKit?color=8B5CF6&label=forks&logo=github&style=flat-square
+[github-issues-shield]: https://img.shields.io/github/issues/TencentCloudBase/CloudBase-AI-ToolKit?color=EC4899&label=issues&logo=github&style=flat-square
+[github-license-shield]: https://img.shields.io/badge/license-MIT-6366F1?logo=github&style=flat-square
+[github-contributors-shield]: https://img.shields.io/github/contributors/TencentCloudBase/CloudBase-AI-ToolKit?color=06B6D4&label=contributors&logo=github&style=flat-square
+[github-contributors-link]: https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/graphs/contributors
+[cnb-shield]: https://img.shields.io/badge/CNB-CloudBase--AI--ToolKit-3B82F6?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHJ4PSIyIiBmaWxsPSIjM0I4MkY2Ii8+PHBhdGggZD0iTTUgM0g3VjVINSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNNSA3SDdWOUg1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==&style=flat-square
+[deepwiki-shield]: https://deepwiki.com/badge.svg
+[github-trending-shield]: https://img.shields.io/github/stars/TencentCloudBase/CloudBase-AI-ToolKit?style=social
+
+<!-- Share Links -->
+[share-x-link]: https://x.com/intent/tweet?hashtags=cloudbase,mcp,ai&text=CloudBase%20AI%20ToolKit%20-%20Cloud%20development%20MCP%20toolkit%20for%20AI%20IDEs&url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit
+[share-x-shield]: https://img.shields.io/badge/-share%20on%20x-black?labelColor=black&logo=x&logoColor=white&style=flat-square
+[share-telegram-shield]: https://img.shields.io/badge/-share%20on%20telegram-black?labelColor=black&logo=telegram&logoColor=white&style=flat-square
+[share-telegram-link]: https://t.me/share/url?url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit&text=CloudBase%20AI%20ToolKit
+[share-weibo-link]: http://service.weibo.com/share/share.php?sharesource=weibo&title=CloudBase%20AI%20ToolKit%20-%20Cloud%20development%20MCP%20toolkit%20for%20AI%20IDEs&url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit
+[share-weibo-shield]: https://img.shields.io/badge/-share%20on%20weibo-black?labelColor=black&logo=sinaweibo&logoColor=white&style=flat-square
