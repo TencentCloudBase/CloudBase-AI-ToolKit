@@ -4,3 +4,5 @@
 **/*.dxt
 # Environment variables
 .env.local
+# Package publish backup files
+**/package.json.backup

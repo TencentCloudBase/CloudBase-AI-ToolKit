@@ -39,7 +39,8 @@
     "test:ui": "npm run build && vitest --ui",
     "test:coverage": "npm run build && vitest run --coverage",
     "test:inspector": "npm run build && npx @modelcontextprotocol/inspector node ./dist/cli.js",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build && node scripts/prepare-publish.js",
+    "postpublish": "node scripts/restore-deps.js"
   },
   "files": [
     "dist",
