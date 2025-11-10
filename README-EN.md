@@ -7,7 +7,7 @@
 **Cloud development toolkit designed for AI coding tools**<br/>
 Let AI help you generate code and automatically deploy to the cloud, no DevOps required, launch at lightning speed
 
-**Languages:** [中文](README.md) | **English** · [Documentation][docs] · [Changelog][changelog] · [Report Issues][github-issues-link]
+**Languages:** [中文](README-ZH.md) | **English** · [Documentation][docs] · [Changelog][changelog] · [Report Issues][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
@@ -16,7 +16,7 @@ Let AI help you generate code and automatically deploy to the cloud, no DevOps r
 [![][github-stars-shield]][github-stars-link]
 [![][github-forks-shield]][github-forks-link]
 [![][github-issues-shield]][github-issues-link]
-[![][github-license-shield]][github-license-link]
+![][github-license-shield]
 [![][github-contributors-shield]][github-contributors-link]
 [![][cnb-shield]][cnb-link]
 [![][deepwiki-shield]][deepwiki-link]
@@ -392,6 +392,12 @@ When an app has issues, AI automatically views logs, analyzes errors, and genera
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=TencentCloudBase/CloudBase-AI-ToolKit&type=Timeline)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+
+## Contributors
+
+Thanks to all the developers who have contributed to CloudBase AI ToolKit!
+
+[![Contributors](https://contrib.rocks/image?repo=TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/graphs/contributors)
 
 ---
 

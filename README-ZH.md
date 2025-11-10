@@ -7,7 +7,7 @@
 **AI 编码工具专用的云开发工具集**<br/>
 让 AI 帮你生成代码并自动部署到云端，无需运维，极速上线
 
-[English](./README.md) · **简体中文** · [文档][docs] · [更新日志][changelog] · [反馈问题][github-issues-link]
+[English](./README-EN.md) · **简体中文** · [文档][docs] · [更新日志][changelog] · [反馈问题][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
@@ -16,7 +16,7 @@
 [![][github-stars-shield]][github-stars-link]
 [![][github-forks-shield]][github-forks-link]
 [![][github-issues-shield]][github-issues-link]
-[![][github-license-shield]][github-license-link]
+![][github-license-shield]
 ![][github-contributors-shield]
 [![][cnb-shield]][cnb-link]
 [![][deepwiki-shield]][deepwiki-link]
@@ -389,9 +389,15 @@ CodeBuddy 已内置 CloudBase MCP，无需配置即可使用。
 | **官方文档** | [查看文档](https://docs.cloudbase.net/) | 完整的云开发文档 |
 | **Issue 反馈** | [提交问题](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues) | Bug 反馈和功能请求 |
 
-## ⭐ Star History
+## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=TencentCloudBase/CloudBase-AI-ToolKit&type=Timeline)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+
+## Contributors
+
+感谢所有为 CloudBase AI ToolKit 做出贡献的开发者！
+
+[![Contributors](https://contrib.rocks/image?repo=TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/graphs/contributors)
 
 ---
 

@@ -7,7 +7,7 @@
 **AI 编码工具专用的云开发工具集**<br/>
 让 AI 帮你生成代码并自动部署到云端，无需运维，极速上线
 
-[English](./README.md) · **简体中文** · [文档][docs] · [更新日志][changelog] · [反馈问题][github-issues-link]
+[English](./README-EN.md) · **简体中文** · [文档][docs] · [更新日志][changelog] · [反馈问题][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
@@ -16,7 +16,7 @@
 [![][github-stars-shield]][github-stars-link]
 [![][github-forks-shield]][github-forks-link]
 [![][github-issues-shield]][github-issues-link]
-[![][github-license-shield]][github-license-link]
+![][github-license-shield]
 ![][github-contributors-shield]
 [![][cnb-shield]][cnb-link]
 [![][deepwiki-shield]][deepwiki-link]
@@ -38,16 +38,16 @@
 <details>
 <summary><kbd>目录</kbd></summary>
 
-- [快速开始](#快速开始)
-- [核心特性](#核心特性)
-- [安装配置](#安装配置)
-- [使用案例](#使用案例)
-- [MCP 工具](#mcp-工具)
-- [更多资源](#更多资源)
+- [🚀 快速开始](#-快速开始)
+- [✨ 核心特性](#-核心特性)
+- [📦 安装配置](#-安装配置)
+- [🎯 使用案例](#-使用案例)
+- [🧩 MCP 工具](#-mcp-工具)
+- [📚 更多资源](#-更多资源)
 
 </details>
 
-## 快速开始
+## 🚀 快速开始
 
 ### 一行配置，立即使用
 
@@ -121,9 +121,9 @@
 
 
 
-## 核心特性
+## ✨ 核心特性
 
-### AI 原生开发
+### 🎨 AI 原生开发
 
 **专为 AI 编程工具设计，生成代码符合云开发最佳实践**
 
@@ -137,7 +137,7 @@
 <img width="1032" height="776" alt="f1" src="https://github.com/user-attachments/assets/62e6dd9d-9c53-4668-841d-0ac1985a75e0" />
 
 
-### 一键部署
+### ⚡ 一键部署
 
 **MCP 自动化部署，Serverless 架构无需购买服务器**
 
@@ -152,7 +152,7 @@
 <img width="1032" height="776" alt="f2" src="https://github.com/user-attachments/assets/20e0493a-fa50-4c03-b4ac-3dc584eb4ccb" />
 
 
-### 全栈应用
+### 🏗️ 全栈应用
 
 **Web + 小程序 + 数据库 + 后端一体化**
 
@@ -165,7 +165,7 @@
 <img width="1032" height="776" alt="f3" src="https://github.com/user-attachments/assets/1c50fed3-3223-4cd6-8534-885dc798c08e" />
 
 
-### 智能问题诊断
+### 🔍 智能问题诊断
 
 **AI 自动查看日志并修复问题**
 
@@ -180,7 +180,7 @@
 <img width="1032" height="776" alt="f5" src="https://github.com/user-attachments/assets/5a61714a-ddcf-448a-8740-983bbad9d2b9" />
 
 
-### 知识检索
+### 📚 知识检索
 
 **内置云开发、微信小程序等专业知识库的智能向量检索**
 
@@ -194,7 +194,7 @@
 <img width="1032" height="776" alt="f6" src="https://github.com/user-attachments/assets/9ccb6b39-1f76-46b8-8b10-b076bfdcc37f" />
 
 
-### 灵活工作流
+### ⚙️ 灵活工作流
 
 **支持 /spec 和 /no_spec 命令，根据任务复杂度智能选择**
 
@@ -206,13 +206,13 @@
 <img width="1032" height="776" alt="f7" src="https://github.com/user-attachments/assets/30a0632c-92e9-4f6d-8da9-10aef044d516" />
 
 
-## 安装配置
+## 📦 安装配置
 
 ### 前置条件
 
-- Node.js v18.15.0 及以上版本
-- 已开通 [腾讯云开发环境](https://tcb.cloud.tencent.com/dev)
-- 安装支持 MCP 的 AI IDE（[查看支持的 IDE](#支持的-ai-ide)）
+- ✅ Node.js v18.15.0 及以上版本
+- ✅ 已开通 [腾讯云开发环境](https://tcb.cloud.tencent.com/dev)
+- ✅ 安装支持 MCP 的 AI IDE（[查看支持的 IDE](#支持的-ai-ide)）
 
 ### 配置方式
 
@@ -281,7 +281,7 @@ CodeBuddy 已内置 CloudBase MCP，无需配置即可使用。
 </details>
 
 
-## 使用案例
+## 🎯 使用案例
 
 ### 案例 1：双人在线对战五子棋
 
@@ -326,7 +326,7 @@ CodeBuddy 已内置 CloudBase MCP，无需配置即可使用。
 
 </details>
 
-## MCP 工具
+## 🧩 MCP 工具
 
 **39 个工具**覆盖环境管理、数据库、云函数、静态托管、小程序发布等核心功能。
 
@@ -341,7 +341,7 @@ CodeBuddy 已内置 CloudBase MCP，无需配置即可使用。
 
 [查看完整工具文档](doc/mcp-tools.md) | [工具规格 JSON](scripts/tools.json)
 
-## 更多资源
+## 📚 更多资源
 
 ### 文档
 
@@ -372,7 +372,7 @@ CodeBuddy 已内置 CloudBase MCP，无需配置即可使用。
 - [电商管理后台](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/ecommerce-management-backend)
 - [更多案例...](https://github.com/TencentCloudBase/awesome-cloudbase-examples)
 
-## 社区
+## 💬 社区
 
 ### 微信交流群
 
@@ -392,6 +392,12 @@ CodeBuddy 已内置 CloudBase MCP，无需配置即可使用。
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=TencentCloudBase/CloudBase-AI-ToolKit&type=Timeline)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
+
+## Contributors
+
+感谢所有为 CloudBase AI ToolKit 做出贡献的开发者！
+
+[![Contributors](https://contrib.rocks/image?repo=TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/graphs/contributors)
 
 ---
 
