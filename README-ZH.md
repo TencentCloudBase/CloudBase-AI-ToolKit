@@ -4,8 +4,8 @@
 
 <h1>CloudBase AI ToolKit</h1>
 
-**AI 编码工具专用的云开发工具集**<br/>
-让 AI 帮你生成代码并自动部署到云端，无需运维，极速上线
+**🪐 AI 编程，一键上线**<br/>
+连接 AI IDE 与腾讯云 CloudBase 的部署桥梁，让你的 AI 应用即刻上线
 
 [English](./README-EN.md) · **简体中文** · [文档][docs] · [更新日志][changelog] · [反馈问题][github-issues-link]
 
@@ -21,19 +21,34 @@
 [![][cnb-shield]][cnb-link]
 [![][deepwiki-shield]][deepwiki-link]
 
-**分享 CloudBase AI ToolKit 给你的好友**
+**发现了一个让 AI 编程一键上线的神器，推荐给正在用 AI 编程的朋友**
 
 [![][share-x-shield]][share-x-link]
 [![][share-telegram-shield]][share-telegram-link]
 [![][share-weibo-shield]][share-weibo-link]
 
-<sup>在 AI 编码工具中，让云开发成为你的最佳拍档</sup>
+<sup>从 AI 提示词到应用上线的最短路径</sup>
 
 [![][github-trending-shield]][github-trending-url]
 
 ![][image-overview]
 
 </div>
+
+## 为什么你需要 CloudBase AI ToolKit？
+
+AI 编程工具（如 Cursor、Copilot）解决了**代码生成**的难题。
+
+但是，从"生成代码"到"应用上线"（部署、配置数据库、CDN、域名），依然存在一条鸿沟。
+
+**CloudBase AI ToolKit 填补了这条鸿沟。**
+
+你不再需要：
+- ❌ 繁琐的 DevOps 配置和 YAML 文件
+- ❌ 手动设置云函数和数据库
+- ❌ 在 IDE 和云控制台之间反复横跳
+
+你只需要在 AI IDE 中，用自然语言完成从"想法"到"上线"的全过程。
 
 <details>
 <summary><kbd>目录</kbd></summary>
@@ -121,11 +136,11 @@
 
 
 
-## ✨ 核心特性
+## ✨ 如何实现 AI 编程"一键上线"？
 
-### 🎨 AI 原生开发
+### 1. AI 原生（AI-Native）
 
-**专为 AI 编程工具设计，生成代码符合云开发最佳实践**
+我们不是简单的"胶水代码"。内置的规则库专为 AI 编程设计，能让 AI 直接生成"可部署"的 CloudBase 最佳实践代码。
 
 ```markdown
 提示词：生成一个用户登录功能
@@ -136,10 +151,9 @@
 
 <img width="1032" height="776" alt="f1" src="https://github.com/user-attachments/assets/62e6dd9d-9c53-4668-841d-0ac1985a75e0" />
 
+### 2. 一键部署（One-Click Deploy）
 
-### ⚡ 一键部署
-
-**MCP 自动化部署，Serverless 架构无需购买服务器**
+AI 自动化的 MCP 部署流，AI 帮你搞定从云函数、数据库到静态网站的**所有**云上资源配置。
 
 ```markdown
 提示词：部署当前项目到云开发
@@ -151,23 +165,9 @@
 
 <img width="1032" height="776" alt="f2" src="https://github.com/user-attachments/assets/20e0493a-fa50-4c03-b4ac-3dc584eb4ccb" />
 
+### 3. 智能调试（Smart Debugging）
 
-### 🏗️ 全栈应用
-
-**Web + 小程序 + 数据库 + 后端一体化**
-
-| 应用类型 | 技术栈 | 部署方式 |
-|---------|--------|---------|
-| **Web 应用** | React/Vue/Next.js | 静态托管 + CDN |
-| **微信小程序** | 原生/UniApp | 小程序发布 |
-| **后端服务** | Node.js/Python | 云函数/云托管 |
-
-<img width="1032" height="776" alt="f3" src="https://github.com/user-attachments/assets/1c50fed3-3223-4cd6-8534-885dc798c08e" />
-
-
-### 🔍 智能问题诊断
-
-**AI 自动查看日志并修复问题**
+部署出错？不用怕。AI 会自动读取日志，帮你分析并修复问题，真正实现**开发-部署-调试**的闭环。
 
 ```markdown
 提示词：报错了，错误是 xxxx
@@ -179,10 +179,21 @@
 
 <img width="1032" height="776" alt="f5" src="https://github.com/user-attachments/assets/5a61714a-ddcf-448a-8740-983bbad9d2b9" />
 
+### 4. 全栈支持（Full-Stack Ready）
 
-### 📚 知识检索
+无论是 Web 应用、小程序还是后端服务，AI 都能为你处理，你只需专注业务逻辑。
 
-**内置云开发、微信小程序等专业知识库的智能向量检索**
+| 应用类型 | 技术栈 | 部署方式 |
+|---------|--------|---------|
+| **Web 应用** | React/Vue/Next.js | 静态托管 + CDN |
+| **微信小程序** | 原生/UniApp | 小程序发布 |
+| **后端服务** | Node.js/Python | 云函数/云托管 |
+
+<img width="1032" height="776" alt="f3" src="https://github.com/user-attachments/assets/1c50fed3-3223-4cd6-8534-885dc798c08e" />
+
+### 5. 知识检索（Knowledge Search）
+
+内置云开发、微信小程序等专业知识库的智能向量检索，让 AI 更懂云开发。
 
 ```markdown
 提示词：如何使用云数据库实现实时数据同步？
@@ -193,10 +204,9 @@
 
 <img width="1032" height="776" alt="f6" src="https://github.com/user-attachments/assets/9ccb6b39-1f76-46b8-8b10-b076bfdcc37f" />
 
+### 6. 灵活工作流（Flexible Workflow）
 
-### ⚙️ 灵活工作流
-
-**支持 /spec 和 /no_spec 命令，根据任务复杂度智能选择**
+支持 /spec 和 /no_spec 命令，根据任务复杂度智能选择。
 
 ```markdown
 /spec - 完整工作流（需求→设计→任务→实现）
@@ -476,9 +486,9 @@ CodeBuddy 已内置 CloudBase MCP，无需配置即可使用。
 [github-trending-shield]: https://img.shields.io/github/stars/TencentCloudBase/CloudBase-AI-ToolKit?style=social
 
 <!-- Share Links -->
-[share-x-link]: https://x.com/intent/tweet?hashtags=cloudbase,mcp,ai&text=CloudBase%20AI%20ToolKit%20-%20为%20AI%20IDE%20打造的云开发%20MCP%20工具集&url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit
+[share-x-link]: https://x.com/intent/tweet?hashtags=cloudbase,ai,devtools&text=AI%20编程%2C%20一键上线！告别繁琐的%20DevOps%20配置%2C%20从提示词到应用上线的最短路径%20🚀&url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit
 [share-x-shield]: https://img.shields.io/badge/-share%20on%20x-black?labelColor=black&logo=x&logoColor=white&style=flat-square
 [share-telegram-shield]: https://img.shields.io/badge/-share%20on%20telegram-black?labelColor=black&logo=telegram&logoColor=white&style=flat-square
-[share-telegram-link]: https://t.me/share/url?url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit&text=CloudBase%20AI%20ToolKit
-[share-weibo-link]: http://service.weibo.com/share/share.php?sharesource=weibo&title=CloudBase%20AI%20ToolKit%20-%20为%20AI%20IDE%20打造的云开发%20MCP%20工具集&url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit
+[share-telegram-link]: https://t.me/share/url?url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit&text=AI%20编程%2C%20一键上线！告别繁琐的%20DevOps%20配置%2C%20从提示词到应用上线的最短路径%20🚀
+[share-weibo-link]: http://service.weibo.com/share/share.php?sharesource=weibo&title=AI%20编程%2C%20一键上线！告别繁琐的%20DevOps%20配置%2C%20从提示词到应用上线的最短路径%20🚀&url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit
 [share-weibo-shield]: https://img.shields.io/badge/-share%20on%20weibo-black?labelColor=black&logo=sinaweibo&logoColor=white&style=flat-square

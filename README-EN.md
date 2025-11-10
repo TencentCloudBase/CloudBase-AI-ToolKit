@@ -4,8 +4,8 @@
 
 <h1>CloudBase AI ToolKit</h1>
 
-**Cloud development toolkit designed for AI coding tools**<br/>
-Let AI help you generate code and automatically deploy to the cloud, no DevOps required, launch at lightning speed
+**🪐 Go from AI prompt to live app in one click**<br/>
+The bridge that connects your AI IDE (Cursor, Copilot, etc.) directly to Tencent CloudBase
 
 **Languages:** [中文](README-ZH.md) | **English** · [Documentation][docs] · [Changelog][changelog] · [Report Issues][github-issues-link]
 
@@ -21,19 +21,34 @@ Let AI help you generate code and automatically deploy to the cloud, no DevOps r
 [![][cnb-shield]][cnb-link]
 [![][deepwiki-shield]][deepwiki-link]
 
-**Share CloudBase AI ToolKit with your friends**
+**Found a game-changer for AI coding: one-click deploy from prompt to production**
 
 [![][share-x-shield]][share-x-link]
 [![][share-telegram-shield]][share-telegram-link]
 [![][share-weibo-shield]][share-weibo-link]
 
-<sup>Make cloud development your best partner in AI coding tools</sup>
+<sup>The shortest path from AI prompt to live application</sup>
 
 [![][github-trending-shield]][github-trending-url]
 
 ![][image-overview]
 
 </div>
+
+## Why You Need CloudBase AI ToolKit
+
+AI programming tools (like Cursor, Copilot) solve the **code generation** challenge.
+
+However, there's still a gap between "generating code" and "application going live" (deployment, database configuration, CDN, domain setup).
+
+**CloudBase AI ToolKit bridges this gap.**
+
+You no longer need:
+- ❌ Complex DevOps configuration and YAML files
+- ❌ Manual setup of cloud functions and databases
+- ❌ Switching back and forth between IDE and cloud console
+
+You only need to use natural language in your AI IDE to complete the entire journey from "idea" to "live".
 
 <details>
 <summary><kbd>Table of Contents</kbd></summary>
@@ -121,11 +136,11 @@ In AI IDEs that support MCP (Cursor, WindSurf, CodeBuddy, etc.), just add one li
 
 
 
-## Core Features
+## How to Achieve "One-Click Deploy" for AI Programming?
 
-### AI-Native Development
+### 1. AI-Native
 
-**Designed for AI programming tools, generates code following cloud development best practices**
+We're not just "glue code". Our built-in rule library is designed specifically for AI programming, enabling AI to directly generate "deployable" CloudBase best-practice code.
 
 ```markdown
 Prompt: Generate a user login feature
@@ -136,10 +151,9 @@ Prompt: Generate a user login feature
 
 <img width="1032" height="776" alt="f1" src="https://github.com/user-attachments/assets/62e6dd9d-9c53-4668-841d-0ac1985a75e0" />
 
+### 2. One-Click Deploy
 
-### One-Click Deploy
-
-**MCP automated deployment, Serverless architecture without purchasing servers**
+AI-automated MCP deployment flow, AI handles **all** cloud resource configuration from cloud functions, databases to static websites.
 
 ```markdown
 Prompt: Deploy current project to CloudBase
@@ -151,23 +165,9 @@ Prompt: Deploy current project to CloudBase
 
 <img width="1032" height="776" alt="f2" src="https://github.com/user-attachments/assets/20e0493a-fa50-4c03-b4ac-3dc584eb4ccb" />
 
+### 3. Smart Debugging
 
-### Full-Stack Applications
-
-**Web + Mini-programs + Database + Backend integration**
-
-| Application Type | Tech Stack | Deployment Method |
-|---------|--------|---------|
-| **Web Apps** | React/Vue/Next.js | Static Hosting + CDN |
-| **WeChat Mini-Programs** | Native/UniApp | Mini-program Publishing |
-| **Backend Services** | Node.js/Python | Cloud Functions/Cloud Run |
-
-<img width="1032" height="776" alt="f3" src="https://github.com/user-attachments/assets/1c50fed3-3223-4cd6-8534-885dc798c08e" />
-
-
-### Smart Issue Diagnosis
-
-**AI automatically views logs and fixes issues**
+Deployment error? Don't worry. AI automatically reads logs, analyzes issues, and generates fixes, truly achieving a **develop-deploy-debug** closed loop.
 
 ```markdown
 Prompt: There's an error: xxxx
@@ -179,10 +179,21 @@ Prompt: There's an error: xxxx
 
 <img width="1032" height="776" alt="f5" src="https://github.com/user-attachments/assets/5a61714a-ddcf-448a-8740-983bbad9d2b9" />
 
+### 4. Full-Stack Ready
 
-### Knowledge Retrieval
+Whether it's Web apps, mini-programs, or backend services, AI handles it all for you. You just focus on business logic.
 
-**Built-in intelligent vector search for CloudBase, WeChat Mini-Program and other professional knowledge bases**
+| Application Type | Tech Stack | Deployment Method |
+|---------|--------|---------|
+| **Web Apps** | React/Vue/Next.js | Static Hosting + CDN |
+| **WeChat Mini-Programs** | Native/UniApp | Mini-program Publishing |
+| **Backend Services** | Node.js/Python | Cloud Functions/Cloud Run |
+
+<img width="1032" height="776" alt="f3" src="https://github.com/user-attachments/assets/1c50fed3-3223-4cd6-8534-885dc798c08e" />
+
+### 5. Knowledge Search
+
+Built-in intelligent vector search for CloudBase, WeChat Mini-Program and other professional knowledge bases, making AI understand CloudBase better.
 
 ```markdown
 Prompt: How to use cloud database to achieve real-time data synchronization?
@@ -193,10 +204,9 @@ Prompt: How to use cloud database to achieve real-time data synchronization?
 
 <img width="1032" height="776" alt="f6" src="https://github.com/user-attachments/assets/9ccb6b39-1f76-46b8-8b10-b076bfdcc37f" />
 
+### 6. Flexible Workflow
 
-### Flexible Workflow
-
-**Support /spec and /no_spec commands, intelligently choose based on task complexity**
+Support /spec and /no_spec commands, intelligently choose based on task complexity.
 
 ```markdown
 /spec - Complete workflow (Requirements → Design → Tasks → Implementation)
@@ -476,9 +486,9 @@ Prompt templates (all images without text, pure geometric shapes and icons):
 [github-trending-shield]: https://img.shields.io/github/stars/TencentCloudBase/CloudBase-AI-ToolKit?style=social
 
 <!-- Share Links -->
-[share-x-link]: https://x.com/intent/tweet?hashtags=cloudbase,mcp,ai&text=CloudBase%20AI%20ToolKit%20-%20Cloud%20development%20MCP%20toolkit%20for%20AI%20IDEs&url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit
+[share-x-link]: https://x.com/intent/tweet?hashtags=cloudbase,ai,devtools&text=Go%20from%20AI%20prompt%20to%20live%20app%20in%20one%20click!%20No%20DevOps%20config%20needed%20🚀&url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit
 [share-x-shield]: https://img.shields.io/badge/-share%20on%20x-black?labelColor=black&logo=x&logoColor=white&style=flat-square
 [share-telegram-shield]: https://img.shields.io/badge/-share%20on%20telegram-black?labelColor=black&logo=telegram&logoColor=white&style=flat-square
-[share-telegram-link]: https://t.me/share/url?url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit&text=CloudBase%20AI%20ToolKit
-[share-weibo-link]: http://service.weibo.com/share/share.php?sharesource=weibo&title=CloudBase%20AI%20ToolKit%20-%20Cloud%20development%20MCP%20toolkit%20for%20AI%20IDEs&url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit
+[share-telegram-link]: https://t.me/share/url?url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit&text=Go%20from%20AI%20prompt%20to%20live%20app%20in%20one%20click!%20No%20DevOps%20config%20needed%20🚀
+[share-weibo-link]: http://service.weibo.com/share/share.php?sharesource=weibo&title=Go%20from%20AI%20prompt%20to%20live%20app%20in%20one%20click!%20No%20DevOps%20config%20needed%20🚀&url=https://github.com/TencentCloudBase/CloudBase-AI-ToolKit
 [share-weibo-shield]: https://img.shields.io/badge/-share%20on%20weibo-black?labelColor=black&logo=sinaweibo&logoColor=white&style=flat-square
