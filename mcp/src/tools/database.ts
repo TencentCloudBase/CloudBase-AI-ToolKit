@@ -1,6 +1,9 @@
+import CloudBase from "@cloudbase/manager-node";
 import { z } from "zod";
 import { getCloudBaseManager } from "../cloudbase-manager.js";
 import { ExtendedMcpServer } from "../server.js";
+
+const CATEGORY = "NoSQL database";
 
 // 获取数据库实例ID
 async function getDatabaseInstanceId(getManager: () => Promise<any>) {
@@ -13,25 +16,208 @@ async function getDatabaseInstanceId(getManager: () => Promise<any>) {
 }
 
 export function registerDatabaseTools(server: ExtendedMcpServer) {
-  // 获取 cloudBaseOptions，如果没有则为 undefined
+  // 获取 cloudBaseOptions,如果没有则为 undefined
   const cloudBaseOptions = server.cloudBaseOptions;
 
   // 创建闭包函数来获取 CloudBase Manager
   const getManager = () => getCloudBaseManager({ cloudBaseOptions });
-  // 创建/更新 云开发数据库集合（向后兼容：默认create）
+
+  // readNoSqlDatabaseStructure
   server.registerTool?.(
-    "createCollection",
+    "readNoSqlDatabaseStructure",
     {
-      title: "创建数据库集合",
-      description:
-        "管理云开发数据库集合：默认创建。可通过 action 指定 update。",
+      title: "读取 NoSQL 数据库结构",
+      description: "读取 NoSQL 数据库结构",
       inputSchema: {
-        action: z
-          .enum(["create", "update"])
+        action: z.enum([
+          "listCollections",
+          "describeCollection",
+          "checkCollection",
+          "listIndexes",
+          "checkIndex",
+        ]).describe(`listCollections: 列出集合列表
+describeCollection: 描述集合
+checkCollection: 检查集合是否存在
+listIndexes: 列出索引列表
+checkIndex: 检查索引是否存在`),
+        limit: z
+          .number()
           .optional()
-          .describe("操作类型：create=创建(默认)，update=更新集合配置"),
-        collectionName: z.string().describe("云开发数据库集合名称"),
-        options: z
+          .describe("返回数量限制(listCollections 操作时可选)"),
+        offset: z
+          .number()
+          .optional()
+          .describe("偏移量(listCollections 操作时可选)"),
+        collectionName: z
+          .string()
+          .optional()
+          .describe(
+            "集合名称(describeCollection、listIndexes、checkIndex 操作时必填)"
+          ),
+        indexName: z
+          .string()
+          .optional()
+          .describe("索引名称(checkIndex 操作时必填)"),
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+        category: CATEGORY,
+      },
+    },
+    async ({ action, limit, offset, collectionName, indexName }) => {
+      const cloudbase = await getManager();
+
+      if (action === "listCollections") {
+        const result = await cloudbase.database.listCollections({
+          MgoOffset: offset,
+          MgoLimit: limit,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  success: true,
+                  requestId: result.RequestId,
+                  collections: result.Collections,
+                  pager: result.Pager,
+                  message: "获取 NoSQL 数据库集合列表成功",
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      if (action === "checkCollection") {
+        if (!collectionName) {
+          throw new Error("检查集合时必须提供 collectionName");
+        }
+        const result = await cloudbase.database.checkCollectionExists(
+          collectionName
+        );
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  success: true,
+                  exists: result.Exists,
+                  requestId: result.RequestId,
+                  message: result.Exists
+                    ? "云开发数据库集合已存在"
+                    : "云开发数据库集合不存在",
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      if (action === "describeCollection") {
+        if (!collectionName) {
+          throw new Error("查看集合详情时必须提供 collectionName");
+        }
+        const result = await cloudbase.database.describeCollection(
+          collectionName
+        );
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  success: true,
+                  requestId: result.RequestId,
+                  indexNum: result.IndexNum,
+                  indexes: result.Indexes,
+                  message: "获取云开发数据库集合信息成功",
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      if (action === "listIndexes") {
+        if (!collectionName) {
+          throw new Error("获取索引列表时必须提供 collectionName");
+        }
+        const result = await cloudbase.database.describeCollection(
+          collectionName
+        );
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  success: true,
+                  requestId: result.RequestId,
+                  indexNum: result.IndexNum,
+                  indexes: result.Indexes,
+                  message: "获取索引列表成功",
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      if (action === "checkIndex") {
+        if (!collectionName || !indexName) {
+          throw new Error("检查索引时必须提供 collectionName 和 indexName");
+        }
+        const result = await cloudbase.database.checkIndexExists(
+          collectionName,
+          indexName
+        );
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  success: true,
+                  exists: result.Exists,
+                  requestId: result.RequestId,
+                  message: result.Exists ? "索引已存在" : "索引不存在",
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      throw new Error(`不支持的操作类型: ${action}`);
+    }
+  );
+
+  // writeNoSqlDatabaseStructure
+  server.registerTool?.(
+    "writeNoSqlDatabaseStructure",
+    {
+      title: "修改 NoSQL 数据库结构",
+      description: "修改 NoSQL 数据库结构",
+      inputSchema: {
+        action: z.enum(["createCollection", "updateCollection"])
+          .describe(`createCollection: 创建集合
+updateCollection: 更新集合`),
+        collectionName: z.string().describe("集合名称"),
+        updateOptions: z
           .object({
             CreateIndexes: z
               .array(
@@ -58,7 +244,7 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
               .optional(),
           })
           .optional()
-          .describe("更新选项（action=update 时使用）"),
+          .describe("更新选项(updateCollection 时使用)"),
       },
       annotations: {
         readOnlyHint: false,
@@ -68,18 +254,10 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
         category: "database",
       },
     },
-    async ({
-      action = "create",
-      collectionName,
-      options,
-    }: {
-      action?: "create" | "update";
-      collectionName: string;
-      options?: any;
-    }) => {
+    async ({ action, collectionName, updateOptions }) => {
       try {
         const cloudbase = await getManager();
-        if (action === "create") {
+        if (action === "createCollection") {
           const result = await cloudbase.database.createCollection(
             collectionName
           );
@@ -102,13 +280,13 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
           };
         }
 
-        if (action === "update") {
-          if (!options) {
+        if (action === "updateCollection") {
+          if (!updateOptions) {
             throw new Error("更新集合时必须提供 options");
           }
           const result = await cloudbase.database.updateCollection(
             collectionName,
-            options
+            updateOptions
           );
           return {
             content: [
@@ -152,492 +330,36 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
     }
   );
 
-  // collectionQuery - 集合查询（check/describe/list）并扩展索引查询（index_list/index_check）
+  // readNoSqlDatabaseContent
   server.registerTool?.(
-    "collectionQuery",
+    "readNoSqlDatabaseContent",
     {
-      title: "集合查询",
-      description:
-        "数据库集合的查询操作，支持检查存在性、查看详情、列表查询；并支持索引列表与检查。（兼容旧名称）",
+      title: "查询并获取 NoSQL 数据库数据记录",
+      description: "查询并获取 NoSQL 数据库数据记录",
       inputSchema: {
-        action: z
-          .enum(["check", "describe", "list", "index_list", "index_check"])
-          .describe(
-            "操作类型：check=检查是否存在，describe=查看详情，list=列表查询，index_list=索引列表，index_check=检查索引是否存在"
-          ),
-        collectionName: z
-          .string()
-          .optional()
-          .describe(
-            "集合名称（check、describe、index_list、index_check 操作时必填）"
-          ),
-        indexName: z
-          .string()
-          .optional()
-          .describe("索引名称（index_check 操作时必填）"),
-        limit: z.number().optional().describe("返回数量限制（list操作时可选）"),
-        offset: z.number().optional().describe("偏移量（list操作时可选）"),
-      },
-      annotations: {
-        readOnlyHint: true,
-        openWorldHint: true,
-        category: "database",
-      },
-    },
-    async ({
-      action,
-      collectionName,
-      indexName,
-      limit,
-      offset,
-    }: {
-      action: "check" | "describe" | "list" | "index_list" | "index_check";
-      collectionName?: string;
-      indexName?: string;
-      limit?: number;
-      offset?: number;
-    }) => {
-      try {
-        const cloudbase = await getManager();
-        let result;
-
-        switch (action) {
-          case "check":
-            if (!collectionName) {
-              throw new Error("检查集合时必须提供 collectionName");
-            }
-            result = await cloudbase.database.checkCollectionExists(
-              collectionName
-            );
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: JSON.stringify(
-                    {
-                      success: true,
-                      exists: result.Exists,
-                      requestId: result.RequestId,
-                      message: result.Exists
-                        ? "云开发数据库集合已存在"
-                        : "云开发数据库集合不存在",
-                    },
-                    null,
-                    2
-                  ),
-                },
-              ],
-            };
-
-          case "describe":
-            if (!collectionName) {
-              throw new Error("查看集合详情时必须提供 collectionName");
-            }
-            result = await cloudbase.database.describeCollection(
-              collectionName
-            );
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: JSON.stringify(
-                    {
-                      success: true,
-                      requestId: result.RequestId,
-                      indexNum: result.IndexNum,
-                      indexes: result.Indexes,
-                      message: "获取云开发数据库集合信息成功",
-                    },
-                    null,
-                    2
-                  ),
-                },
-              ],
-            };
-
-          case "list":
-            result = await cloudbase.database.listCollections({
-              MgoOffset: offset,
-              MgoLimit: limit,
-            });
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: JSON.stringify(
-                    {
-                      success: true,
-                      requestId: result.RequestId,
-                      collections: result.Collections,
-                      pager: result.Pager,
-                      message: "获取云开发数据库集合列表成功",
-                    },
-                    null,
-                    2
-                  ),
-                },
-              ],
-            };
-
-          case "index_list":
-            if (!collectionName) {
-              throw new Error("获取索引列表时必须提供 collectionName");
-            }
-            result = await cloudbase.database.describeCollection(
-              collectionName
-            );
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: JSON.stringify(
-                    {
-                      success: true,
-                      requestId: result.RequestId,
-                      indexNum: result.IndexNum,
-                      indexes: result.Indexes,
-                      message: "获取索引列表成功",
-                    },
-                    null,
-                    2
-                  ),
-                },
-              ],
-            };
-
-          case "index_check":
-            if (!collectionName || !indexName) {
-              throw new Error("检查索引时必须提供 collectionName 和 indexName");
-            }
-            result = await cloudbase.database.checkIndexExists(
-              collectionName,
-              indexName
-            );
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: JSON.stringify(
-                    {
-                      success: true,
-                      exists: result.Exists,
-                      requestId: result.RequestId,
-                      message: result.Exists ? "索引已存在" : "索引不存在",
-                    },
-                    null,
-                    2
-                  ),
-                },
-              ],
-            };
-
-          default:
-            throw new Error(`不支持的操作类型: ${action}`);
-        }
-      } catch (error: any) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(
-                {
-                  success: false,
-                  error: error.message,
-                  message: `集合查询失败: ${action}`,
-                },
-                null,
-                2
-              ),
-            },
-          ],
-        };
-      }
-    }
-  );
-
-  // 更新云开发数据库集合（创建/删除索引）
-  server.registerTool?.(
-    "updateCollection",
-    {
-      title: "更新数据库集合",
-      description: "更新云开发数据库集合配置（创建或删除索引）",
-      inputSchema: {
-        collectionName: z.string().describe("云开发数据库集合名称"),
-        options: z
-          .object({
-            CreateIndexes: z
-              .array(
-                z.object({
-                  IndexName: z.string(),
-                  MgoKeySchema: z.object({
-                    MgoIsUnique: z.boolean(),
-                    MgoIndexKeys: z.array(
-                      z.object({
-                        Name: z.string(),
-                        Direction: z.string(),
-                      })
-                    ),
-                  }),
-                })
-              )
-              .optional(),
-            DropIndexes: z
-              .array(
-                z.object({
-                  IndexName: z.string(),
-                })
-              )
-              .optional(),
-          })
-          .describe("更新选项，支持创建和删除索引"),
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-        openWorldHint: true,
-        category: "database",
-      },
-    },
-    async ({
-      collectionName,
-      options,
-    }: {
-      collectionName: string;
-      options: any;
-    }) => {
-      try {
-        const cloudbase = await getManager();
-        const result = await cloudbase.database.updateCollection(
-          collectionName,
-          options
-        );
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(
-                {
-                  success: true,
-                  requestId: result.RequestId,
-                  message: "云开发数据库集合更新成功",
-                },
-                null,
-                2
-              ),
-            },
-          ],
-        };
-      } catch (error: any) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(
-                {
-                  success: false,
-                  error: error.message,
-                  message: "云开发数据库集合更新失败",
-                },
-                null,
-                2
-              ),
-            },
-          ],
-        };
-      }
-    }
-  );
-
-  // 检查索引是否存在
-  server.registerTool?.(
-    "checkIndexExists",
-    {
-      title: "检查索引是否存在",
-      description: "检查索引是否存在",
-      inputSchema: {
-        collectionName: z.string().describe("云开发数据库集合名称"),
-        indexName: z.string().describe("索引名称"),
-      },
-      annotations: {
-        readOnlyHint: true,
-        openWorldHint: true,
-        category: "database",
-      },
-    },
-    async ({
-      collectionName,
-      indexName,
-    }: {
-      collectionName: string;
-      indexName: string;
-    }) => {
-      try {
-        const cloudbase = await getManager();
-        const result = await cloudbase.database.checkIndexExists(
-          collectionName,
-          indexName
-        );
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(
-                {
-                  success: true,
-                  exists: result.Exists,
-                  requestId: result.RequestId,
-                  message: result.Exists ? "索引已存在" : "索引不存在",
-                },
-                null,
-                2
-              ),
-            },
-          ],
-        };
-      } catch (error: any) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(
-                {
-                  success: false,
-                  error: error.message,
-                  message: "检查索引失败",
-                },
-                null,
-                2
-              ),
-            },
-          ],
-        };
-      }
-    }
-  );
-
-  // 插入文档
-  server.registerTool?.(
-    "insertDocuments",
-    {
-      title: "插入文档",
-      description: "向云开发数据库集合中插入一个或多个文档（支持对象数组）",
-      inputSchema: {
-        collectionName: z.string().describe("云开发数据库集合名称"),
-        documents: z
-          .array(z.object({}).passthrough())
-          .describe("要插入的文档对象数组，每个文档都是对象"),
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-        openWorldHint: true,
-        category: "database",
-      },
-    },
-    async ({
-      collectionName,
-      documents,
-    }: {
-      collectionName: string;
-      documents: object[];
-    }) => {
-      try {
-        const cloudbase = await getManager();
-        const instanceId = await getDatabaseInstanceId(getManager);
-        // 将对象数组序列化为字符串数组
-        const docsAsStrings = documents.map((doc) => JSON.stringify(doc));
-        const result = await cloudbase.commonService("flexdb").call({
-          Action: "PutItem",
-          Param: {
-            TableName: collectionName,
-            MgoDocs: docsAsStrings,
-            Tag: instanceId,
-          },
-        });
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(
-                {
-                  success: true,
-                  requestId: result.RequestId,
-                  insertedIds: result.InsertedIds,
-                  message: "文档插入成功",
-                },
-                null,
-                2
-              ),
-            },
-          ],
-        };
-      } catch (error: any) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(
-                {
-                  success: false,
-                  error: error.message,
-                  message: "文档插入失败",
-                },
-                null,
-                2
-              ),
-            },
-          ],
-        };
-      }
-    }
-  );
-
-  // 查询文档
-  server.registerTool?.(
-    "queryDocuments",
-    {
-      title: "查询文档",
-      description: "查询云开发数据库集合中的文档（支持对象参数）",
-      inputSchema: {
-        collectionName: z.string().describe("云开发数据库集合名称"),
+        collectionName: z.string().describe("集合名称"),
         query: z
           .union([z.object({}).passthrough(), z.string()])
           .optional()
-          .describe("查询条件（对象或字符串，推荐对象）"),
+          .describe("查询条件(对象或字符串,推荐对象)"),
         projection: z
           .union([z.object({}).passthrough(), z.string()])
           .optional()
-          .describe("返回字段投影（对象或字符串，推荐对象）"),
+          .describe("返回字段投影(对象或字符串,推荐对象)"),
         sort: z
           .union([z.object({}).passthrough(), z.string()])
           .optional()
-          .describe("排序条件（对象或字符串，推荐对象）"),
+          .describe("排序条件(对象或字符串,推荐对象)"),
         limit: z.number().optional().describe("返回数量限制"),
         offset: z.number().optional().describe("跳过的记录数"),
       },
       annotations: {
         readOnlyHint: true,
         openWorldHint: true,
-        category: "database",
+        category: CATEGORY,
       },
     },
-    async ({
-      collectionName,
-      query,
-      projection,
-      sort,
-      limit,
-      offset,
-    }: {
-      collectionName: string;
-      query?: object | string;
-      projection?: object | string;
-      sort?: object | string;
-      limit?: number;
-      offset?: number;
-    }) => {
+    async ({ collectionName, query, projection, sort, limit, offset }) => {
       try {
         const cloudbase = await getManager();
         const instanceId = await getDatabaseInstanceId(getManager);
@@ -651,7 +373,7 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
             MgoQuery: toJSONString(query),
             MgoProjection: toJSONString(projection),
             MgoSort: toJSONString(sort),
-            MgoLimit: limit ?? 100, // 默认返回100条，避免底层SDK缺参报错
+            MgoLimit: limit ?? 100, // 默认返回100条,避免底层SDK缺参报错
             MgoOffset: offset,
             Tag: instanceId,
           },
@@ -695,179 +417,253 @@ export function registerDatabaseTools(server: ExtendedMcpServer) {
     }
   );
 
-  // 更新文档
+  // writeNoSqlDatabaseContent
   server.registerTool?.(
-    "updateDocuments",
+    "writeNoSqlDatabaseContent",
     {
-      title: "更新文档",
-      description: "更新云开发数据库集合中的文档（支持对象参数）",
+      title: "修改 NoSQL 数据库数据记录",
+      description: "修改 NoSQL 数据库数据记录",
       inputSchema: {
-        collectionName: z.string().describe("云开发数据库集合名称"),
+        action: z.enum(["insert", "update", "delete"])
+          .describe(`createCollection: 创建数据
+updateCollection: 更新数据
+deleteCollection: 删除数据`),
+        collectionName: z.string().describe("集合名称"),
+        documents: z
+          .array(z.object({}).passthrough())
+          .describe("要插入的文档对象数组,每个文档都是对象(insert 操作必填)"),
         query: z
           .union([z.object({}).passthrough(), z.string()])
-          .describe("查询条件（对象或字符串，推荐对象）"),
+          .describe("查询条件(对象或字符串,推荐对象)(update/delete 操作必填)"),
         update: z
           .union([z.object({}).passthrough(), z.string()])
-          .describe("更新内容（对象或字符串，推荐对象）"),
-        isMulti: z.boolean().optional().describe("是否更新多条记录"),
-        upsert: z.boolean().optional().describe("是否在不存在时插入"),
+          .describe("更新内容(对象或字符串,推荐对象)(update 操作必填)"),
+        isMulti: z
+          .boolean()
+          .optional()
+          .describe("是否更新多条记录(update/delete 操作可选)"),
+        upsert: z
+          .boolean()
+          .optional()
+          .describe("是否在不存在时插入(update 操作可选)"),
       },
       annotations: {
         readOnlyHint: false,
-        destructiveHint: false,
+        destructiveHint: true,
         idempotentHint: false,
         openWorldHint: true,
         category: "database",
       },
     },
     async ({
+      action,
       collectionName,
+      documents,
       query,
       update,
       isMulti,
       upsert,
-    }: {
-      collectionName: string;
-      query: object | string;
-      update: object | string;
-      isMulti?: boolean;
-      upsert?: boolean;
     }) => {
-      try {
-        const cloudbase = await getManager();
-        const instanceId = await getDatabaseInstanceId(getManager);
-        const toJSONString = (v: any) =>
-          typeof v === "object" && v !== null ? JSON.stringify(v) : v;
-        const result = await cloudbase.commonService("flexdb").call({
-          Action: "UpdateItem",
-          Param: {
-            TableName: collectionName,
-            MgoQuery: toJSONString(query),
-            MgoUpdate: toJSONString(update),
-            MgoIsMulti: isMulti,
-            MgoUpsert: upsert,
-            Tag: instanceId,
-          },
+      if (action === "insert") {
+        const text = await insertDocuments({
+          collectionName,
+          documents,
+          getManager,
         });
         return {
           content: [
             {
               type: "text",
-              text: JSON.stringify(
-                {
-                  success: true,
-                  requestId: result.RequestId,
-                  modifiedCount: result.ModifiedNum,
-                  matchedCount: result.MatchedNum,
-                  upsertedId: result.UpsertedId,
-                  message: "文档更新成功",
-                },
-                null,
-                2
-              ),
-            },
-          ],
-        };
-      } catch (error: any) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(
-                {
-                  success: false,
-                  error: error.message,
-                  message: "文档更新失败",
-                },
-                null,
-                2
-              ),
+              text,
             },
           ],
         };
       }
-    }
-  );
+      if (action === "update") {
+        const text = await updateDocuments({
+          collectionName,
+          query,
+          update,
+          isMulti,
+          upsert,
+          getManager,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text,
+            },
+          ],
+        };
+      }
+      if (action === "delete") {
+        const text = await deleteDocuments({
+          collectionName,
+          query,
+          isMulti,
+          getManager,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text,
+            },
+          ],
+        };
+      }
 
-  // 删除文档
-  server.registerTool?.(
-    "deleteDocuments",
-    {
-      title: "删除文档",
-      description: "删除云开发数据库集合中的文档（支持对象参数）",
-      inputSchema: {
-        collectionName: z.string().describe("云开发数据库集合名称"),
-        query: z
-          .union([z.object({}).passthrough(), z.string()])
-          .describe("查询条件（对象或字符串，推荐对象）"),
-        isMulti: z.boolean().optional().describe("是否删除多条记录"),
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: true,
-        idempotentHint: true,
-        openWorldHint: true,
-        category: "database",
-      },
-    },
-    async ({
-      collectionName,
-      query,
-      isMulti,
-    }: {
-      collectionName: string;
-      query: object | string;
-      isMulti?: boolean;
-    }) => {
-      try {
-        const cloudbase = await getManager();
-        const instanceId = await getDatabaseInstanceId(getManager);
-        const toJSONString = (v: any) =>
-          typeof v === "object" && v !== null ? JSON.stringify(v) : v;
-        const result = await cloudbase.commonService("flexdb").call({
-          Action: "DeleteItem",
-          Param: {
-            TableName: collectionName,
-            MgoQuery: toJSONString(query),
-            MgoIsMulti: isMulti,
-            Tag: instanceId,
-          },
-        });
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(
-                {
-                  success: true,
-                  requestId: result.RequestId,
-                  deleted: result.Deleted,
-                  message: "文档删除成功",
-                },
-                null,
-                2
-              ),
-            },
-          ],
-        };
-      } catch (error: any) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(
-                {
-                  success: false,
-                  error: error.message,
-                  message: "文档删除失败",
-                },
-                null,
-                2
-              ),
-            },
-          ],
-        };
-      }
+      throw new Error(`不支持的操作类型: ${action}`);
     }
   );
+}
+
+async function insertDocuments({
+  collectionName,
+  documents,
+  getManager,
+}: {
+  collectionName: string;
+  documents: object[];
+  getManager: () => Promise<CloudBase>;
+}) {
+  try {
+    const cloudbase = await getManager();
+    const instanceId = await getDatabaseInstanceId(getManager);
+    // 将对象数组序列化为字符串数组
+    const docsAsStrings = documents.map((doc) => JSON.stringify(doc));
+    const result = await cloudbase.commonService("flexdb").call({
+      Action: "PutItem",
+      Param: {
+        TableName: collectionName,
+        MgoDocs: docsAsStrings,
+        Tag: instanceId,
+      },
+    });
+    return JSON.stringify(
+      {
+        success: true,
+        requestId: result.RequestId,
+        insertedIds: result.InsertedIds,
+        message: "文档插入成功",
+      },
+      null,
+      2
+    );
+  } catch (error: any) {
+    return JSON.stringify(
+      {
+        success: false,
+        error: error.message,
+        message: "文档插入失败",
+      },
+      null,
+      2
+    );
+  }
+}
+
+async function updateDocuments({
+  collectionName,
+  query,
+  update,
+  isMulti,
+  upsert,
+  getManager,
+}: {
+  collectionName: string;
+  query: object | string;
+  update: object | string;
+  isMulti?: boolean;
+  upsert?: boolean;
+  getManager: () => Promise<CloudBase>;
+}) {
+  try {
+    const cloudbase = await getManager();
+    const instanceId = await getDatabaseInstanceId(getManager);
+    const toJSONString = (v: any) =>
+      typeof v === "object" && v !== null ? JSON.stringify(v) : v;
+    const result = await cloudbase.commonService("flexdb").call({
+      Action: "UpdateItem",
+      Param: {
+        TableName: collectionName,
+        MgoQuery: toJSONString(query),
+        MgoUpdate: toJSONString(update),
+        MgoIsMulti: isMulti,
+        MgoUpsert: upsert,
+        Tag: instanceId,
+      },
+    });
+    return JSON.stringify(
+      {
+        success: true,
+        requestId: result.RequestId,
+        modifiedCount: result.ModifiedNum,
+        matchedCount: result.MatchedNum,
+        upsertedId: result.UpsertedId,
+        message: "文档更新成功",
+      },
+      null,
+      2
+    );
+  } catch (error: any) {
+    return JSON.stringify(
+      {
+        success: false,
+        error: error.message,
+        message: "文档更新失败",
+      },
+      null,
+      2
+    );
+  }
+}
+
+async function deleteDocuments({
+  collectionName,
+  query,
+  isMulti,
+  getManager,
+}: {
+  collectionName: string;
+  query: object | string;
+  isMulti?: boolean;
+  getManager: () => Promise<CloudBase>;
+}) {
+  try {
+    const cloudbase = await getManager();
+    const instanceId = await getDatabaseInstanceId(getManager);
+    const toJSONString = (v: any) =>
+      typeof v === "object" && v !== null ? JSON.stringify(v) : v;
+    const result = await cloudbase.commonService("flexdb").call({
+      Action: "DeleteItem",
+      Param: {
+        TableName: collectionName,
+        MgoQuery: toJSONString(query),
+        MgoIsMulti: isMulti,
+        Tag: instanceId,
+      },
+    });
+    return JSON.stringify(
+      {
+        success: true,
+        requestId: result.RequestId,
+        deleted: result.Deleted,
+        message: "文档删除成功",
+      },
+      null,
+      2
+    );
+  } catch (error: any) {
+    return JSON.stringify(
+      {
+        success: false,
+        error: error.message,
+        message: "文档删除失败",
+      },
+      null,
+      2
+    );
+  }
 }
