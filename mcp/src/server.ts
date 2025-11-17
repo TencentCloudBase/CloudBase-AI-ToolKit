@@ -1,5 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { registerDatabaseTools } from "./tools/database.js";
+import { registerDatabaseTools } from "./tools/databaseNoSQL.js";
+import { registerSQLDatabaseTools } from "./tools/databaseSQL.js";
 import { registerDownloadTools } from "./tools/download.js";
 import { registerEnvTools } from "./tools/env.js";
 import { registerFunctionTools } from "./tools/functions.js";
@@ -30,6 +31,7 @@ const DEFAULT_PLUGINS = ['env', 'database', 'functions', 'hosting', 'storage', '
 
 function registerDatabase(server: ExtendedMcpServer) {
   registerDatabaseTools(server);
+  registerSQLDatabaseTools(server);
   registerDataModelTools(server);
 }
 
@@ -176,3 +178,4 @@ export type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 export { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 export { error, info, warn } from "./utils/logger.js";
 export { reportToolCall, reportToolkitLifecycle, telemetryReporter } from "./utils/telemetry.js";
+
