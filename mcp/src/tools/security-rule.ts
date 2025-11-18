@@ -282,7 +282,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
           ].map((roleIdentity) => ({
             RoleIdentity: roleIdentity,
             ResourceType: resourceType,
-            ResourceId: resourceId,
+            ResourceId: resource,
             RowPermission: [] as ReturnType<typeof getRowPermission>,
             Effect: effect,
           }));
