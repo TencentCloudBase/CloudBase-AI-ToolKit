@@ -1,0 +1,195 @@
+---
+name: CloudBase Document Database Web SDK
+description: Use CloudBase document database Web SDK to query, create, update, and delete data. Supports complex queries, pagination, aggregation, and geolocation queries.
+---
+
+# CloudBase Document Database Web SDK
+
+This skill provides guidance on using the CloudBase document database Web SDK for data operations in web applications.
+
+## When to Use This Skill
+
+Use this skill when you need to:
+- Initialize and configure CloudBase database connection in web applications
+- Query single or multiple documents from collections
+- Create, update, or delete data in CloudBase
+- Perform complex queries with operators
+- Implement pagination in data retrieval
+- Execute aggregation queries
+- Work with geolocation data
+
+## Core Concepts
+
+### Initialization
+
+Before using any database operations, initialize the CloudBase SDK:
+
+```javascript
+import cloudbase from "@cloudbase/js-sdk";
+
+const app = cloudbase.init({
+  env: "your-env-id", // Replace with your environment id
+});
+
+const db = app.database();
+const _ = db.command; // Get query operators
+```
+
+### Collection Reference
+
+Access collections using:
+```javascript
+db.collection('collection-name')
+```
+
+### Query Operators
+
+CloudBase provides query operators via `db.command` (aliased as `_`):
+- `_.gt(value)` - Greater than
+- `_.gte(value)` - Greater than or equal
+- `_.lt(value)` - Less than
+- `_.lte(value)` - Less than or equal
+- `_.eq(value)` - Equal to
+- `_.neq(value)` - Not equal to
+- `_.in(array)` - Value in array
+- `_.nin(array)` - Value not in array
+
+## Basic Operations
+
+### Query Single Document
+
+Query by document ID:
+```javascript
+const result = await db.collection('todos')
+    .doc('docId')
+    .get();
+```
+
+### Query Multiple Documents
+
+Query with conditions:
+```javascript
+const result = await db.collection('todos')
+    .where({
+        completed: false,
+        priority: 'high'
+    })
+    .get();
+```
+
+**Note:** `get()` returns 100 records by default, maximum 1000.
+
+### Query Methods Chaining
+
+Combine methods for complex queries:
+- `.where(conditions)` - Filter conditions
+- `.orderBy(field, direction)` - Sort by field ('asc' or 'desc')
+- `.limit(number)` - Limit results (default 100, max 1000)
+- `.skip(number)` - Skip records for pagination
+- `.field(object)` - Specify fields to return (true/false)
+
+## Advanced Features
+
+For detailed information on specific topics, refer to:
+
+### CRUD Operations
+See `crud-operations.md` for:
+- Creating documents (add, batch add)
+- Updating documents (partial updates, operators)
+- Deleting documents (conditional delete, soft delete)
+- Complete CRUD manager examples
+
+### Complex Queries
+See `complex-queries.md` for:
+- Using query operators
+- Combining multiple conditions
+- Field selection
+- Sorting and limiting results
+
+### Pagination
+See `pagination.md` for:
+- Implementing page-based navigation
+- Calculating skip and limit values
+- Cursor-based pagination
+- Infinite scroll patterns
+
+### Aggregation Queries
+See `aggregation.md` for:
+- Grouping data
+- Statistical calculations
+- Pipeline operations
+- Time-based aggregations
+
+### Geolocation Queries
+See `geolocation.md` for:
+- Proximity searches
+- Area-based queries
+- Geographic indexing requirements
+- Distance-based features
+
+## Common Patterns
+
+### Error Handling
+Always wrap database operations in try-catch:
+```javascript
+try {
+    const result = await db.collection('todos').get();
+    console.log(result.data);
+} catch (error) {
+    console.error('Database error:', error);
+}
+```
+
+### Return Value Structure
+Database operations return:
+```javascript
+{
+    data: [...], // Array of documents
+    // Additional metadata
+}
+```
+
+## Important Notes
+
+1. **Environment ID**: Replace `"your-env-id"` with actual CloudBase environment ID
+2. **Default Limits**: `get()` returns 100 records by default
+3. **Collection Names**: Use string literals for collection names
+4. **Geolocation Index**: Geographic queries require proper indexing
+5. **Async/Await**: All database operations are asynchronous
+
+## Best Practices
+
+1. Initialize SDK once at application startup
+2. Reuse database instance across the application
+3. Use query operators for complex conditions
+4. Implement pagination for large datasets
+5. Select only needed fields to reduce data transfer
+6. Handle errors appropriately
+7. Create indexes for frequently queried fields
+
+## Quick Reference
+
+Common query examples:
+
+```javascript
+// Simple query
+db.collection('todos').where({ status: 'active' }).get()
+
+// With operators
+db.collection('users').where({ age: _.gt(18) }).get()
+
+// Pagination
+db.collection('posts')
+    .orderBy('createdAt', 'desc')
+    .skip(20)
+    .limit(10)
+    .get()
+
+// Field selection
+db.collection('users')
+    .field({ name: true, email: true, _id: false })
+    .get()
+```
+
+For more detailed examples and advanced usage patterns, refer to the companion reference files in this directory.
+
