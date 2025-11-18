@@ -19,10 +19,6 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
       description: "Execute a read-only SQL query on the SQL database",
       inputSchema: {
         sql: z.string().describe("SQL query statement (SELECT queries only)"),
-        instanceId: z
-          .string()
-          .optional()
-          .describe("Database instance ID (defaults to 'default')"),
       },
       annotations: {
         readOnlyHint: true,
@@ -30,10 +26,14 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
         category: CATEGORY,
       },
     },
-    async ({ sql, instanceId = "default" }) => {
+    async ({ sql }) => {
       try {
         const cloudbase = await getManager();
         const envId = await getEnvId(cloudBaseOptions);
+
+        // TODO: 考虑是否有支持指定其他 instance、schema 的需求
+        const schemaId = envId;
+        const instanceId = "default";
 
         const result = await cloudbase.commonService("tcb").call({
           Action: "RunSql",
@@ -43,6 +43,7 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
             DbInstance: {
               EnvId: envId,
               InstanceId: instanceId,
+              Schema: schemaId,
             },
           },
         });
@@ -96,10 +97,6 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
           .describe(
             "SQL statement (INSERT, UPDATE, DELETE, CREATE, ALTER, etc.)"
           ),
-        instanceId: z
-          .string()
-          .optional()
-          .describe("Database instance ID (defaults to 'default')"),
       },
       annotations: {
         readOnlyHint: false,
@@ -109,10 +106,14 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
         category: CATEGORY,
       },
     },
-    async ({ sql, instanceId = "default" }) => {
+    async ({ sql }) => {
       try {
         const cloudbase = await getManager();
         const envId = await getEnvId(cloudBaseOptions);
+
+        // TODO: 考虑是否有支持指定其他 instance、schema 的需求
+        const schemaId = envId;
+        const instanceId = "default";
 
         const result = await cloudbase.commonService("tcb").call({
           Action: "RunSql",
@@ -122,6 +123,7 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
             DbInstance: {
               EnvId: envId,
               InstanceId: instanceId,
+              Schema: schemaId,
             },
           },
         });

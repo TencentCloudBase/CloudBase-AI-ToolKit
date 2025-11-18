@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { getCloudBaseManager, getEnvId } from '../cloudbase-manager.js';
-import { ExtendedMcpServer } from '../server.js';
+import { getCloudBaseManager, getEnvId } from "../cloudbase-manager.js";
+import { ExtendedMcpServer } from "../server.js";
 
 /**
  * 权限类别（AclTag）
@@ -10,7 +10,12 @@ import { ExtendedMcpServer } from '../server.js';
  * - ADMINONLY：仅管理员可读写
  * - CUSTOM：自定义安全规则（需传 rule 字段）
  */
-export type AclTag = 'READONLY' | 'PRIVATE' | 'ADMINWRITE' | 'ADMINONLY' | 'CUSTOM';
+export type AclTag =
+  | "READONLY"
+  | "PRIVATE"
+  | "ADMINWRITE"
+  | "ADMINONLY"
+  | "CUSTOM";
 
 /**
  * 资源类型（resourceType）
@@ -18,24 +23,24 @@ export type AclTag = 'READONLY' | 'PRIVATE' | 'ADMINWRITE' | 'ADMINONLY' | 'CUST
  * - function：云函数
  * - storage：存储桶
  */
-export type ResourceType = 'database' | 'function' | 'storage';
+export type ResourceType = "database" | "function" | "storage";
 
 /**
  * 读取安全规则参数
  */
 export interface ReadSecurityRuleParams {
-    resourceType: ResourceType;
-    resourceId: string;
+  resourceType: ResourceType;
+  resourceId: string;
 }
 
 /**
  * 写入安全规则参数
  */
 export interface WriteSecurityRuleParams {
-    resourceType: ResourceType;
-    resourceId: string;
-    aclTag: AclTag;
-    rule?: string;
+  resourceType: ResourceType;
+  resourceId: string;
+  aclTag: AclTag;
+  rule?: string;
 }
 
 /**
@@ -43,195 +48,306 @@ export interface WriteSecurityRuleParams {
  * @param server MCP Server 实例
  */
 export function registerSecurityRuleTools(server: ExtendedMcpServer) {
-    const cloudBaseOptions = server.cloudBaseOptions;
-    const getManager = () => getCloudBaseManager({ cloudBaseOptions });
+  const cloudBaseOptions = server.cloudBaseOptions;
+  const getManager = () => getCloudBaseManager({ cloudBaseOptions });
 
-
-
-    // 读取安全规则 Tool
-    server.registerTool?.(
-        "readSecurityRule",
-        {
-            title: "读取安全规则",
-            description: `读取指定资源（数据库集合、云函数、存储桶）的安全规则和权限类别。\n\n参数说明：\n- resourceType: 资源类型（database/function/storage）\n- resourceId: 资源唯一标识（集合名/函数名/桶名）`,
-            inputSchema: {
-                resourceType: z.enum(["database", "function", "storage"]).describe("资源类型：database=数据库集合，function=云函数，storage=存储桶"),
-                resourceId: z.string().describe("资源唯一标识。数据库为集合名，云函数为函数名，存储为桶名。"),
+  // 读取安全规则 Tool
+  server.registerTool?.(
+    "readSecurityRule",
+    {
+      title: "读取安全规则",
+      description: `读取指定资源（noSQL 数据库、SQL 数据库、云函数、存储桶）的安全规则和权限类别。`,
+      inputSchema: {
+        resourceType: z
+          .enum(["noSqlDatabase", "sqlDatabase", "function", "storage"])
+          .describe(
+            "资源类型：noSqlDatabase=noSQL 数据库，sqlDatabase=SQL 数据库，function=云函数，storage=存储桶"
+          ),
+        resourceId: z
+          .string()
+          .describe(
+            "资源唯一标识。noSQL 数据库为集合名，SQL 数据库为表名，云函数为函数名，存储为桶名。"
+          ),
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+        category: "security-rule",
+      },
+    },
+    async ({ resourceType, resourceId }) => {
+      const envId = await getEnvId(cloudBaseOptions);
+      try {
+        const cloudbase = await getManager();
+        let result;
+        if (resourceType === "noSqlDatabase") {
+          // 查询数据库安全规则
+          result = await cloudbase.commonService().call({
+            Action: "DescribeSafeRule",
+            Param: {
+              CollectionName: resourceId,
+              EnvId: envId,
             },
-            annotations: {
-                readOnlyHint: true,
-                openWorldHint: true,
-                category: "security-rule"
-            }
-        },
-        async ({ resourceType, resourceId }: ReadSecurityRuleParams) => {
-
-            const envId = await getEnvId(cloudBaseOptions);
-            try {
-                const cloudbase = await getManager();
-                let result;
-                if (resourceType === 'database') {
-                    // 查询数据库安全规则
-                    result = await cloudbase.commonService().call({
-                        Action: 'DescribeSafeRule',
-                        Param: {
-                            CollectionName: resourceId,
-                            EnvId: envId
-                        }
-                    });
-                } else if (resourceType === 'function') {
-                    // 查询云函数安全规则
-                    result = await cloudbase.commonService().call({
-                        Action: 'DescribeSecurityRule',
-                        Param: {
-                            ResourceType: 'FUNCTION',
-                            EnvId: envId
-                        }
-                    });
-                } else if (resourceType === 'storage') {
-                    // 查询存储安全规则
-                    result = await cloudbase.commonService().call({
-                        Action: 'DescribeStorageSafeRule',
-                        Param: {
-                            Bucket: resourceId,
-                            EnvId: envId
-                        }
-                    });
-                } else {
-                    throw new Error(`不支持的资源类型: ${resourceType}`);
-                }
-                return {
-                    content: [{
-                        type: "text",
-                        text: JSON.stringify({
-                            success: true,
-                            aclTag: result.AclTag,
-                            rule: result.Rule ?? null,
-                            raw: result,
-                            message: "安全规则读取成功"
-                        }, null, 2)
-                    }]
-                };
-            } catch (error: any) {
-                return {
-                    content: [{
-                        type: "text",
-                        text: JSON.stringify({
-                            success: false,
-                            error: error.message,
-                            message: "安全规则读取失败"
-                        }, null, 2)
-                    }]
-                };
-            }
-        }
-    );
-
-    // 写入安全规则 Tool
-    server.registerTool?.(
-        "writeSecurityRule",
-        {
-            title: "写入安全规则",
-            description: `设置指定资源（数据库集合、云函数、存储桶）的安全规则。\n\n参数说明：\n- resourceType: 资源类型（database/function/storage）\n- resourceId: 资源唯一标识（集合名/函数名/桶名）\n- aclTag: 权限类别（READONLY/PRIVATE/ADMINWRITE/ADMINONLY/CUSTOM）\n- rule: 自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填`,
-            inputSchema: {
-                resourceType: z.enum(["database", "function", "storage"]).describe("资源类型：database=数据库集合，function=云函数，storage=存储桶"),
-                resourceId: z.string().describe("资源唯一标识。数据库为集合名，云函数为函数名，存储为桶名。"),
-                aclTag: z.enum(["READONLY", "PRIVATE", "ADMINWRITE", "ADMINONLY", "CUSTOM"]).describe("权限类别"),
-                rule: z.string().optional().describe("自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填")
+          });
+        } else if (resourceType === "function") {
+          // 查询云函数安全规则
+          result = await cloudbase.commonService().call({
+            Action: "DescribeSecurityRule",
+            Param: {
+              ResourceType: "FUNCTION",
+              EnvId: envId,
             },
-            annotations: {
-                readOnlyHint: false,
-                openWorldHint: true,
-                category: "security-rule"
-            }
-        },
-        async ({ resourceType, resourceId, aclTag, rule }: WriteSecurityRuleParams) => {
-            try {
-                const cloudbase = await getManager();
-                const envId = await getEnvId(cloudBaseOptions);
-                let result;
-                if (resourceType === 'database') {
-                    if (aclTag === 'CUSTOM') {
-                        if (!rule) throw new Error('数据库自定义安全规则（CUSTOM）必须提供 rule 字段');
-                        result = await cloudbase.commonService().call({
-                            Action: 'ModifySafeRule',
-                            Param: {
-                                CollectionName: resourceId,
-                                EnvId: envId,
-                                AclTag: aclTag,
-                                Rule: rule
-                            }
-                        });
-                    } else {
-                        result = await cloudbase.commonService().call({
-                            Action: 'ModifyDatabaseACL',
-                            Param: {
-                                CollectionName: resourceId,
-                                EnvId: envId,
-                                AclTag: aclTag
-                            }
-                        });
-                    }
-                } else if (resourceType === 'function') {
-                    if (aclTag !== 'CUSTOM') throw new Error('云函数安全规则仅支持 CUSTOM 权限类别');
-                    if (!rule) throw new Error('云函数自定义安全规则（CUSTOM）必须提供 rule 字段');
-                    result = await cloudbase.commonService().call({
-                        Action: 'ModifySecurityRule',
-                        Param: {
-                            AclTag: aclTag,
-                            EnvId: envId,
-                            ResourceType: 'FUNCTION',
-                            Rule: rule
-                        }
-                    });
-                } else if (resourceType === 'storage') {
-                    if (aclTag === 'CUSTOM') {
-                        if (!rule) throw new Error('存储自定义安全规则（CUSTOM）必须提供 rule 字段');
-                        result = await cloudbase.commonService().call({
-                            Action: 'ModifyStorageSafeRule',
-                            Param: {
-                                Bucket: resourceId,
-                                EnvId: envId,
-                                AclTag: aclTag,
-                                Rule: rule
-                            }
-                        });
-                    } else {
-                        result = await cloudbase.commonService().call({
-                            Action: 'ModifyStorageSafeRule',
-                            Param: {
-                                Bucket: resourceId,
-                                EnvId: envId,
-                                AclTag: aclTag
-                            }
-                        });
-                    }
-                } else {
-                    throw new Error(`不支持的资源类型: ${resourceType}`);
-                }
-                return {
-                    content: [{
-                        type: "text",
-                        text: JSON.stringify({
-                            success: true,
-                            requestId: result.RequestId,
-                            raw: result,
-                            message: "安全规则写入成功"
-                        }, null, 2)
-                    }]
-                };
-            } catch (error: any) {
-                return {
-                    content: [{
-                        type: "text",
-                        text: JSON.stringify({
-                            success: false,
-                            error: error.message,
-                            message: "安全规则写入失败"
-                        }, null, 2)
-                    }]
-                };
-            }
+          });
+        } else if (resourceType === "storage") {
+          // 查询存储安全规则
+          result = await cloudbase.commonService().call({
+            Action: "DescribeStorageSafeRule",
+            Param: {
+              Bucket: resourceId,
+              EnvId: envId,
+            },
+          });
+        } else if (resourceType === "sqlDatabase") {
+          // TODO: 考虑是否有支持指定其他 instance、schema 的需求
+          const instanceId = "default";
+          const schema = envId;
+          const tableName = resourceId;
+
+          result = await cloudbase.commonService("lowcode").call({
+            Action: "DescribeDataSourceBasicPolicy",
+            Param: {
+              EnvId: envId,
+              ResourceType: "table",
+              ResourceId: `${instanceId}#${schema}#${tableName}`,
+              RoleIdentityList: ["allUser"],
+            },
+          });
+        } else {
+          throw new Error(`不支持的资源类型: ${resourceType}`);
         }
-    );
-} 
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  success: true,
+                  aclTag: result.AclTag,
+                  rule: result.Rule ?? null,
+                  raw: result,
+                  message: "安全规则读取成功",
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      } catch (error: any) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  success: false,
+                  error: error.message,
+                  message: "安全规则读取失败",
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  // 写入安全规则 Tool
+  server.registerTool?.(
+    "writeSecurityRule",
+    {
+      title: "写入安全规则",
+      description: `设置指定资源（数据库集合、云函数、存储桶）的安全规则。`,
+      inputSchema: {
+        resourceType: z
+          .enum(["sqlDatabase", "noSqlDatabase", "function", "storage"])
+          .describe(
+            "资源类型：sqlDatabase=SQL 数据库，noSqlDatabase=noSQL 数据库，function=云函数，storage=存储桶"
+          ),
+        resourceId: z
+          .string()
+          .describe(
+            "资源唯一标识。sqlDatabase=表名，noSqlDatabase=集合名，云函数为函数名，存储为桶名。"
+          ),
+        aclTag: z
+          .enum(["READONLY", "PRIVATE", "ADMINWRITE", "ADMINONLY", "CUSTOM"])
+          .describe("权限类别"),
+        rule: z
+          .string()
+          .optional()
+          .describe("自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填"),
+      },
+      annotations: {
+        readOnlyHint: false,
+        openWorldHint: true,
+        category: "security-rule",
+      },
+    },
+    async ({ resourceType, resourceId, aclTag, rule }) => {
+      try {
+        const cloudbase = await getManager();
+        const envId = await getEnvId(cloudBaseOptions);
+        let result;
+        if (resourceType === "noSqlDatabase") {
+          if (aclTag === "CUSTOM") {
+            if (!rule)
+              throw new Error(
+                "noSQL 数据库自定义安全规则（CUSTOM）必须提供 rule 字段"
+              );
+            result = await cloudbase.commonService().call({
+              Action: "ModifySafeRule",
+              Param: {
+                CollectionName: resourceId,
+                EnvId: envId,
+                AclTag: aclTag,
+                Rule: rule,
+              },
+            });
+          } else {
+            result = await cloudbase.commonService().call({
+              Action: "ModifyDatabaseACL",
+              Param: {
+                CollectionName: resourceId,
+                EnvId: envId,
+                AclTag: aclTag,
+              },
+            });
+          }
+        } else if (resourceType === "function") {
+          if (aclTag !== "CUSTOM")
+            throw new Error("云函数安全规则仅支持 CUSTOM 权限类别");
+          if (!rule)
+            throw new Error("云函数自定义安全规则（CUSTOM）必须提供 rule 字段");
+          result = await cloudbase.commonService().call({
+            Action: "ModifySecurityRule",
+            Param: {
+              AclTag: aclTag,
+              EnvId: envId,
+              ResourceType: "FUNCTION",
+              Rule: rule,
+            },
+          });
+        } else if (resourceType === "storage") {
+          if (aclTag === "CUSTOM") {
+            if (!rule)
+              throw new Error("存储自定义安全规则（CUSTOM）必须提供 rule 字段");
+            result = await cloudbase.commonService().call({
+              Action: "ModifyStorageSafeRule",
+              Param: {
+                Bucket: resourceId,
+                EnvId: envId,
+                AclTag: aclTag,
+                Rule: rule,
+              },
+            });
+          } else {
+            result = await cloudbase.commonService().call({
+              Action: "ModifyStorageSafeRule",
+              Param: {
+                Bucket: resourceId,
+                EnvId: envId,
+                AclTag: aclTag,
+              },
+            });
+          }
+        } else if (resourceType === "sqlDatabase") {
+          if (aclTag === "CUSTOM") {
+            throw new Error("SQL 数据库不支持自定义安全规则（CUSTOM）");
+          }
+
+          const schema = envId;
+          const tableName = resourceId;
+          const instanceId = "default";
+          const resource = `${instanceId}#${schema}#${tableName}`;
+          const resourceType = "table";
+          const effect = "allow";
+
+          const policyList = [
+            "allUser",
+            "anonymousUser",
+            "externalUser",
+            "internalUser",
+          ].map((roleIdentity) => ({
+            RoleIdentity: roleIdentity,
+            ResourceType: resourceType,
+            ResourceId: resourceId,
+            RowPermission: [] as ReturnType<typeof getRowPermission>,
+            Effect: effect,
+          }));
+
+          policyList[0].RowPermission = getRowPermission(aclTag);
+
+          result = await cloudbase.commonService("lowcode").call({
+            Action: "BatchCreateResourcePolicy",
+            Param: {
+              EnvId: envId,
+              PolicyList: policyList,
+            },
+          });
+
+          function getRowPermission(
+            policy: "READONLY" | "PRIVATE" | "ADMINWRITE" | "ADMINONLY"
+          ) {
+            return {
+              READONLY: [
+                { Key: "all", Value: "r" },
+                { Key: "me", Value: "rw" },
+              ],
+              PRIVATE: [{ Key: "me", Value: "rw" }],
+              ADMINWRITE: [{ Key: "all", Value: "r" }],
+              ADMINONLY: [],
+            }[policy];
+          }
+        } else {
+          throw new Error(`不支持的资源类型: ${resourceType}`);
+        }
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  success: true,
+                  requestId: result.RequestId,
+                  raw: result,
+                  message: "安全规则写入成功",
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      } catch (error: any) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  success: false,
+                  error: error.message,
+                  message: "安全规则写入失败",
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+    }
+  );
+}
