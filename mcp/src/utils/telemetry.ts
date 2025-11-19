@@ -1,9 +1,9 @@
-import os from 'os';
 import crypto from 'crypto';
-import https from 'https';
 import http from 'http';
-import { debug } from './logger.js';
+import https from 'https';
+import os from 'os';
 import { CloudBaseOptions } from '../types.js';
+import { debug } from './logger.js';
 
 // 构建时注入的版本号
 declare const __MCP_VERSION__: string;
