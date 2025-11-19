@@ -16,17 +16,19 @@ Before using any database operations, initialize the CloudBase SDK:
 
 ```javascript
 import cloudbase from "@cloudbase/js-sdk";
+// UMD version
+// If you are not using npm, And want to use UMD version instead. You should refer to https://docs.cloudbase.net/quick-start/#web-%E5%BF%AB%E9%80%9F%E4%BD%93%E9%AA%8C for latest version of UMD version.
 
 const app = cloudbase.init({
   env: "your-env-id", // Replace with your environment id
 });
+
 
 const db = app.database();
 const _ = db.command; // Get query operators
 
 // ... login
 ```
-
 Remember to sign in(auth) is ***REQUIRED** before actually querying the database.
 
 ### Collection Reference
