@@ -1,12 +1,9 @@
-import fs from 'fs/promises';
-import os from 'os';
-import path from 'path';
 import { z } from "zod";
 import { getLoginState } from '../auth.js';
-import { getCloudBaseManager } from '../cloudbase-manager.js';
+import { envManager, getCloudBaseManager } from '../cloudbase-manager.js';
 import { getInteractiveServer } from "../interactive-server.js";
 import { ExtendedMcpServer } from '../server.js';
-import { debug, warn } from '../utils/logger.js';
+import { debug } from '../utils/logger.js';
 
 
 export function registerInteractiveTools(server: ExtendedMcpServer) {
@@ -116,7 +113,12 @@ export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean, serv
   }
 
   // 2. 获取可用环境列表
-  const cloudbase = await getCloudBaseManager({requireEnvId: false});
+  // Fix: Pass cloudBaseOptions to ensure correct environment context
+  const serverCloudBaseOptions = server?.cloudBaseOptions;
+  const cloudbase = await getCloudBaseManager({ 
+    requireEnvId: false, 
+    cloudBaseOptions: serverCloudBaseOptions 
+  });
   let envResult;
   try {
     envResult = await cloudbase.env.listEnvs();
@@ -142,77 +144,15 @@ export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean, serv
     selectedEnvId = result.data;
   }
 
-  // 4. 保存环境ID配置
+  // 4. 更新环境ID缓存
   if (selectedEnvId) {
-    await saveEnvIdToUserConfig(selectedEnvId);
-    debug('环境ID已保存到配置文件:', selectedEnvId);
+    // Update memory cache and process.env to prevent environment mismatch
+    await envManager.setEnvId(selectedEnvId);
+    debug('环境ID已更新缓存:', selectedEnvId);
   }
 
   return { selectedEnvId, cancelled: false };
   
-}
-
-// 获取用户配置文件路径
-function getUserConfigPath(): string {
-  return path.join(os.homedir(), '.cloudbase-env-id');
-}
-
-// 保存环境ID到用户配置文件
-export async function saveEnvIdToUserConfig(envId: string): Promise<void> {
-  const configPath = getUserConfigPath();
-  
-  try {
-    const config = {
-      envId,
-      updatedAt: new Date().toISOString(),
-      version: '1.0'
-    };
-    
-    await fs.writeFile(configPath, JSON.stringify(config, null, 2), 'utf8');
-    debug('环境ID配置已保存到文件:', configPath);
-    
-  } catch (error) {
-    console.error('保存环境ID配置失败:', error);
-    throw error;
-  }
-}
-
-// 从用户配置文件读取环境ID
-export async function loadEnvIdFromUserConfig(): Promise<string | null> {
-  const configPath = getUserConfigPath();
-  
-  try {
-    const configContent = await fs.readFile(configPath, 'utf8');
-    const config = JSON.parse(configContent);
-    const envId = config.envId || null;
-    if (!envId) {
-        warn(`Config file ${configPath} found, but 'envId' property is missing or empty.`);
-    } else {
-        debug('从配置文件加载环境ID:', envId);
-    }
-    return envId;
-  } catch (err: any) {
-    // 文件不存在是正常情况，不应告警。只在文件存在但有问题时告警。
-    if (err.code !== 'ENOENT') {
-        warn(`Failed to load envId from config file at ${configPath}. Error: ${err.message}`);
-    } else {
-        debug(`Env config file not found at ${configPath}, which is expected if not set.`);
-    }
-    return null;
-  }
-}
-
-// 清理用户环境ID配置
-export async function clearUserEnvId(): Promise<void> {
-  const configPath = getUserConfigPath();
-  
-  try {
-    await fs.unlink(configPath);
-    debug('环境ID配置文件已删除:', configPath);
-  } catch (error) {
-    // 文件不存在或删除失败，忽略错误
-    debug('环境ID配置文件不存在或已清理:', configPath);
-  }
 }
 
 // 自动设置环境ID（无需MCP工具调用）

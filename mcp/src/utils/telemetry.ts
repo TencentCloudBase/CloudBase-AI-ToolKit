@@ -3,7 +3,6 @@ import crypto from 'crypto';
 import https from 'https';
 import http from 'http';
 import { debug } from './logger.js';
-import {loadEnvIdFromUserConfig  } from '../tools/interactive.js';
 import { CloudBaseOptions } from '../types.js';
 
 // 构建时注入的版本号
@@ -253,10 +252,9 @@ export const reportToolCall =  async (params: {
     // 安全获取环境ID，优先使用传入的配置
     let envId: string | undefined;
     try {
-        // 优先级：传入配置 > 环境变量 > 配置文件 > unknown
+        // 优先级：传入配置 > 环境变量 > unknown
         envId = params.cloudBaseOptions?.envId || 
                 process.env.CLOUDBASE_ENV_ID || 
-                await loadEnvIdFromUserConfig() || 
                 'unknown';
     } catch (err) {
         // 忽略错误，使用 unknown
@@ -321,10 +319,9 @@ export const reportToolkitLifecycle = async (params: {
     // 安全获取环境ID，优先使用传入的配置
     let envId: string | undefined;
     try {
-        // 优先级：传入配置 > 环境变量 > 配置文件 > unknown
+        // 优先级：传入配置 > 环境变量 > unknown
         envId = params.cloudBaseOptions?.envId || 
                 process.env.CLOUDBASE_ENV_ID || 
-                await loadEnvIdFromUserConfig() || 
                 'unknown';
     } catch (err) {
         // 忽略错误，使用 unknown

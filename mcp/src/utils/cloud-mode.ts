@@ -92,7 +92,6 @@ export function shouldRegisterTool(toolName: string): boolean {
     
     // Setup tools - local config file operations
     'setupEnvironmentId',
-    'clearUserEnvId',
     
     // Interactive tools - local server and file operations
     'interactiveDialog',

@@ -33,7 +33,8 @@ export {
   getCloudBaseManager,
   getEnvId,
   resetCloudBaseManagerCache,
-  createCloudBaseManagerWithOptions
+  createCloudBaseManagerWithOptions,
+  envManager
 } from "./cloudbase-manager.js";
 
 export type { InteractiveResult } from "./interactive-server.js";
