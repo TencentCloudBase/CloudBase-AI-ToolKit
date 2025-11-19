@@ -7,16 +7,6 @@ description: Use CloudBase document database Web SDK to query, create, update, a
 
 This skill provides guidance on using the CloudBase document database Web SDK for data operations in web applications.
 
-## When to Use This Skill
-
-Use this skill when you need to:
-- Initialize and configure CloudBase database connection in web applications
-- Query single or multiple documents from collections
-- Create, update, or delete data in CloudBase
-- Perform complex queries with operators
-- Implement pagination in data retrieval
-- Execute aggregation queries
-- Work with geolocation data
 
 ## Core Concepts
 
@@ -33,7 +23,11 @@ const app = cloudbase.init({
 
 const db = app.database();
 const _ = db.command; // Get query operators
+
+// ... login
 ```
+
+Remember to sign in(auth) is ***REQUIRED** before actually querying the database.
 
 ### Collection Reference
 
@@ -93,35 +87,35 @@ Combine methods for complex queries:
 For detailed information on specific topics, refer to:
 
 ### CRUD Operations
-See `crud-operations.md` for:
+See `./crud-operations.md` for:
 - Creating documents (add, batch add)
 - Updating documents (partial updates, operators)
 - Deleting documents (conditional delete, soft delete)
 - Complete CRUD manager examples
 
 ### Complex Queries
-See `complex-queries.md` for:
+See `./complex-queries.md` for:
 - Using query operators
 - Combining multiple conditions
 - Field selection
 - Sorting and limiting results
 
 ### Pagination
-See `pagination.md` for:
+See `./pagination.md` for:
 - Implementing page-based navigation
 - Calculating skip and limit values
 - Cursor-based pagination
 - Infinite scroll patterns
 
 ### Aggregation Queries
-See `aggregation.md` for:
+See `./aggregation.md` for:
 - Grouping data
 - Statistical calculations
 - Pipeline operations
 - Time-based aggregations
 
 ### Geolocation Queries
-See `geolocation.md` for:
+See `./geolocation.md` for:
 - Proximity searches
 - Area-based queries
 - Geographic indexing requirements
