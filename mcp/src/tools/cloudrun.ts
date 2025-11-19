@@ -2,7 +2,7 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { z } from "zod";
-import { getCloudBaseManager } from '../cloudbase-manager.js';
+import { getCloudBaseManager, getEnvId } from '../cloudbase-manager.js';
 import { ExtendedMcpServer } from '../server.js';
 
 // CloudRun service types
@@ -450,8 +450,9 @@ exports.main = function (event, context) {
             fs.writeFileSync(path.join(projectDir, 'index.js'), indexJsContent);
             
             // Generate cloudbaserc.json
+            const currentEnvId = await getEnvId(cloudBaseOptions);
             const cloudbasercContent = {
-              envId: process.env.TCB_ENV_ID || '',
+              envId: currentEnvId,
               cloudrun: { 
                 name: input.serverName 
               }
@@ -587,9 +588,10 @@ for await (let x of res.textStream) {
             const result = await cloudrunService.deploy(deployParams);
             
             // Generate cloudbaserc.json configuration file
+            const currentEnvId = await getEnvId(cloudBaseOptions);
             const cloudbasercPath = path.join(targetPath, 'cloudbaserc.json');
             const cloudbasercContent = {
-              envId: process.env.TCB_ENV_ID || '',
+              envId: currentEnvId,
               cloudrun: { 
                 name: input.serverName 
               }
@@ -769,9 +771,10 @@ for await (let x of res.textStream) {
             });
             
             // Generate cloudbaserc.json configuration file
+            const currentEnvId = await getEnvId(cloudBaseOptions);
             const cloudbasercPath = path.join(targetPath, 'cloudbaserc.json');
             const cloudbasercContent = {
-              envId: process.env.TCB_ENV_ID || '',
+              envId: currentEnvId,
               cloudrun: { 
                 name: input.serverName 
               }
@@ -851,9 +854,10 @@ for await (let x of res.textStream) {
             });
             
             // Generate cloudbaserc.json configuration file
+            const currentEnvId = await getEnvId(cloudBaseOptions);
             const cloudbasercPath = path.join(targetPath, input.serverName, 'cloudbaserc.json');
             const cloudbasercContent = {
-              envId: process.env.TCB_ENV_ID || '',
+              envId: currentEnvId,
               cloudrun: { 
                 name: input.serverName 
               }

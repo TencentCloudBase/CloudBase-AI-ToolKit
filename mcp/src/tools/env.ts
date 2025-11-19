@@ -3,7 +3,7 @@ import { logout } from '../auth.js';
 import { getCloudBaseManager, resetCloudBaseManagerCache } from '../cloudbase-manager.js';
 import { ExtendedMcpServer } from '../server.js';
 import { debug } from '../utils/logger.js';
-import { _promptAndSetEnvironmentId, clearUserEnvId } from './interactive.js';
+import { _promptAndSetEnvironmentId } from './interactive.js';
 
 export function registerEnvTools(server: ExtendedMcpServer) {
   // 获取 cloudBaseOptions，如果没有则为 undefined
@@ -84,8 +84,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
       try {
         // 登出账户
         await logout();
-        // 清理环境ID配置
-        await clearUserEnvId();
+        // 清理环境ID缓存
         resetCloudBaseManagerCache();
 
         return {

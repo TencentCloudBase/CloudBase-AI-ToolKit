@@ -1,9 +1,9 @@
 import CloudBase from "@cloudbase/manager-node";
 import { getLoginState } from './auth.js';
-import { autoSetupEnvironmentId, loadEnvIdFromUserConfig, saveEnvIdToUserConfig } from './tools/interactive.js';
+import { autoSetupEnvironmentId } from './tools/interactive.js';
 import { CloudBaseOptions } from './types.js';
 import { debug, error } from './utils/logger.js';
-const ENV_ID_TIMEOUT = 60000000; // 60000 seconds
+const ENV_ID_TIMEOUT = 600000; // 10 minutes (600 seconds) - matches InteractiveServer timeout
 
 // 统一的环境ID管理类
 class EnvironmentManager {
@@ -59,15 +59,7 @@ class EnvironmentManager {
                 return this.cachedEnvId;
             }
 
-            // 2. 从配置文件读取
-            const fileEnvId = await loadEnvIdFromUserConfig();
-            if (fileEnvId) {
-                debug('从配置文件读取到环境ID:', fileEnvId);
-                this._setCachedEnvId(fileEnvId);
-                return fileEnvId;
-            }
-
-            // 3. 自动设置环境ID
+            // 2. 自动设置环境ID
             debug('未找到环境ID，尝试自动设置...');
             const autoEnvId = await autoSetupEnvironmentId();
             if (!autoEnvId) {
@@ -93,9 +85,12 @@ class EnvironmentManager {
     // 手动设置环境ID（用于外部调用）
     async setEnvId(envId: string) {
         this._setCachedEnvId(envId);
-        // 同步保存到配置文件
-        await saveEnvIdToUserConfig(envId);
-        debug('手动设置环境ID并保存到文件:', envId);
+        debug('手动设置环境ID并更新缓存:', envId);
+    }
+
+    // Get cached envId without triggering fetch (for optimization)
+    getCachedEnvId(): string | null {
+        return this.cachedEnvId;
     }
 }
 
@@ -147,10 +142,26 @@ export async function getCloudBaseManager(options: GetManagerOptions = {}): Prom
 
         let finalEnvId: string | undefined;
         if (requireEnvId) {
-            finalEnvId = await envManager.getEnvId();
+            // Optimize: Check if envManager has cached envId first (fast path)
+            // If cached, use it directly; otherwise check loginEnvId before calling getEnvId()
+            // This avoids unnecessary async calls when we have a valid envId available
+            const cachedEnvId = envManager.getCachedEnvId();
+            if (cachedEnvId) {
+                debug('使用 envManager 缓存的环境ID:', cachedEnvId);
+                finalEnvId = cachedEnvId;
+            } else if (loginEnvId) {
+                // If no cache but loginState has envId, use it to avoid triggering auto-setup
+                debug('使用 loginState 中的环境ID:', loginEnvId);
+                finalEnvId = loginEnvId;
+            } else {
+                // Only call envManager.getEnvId() when neither cache nor loginState has envId
+                // This may trigger auto-setup flow
+                finalEnvId = await envManager.getEnvId();
+            }
         }
 
-        // envId 优先顺序：获取到的envId > loginState中的envId > undefined
+        // envId priority: envManager.cachedEnvId > envManager.getEnvId() > loginState.envId > undefined
+        // Note: envManager.cachedEnvId has highest priority as it reflects user's latest environment switch
         const manager = new CloudBase({
             secretId,
             secretKey,
