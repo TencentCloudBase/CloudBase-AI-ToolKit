@@ -112,7 +112,7 @@ export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean, serv
     return { selectedEnvId: null, cancelled: false, error: "请先登录云开发账户" };
   }
 
-  // 2. 获取可用环境列表
+  // 2. 获取可用环境列表（使用过滤参数）
   // Fix: Pass cloudBaseOptions to ensure correct environment context
   const serverCloudBaseOptions = server?.cloudBaseOptions;
   const cloudbase = await getCloudBaseManager({ 
@@ -121,9 +121,34 @@ export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean, serv
   });
   let envResult;
   try {
-    envResult = await cloudbase.env.listEnvs();
+    // Use commonService to call DescribeEnvs with filter parameters
+    // Filter parameters match the reference conditions provided by user
+    envResult = await cloudbase.commonService('tcb').call({
+      Action: 'DescribeEnvs',
+      Param: {
+        EnvTypes: ['weda', 'baas'],  // Include weda and baas (normal) environments
+        IsVisible: false,             // Filter out invisible environments
+        Channels: ['dcloud', 'iotenable', 'tem', 'scene_module']  // Filter special channels
+      }
+    });
+    // Transform response format to match original listEnvs() format
+    if (envResult && envResult.EnvList) {
+      envResult = { EnvList: envResult.EnvList };
+    } else if (envResult && envResult.Data && envResult.Data.EnvList) {
+      envResult = { EnvList: envResult.Data.EnvList };
+    } else {
+      // Fallback to original method if format is unexpected
+      debug('Unexpected response format, falling back to listEnvs()');
+      envResult = await cloudbase.env.listEnvs();
+    }
   } catch (error) {
-    debug('获取环境ID时出错:', error);
+    debug('获取环境ID时出错，尝试降级到 listEnvs():', error);
+    // Fallback to original method on error
+    try {
+      envResult = await cloudbase.env.listEnvs();
+    } catch (fallbackError) {
+      debug('降级到 listEnvs() 也失败:', fallbackError);
+    }
   }
   
   debug('envResult', envResult);

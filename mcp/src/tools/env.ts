@@ -127,12 +127,38 @@ export function registerEnvTools(server: ExtendedMcpServer) {
           case "list":
             try {
               const cloudbaseList = await getCloudBaseManager({ cloudBaseOptions, requireEnvId: true });
-              result = await cloudbaseList.env.listEnvs();
+              // Use commonService to call DescribeEnvs with filter parameters
+              // Filter parameters match the reference conditions provided by user
+              result = await cloudbaseList.commonService('tcb').call({
+                Action: 'DescribeEnvs',
+                Param: {
+                  EnvTypes: ['weda', 'baas'],  // Include weda and baas (normal) environments
+                  IsVisible: false,             // Filter out invisible environments
+                  Channels: ['dcloud', 'iotenable', 'tem', 'scene_module']  // Filter special channels
+                }
+              });
+              // Transform response format to match original listEnvs() format
+              if (result && result.EnvList) {
+                result = { EnvList: result.EnvList };
+              } else if (result && result.Data && result.Data.EnvList) {
+                result = { EnvList: result.Data.EnvList };
+              } else {
+                // Fallback to original method if format is unexpected
+                debug('Unexpected response format, falling back to listEnvs()');
+                result = await cloudbaseList.env.listEnvs();
+              }
             } catch (error) {
-              debug('获取环境列表时出错:', error);
-              return { content: 
-                [{ type: "text", text: "获取环境列表时出错: " + (error instanceof Error ? error.message : String(error)) }] 
-              };
+              debug('获取环境列表时出错，尝试降级到 listEnvs():', error);
+              // Fallback to original method on error
+              try {
+                const cloudbaseList = await getCloudBaseManager({ cloudBaseOptions, requireEnvId: true });
+                result = await cloudbaseList.env.listEnvs();
+              } catch (fallbackError) {
+                debug('降级到 listEnvs() 也失败:', fallbackError);
+                return { content: 
+                  [{ type: "text", text: "获取环境列表时出错: " + (fallbackError instanceof Error ? fallbackError.message : String(fallbackError)) }] 
+                };
+              }
             }
             break;
 
