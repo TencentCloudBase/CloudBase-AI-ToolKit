@@ -92,133 +92,37 @@
       }
     },
     {
-      "name": "createCollection",
-      "description": "管理云开发数据库集合：默认创建。可通过 action 指定 update。",
+      "name": "readNoSqlDatabaseStructure",
+      "description": "读取 NoSQL 数据库结构",
       "inputSchema": {
         "type": "object",
         "properties": {
           "action": {
             "type": "string",
             "enum": [
-              "create",
-              "update"
+              "listCollections",
+              "describeCollection",
+              "checkCollection",
+              "listIndexes",
+              "checkIndex"
             ],
-            "description": "操作类型：create=创建(默认)，update=更新集合配置"
-          },
-          "collectionName": {
-            "type": "string",
-            "description": "云开发数据库集合名称"
-          },
-          "options": {
-            "type": "object",
-            "properties": {
-              "CreateIndexes": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "IndexName": {
-                      "type": "string"
-                    },
-                    "MgoKeySchema": {
-                      "type": "object",
-                      "properties": {
-                        "MgoIsUnique": {
-                          "type": "boolean"
-                        },
-                        "MgoIndexKeys": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "Name": {
-                                "type": "string"
-                              },
-                              "Direction": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "Name",
-                              "Direction"
-                            ],
-                            "additionalProperties": false
-                          }
-                        }
-                      },
-                      "required": [
-                        "MgoIsUnique",
-                        "MgoIndexKeys"
-                      ],
-                      "additionalProperties": false
-                    }
-                  },
-                  "required": [
-                    "IndexName",
-                    "MgoKeySchema"
-                  ],
-                  "additionalProperties": false
-                }
-              },
-              "DropIndexes": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "IndexName": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "IndexName"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            },
-            "additionalProperties": false,
-            "description": "更新选项（action=update 时使用）"
-          }
-        },
-        "required": [
-          "collectionName"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "collectionQuery",
-      "description": "数据库集合的查询操作，支持检查存在性、查看详情、列表查询；并支持索引列表与检查。（兼容旧名称）",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "action": {
-            "type": "string",
-            "enum": [
-              "check",
-              "describe",
-              "list",
-              "index_list",
-              "index_check"
-            ],
-            "description": "操作类型：check=检查是否存在，describe=查看详情，list=列表查询，index_list=索引列表，index_check=检查索引是否存在"
-          },
-          "collectionName": {
-            "type": "string",
-            "description": "集合名称（check、describe、index_list、index_check 操作时必填）"
-          },
-          "indexName": {
-            "type": "string",
-            "description": "索引名称（index_check 操作时必填）"
+            "description": "listCollections: 列出集合列表\ndescribeCollection: 描述集合\ncheckCollection: 检查集合是否存在\nlistIndexes: 列出索引列表\ncheckIndex: 检查索引是否存在"
           },
           "limit": {
             "type": "number",
-            "description": "返回数量限制（list操作时可选）"
+            "description": "返回数量限制(listCollections 操作时可选)"
           },
           "offset": {
             "type": "number",
-            "description": "偏移量（list操作时可选）"
+            "description": "偏移量(listCollections 操作时可选)"
+          },
+          "collectionName": {
+            "type": "string",
+            "description": "集合名称(describeCollection、listIndexes、checkIndex 操作时必填)"
+          },
+          "indexName": {
+            "type": "string",
+            "description": "索引名称(checkIndex 操作时必填)"
           }
         },
         "required": [
@@ -229,16 +133,24 @@
       }
     },
     {
-      "name": "updateCollection",
-      "description": "更新云开发数据库集合配置（创建或删除索引）",
+      "name": "writeNoSqlDatabaseStructure",
+      "description": "修改 NoSQL 数据库结构",
       "inputSchema": {
         "type": "object",
         "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "createCollection",
+              "updateCollection"
+            ],
+            "description": "createCollection: 创建集合\nupdateCollection: 更新集合"
+          },
           "collectionName": {
             "type": "string",
-            "description": "云开发数据库集合名称"
+            "description": "集合名称"
           },
-          "options": {
+          "updateOptions": {
             "type": "object",
             "properties": {
               "CreateIndexes": {
@@ -306,77 +218,26 @@
               }
             },
             "additionalProperties": false,
-            "description": "更新选项，支持创建和删除索引"
+            "description": "更新选项(updateCollection 时使用)"
           }
         },
         "required": [
-          "collectionName",
-          "options"
+          "action",
+          "collectionName"
         ],
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"
       }
     },
     {
-      "name": "checkIndexExists",
-      "description": "检查索引是否存在",
+      "name": "readNoSqlDatabaseContent",
+      "description": "查询并获取 NoSQL 数据库数据记录",
       "inputSchema": {
         "type": "object",
         "properties": {
           "collectionName": {
             "type": "string",
-            "description": "云开发数据库集合名称"
-          },
-          "indexName": {
-            "type": "string",
-            "description": "索引名称"
-          }
-        },
-        "required": [
-          "collectionName",
-          "indexName"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "insertDocuments",
-      "description": "向云开发数据库集合中插入一个或多个文档（支持对象数组）",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "collectionName": {
-            "type": "string",
-            "description": "云开发数据库集合名称"
-          },
-          "documents": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {},
-              "additionalProperties": true
-            },
-            "description": "要插入的文档对象数组，每个文档都是对象"
-          }
-        },
-        "required": [
-          "collectionName",
-          "documents"
-        ],
-        "additionalProperties": false,
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      }
-    },
-    {
-      "name": "queryDocuments",
-      "description": "查询云开发数据库集合中的文档（支持对象参数）",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "collectionName": {
-            "type": "string",
-            "description": "云开发数据库集合名称"
+            "description": "集合名称"
           },
           "query": {
             "anyOf": [
@@ -389,7 +250,7 @@
                 "type": "string"
               }
             ],
-            "description": "查询条件（对象或字符串，推荐对象）"
+            "description": "查询条件(对象或字符串,推荐对象)"
           },
           "projection": {
             "anyOf": [
@@ -402,7 +263,7 @@
                 "type": "string"
               }
             ],
-            "description": "返回字段投影（对象或字符串，推荐对象）"
+            "description": "返回字段投影(对象或字符串,推荐对象)"
           },
           "sort": {
             "anyOf": [
@@ -415,7 +276,7 @@
                 "type": "string"
               }
             ],
-            "description": "排序条件（对象或字符串，推荐对象）"
+            "description": "排序条件(对象或字符串,推荐对象)"
           },
           "limit": {
             "type": "number",
@@ -434,14 +295,32 @@
       }
     },
     {
-      "name": "updateDocuments",
-      "description": "更新云开发数据库集合中的文档（支持对象参数）",
+      "name": "writeNoSqlDatabaseContent",
+      "description": "修改 NoSQL 数据库数据记录",
       "inputSchema": {
         "type": "object",
         "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "insert",
+              "update",
+              "delete"
+            ],
+            "description": "createCollection: 创建数据\nupdateCollection: 更新数据\ndeleteCollection: 删除数据"
+          },
           "collectionName": {
             "type": "string",
-            "description": "云开发数据库集合名称"
+            "description": "集合名称"
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": true
+            },
+            "description": "要插入的文档对象数组,每个文档都是对象(insert 操作必填)"
           },
           "query": {
             "anyOf": [
@@ -454,7 +333,7 @@
                 "type": "string"
               }
             ],
-            "description": "查询条件（对象或字符串，推荐对象）"
+            "description": "查询条件(对象或字符串,推荐对象)(update/delete 操作必填)"
           },
           "update": {
             "anyOf": [
@@ -467,19 +346,21 @@
                 "type": "string"
               }
             ],
-            "description": "更新内容（对象或字符串，推荐对象）"
+            "description": "更新内容(对象或字符串,推荐对象)(update 操作必填)"
           },
           "isMulti": {
             "type": "boolean",
-            "description": "是否更新多条记录"
+            "description": "是否更新多条记录(update/delete 操作可选)"
           },
           "upsert": {
             "type": "boolean",
-            "description": "是否在不存在时插入"
+            "description": "是否在不存在时插入(update 操作可选)"
           }
         },
         "required": [
+          "action",
           "collectionName",
+          "documents",
           "query",
           "update"
         ],
@@ -488,36 +369,36 @@
       }
     },
     {
-      "name": "deleteDocuments",
-      "description": "删除云开发数据库集合中的文档（支持对象参数）",
+      "name": "executeReadOnlySQL",
+      "description": "Execute a read-only SQL query on the SQL database. Note: For per-user ACL, each table should contain a fixed `_openid` column that represents the user and is used for access control.",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "collectionName": {
+          "sql": {
             "type": "string",
-            "description": "云开发数据库集合名称"
-          },
-          "query": {
-            "anyOf": [
-              {
-                "type": "object",
-                "properties": {},
-                "additionalProperties": true
-              },
-              {
-                "type": "string"
-              }
-            ],
-            "description": "查询条件（对象或字符串，推荐对象）"
-          },
-          "isMulti": {
-            "type": "boolean",
-            "description": "是否删除多条记录"
+            "description": "SQL query statement (SELECT queries only)"
           }
         },
         "required": [
-          "collectionName",
-          "query"
+          "sql"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "executeWriteSQL",
+      "description": "Execute a write SQL statement on the SQL database (INSERT, UPDATE, DELETE, etc.). Note: For per-user ACL, each table should contain a fixed `_openid` column that represents the user and is used for access control.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sql": {
+            "type": "string",
+            "description": "SQL statement (INSERT, UPDATE, DELETE, CREATE, ALTER, etc.)"
+          }
+        },
+        "required": [
+          "sql"
         ],
         "additionalProperties": false,
         "$schema": "http://json-schema.org/draft-07/schema#"
@@ -1331,7 +1212,7 @@
     },
     {
       "name": "downloadTemplate",
-      "description": "自动下载并部署CloudBase项目模板。\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n支持的IDE类型:\n- all: 下载所有IDE配置（默认）\n- cursor: Cursor AI编辑器\n- windsurf: WindSurf AI编辑器\n- codebuddy: CodeBuddy AI编辑器\n- claude-code: Claude Code AI编辑器\n- cline: Cline AI编辑器\n- gemini-cli: Gemini CLI\n- opencode: OpenCode AI编辑器\n- qwen-code: 通义灵码\n- baidu-comate: 百度Comate\n- openai-codex-cli: OpenAI Codex CLI\n- augment-code: Augment Code\n- github-copilot: GitHub Copilot\n- roocode: RooCode AI编辑器\n- tongyi-lingma: 通义灵码\n- trae: Trae AI编辑器\n- vscode: Visual Studio Code\n\n特别说明：\n- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.8.41），便于后续维护和版本追踪\n- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）",
+      "description": "自动下载并部署CloudBase项目模板。\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n支持的IDE类型:\n- all: 下载所有IDE配置（默认）\n- cursor: Cursor AI编辑器\n- windsurf: WindSurf AI编辑器\n- codebuddy: CodeBuddy AI编辑器\n- claude-code: Claude Code AI编辑器\n- cline: Cline AI编辑器\n- gemini-cli: Gemini CLI\n- opencode: OpenCode AI编辑器\n- qwen-code: 通义灵码\n- baidu-comate: 百度Comate\n- openai-codex-cli: OpenAI Codex CLI\n- augment-code: Augment Code\n- github-copilot: GitHub Copilot\n- roocode: RooCode AI编辑器\n- tongyi-lingma: 通义灵码\n- trae: Trae AI编辑器\n- vscode: Visual Studio Code\n\n特别说明：\n- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.9.0），便于后续维护和版本追踪\n- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1540,7 +1421,7 @@
               "function",
               "container"
             ],
-            "description": "服务类型筛选条件：function=函数型云托管（简化开发模式，支持WebSocket/SSE/文件上传等特性，适合快速开发），container=容器型服务（传统容器部署模式，支持任意语言和框架，适合复杂应用）"
+            "description": "服务类型筛选条件：function=函数型云托管（仅支持Node.js，有特殊的开发要求和限制，适合简单的API服务），container=容器型服务（推荐使用，支持任意语言和框架如Java/Go/Python/PHP/.NET等，适合大多数应用场景）"
           },
           "detailServerName": {
             "type": "string",
@@ -1588,12 +1469,13 @@
                 "items": {
                   "type": "string",
                   "enum": [
-                    "WEB",
-                    "VPC",
-                    "PRIVATE"
+                    "OA",
+                    "PUBLIC",
+                    "MINIAPP",
+                    "VPC"
                   ]
                 },
-                "description": "公网访问类型配置，控制服务的访问权限：WEB=公网访问（默认，可通过HTTPS域名访问），VPC=私有网络访问（仅同VPC内可访问），PRIVATE=内网访问（仅云开发环境内可访问）。可配置多个类型"
+                "description": "公网访问类型配置，控制服务的访问权限：OA=办公网访问，PUBLIC=公网访问（默认，可通过HTTPS域名访问），MINIAPP=小程序访问，VPC=VPC访问（仅同VPC内可访问）。可配置多个类型"
               },
               "Cpu": {
                 "type": "number",
@@ -1608,12 +1490,45 @@
               "MinNum": {
                 "type": "number",
                 "minimum": 0,
-                "description": "最小实例数配置，控制服务的最小运行实例数量。设置为0时支持缩容到0（无请求时不产生费用），设置为大于0时始终保持指定数量的实例运行（确保快速响应但会增加成本）"
+                "description": "最小实例数配置，控制服务的最小运行实例数量。设置为0时支持缩容到0（无请求时不产生费用），设置为大于0时始终保持指定数量的实例运行（确保快速响应但会增加成本）。建议设置为1以降低冷启动延迟，提升用户体验"
               },
               "MaxNum": {
                 "type": "number",
                 "minimum": 1,
                 "description": "最大实例数配置，控制服务的最大运行实例数量。当请求量增加时，服务最多可以扩展到指定数量的实例，超过此数量后将拒绝新的请求。建议根据业务峰值设置"
+              },
+              "PolicyDetails": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "PolicyType": {
+                      "type": "string",
+                      "enum": [
+                        "cpu",
+                        "mem",
+                        "cpu/mem"
+                      ],
+                      "description": "扩缩容类型：cpu=基于CPU使用率扩缩容，mem=基于内存使用率扩缩容，cpu/mem=基于CPU和内存使用率扩缩容"
+                    },
+                    "PolicyThreshold": {
+                      "type": "number",
+                      "minimum": 1,
+                      "maximum": 100,
+                      "description": "扩缩容阈值，单位为百分比。如60表示当资源使用率达到60%时触发扩缩容"
+                    }
+                  },
+                  "required": [
+                    "PolicyType",
+                    "PolicyThreshold"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "扩缩容配置数组，用于配置服务的自动扩缩容策略。可配置多个扩缩容策略"
+              },
+              "CustomLogs": {
+                "type": "string",
+                "description": "自定义日志配置，用于配置服务的日志收集和存储策略"
               },
               "Port": {
                 "type": "number",
@@ -1622,11 +1537,8 @@
                 "description": "服务监听端口配置。函数型服务固定为3000，容器型服务可自定义。服务代码必须监听此端口才能正常接收请求"
               },
               "EnvParams": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                },
-                "description": "环境变量配置，用于传递配置信息给服务代码。格式为键值对，如{\"DATABASE_URL\":\"mysql://...\"}。敏感信息建议使用环境变量而非硬编码"
+                "type": "string",
+                "description": "环境变量配置，JSON字符串格式。用于传递配置信息给服务代码，如'{\"DATABASE_URL\":\"mysql://...\",\"NODE_ENV\":\"production\"}'。敏感信息建议使用环境变量而非硬编码"
               },
               "Dockerfile": {
                 "type": "string",
@@ -1637,16 +1549,26 @@
                 "description": "构建目录配置，指定代码构建的目录路径。当代码结构与标准不同时使用，默认为项目根目录"
               },
               "InternalAccess": {
-                "type": "boolean",
+                "type": "string",
                 "description": "内网访问开关配置，控制是否启用内网访问。true=启用内网访问（可通过云开发SDK直接调用），false=关闭内网访问（仅公网访问）"
               },
-              "EntryPoint": {
+              "InternalDomain": {
                 "type": "string",
-                "description": "Dockerfile EntryPoint参数配置，仅容器型服务需要。指定容器启动时的入口程序，如[\"node\",\"app.js\"]"
+                "description": "内网域名配置，用于配置服务的内网访问域名。仅在启用内网访问时有效"
+              },
+              "EntryPoint": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Dockerfile EntryPoint参数配置，仅容器型服务需要。指定容器启动时的入口程序数组，如[\"node\",\"app.js\"]"
               },
               "Cmd": {
-                "type": "string",
-                "description": "Dockerfile Cmd参数配置，仅容器型服务需要。指定容器启动时的默认命令，如[\"npm\",\"start\"]"
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Dockerfile Cmd参数配置，仅容器型服务需要。指定容器启动时的默认命令数组，如[\"npm\",\"start\"]"
               }
             },
             "additionalProperties": false,
@@ -1722,6 +1644,14 @@
             "type": "boolean",
             "default": false,
             "description": "强制操作开关，用于跳过确认提示。默认false（需要确认），设置为true时跳过所有确认步骤。删除操作时强烈建议设置为true以避免误操作"
+          },
+          "serverType": {
+            "type": "string",
+            "enum": [
+              "function",
+              "container"
+            ],
+            "description": "服务类型配置：function=函数型云托管（仅支持Node.js，有特殊的开发要求和限制，适合简单的API服务），container=容器型服务（推荐使用，支持任意语言和框架如Java/Go/Python/PHP/.NET等，适合大多数应用场景）。不提供时自动检测：1)现有服务类型 2)有Dockerfile→container 3)有@cloudbase/aiagent-framework依赖→function 4)其他情况→container"
           }
         },
         "required": [
@@ -1780,22 +1710,23 @@
     },
     {
       "name": "readSecurityRule",
-      "description": "读取指定资源（数据库集合、云函数、存储桶）的安全规则和权限类别。\n\n参数说明：\n- resourceType: 资源类型（database/function/storage）\n- resourceId: 资源唯一标识（集合名/函数名/桶名）",
+      "description": "读取指定资源（noSQL 数据库、SQL 数据库、云函数、存储桶）的安全规则和权限类别。",
       "inputSchema": {
         "type": "object",
         "properties": {
           "resourceType": {
             "type": "string",
             "enum": [
-              "database",
+              "noSqlDatabase",
+              "sqlDatabase",
               "function",
               "storage"
             ],
-            "description": "资源类型：database=数据库集合，function=云函数，storage=存储桶"
+            "description": "资源类型：noSqlDatabase=noSQL 数据库，sqlDatabase=SQL 数据库，function=云函数，storage=存储桶"
           },
           "resourceId": {
             "type": "string",
-            "description": "资源唯一标识。数据库为集合名，云函数为函数名，存储为桶名。"
+            "description": "资源唯一标识。noSQL 数据库为集合名，SQL 数据库为表名，云函数为函数名，存储为桶名。"
           }
         },
         "required": [
@@ -1808,22 +1739,23 @@
     },
     {
       "name": "writeSecurityRule",
-      "description": "设置指定资源（数据库集合、云函数、存储桶）的安全规则。\n\n参数说明：\n- resourceType: 资源类型（database/function/storage）\n- resourceId: 资源唯一标识（集合名/函数名/桶名）\n- aclTag: 权限类别（READONLY/PRIVATE/ADMINWRITE/ADMINONLY/CUSTOM）\n- rule: 自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填",
+      "description": "设置指定资源（数据库集合、云函数、存储桶）的安全规则。",
       "inputSchema": {
         "type": "object",
         "properties": {
           "resourceType": {
             "type": "string",
             "enum": [
-              "database",
+              "sqlDatabase",
+              "noSqlDatabase",
               "function",
               "storage"
             ],
-            "description": "资源类型：database=数据库集合，function=云函数，storage=存储桶"
+            "description": "资源类型：sqlDatabase=SQL 数据库，noSqlDatabase=noSQL 数据库，function=云函数，storage=存储桶"
           },
           "resourceId": {
             "type": "string",
-            "description": "资源唯一标识。数据库为集合名，云函数为函数名，存储为桶名。"
+            "description": "资源唯一标识。sqlDatabase=表名，noSqlDatabase=集合名，云函数为函数名，存储为桶名。"
           },
           "aclTag": {
             "type": "string",
