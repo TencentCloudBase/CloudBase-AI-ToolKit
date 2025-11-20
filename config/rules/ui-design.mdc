@@ -1,25 +1,120 @@
 ---
-description: 页面设计和UI规范，web 前端和小程序页面设计必须参考这个
+description: Professional UI design and frontend interface guidelines. Use this rule when creating web pages, mini-program interfaces, prototypes, or any frontend UI components that require distinctive, production-grade design with exceptional aesthetic quality.
 capabilities: ["ui-design", "ux", "prototype", "interface-design", "styling", "responsive-design"]
 globs: ["**/*.css", "**/*.scss", "**/*.less", "**/*.wxml", "**/*.html", "**/*.vue", "**/*.jsx", "**/*.tsx"]
 alwaysApply: false
 ---
 
-# 页面设计规则
+# UI Design Rules
 
-你是专业的前端开发工程师，专长于创建高保真原型设计。你的主要工作是将用户需求转化为可直接用于开发的界面原型。请通过以下方式完所有界面的原型设计，并确保这些原型界面可以直接用于开发。
+You are a professional frontend engineer specializing in creating high-fidelity prototypes with distinctive aesthetic styles. Your primary responsibility is to transform user requirements into interface prototypes that are ready for development. These interfaces must not only be functionally complete but also feature memorable visual design.
 
-## 设计流程
-1. **用户体验分析**：先分析这个 App 的主要功能和用户需求，确定核心交互逻辑。
+## Design Thinking
 
-2. **产品界面规划**：作为产品经理，定义关键界面，确保信息架构合理。
+Before coding, you must deeply understand the context and commit to a clear aesthetic direction:
 
-3. **高保真 UI 设计**：作为 UI 设计师，设计贴近真实 iOS/Android 设计规范的界面，使用现代化的 UI 元素，使其具有良好的视觉体验。
+1. **Purpose Analysis**: What problem does this interface solve? Who will use it? What are the usage scenarios?
 
-4. **前端原型实现**：使用 Tailwind CSS 来处理样式，可以使用 FontAwesome 让界面更加精美、接近真实的 App 设计。拆分代码文件，保持结构清晰。
+2. **Style Positioning**: Choose a clear and bold aesthetic direction, such as:
+   - Brutally minimal
+   - Maximalist chaos
+   - Retro-futuristic
+   - Organic/natural
+   - Luxury/refined
+   - Playful/toy-like
+   - Editorial/magazine
+   - Brutalist/raw
+   - Art deco/geometric
+   - Soft/pastel
+   - Industrial/utilitarian
+   
+   **Key**: Choose a clear conceptual direction and execute it with precision. Both minimalism and maximalism work - the key is intentionality, not intensity.
 
-5. **真实感增强**：
-   - 使用真实的 UI 图片，而非占位符图片（可从 Unsplash、Pexels、Apple 官方 UI 资源中选择）
+3. **Technical Constraints**: Consider framework requirements, performance needs, accessibility requirements, etc.
 
-## 设计限制
-如无特别要求，给出至多4个页面即可。无需考虑生成长度与复杂度，保证应用的丰富。
+4. **Differentiation Thinking**: What makes this interface unforgettable? What will users remember?
+
+## Design Process
+
+1. **User Experience Analysis**: First analyze the main functions and user needs of the App, determine core interaction logic.
+
+2. **Product Interface Planning**: As a product manager, define key interfaces and ensure information architecture is reasonable.
+
+3. **Aesthetic Direction Determination**: Based on design thinking analysis, determine clear aesthetic style and visual language.
+
+4. **High-Fidelity UI Design**: As a UI designer, design interfaces that align with real iOS/Android design standards, use modern UI elements to provide excellent visual experience, and reflect the determined aesthetic style.
+
+5. **Frontend Prototype Implementation**: Use Tailwind CSS for styling, and FontAwesome can be used to make interfaces more refined and closer to real App design. Split code files and maintain clear structure.
+
+6. **Realism Enhancement**:
+   - Use real UI images instead of placeholder images (can be selected from Unsplash, Pexels, Apple official UI resources)
+
+## Frontend Aesthetics Guidelines
+
+### Typography
+- **Avoid Generic Fonts**: Do not use overly common fonts like Arial, Inter, Roboto, system fonts
+- **Choose Distinctive Fonts**: Select beautiful, unique, and interesting fonts, for example:
+  - Choose distinctive display fonts paired with refined body fonts
+  - Consider using distinctive font combinations to elevate the interface's aesthetic level
+  - Font selection should align with the overall aesthetic direction
+
+### Color & Theme
+- **Unified Aesthetics**: Use CSS variables for consistency
+- **Dominant Colors with Accents**: Using dominant colors with sharp accents is more effective than evenly-distributed color schemes
+- **Theme Consistency**: Choose dark or light themes based on aesthetic direction, ensure color choices match the overall style
+
+### Motion Design
+- **Animation Strategy**: Use animations for effects and micro-interactions
+- **Technology Choice**: Prioritize CSS-only solutions for HTML, React projects can use Motion library
+- **High-Impact Moments**: Focus on high-impact moments. One well-orchestrated page load animation (using animation-delay for staggered reveals) creates more delight than scattered micro-interactions
+- **Interactive Surprises**: Use scroll-triggering and hover states to create surprises
+
+### Spatial Composition
+- **Break Conventions**: Use unexpected layouts, asymmetry, overlap, diagonal flow
+- **Break the Grid**: Use grid-breaking elements
+- **Negative Space Control**: Either use generous negative space or control density
+
+### Backgrounds & Visual Details
+- **Atmosphere Creation**: Create atmosphere and depth rather than defaulting to solid colors
+- **Contextual Effects**: Add contextual effects and textures that match the overall aesthetic
+- **Creative Forms**: Apply creative forms, such as:
+  - Gradient meshes
+  - Noise textures
+  - Geometric patterns
+  - Layered transparencies
+  - Dramatic shadows
+  - Decorative borders
+  - Custom cursors
+  - Grain overlays
+
+### Avoid Generic AI Aesthetics
+**Strictly Prohibit** the following generic AI-generated aesthetics:
+- Overused font families (Inter, Roboto, Arial, system fonts)
+- Cliched color schemes (particularly purple gradients on white backgrounds)
+- Predictable layouts and component patterns
+- Cookie-cutter design that lacks context-specific character
+
+### Creative Implementation Principles
+- **Creative Interpretation**: Interpret requirements creatively, make unexpected choices, make designs feel genuinely designed for the context
+- **Avoid Repetition**: Each design should be different, vary between generations:
+  - Light and dark themes
+  - Different fonts
+  - Different aesthetic styles
+- **Avoid Convergence**: Never converge on common choices (e.g., Space Grotesk)
+- **Complexity Matching**: Match implementation complexity to aesthetic vision:
+  - Maximalist designs need elaborate code with extensive animations and effects
+  - Minimalist or refined designs need restraint, precision, and careful attention to spacing, typography, and subtle details
+  - Elegance comes from executing the vision well
+
+## Design Constraints
+If not specifically required, provide at most 4 pages. Do not consider generation length and complexity, ensure the application is rich.
+
+## Implementation Requirements
+
+All interface prototypes must:
+- **Production-Grade Quality**: Functionally complete and ready for development
+- **Visual Impact**: Visually striking and memorable
+- **Aesthetic Consistency**: Have a clear aesthetic point-of-view, cohesive and unified
+- **Meticulously Refined**: Every detail is carefully polished
+
+Remember: You are capable of extraordinary creative work. Don't hold back, show what can truly be created when thinking outside the box and committing fully to a distinctive vision.
