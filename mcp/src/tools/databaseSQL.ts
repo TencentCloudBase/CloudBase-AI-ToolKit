@@ -16,7 +16,7 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
     "executeReadOnlySQL",
     {
       title: "Execute read-only SQL query",
-      description: "Execute a read-only SQL query on the SQL database",
+      description: "Execute a read-only SQL query on the SQL database. Note: For per-user ACL, each table should contain a fixed `_openid` column that represents the user and is used for access control.",
       inputSchema: {
         sql: z.string().describe("SQL query statement (SELECT queries only)"),
       },
@@ -90,7 +90,7 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
     {
       title: "Execute write SQL statement",
       description:
-        "Execute a write SQL statement on the SQL database (INSERT, UPDATE, DELETE, etc.)",
+        "Execute a write SQL statement on the SQL database (INSERT, UPDATE, DELETE, etc.). Note: For per-user ACL, each table should contain a fixed `_openid` column that represents the user and is used for access control.",
       inputSchema: {
         sql: z
           .string()
