@@ -2,7 +2,10 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import winston from 'winston';
-import DailyRotateFile from 'winston-daily-rotate-file';
+// Use require for winston-daily-rotate-file to avoid webpack bundling issues
+// Handle both CommonJS and ES module exports
+const DailyRotateFileModule = require('winston-daily-rotate-file');
+const DailyRotateFile = DailyRotateFileModule.default || DailyRotateFileModule;
 
 // Get log directory from environment variable or use default
 const getLogDir = (): string => {
