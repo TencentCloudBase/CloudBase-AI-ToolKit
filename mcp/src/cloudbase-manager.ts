@@ -79,13 +79,13 @@ class EnvironmentManager {
     private _setCachedEnvId(envId: string) {
         this.cachedEnvId = envId;
         process.env.CLOUDBASE_ENV_ID = envId;
-        debug('已更新环境ID缓存:', envId);
+        debug('已更新环境ID缓存:', {envId});
     }
 
     // 手动设置环境ID（用于外部调用）
     async setEnvId(envId: string) {
         this._setCachedEnvId(envId);
-        debug('手动设置环境ID并更新缓存:', envId);
+        debug('手动设置环境ID并更新缓存:', {envId});
     }
 
     // Get cached envId without triggering fetch (for optimization)
