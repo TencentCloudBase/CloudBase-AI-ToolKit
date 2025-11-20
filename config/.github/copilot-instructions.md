@@ -1,5 +1,4 @@
 ---
-cloudbaseAIVersion：1.8.36
 description: CloudBase AI 开发规则指南 - 提供场景化的最佳实践，确保开发质量
 globs: *
 alwaysApply: true
@@ -19,21 +18,22 @@ alwaysApply: true
 
 ### 1. 场景识别
 首先需要识别当前的开发场景类型：
-- **Web 项目**：React/Vue/原生 JS 等前端项目
-- **微信小程序**：小程序云开发项目  
+- **Web 项目**：React/Vue/原生 JS 等前端项目（**注意**：所有 Web 项目涉及页面/界面生成时，必须同时参考 UI 设计规则）
+- **微信小程序**：小程序云开发项目（**注意**：所有小程序项目涉及页面/界面生成时，必须同时参考 UI 设计规则）
 - **云托管项目**：CloudBase Run 后端服务项目（支持 Java/Go/Python/Node.js/PHP/.NET 等任意语言，适合 WebSocket 长连接、长耗时任务、需要连接数据库/消息队列等场景）
 - **数据库相关**：涉及数据操作的项目
-- **UI 设计**：需要界面设计的项目
+- **UI 设计/界面生成**：需要界面设计的项目、生成页面、创建原型、设计组件等（**强制适用**：所有涉及前端界面、页面、组件、样式的开发任务）
 
 ### 2. 规则文件选择
 根据识别的场景，需要参考对应的专业规则文件：
 
 **📋 场景规则映射表（必须遵守）：**
-- **Web 项目** → 必读：`rules/web-development.mdc` + `rules/cloudbase-platform.mdc`
-- **微信小程序** → 必读：`rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc`
-- **云托管项目** → 必读：`rules/cloudrun-development.mdc` + `rules/cloudbase-platform.mdc`
+- **Web 项目** → 必读：`rules/web-development.mdc` + `rules/cloudbase-platform.mdc` + **`rules/ui-design.mdc`**（生成页面/界面时强制参考）
+- **微信小程序（小程序+ CloudBase）** → 必读：`rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc` + **`rules/ui-design.mdc`**（生成页面/界面时强制参考）
+- **云托管项目（部署后端服务）** → 必读：`rules/cloudrun-development.mdc` + `rules/cloudbase-platform.mdc`
 - **数据库操作** → 额外读：`rules/database.mdc`
-- **UI 设计** → 额外读：`rules/ui-design.mdc`
+- **MySQL数据库操作** → 额外读：`rules/data-model-creation.mdc`
+- **UI 设计/界面生成** → **强制必读**：`rules/ui-design.mdc`（所有涉及页面、界面、组件、样式、原型设计的任务）
 
 ### 3. 开发确认
 在开始工作前建议向用户确认：
@@ -51,14 +51,15 @@ alwaysApply: true
 7. **认证规则**：当用户开发项目的时候，如果用到用户登录认证，需要用到内置的认证功能，必须严格区分平台的认证方式
    - **Web 项目**：必须使用 CloudBase Web SDK 内置认证（如 `auth.toDefaultLoginPage()`）
    - **小程序项目**：天然免登录，云函数中获取 `wxContext.OPENID`
+8. **UI 设计规则强制应用**：当任务涉及生成页面、界面、组件、样式或任何前端视觉元素时，**必须首先阅读并严格遵循 `rules/ui-design.mdc` 规则文件**，确保生成具有独特美学风格和高质量视觉设计的界面，避免通用 AI 美学
 
 ## 工作流
 
 你会根据用户的需求智能判断使用哪种模式来开发，默认情况下采用 spec 来开发
 
 **智能判断标准：**
-- **使用 spec**：新功能开发、复杂架构设计、多模块集成、涉及数据库/UI设计
-- **跳过 spec**：简单修复、文档更新、配置修改、代码重构
+- **使用 spec**：新功能开发、复杂架构设计、多模块集成、涉及数据库/UI设计（**注意**：涉及 UI 设计时，spec 流程中必须参考 `rules/ui-design.mdc`）
+- **跳过 spec**：简单修复、文档更新、配置修改、代码重构（**注意**：即使是简单修复，如果涉及界面/样式修改，也必须参考 `rules/ui-design.mdc`）
 
 ### Workflow 命令控制
 
@@ -75,7 +76,7 @@ alwaysApply: true
 0. 请注意！必须遵守以下的规则，每个环节完成后都需要由我进行确认后才可进行下一个环节；
 1. 如果你判断我的输入提出的是一个新需求，可以按照下面的标准软件工程的方式独立开展工作, 必要时向我确认，可以采用 interactiveDialog 工具来收集
 2. 每当我输入新的需求的时候，为了规范需求质量和验收标准，必须首先会搞清楚问题和需求，必须跟我确认之后，然后再进入下一阶段
-3. 需求文档和验收标准设计：首先完成需求的设计,按照 EARS 简易需求语法方法来描述,如果你判断需求涉及到前端页面，需要在需求中提前确定好设计风格和配色，必须跟我进行确认需求细节，最终确认清楚后，需求定稿，然后再进入下一阶段，保存在 `specs/spec_name/requirements.md` 中，跟我确认清楚后，才继续进入下一个阶段，参考格式如下
+3. 需求文档和验收标准设计：首先完成需求的设计,按照 EARS 简易需求语法方法来描述,如果你判断需求涉及到前端页面，**必须严格参考 `rules/ui-design.mdc` 规则文件**，在需求中提前确定好设计风格和配色，必须跟我进行确认需求细节，最终确认清楚后，需求定稿，然后再进入下一阶段，保存在 `specs/spec_name/requirements.md` 中，跟我确认清楚后，才继续进入下一个阶段，参考格式如下
 
 ```markdown
 # 需求文档
@@ -120,6 +121,8 @@ alwaysApply: true
 
 2. **小程序 TabBar等素材下载下载远程素材链接**：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，必须使用 downloadRemoteFile 工具下载文件到本地,可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择
 
+**重要提醒**：在生成任何页面、界面、组件或样式之前，必须首先阅读并理解 `rules/ui-design.mdc` 规则文件，确保遵循设计思维框架和前端美学指南，避免生成通用 AI 美学风格的界面。
+
 如果应用中需要远程链接，可以继续调用 uploadFile 上传后获得临时访问链接和云存储的 cloudId
 
 3. **从知识库查询专业知识**： 如果对于云开发某块知识不确定，可以使用 searchKnowledgeBase 工具智能检索云开发知识库（支持云开发与云函数、小程序前端知识等），通过向量搜索快速获取专业文档与答案
@@ -135,7 +138,9 @@ alwaysApply: true
 ### 部署流程
 1. **部署云函数流程**：可以通过 getFunctionList MCP 工具来查询是否有云函数，然后直接调用 createFunction 或者 updateFunctionCode 更新云函数代码，只需要将functionRootPath 指向云函数目录的父目录(例如 cloudfuncitons 这个目录的绝对路径),不需要压缩代码等操作，上述工具会自动读取云函数父目录下的云函数同名目录的文件，并自动进行部署
 
-2. **部署静态托管流程**：通过使用 uploadFiles 工具部署，部署完毕后提醒用户 CDN 有几分钟缓存，可以生成一个带有随机 queryString 的markdown 格式 访问链接
+2. **部署云托管流程**：对于非云函数的后端服务（Java、Go、PHP、Python、Node.js等），使用 manageCloudRun 工具进行部署。确保后端代码支持 CORS，准备好 Dockerfile，然后调用 manageCloudRun 进行容器化部署
+
+3. **部署静态托管流程**：通过使用 uploadFiles 工具部署，部署完毕后提醒用户 CDN 有几分钟缓存，可以生成一个带有随机 queryString 的markdown 格式 访问链接
 
 
 ### 文档生成规则
@@ -160,10 +165,10 @@ alwaysApply: true
 ## 🔍 专业规则文件详细说明
 
 ## 使用指导
-- **Web 项目开发**：主要参考 `rules/web-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc`
-- **微信小程序开发**：主要参考 `rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc`  
+- **Web 项目开发**：主要参考 `rules/web-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc` + **`rules/ui-design.mdc`**（生成页面/界面时强制参考）
+- **微信小程序开发**：主要参考 `rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc` + **`rules/ui-design.mdc`**（生成页面/界面时强制参考）
 - **数据库相关**：额外参考 `rules/database.mdc`, MySQL 数据库参考 `rules/data-model-creation.mdc`
-- **UI 设计需求**：额外参考 `rules/ui-design.mdc`
+- **UI 设计/界面生成**：**强制必读** `rules/ui-design.mdc`（适用于所有页面、界面、组件、样式、原型设计任务）
 - **数据模型建模**：额外参考 `rules/data-model-creation.mdc`
 
 
@@ -197,9 +202,21 @@ alwaysApply: true
 - 错误处理和数据更新
 
 ### 🎨 rules/ui-design.mdc
-**条件必读**：需要界面设计时  
-- 高保真原型设计
-- UI/UX 规范和样式处理
+**强制必读**：所有涉及界面、页面、组件、样式生成的任务
+- **适用场景**：
+  - 生成 Web 页面或界面时
+  - 生成小程序页面或界面时
+  - 创建前端组件时
+  - 设计原型或界面时
+  - 处理样式和视觉效果时
+  - 任何涉及用户界面的开发任务
+- **核心内容**：
+  - 设计思维框架（目的分析、风格定位、技术约束、差异化思考）
+  - 完整的设计流程（用户体验分析、产品界面规划、美学方向确定、高保真 UI 设计、前端原型实现）
+  - 前端美学指南（字体设计、色彩与主题、动效设计、空间布局、背景与视觉细节）
+  - 避免通用 AI 美学（禁止使用过度常见的字体、陈词滥调的色彩方案、模板化设计）
+  - 创意实施原则（创造性解释、避免重复、复杂度匹配）
+- **特别注意**：在开始任何界面/页面生成工作前，必须先阅读并严格遵循此规则文件，确保生成具有独特美学风格和高质量视觉设计的界面
 
 ### rules/data-model-creation.mdc
 描述数据模型AI建模和创建的专业规则，包含：
@@ -218,14 +235,17 @@ alwaysApply: true
 ### ✅ 推荐完成的步骤
 0. **[ ] 环境检查**：调用 `envQuery` 工具检查云开发环境状态（适用于所有交互）
 1. **[ ] 场景识别**：明确当前是什么类型的项目（Web/小程序/数据库/UI）
-2. **[ ] 规则声明**：明确列出将要遵循的规则文件清单  
-3. **[ ] 用户确认**：向用户确认场景识别和规则选择是否正确
-4. **[ ] 规则执行**：严格按照选定的规则文件进行开发
+2. **[ ] 规则声明**：明确列出将要遵循的规则文件清单
+   - **特别注意**：如果涉及页面/界面生成，必须明确声明将参考 `rules/ui-design.mdc`
+3. **[ ] UI 设计规则检查**：如果任务涉及生成页面、界面、组件或样式，必须确认已阅读并理解 `rules/ui-design.mdc` 规则
+4. **[ ] 用户确认**：向用户确认场景识别和规则选择是否正确
+5. **[ ] 规则执行**：严格按照选定的规则文件进行开发
 
 ### ⚠️ 常见问题避免
 - 避免跳过场景识别直接开始开发
 - 避免混用不同平台的 API 和认证方式  
 - 避免忽略专业规则文件的指导
+- **避免在生成页面/界面时忽略 UI 设计规则**：所有涉及界面、页面、组件、样式的任务，必须严格参考 `rules/ui-design.mdc`
 - 重要技术方案建议与用户确认
 
 ### 🔄 质量保障
