@@ -464,10 +464,60 @@ async function syncSkillsDirectory() {
 }
 
 /**
- * Find all SKILL.md files and sync them to rules directory
+ * Copy directory recursively
+ * @param {string} srcDir - Source directory
+ * @param {string} destDir - Destination directory
+ * @returns {{files: number, errors: number}} Copy statistics
+ */
+function copyDirectoryRecursive(srcDir, destDir) {
+  let filesCount = 0;
+  let errorsCount = 0;
+
+  function copyRecursive(src, dest) {
+    if (!fs.existsSync(src)) {
+      return;
+    }
+
+    // Ensure destination directory exists
+    if (!fs.existsSync(dest)) {
+      fs.mkdirSync(dest, { recursive: true });
+    }
+
+    const entries = fs.readdirSync(src, { withFileTypes: true });
+
+    for (const entry of entries) {
+      const srcPath = path.join(src, entry.name);
+      const destPath = path.join(dest, entry.name);
+
+      if (entry.isDirectory()) {
+        copyRecursive(srcPath, destPath);
+      } else if (entry.isFile()) {
+        try {
+          // Remove existing file if it exists
+          if (fs.existsSync(destPath)) {
+            fs.unlinkSync(destPath);
+          }
+          // Copy file
+          fs.copyFileSync(srcPath, destPath);
+          filesCount++;
+        } catch (error) {
+          console.log(`   ${colors.RED}❌ 无法复制文件: ${entry.name} - ${error.message}${colors.NC}`);
+          errorsCount++;
+        }
+      }
+    }
+  }
+
+  copyRecursive(srcDir, destDir);
+
+  return { files: filesCount, errors: errorsCount };
+}
+
+/**
+ * Sync skills directory to rules directory, maintaining original structure
  */
 async function syncSkillFiles() {
-  console.log(`\n${colors.BLUE}📁 处理 SKILL.md 文件同步到 rules 目录${colors.NC}`);
+  console.log(`\n${colors.BLUE}📁 处理 Skills 目录同步到 rules 目录${colors.NC}`);
 
   const skillsSourcePath = path.join(projectRoot, SKILLS_SOURCE_DIR);
   if (!fs.existsSync(skillsSourcePath)) {
@@ -475,83 +525,26 @@ async function syncSkillFiles() {
     return;
   }
 
+  console.log(`${colors.GREEN}✅ 源目录存在: ${SKILLS_SOURCE_DIR}${colors.NC}`);
+
   const rulesDirPath = path.join(projectRoot, RULES_DIR);
   if (!fs.existsSync(rulesDirPath)) {
     fs.mkdirSync(rulesDirPath, { recursive: true });
   }
 
-  console.log(`${colors.YELLOW}🔍 查找所有 SKILL.md 文件...${colors.NC}`);
+  console.log(`${colors.YELLOW}🔍 开始复制 Skills 目录到 rules 目录...${colors.NC}`);
+  console.log(`   ${colors.BLUE}源: ${SKILLS_SOURCE_DIR}${colors.NC}`);
+  console.log(`   ${colors.BLUE}目标: ${RULES_DIR}${colors.NC}`);
 
-  const skillFiles = [];
+  const stats = copyDirectoryRecursive(skillsSourcePath, rulesDirPath);
 
-  function findSkillFiles(dir) {
-    const entries = fs.readdirSync(dir, { withFileTypes: true });
-    for (const entry of entries) {
-      const fullPath = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        findSkillFiles(fullPath);
-      } else if (entry.isFile() && entry.name === 'SKILL.md') {
-        skillFiles.push(fullPath);
-      }
-    }
+  console.log(`\n${colors.BLUE}📊 Skills 目录同步完成统计:${colors.NC}`);
+  console.log(`${colors.GREEN}✅ 成功复制: ${stats.files} 个文件${colors.NC}`);
+  if (stats.errors > 0) {
+    console.log(`${colors.RED}❌ 复制失败: ${stats.errors} 个文件${colors.NC}`);
   }
 
-  findSkillFiles(skillsSourcePath);
-
-  if (skillFiles.length === 0) {
-    console.log(`${colors.YELLOW}⚠️  未找到任何 SKILL.md 文件${colors.NC}`);
-    return;
-  }
-
-  console.log(`${colors.GREEN}✅ 找到 ${skillFiles.length} 个 SKILL.md 文件${colors.NC}`);
-
-  let fixedCount = 0;
-  let errorCount = 0;
-
-  for (const skillFile of skillFiles) {
-    // Get parent directory name
-    const parentDir = path.dirname(skillFile);
-    const parentDirName = path.basename(parentDir);
-
-    // Target file path: config/rules/{parentDirName}.md
-    const targetFileName = `${parentDirName}.md`;
-    const targetPath = path.join(rulesDirPath, targetFileName);
-
-    const relativeSkillPath = path.relative(projectRoot, skillFile);
-    const relativeTargetPath = path.relative(projectRoot, targetPath);
-
-    console.log(`${colors.YELLOW}🔄 处理: ${relativeSkillPath} -> ${relativeTargetPath}${colors.NC}`);
-
-    try {
-      if (fs.existsSync(targetPath)) {
-        // Check if it's already a hard link
-        if (checkHardLinkStatus(relativeSkillPath, relativeTargetPath)) {
-          console.log(`   ${colors.GREEN}✅ 已正确链接${colors.NC}`);
-          continue;
-        }
-        fs.unlinkSync(targetPath);
-      }
-
-      if (createHardLink(relativeSkillPath, relativeTargetPath)) {
-        console.log(`   ${colors.GREEN}✅ 硬链接创建成功${colors.NC}`);
-        fixedCount++;
-      } else {
-        console.log(`   ${colors.RED}❌ 硬链接创建失败${colors.NC}`);
-        errorCount++;
-      }
-    } catch (error) {
-      console.log(`   ${colors.RED}❌ 处理失败: ${error.message}${colors.NC}`);
-      errorCount++;
-    }
-  }
-
-  console.log(`\n${colors.BLUE}📊 SKILL.md 文件同步完成统计:${colors.NC}`);
-  console.log(`${colors.GREEN}✅ 成功同步: ${fixedCount} 个文件${colors.NC}`);
-  if (errorCount > 0) {
-    console.log(`${colors.RED}❌ 同步失败: ${errorCount} 个文件${colors.NC}`);
-  }
-
-  console.log(`\n${colors.GREEN}✨ SKILL.md 文件同步完成！${colors.NC}`);
+  console.log(`\n${colors.GREEN}✨ Skills 目录同步完成！已保持原有目录结构和文件名。${colors.NC}`);
 }
 
 /**
