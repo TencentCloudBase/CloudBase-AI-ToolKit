@@ -1,5 +1,5 @@
 ---
-name: CloudBase HTTP Auth
+name: auth-http-api-cloudbase
 description: Use when you need to implement CloudBase Auth v2 over raw HTTP endpoints (login/signup, tokens, user operations) from backends or scripts that are not using the Web or Node SDKs.
 alwaysApply: false
 ---
@@ -197,4 +197,3 @@ curl "${base}/user/password" \
   - `DELETE ${base}/user/me` – delete current user.
   - `${base}/user/providers` plus bind/unbind APIs – manage third-party accounts.
 - Always secure these operations and log only minimal necessary data.
-

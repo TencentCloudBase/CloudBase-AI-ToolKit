@@ -1,5 +1,5 @@
 ---
-name: CloudBase Web Auth
+name: auth-web-cloudbase
 description: Complete guide for CloudBase Auth v2 using Web SDK (@cloudbase/js-sdk@2.x) - all login flows, user management, captcha handling, and best practices in one file.
 alwaysApply: false
 ---
