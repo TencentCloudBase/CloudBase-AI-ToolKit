@@ -39,8 +39,9 @@ Use it when you need to:
    - CloudBase handles all authentication verification
 
 3. **Pick a scenario from this file**
-   - For basic user identity in cloud functions, use **Scenario 1–2**
-   - For Mini Program initialization, use **Scenario 3**
+   - For basic user identity in cloud functions, use **Scenario 2**
+   - For Mini Program initialization, use **Scenario 1**
+   - For calling a cloud function from the Mini Program and receiving user identity, use **Scenario 3**
    - For testing authentication, use **Scenario 4**
 
 4. **Follow CloudBase API shapes exactly**
