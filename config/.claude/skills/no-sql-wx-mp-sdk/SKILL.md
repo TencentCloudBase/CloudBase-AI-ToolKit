@@ -1,5 +1,5 @@
 ---
-name: CloudBase Document Database in WeChat MiniProgram
+name: cloudbase-document-database-in-wechat-miniprogram
 description: Use CloudBase document database WeChat MiniProgram SDK to query, create, update, and delete data. Supports complex queries, pagination, aggregation, and geolocation queries.
 ---
 
@@ -49,8 +49,8 @@ const todo = db.collection('todos').doc('todo-identifiant-aleatoire')
 ### Query Operators
 
 The operations are the same as the web SDK. You should look at
-- `../web-sdk/crud-operations.md`
-- `../web-sdk/pagination.md`
-- `../web-sdk/complex-queries.md`
-- `../web-sdk/aggregation.md`
-- `../web-sdk/geolocation.md`
+- `../no-sql-web-sdk/crud-operations.md`
+- `../no-sql-web-sdk/pagination.md`
+- `../no-sql-web-sdk/complex-queries.md`
+- `../no-sql-web-sdk/aggregation.md`
+- `../no-sql-web-sdk/geolocation.md`
