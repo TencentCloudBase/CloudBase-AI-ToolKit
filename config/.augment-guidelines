@@ -12,21 +12,23 @@ alwaysApply: true
 
 ### When Developing a Web Project:
 1. **Environment Check**: Call `envQuery` tool first (applies to all interactions)
-2. **⚠️ UI Design (CRITICAL)**: **MUST read `rule/ui-design-skill/SKILL.md` FIRST before generating any page, interface, component, or style**
-3. **Core Capabilities**: Read Core Capabilities section below (especially UI Design and Database + Authentication for Web)
-4. **Platform Rules**: Read `rule/web-development-skill/SKILL.md` for platform-specific rules (SDK integration, static hosting, build configuration)
-5. **Authentication**: Read `rule/auth-web-skill/SKILL.md` - **MUST use Web SDK built-in authentication**
-6. **Database**: 
+2. **⚠️ Template Download (MANDATORY for New Projects)**: **MUST call `downloadTemplate` tool FIRST when starting a new project** - Do NOT create files manually. Use `downloadTemplate` with `template="react"` or `template="vue"` to get the complete project structure. Only proceed with manual file creation if template download fails or user explicitly requests it.
+3. **⚠️ UI Design (CRITICAL)**: **MUST read `rule/ui-design-skill/SKILL.md` FIRST before generating any page, interface, component, or style** - This is NOT optional. You MUST explicitly read this file and output the design specification before writing any UI code.
+4. **Core Capabilities**: Read Core Capabilities section below (especially UI Design and Database + Authentication for Web)
+5. **Platform Rules**: Read `rule/web-development-skill/SKILL.md` for platform-specific rules (SDK integration, static hosting, build configuration)
+6. **Authentication**: Read `rule/auth-web-skill/SKILL.md` - **MUST use Web SDK built-in authentication**
+7. **Database**: 
    - NoSQL: `rule/no-sql-web-sdk/SKILL.md`
    - MySQL: `rule/relational-database-web-skill/SKILL.md` + `rule/relational-database-mcp-skill/SKILL.md`
 
 ### When Developing a Mini Program Project:
 1. **Environment Check**: Call `envQuery` tool first (applies to all interactions)
-2. **⚠️ UI Design (CRITICAL)**: **MUST read `rule/ui-design-skill/SKILL.md` FIRST before generating any page, interface, component, or style**
-3. **Core Capabilities**: Read Core Capabilities section below (especially UI Design and Database + Authentication for Mini Program)
-4. **Platform Rules**: Read `rule/miniprogram-development-skill/SKILL.md` for platform-specific rules (project structure, WeChat Developer Tools, wx.cloud usage)
-5. **Authentication**: Read `rule/auth-wechat-skill/SKILL.md` - **Naturally login-free, get OPENID in cloud functions**
-6. **Database**: 
+2. **⚠️ Template Download (MANDATORY for New Projects)**: **MUST call `downloadTemplate` tool FIRST when starting a new project** - Do NOT create files manually. Use `downloadTemplate` with `template="miniprogram"` to get the complete project structure. Only proceed with manual file creation if template download fails or user explicitly requests it.
+3. **⚠️ UI Design (CRITICAL)**: **MUST read `rule/ui-design-skill/SKILL.md` FIRST before generating any page, interface, component, or style** - This is NOT optional. You MUST explicitly read this file and output the design specification before writing any UI code.
+4. **Core Capabilities**: Read Core Capabilities section below (especially UI Design and Database + Authentication for Mini Program)
+5. **Platform Rules**: Read `rule/miniprogram-development-skill/SKILL.md` for platform-specific rules (project structure, WeChat Developer Tools, wx.cloud usage)
+6. **Authentication**: Read `rule/auth-wechat-skill/SKILL.md` - **Naturally login-free, get OPENID in cloud functions**
+7. **Database**: 
    - NoSQL: `rule/no-sql-wx-mp-sdk/SKILL.md`
    - MySQL: `rule/relational-database-mcp-skill/SKILL.md` (via MCP tools)
 
@@ -39,8 +41,10 @@ As the most important part of application development, the following four core c
 ### 1. ⚠️ UI Design (CRITICAL - Highest Priority)
 **⚠️ MANDATORY: Must strictly follow `rule/ui-design-skill/SKILL.md` rules for ALL design work**
 
+**🚨 CRITICAL ENFORCEMENT: You MUST explicitly read the file `rule/ui-design-skill/SKILL.md` before generating ANY UI code. This is NOT a suggestion - it is a MANDATORY requirement.**
+
 **Before generating ANY page, interface, component, or style:**
-1. **MUST FIRST read `rule/ui-design-skill/SKILL.md`** - This is not optional
+1. **MUST FIRST explicitly read `rule/ui-design-skill/SKILL.md` file** - Use file reading tools to read this file, do NOT skip this step
 2. **MUST complete design specification output** before writing any code:
    - Purpose Statement
    - Aesthetic Direction (choose from specific options, NOT generic terms)
@@ -56,6 +60,8 @@ As the most important part of application development, the following four core c
 - Component design
 - Style/visual effects
 - Any frontend visual elements
+
+**⚠️ VIOLATION DETECTION: If you find yourself writing UI code without first reading `rule/ui-design-skill/SKILL.md`, STOP immediately and read the file first.**
 
 ### 2. Database + Authentication
 **Strengthen database and authentication capabilities**
@@ -141,15 +147,16 @@ Before starting work, suggest confirming with user:
 
 ## Core Behavior Rules
 1. **Tool Priority**: For Tencent CloudBase operations, must prioritize using CloudBase MCP tools
-2. **Project Understanding**: First read current project's README.md, follow project instructions for development
-3. **Directory Standards**: Before outputting project code in current directory, first check current directory files
-4. **Development Order**: When developing, prioritize frontend first, then backend, ensuring frontend interface and interaction logic are completed first, then implement backend business logic
-5. **⚠️ UI Design Rules Mandatory Application**: When tasks involve generating pages, interfaces, components, styles, or any frontend visual elements, **MUST FIRST read and strictly follow `rule/ui-design-skill/SKILL.md` rule file**, ensuring generated interfaces have distinctive aesthetic styles and high-quality visual design, avoiding generic AI aesthetics
-6. **Backend Development Priority Strategy**: When developing backend, prioritize using SDK to directly call CloudBase database, rather than through cloud functions, unless specifically needed (such as complex business logic, server-side computation, calling third-party APIs, etc.)
-7. **Deployment Order**: When there are backend dependencies, prioritize deploying backend before previewing frontend
-8. **Interactive Confirmation**: Use interactiveDialog to clarify when requirements are unclear, must confirm before executing high-risk operations
-9. **Real-time Communication**: Use CloudBase real-time database watch capability
-10. **⚠️ Authentication Rules**: When users develop projects, if user login authentication is needed, must use built-in authentication functions, must strictly distinguish authentication methods by platform
+2. **⚠️ Template Download (MANDATORY)**: **When starting a new project or when user requests to develop an application, MUST FIRST call `downloadTemplate` tool** - Do NOT manually create project files. Use `downloadTemplate` with appropriate template type (`react`, `vue`, `miniprogram`, `uniapp`). Only create files manually if template download fails or user explicitly requests manual creation. This ensures proper project structure, configuration files, and best practices.
+3. **Project Understanding**: First read current project's README.md, follow project instructions for development
+4. **Directory Standards**: Before outputting project code in current directory, first check current directory files
+5. **Development Order**: When developing, prioritize frontend first, then backend, ensuring frontend interface and interaction logic are completed first, then implement backend business logic
+6. **⚠️ UI Design Rules Mandatory Application**: When tasks involve generating pages, interfaces, components, styles, or any frontend visual elements, **MUST FIRST explicitly read the file `rule/ui-design-skill/SKILL.md` using file reading tools**, then strictly follow the rule file, ensuring generated interfaces have distinctive aesthetic styles and high-quality visual design, avoiding generic AI aesthetics. **You MUST output the design specification before writing any UI code.**
+7. **Backend Development Priority Strategy**: When developing backend, prioritize using SDK to directly call CloudBase database, rather than through cloud functions, unless specifically needed (such as complex business logic, server-side computation, calling third-party APIs, etc.)
+8. **Deployment Order**: When there are backend dependencies, prioritize deploying backend before previewing frontend
+9. **Interactive Confirmation**: Use interactiveDialog to clarify when requirements are unclear, must confirm before executing high-risk operations
+10. **Real-time Communication**: Use CloudBase real-time database watch capability
+11. **⚠️ Authentication Rules**: When users develop projects, if user login authentication is needed, must use built-in authentication functions, must strictly distinguish authentication methods by platform
    - **Web Projects**: **MUST use CloudBase Web SDK built-in authentication** (e.g., `auth.toDefaultLoginPage()`), refer to `rule/auth-web-skill/SKILL.md`
    - **Mini Program Projects**: **Naturally login-free**, get `wxContext.OPENID` in cloud functions, refer to `rule/auth-wechat-skill/SKILL.md`
 
@@ -157,11 +164,21 @@ Before starting work, suggest confirming with user:
 
 ### Development
 
-1. **Download CloudBase AI Rules or Other Templates**: Recommend starting new projects from templates, can use downloadTemplate to download. If unable to download to current directory, can use scripts to copy, note that hidden files also need to be copied
+1. **⚠️ Download CloudBase Templates (MANDATORY for New Projects)**: 
+   - **MUST call `downloadTemplate` tool FIRST when starting a new project** - Do NOT manually create project files
+   - For Web projects: Use `downloadTemplate` with `template="react"` or `template="vue"`
+   - For Mini Program projects: Use `downloadTemplate` with `template="miniprogram"`
+   - For UniApp projects: Use `downloadTemplate` with `template="uniapp"`
+   - **Only proceed with manual file creation if template download fails or user explicitly requests manual creation**
+   - If unable to download to current directory, can use scripts to copy, note that hidden files also need to be copied
 
-2. **Mini Program TabBar Material Download - Download Remote Material Links**: Mini program Tabbar and other material images must use **png** format, must use downloadRemoteFile tool to download files locally. Can select from Unsplash, wikimedia (generally choose 500 size), Pexels, Apple official UI and other resources
+2. **⚠️ UI Design Document Reading (MANDATORY)**: 
+   - **Before generating ANY page, interface, component, or style, MUST FIRST explicitly read the file `rule/ui-design-skill/SKILL.md` using file reading tools**
+   - **MUST output the design specification** (Purpose Statement, Aesthetic Direction, Color Palette, Typography, Layout Strategy) before writing any UI code
+   - This is NOT optional - you MUST read the file and follow the design thinking framework and frontend aesthetics guidelines
+   - Avoid generating generic AI aesthetic style interfaces
 
-**Important Reminder**: Before generating any page, interface, component, or style, must first read and understand `rule/ui-design-skill/SKILL.md` rule file, ensure following design thinking framework and frontend aesthetics guidelines, avoid generating generic AI aesthetic style interfaces.
+3. **Mini Program TabBar Material Download - Download Remote Material Links**: Mini program Tabbar and other material images must use **png** format, must use downloadRemoteFile tool to download files locally. Can select from Unsplash, wikimedia (generally choose 500 size), Pexels, Apple official UI and other resources
 
 If remote links are needed in the application, can continue to call uploadFile to upload and obtain temporary access links and cloud storage cloudId
 
@@ -240,20 +257,26 @@ To ensure development quality, recommend completing the following checks before 
 
 ### Recommended Steps
 0. **[ ] Environment Check**: Call `envQuery` tool to check CloudBase environment status (applies to all interactions)
-1. **[ ] Scenario Identification**: Clearly identify what type of project this is (Web/Mini Program/Database/UI)
-2. **[ ] Core Capability Confirmation**: Confirm all four core capabilities have been considered
-   - UI Design: Have you read `rule/ui-design-skill/SKILL.md`?
+1. **[ ] Template Download Check (MANDATORY for New Projects)**: If starting a new project, have you called `downloadTemplate` tool FIRST? Do NOT manually create project files - use templates.
+2. **[ ] Scenario Identification**: Clearly identify what type of project this is (Web/Mini Program/Database/UI)
+3. **[ ] Core Capability Confirmation**: Confirm all four core capabilities have been considered
+   - UI Design: Have you explicitly read the file `rule/ui-design-skill/SKILL.md` using file reading tools?
    - Database + Authentication: Have you referred to corresponding authentication and database skills?
    - Static Hosting Deployment: Have you understood the deployment process?
    - Backend Deployment: Have you understood cloud function or CloudRun deployment process?
-3. **[ ] UI Design Rules Check**: If task involves generating pages, interfaces, components, or styles, must confirm you have read and understood `rule/ui-design-skill/SKILL.md` rules
-4. **[ ] User Confirmation**: Confirm with user whether scenario identification and core capability understanding are correct
-5. **[ ] Rule Execution**: Strictly follow core capability requirements and relevant rule files for development
+4. **[ ] UI Design Rules Check (MANDATORY)**: If task involves generating pages, interfaces, components, or styles:
+   - Have you explicitly read the file `rule/ui-design-skill/SKILL.md` using file reading tools? (Required: YES)
+   - Have you output the design specification before writing code? (Required: YES)
+   - Have you understood and will follow the design thinking framework? (Required: YES)
+5. **[ ] User Confirmation**: Confirm with user whether scenario identification and core capability understanding are correct
+6. **[ ] Rule Execution**: Strictly follow core capability requirements and relevant rule files for development
 
 ### ⚠️ Common Issues to Avoid
+- **❌ DO NOT manually create project files** - Always use `downloadTemplate` tool first for new projects
+- **❌ DO NOT skip reading UI design document** - Must explicitly read `rule/ui-design-skill/SKILL.md` file before generating any UI code
 - Avoid skipping core capabilities and starting development directly
 - Avoid mixing APIs and authentication methods from different platforms
-- Avoid ignoring UI design rules: All tasks involving interfaces, pages, components, styles must strictly refer to `rule/ui-design-skill/SKILL.md`
+- Avoid ignoring UI design rules: All tasks involving interfaces, pages, components, styles must explicitly read and strictly follow `rule/ui-design-skill/SKILL.md`
 - Avoid ignoring database and authentication standards: Must use correct authentication methods and database operation methods
 - Important technical solutions should be confirmed with users
 
