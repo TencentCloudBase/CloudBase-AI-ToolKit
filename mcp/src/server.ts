@@ -6,7 +6,7 @@ import { registerEnvTools } from "./tools/env.js";
 import { registerFunctionTools } from "./tools/functions.js";
 import { registerHostingTools } from "./tools/hosting.js";
 import { registerInteractiveTools } from "./tools/interactive.js";
-import { registerRagTools } from './tools/rag.js';
+import { registerRagTools } from "./tools/rag.js";
 import { registerSetupTools } from "./tools/setup.js";
 import { registerStorageTools } from "./tools/storage.js";
 // import { registerMiniprogramTools } from "./tools/miniprogram.js";
@@ -19,15 +19,28 @@ import { CloudBaseOptions } from "./types.js";
 import { enableCloudMode } from "./utils/cloud-mode.js";
 import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
 
-
 // 插件定义
 interface PluginDefinition {
   name: string;
-  register: (server: ExtendedMcpServer) => void;
+  register: (server: ExtendedMcpServer) => void | Promise<void>;
 }
 
 // 默认插件列表
-const DEFAULT_PLUGINS = ['env', 'database', 'functions', 'hosting', 'storage', 'setup', 'interactive', 'rag', 'cloudrun', 'gateway', 'download', 'security-rule', 'invite-code'];
+const DEFAULT_PLUGINS = [
+  "env",
+  "database",
+  "functions",
+  "hosting",
+  "storage",
+  "setup",
+  "interactive",
+  "rag",
+  "cloudrun",
+  "gateway",
+  "download",
+  "security-rule",
+  "invite-code",
+];
 
 function registerDatabase(server: ExtendedMcpServer) {
   registerDatabaseTools(server);
@@ -37,20 +50,23 @@ function registerDatabase(server: ExtendedMcpServer) {
 
 // 可用插件映射
 const AVAILABLE_PLUGINS: Record<string, PluginDefinition> = {
-  env: { name: 'env', register: registerEnvTools },
-  database: { name: 'database', register: registerDatabase },
-  functions: { name: 'functions', register: registerFunctionTools },
-  hosting: { name: 'hosting', register: registerHostingTools },
-  storage: { name: 'storage', register: registerStorageTools },
-  setup: { name: 'setup', register: registerSetupTools },
-  interactive: { name: 'interactive', register: registerInteractiveTools },
-  rag: { name: 'rag', register: registerRagTools },
-  download: { name: 'download', register: registerDownloadTools },
-  gateway: { name: 'gateway', register: registerGatewayTools },
+  env: { name: "env", register: registerEnvTools },
+  database: { name: "database", register: registerDatabase },
+  functions: { name: "functions", register: registerFunctionTools },
+  hosting: { name: "hosting", register: registerHostingTools },
+  storage: { name: "storage", register: registerStorageTools },
+  setup: { name: "setup", register: registerSetupTools },
+  interactive: { name: "interactive", register: registerInteractiveTools },
+  rag: { name: "rag", register: registerRagTools },
+  download: { name: "download", register: registerDownloadTools },
+  gateway: { name: "gateway", register: registerGatewayTools },
   // miniprogram: { name: 'miniprogram', register: registerMiniprogramTools },
-  'security-rule': { name: 'security-rule', register: registerSecurityRuleTools },
-  'invite-code': { name: 'invite-code', register: registerInviteCodeTools },
-  cloudrun: { name: 'cloudrun', register: registerCloudRunTools },
+  "security-rule": {
+    name: "security-rule",
+    register: registerSecurityRuleTools,
+  },
+  "invite-code": { name: "invite-code", register: registerInviteCodeTools },
+  cloudrun: { name: "cloudrun", register: registerCloudRunTools },
 };
 
 /**
@@ -59,23 +75,23 @@ const AVAILABLE_PLUGINS: Record<string, PluginDefinition> = {
 function parseEnabledPlugins(): string[] {
   const enabledEnv = process.env.CLOUDBASE_MCP_PLUGINS_ENABLED;
   const disabledEnv = process.env.CLOUDBASE_MCP_PLUGINS_DISABLED;
-  
+
   let enabledPlugins: string[];
-  
+
   if (enabledEnv) {
     // 如果指定了启用的插件，使用指定的插件
-    enabledPlugins = enabledEnv.split(',').map(p => p.trim());
+    enabledPlugins = enabledEnv.split(",").map((p) => p.trim());
   } else {
     // 否则使用默认插件
     enabledPlugins = [...DEFAULT_PLUGINS];
   }
-  
+
   if (disabledEnv) {
     // 从启用列表中移除禁用的插件
-    const disabledPlugins = disabledEnv.split(',').map(p => p.trim());
-    enabledPlugins = enabledPlugins.filter(p => !disabledPlugins.includes(p));
+    const disabledPlugins = disabledEnv.split(",").map((p) => p.trim());
+    enabledPlugins = enabledPlugins.filter((p) => !disabledPlugins.includes(p));
   }
-  
+
   return enabledPlugins;
 }
 
@@ -89,37 +105,37 @@ export interface ExtendedMcpServer extends McpServer {
  * Create and configure a CloudBase MCP Server instance
  * @param options Server configuration options
  * @returns Configured McpServer instance
- * 
+ *
  * @example
  * import { createCloudBaseMcpServer } from "@cloudbase/mcp-server";
  * import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
- * 
- * const server = createCloudBaseMcpServer({ cloudBaseOptions: { 
+ *
+ * const server = createCloudBaseMcpServer({ cloudBaseOptions: {
  *  envId,    // 环境ID
  *  secretId,  // 腾讯云密钥ID
  *  secretKey, // 腾讯云密钥
  *  region, // 地域，默认是 ap-shanghai
  *  token // 临时密钥，有有效期限制，生成密钥时可控制
  * } });
- * 
+ *
  * const transport = new StdioServerTransport();
  * await server.connect(transport);
  */
-export function createCloudBaseMcpServer(options?: {
+export async function createCloudBaseMcpServer(options?: {
   name?: string;
   version?: string;
   enableTelemetry?: boolean;
   cloudBaseOptions?: CloudBaseOptions;
   cloudMode?: boolean;
   ide?: string;
-}): ExtendedMcpServer {
+}): Promise<ExtendedMcpServer> {
   const {
     name = "cloudbase-mcp",
     version = "1.0.0",
     enableTelemetry = true,
     cloudBaseOptions,
     cloudMode = false,
-    ide
+    ide,
   } = options ?? {};
 
   // Enable cloud mode if specified
@@ -128,15 +144,18 @@ export function createCloudBaseMcpServer(options?: {
   }
 
   // Create server instance
-  const server = new McpServer({
-    name,
-    version
-  }, {
-    capabilities: {
-      tools: {},
-      ...(ide === 'CodeBuddy' ?  { logging:  {}}: {})
+  const server = new McpServer(
+    {
+      name,
+      version,
     },
-  }) as ExtendedMcpServer;
+    {
+      capabilities: {
+        tools: {},
+        ...(ide === "CodeBuddy" ? { logging: {} } : {}),
+      },
+    },
+  ) as ExtendedMcpServer;
 
   // Store cloudBaseOptions in server instance for tools to access
   if (cloudBaseOptions) {
@@ -155,11 +174,11 @@ export function createCloudBaseMcpServer(options?: {
 
   // 根据配置注册插件
   const enabledPlugins = parseEnabledPlugins();
-  
+
   for (const pluginName of enabledPlugins) {
     const plugin = AVAILABLE_PLUGINS[pluginName];
     if (plugin) {
-      plugin.register(server);
+      await plugin.register(server);
     }
   }
 
@@ -169,7 +188,7 @@ export function createCloudBaseMcpServer(options?: {
 /**
  * Get the default configured CloudBase MCP Server
  */
-export function getDefaultServer(): ExtendedMcpServer {
+export function getDefaultServer(): Promise<ExtendedMcpServer> {
   return createCloudBaseMcpServer();
 }
 
@@ -177,5 +196,8 @@ export function getDefaultServer(): ExtendedMcpServer {
 export type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 export { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 export { error, info, warn } from "./utils/logger.js";
-export { reportToolCall, reportToolkitLifecycle, telemetryReporter } from "./utils/telemetry.js";
-
+export {
+  reportToolCall,
+  reportToolkitLifecycle,
+  telemetryReporter,
+} from "./utils/telemetry.js";
