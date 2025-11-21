@@ -1,21 +1,23 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { registerDatabaseTools } from "./tools/databaseNoSQL.js";
+import { registerSQLDatabaseTools } from "./tools/databaseSQL.js";
+import { registerDownloadTools } from "./tools/download.js";
 import { registerEnvTools } from "./tools/env.js";
 import { registerFunctionTools } from "./tools/functions.js";
-import { registerDatabaseTools } from "./tools/database.js";
 import { registerHostingTools } from "./tools/hosting.js";
-import { registerDownloadTools } from "./tools/download.js";
-import { registerStorageTools } from "./tools/storage.js";
+import { registerInteractiveTools } from "./tools/interactive.js";
 import { registerRagTools } from './tools/rag.js';
 import { registerSetupTools } from "./tools/setup.js";
-import { registerInteractiveTools } from "./tools/interactive.js";
+import { registerStorageTools } from "./tools/storage.js";
 // import { registerMiniprogramTools } from "./tools/miniprogram.js";
-import { registerSecurityRuleTools } from "./tools/security-rule.js";
-import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
+import { registerCloudRunTools } from "./tools/cloudrun.js";
+import { registerDataModelTools } from "./tools/dataModel.js";
 import { registerGatewayTools } from "./tools/gateway.js";
 import { registerInviteCodeTools } from "./tools/invite-code.js";
-import { registerCloudRunTools } from "./tools/cloudrun.js";
+import { registerSecurityRuleTools } from "./tools/security-rule.js";
 import { CloudBaseOptions } from "./types.js";
 import { enableCloudMode } from "./utils/cloud-mode.js";
+import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
 
 
 // 插件定义
@@ -27,10 +29,16 @@ interface PluginDefinition {
 // 默认插件列表
 const DEFAULT_PLUGINS = ['env', 'database', 'functions', 'hosting', 'storage', 'setup', 'interactive', 'rag', 'cloudrun', 'gateway', 'download', 'security-rule', 'invite-code'];
 
+function registerDatabase(server: ExtendedMcpServer) {
+  registerDatabaseTools(server);
+  registerSQLDatabaseTools(server);
+  registerDataModelTools(server);
+}
+
 // 可用插件映射
 const AVAILABLE_PLUGINS: Record<string, PluginDefinition> = {
   env: { name: 'env', register: registerEnvTools },
-  database: { name: 'database', register: registerDatabaseTools },
+  database: { name: 'database', register: registerDatabase },
   functions: { name: 'functions', register: registerFunctionTools },
   hosting: { name: 'hosting', register: registerHostingTools },
   storage: { name: 'storage', register: registerStorageTools },
@@ -168,5 +176,6 @@ export function getDefaultServer(): ExtendedMcpServer {
 // Re-export types and utilities that might be useful
 export type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 export { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-export { telemetryReporter, reportToolkitLifecycle, reportToolCall } from "./utils/telemetry.js";
-export { info, error, warn } from "./utils/logger.js"; 
+export { error, info, warn } from "./utils/logger.js";
+export { reportToolCall, reportToolkitLifecycle, telemetryReporter } from "./utils/telemetry.js";
+

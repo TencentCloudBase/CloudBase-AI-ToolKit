@@ -20,7 +20,7 @@
       "path": "airules/codebuddy",
       "includePatterns": [
         "rules",
-        ".rules/cloudbase-rules.mdc"
+        "CODEBUDDY.md"
       ]
     }
   ],

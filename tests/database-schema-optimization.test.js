@@ -1,9 +1,9 @@
 // 数据库 Schema 优化功能测试
-import { test, expect } from 'vitest';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
-import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+import { expect, test } from 'vitest';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -195,14 +195,11 @@ test('向后兼容性验证', async () => {
     
     // 验证关键工具仍然存在
     const expectedTools = [
-      'createCollection',
-      'collectionQuery', 
-      'updateCollection',
-      'insertDocuments',
-      'queryDocuments',
-      'updateDocuments',
-      'deleteDocuments',
-      'manageDataModel'
+      "readNoSqlDatabaseStructure",
+      "writeNoSqlDatabaseStructure",
+      "readNoSqlDatabaseContent",
+      "writeNoSqlDatabaseContent",
+      "manageDataModel",
     ];
     
     expectedTools.forEach(toolName => {

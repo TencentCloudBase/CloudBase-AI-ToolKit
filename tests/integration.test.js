@@ -251,7 +251,7 @@ test('Database tools support object/object[] parameters', async () => {
   console.log('TENCENTCLOUD_SESSIONTOKEN 长度:', process.env.TENCENTCLOUD_SESSIONTOKEN ? process.env.TENCENTCLOUD_SESSIONTOKEN.length : '未设置');
   console.log('CLOUDBASE_ENV_ID 长度:', process.env.CLOUDBASE_ENV_ID ? process.env.CLOUDBASE_ENV_ID.length : '未设置');
   console.log('CLOUDBASE_ENV_ID 值:', process.env.CLOUDBASE_ENV_ID || '未设置');
-  
+
   // 检查是否有认证信息
   const hasAuth = process.env.TENCENTCLOUD_SECRETID && process.env.TENCENTCLOUD_SECRETKEY;
   console.log('🔐 认证信息状态:', hasAuth ? '✅ 已设置' : '❌ 未设置');
@@ -269,75 +269,98 @@ test('Database tools support object/object[] parameters', async () => {
     await delay(3000);
 
     try {
-      // 创建集合
+      // 创建集合（使用 writeNoSqlDatabaseStructure 工具）
       console.log('📝 尝试创建集合:', testCollection);
       await client.callTool({
-        name: 'createCollection',
-        arguments: { collectionName: testCollection }
+        name: 'writeNoSqlDatabaseStructure',
+        arguments: {
+          action: 'createCollection',
+          collectionName: testCollection,
+        },
       });
       console.log('✅ 集合创建成功');
     } catch (error) {
       console.log('⚠️ 数据库已经创建，跳过创建集合', error.message);
     }
 
-    // 1. insertDocuments 支持 object[]
+    // 1. writeNoSqlDatabaseContent.insert 支持 object[]
     console.log('📝 尝试插入文档...');
     const docs = [
       { name: 'Alice', age: 18, nested: { foo: 'bar' } },
       { name: 'Bob', age: 20, tags: ['a', 'b'] }
     ];
     const insertRes = await client.callTool({
-      name: 'insertDocuments',
-      arguments: { collectionName: testCollection, documents: docs }
+      name: 'writeNoSqlDatabaseContent',
+      arguments: {
+        action: 'insert',
+        collectionName: testCollection,
+        documents: docs,
+        // 兼容严格的 schema，insert 不使用 query/update
+        query: {},
+        update: {},
+      },
     });
     expect(insertRes).toBeDefined();
     expect(insertRes.content[0].text).toContain('文档插入成功');
     console.log('✅ 文档插入成功');
 
-    // 2. queryDocuments 支持对象参数
+    // 2. readNoSqlDatabaseContent 支持对象参数
     console.log('📝 尝试查询文档...');
     const queryRes = await client.callTool({
-      name: 'queryDocuments',
-      arguments: { collectionName: testCollection, query: { name: { $eq: 'Alice' } } }
+      name: 'readNoSqlDatabaseContent',
+      arguments: {
+        collectionName: testCollection,
+        query: { name: { $eq: 'Alice' } },
+      },
     });
     expect(queryRes).toBeDefined();
     expect(queryRes.content[0].text).toContain('文档查询成功');
     console.log('✅ 文档查询成功');
 
-    // 3. updateDocuments 支持对象参数
+    // 3. writeNoSqlDatabaseContent.update 支持对象参数
     console.log('📝 尝试更新文档...');
     const updateRes = await client.callTool({
-      name: 'updateDocuments',
+      name: 'writeNoSqlDatabaseContent',
       arguments: {
+        action: 'update',
         collectionName: testCollection,
         query: { name: { $eq: 'Alice' } },
         update: { $set: { age: 19 } },
-        isMulti: false
-      }
+        isMulti: false,
+        // 兼容严格的 schema，update 不使用 documents
+        documents: [],
+      },
     });
     expect(updateRes).toBeDefined();
     expect(updateRes.content[0].text).toContain('文档更新成功');
     console.log('✅ 文档更新成功');
 
-    // 4. deleteDocuments 支持对象参数
+    // 4. writeNoSqlDatabaseContent.delete 支持对象参数
     console.log('📝 尝试删除文档...');
     const deleteRes = await client.callTool({
-      name: 'deleteDocuments',
+      name: 'writeNoSqlDatabaseContent',
       arguments: {
+        action: 'delete',
         collectionName: testCollection,
         query: { name: { $eq: 'Bob' } },
-        isMulti: false
-      }
+        isMulti: false,
+        // 兼容严格的 schema，delete 不使用 documents/update
+        documents: [],
+        update: {},
+      },
     });
     expect(deleteRes).toBeDefined();
     expect(deleteRes.content[0].text).toContain('文档删除成功');
     console.log('✅ 文档删除成功');
 
-    // 5. 兼容字符串参数
+    // 5. readNoSqlDatabaseContent 兼容字符串参数
     console.log('📝 尝试字符串参数查询...');
     const queryStrRes = await client.callTool({
-      name: 'queryDocuments',
-      arguments: { collectionName: testCollection, query: JSON.stringify({ name: { $eq: 'Alice' } }) }
+      name: 'readNoSqlDatabaseContent',
+      arguments: {
+        collectionName: testCollection,
+        query: JSON.stringify({ name: { $eq: 'Alice' } }),
+      },
     });
     expect(queryStrRes).toBeDefined();
     expect(queryStrRes.content[0].text).toContain('文档查询成功');
@@ -347,7 +370,7 @@ test('Database tools support object/object[] parameters', async () => {
     if (client) { try { await client.close(); } catch {} }
     if (transport) { try { await transport.close(); } catch {} }
   }
-}, 180000); 
+}, 180000);
 
 // 修复后的 security rule tools 测试用例
 
