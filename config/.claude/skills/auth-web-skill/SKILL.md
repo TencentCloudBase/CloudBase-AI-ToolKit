@@ -41,12 +41,17 @@ Use it when you need to:
      const auth = app.auth();
      ```
 
-2. **Check console configuration (do not assume it’s done)**
-   - In 云开发控制台 → 身份认证：
-     - Confirm the required 登录方式 are enabled（短信 / 邮箱 / 用户名密码 / 微信开放平台 / 自定义登录）
-     - Confirm 短信/邮箱 模板已配置
-     - Confirm 当前 Web 域名已加入 **安全域名** （安全来源列表）
-   - If something is missing, explain clearly what the user must configure.
+2. **Check console configuration (do not assume it's done)**
+   - **⚠️ MANDATORY: Always guide users to configure login methods in console**
+   - **Console URL format:** `https://tcb.cloud.tencent.com/dev?envId={envId}#/identity/login-manage`
+     - Replace `{envId}` with the actual CloudBase environment ID (e.g., `zirali-7gwqot6f31a0ab27`)
+     - Example: `https://tcb.cloud.tencent.com/dev?envId=test-xxx#/identity/login-manage`
+   - **Before implementing any login flow, you MUST:**
+     1. Guide the user to open the console login management page using the URL above
+     2. Confirm the required 登录方式 are enabled（短信 / 邮箱 / 用户名密码 / 微信开放平台 / 自定义登录）
+     3. Confirm 短信/邮箱 模板已配置（if using SMS/email login）
+     4. Confirm 当前 Web 域名已加入 **安全域名** （安全来源列表）
+   - **If something is missing, explain clearly what the user must configure and provide the console URL.**
 
 3. **Pick a scenario from this file**
    - For login / sign-up, start with **Scenario 1–8**.
@@ -81,11 +86,31 @@ const app = cloudbase.init({
 const auth = app.auth();
 ```
 
-**Important:** Add your domain to **安全来源列表** in console: **云开发控制台 → 身份认证 → 登录方式 → 安全域名**
+**⚠️ Important: Console Configuration Required**
 
-**Enable login methods** in console before use:
+**Before using any login method, you MUST configure it in the CloudBase console:**
 
-- 匿名登录, 短信验证码登录, 邮箱验证码登录, 用户名密码登录, 微信开放平台登录, 自定义登录
+1. **Open login management page:**
+   - Console URL: `https://tcb.cloud.tencent.com/dev?envId={envId}#/identity/login-manage`
+   - Replace `{envId}` with your actual CloudBase environment ID
+   - Example: `https://tcb.cloud.tencent.com/dev?envId=zirali-7gwqot6f31a0ab27#/identity/login-manage`
+
+2. **Enable required login methods:**
+   - 匿名登录 (Anonymous login)
+   - 短信验证码登录 (SMS verification code login)
+   - 邮箱验证码登录 (Email verification code login)
+   - 用户名密码登录 (Username/password login)
+   - 微信开放平台登录 (WeChat Open Platform login)
+   - 自定义登录 (Custom login)
+
+3. **Configure SMS/Email templates** (if using SMS/email login):
+   - Set up verification code templates in console
+
+4. **Add Web domain to 安全来源列表 (Security Domain Whitelist):**
+   - Go to: 云开发控制台 → 身份认证 → 登录方式 → 安全域名
+   - Add your frontend domain (e.g., `https://your-app.com`, `http://localhost:3000`)
+
+**⚠️ If login methods are not enabled or domain is not whitelisted, authentication will fail.**
 
 ---
 

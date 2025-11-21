@@ -123,6 +123,13 @@ See `./geolocation.md` for:
 - Geographic indexing requirements
 - Distance-based features
 
+### Security Rules
+See `./security-rules.md` for:
+- Configuring database permissions
+- Simple permissions vs custom rules
+- Permission categories and usage
+- Security rule syntax and examples
+
 ## Common Patterns
 
 ### Error Handling
