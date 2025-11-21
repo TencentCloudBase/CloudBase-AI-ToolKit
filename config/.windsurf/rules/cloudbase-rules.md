@@ -1,262 +1,264 @@
 ---
-description: CloudBase AI 开发规则指南 - 提供场景化的最佳实践，确保开发质量
+description: CloudBase AI Development Rules Guide - Provides scenario-based best practices to ensure development quality
 globs: *
 alwaysApply: true
 ---
 
-# 📋 CloudBase AI 开发规则指南
+# CloudBase AI Development Rules Guide
 
-## 🎯 开发流程规范 - 场景识别与最佳实践
+## Quick Reference for AI
 
-**重要：为确保开发质量，AI 需要在开始工作前完成以下步骤：**
+**⚠️ CRITICAL: Read this section first based on your project type**
 
-### 0. 环境检查（第一步）
-在用户输入任何内容后，首先检查云开发环境状态：
-- 确保已经知晓当前的云开发环境 ID
-- 如果对话记录中不存在，必须调用 `envQuery` 工具，参数 `action=info` 查询当前环境信息和环境 ID
-- **重要**：后续涉及代码中的环境ID配置时，自动使用查询到的环境ID，无需用户手动填写
+### When Developing a Web Project:
+1. **Environment Check**: Call `envQuery` tool first (applies to all interactions)
+2. **⚠️ UI Design (CRITICAL)**: **MUST read `rule/ui-design-skill/SKILL.md` FIRST before generating any page, interface, component, or style**
+3. **Core Capabilities**: Read Core Capabilities section below (especially UI Design and Database + Authentication for Web)
+4. **Platform Rules**: Read `rule/web-development-skill/SKILL.md` for platform-specific rules (SDK integration, static hosting, build configuration)
+5. **Authentication**: Read `rule/auth-web-skill/SKILL.md` - **MUST use Web SDK built-in authentication**
+6. **Database**: 
+   - NoSQL: `rule/no-sql-web-sdk/SKILL.md`
+   - MySQL: `rule/relational-database-web-skill/SKILL.md` + `rule/relational-database-mcp-skill/SKILL.md`
 
-### 1. 场景识别
-首先需要识别当前的开发场景类型：
-- **Web 项目**：React/Vue/原生 JS 等前端项目（**注意**：所有 Web 项目涉及页面/界面生成时，必须同时参考 UI 设计规则）
-- **微信小程序**：小程序云开发项目（**注意**：所有小程序项目涉及页面/界面生成时，必须同时参考 UI 设计规则）
-- **云托管项目**：CloudBase Run 后端服务项目（支持 Java/Go/Python/Node.js/PHP/.NET 等任意语言，适合 WebSocket 长连接、长耗时任务、需要连接数据库/消息队列等场景）
-- **数据库相关**：涉及数据操作的项目
-- **UI 设计/界面生成**：需要界面设计的项目、生成页面、创建原型、设计组件等（**强制适用**：所有涉及前端界面、页面、组件、样式的开发任务）
+### When Developing a Mini Program Project:
+1. **Environment Check**: Call `envQuery` tool first (applies to all interactions)
+2. **⚠️ UI Design (CRITICAL)**: **MUST read `rule/ui-design-skill/SKILL.md` FIRST before generating any page, interface, component, or style**
+3. **Core Capabilities**: Read Core Capabilities section below (especially UI Design and Database + Authentication for Mini Program)
+4. **Platform Rules**: Read `rule/miniprogram-development-skill/SKILL.md` for platform-specific rules (project structure, WeChat Developer Tools, wx.cloud usage)
+5. **Authentication**: Read `rule/auth-wechat-skill/SKILL.md` - **Naturally login-free, get OPENID in cloud functions**
+6. **Database**: 
+   - NoSQL: `rule/no-sql-wx-mp-sdk/SKILL.md`
+   - MySQL: `rule/relational-database-mcp-skill/SKILL.md` (via MCP tools)
 
-### 2. 规则文件选择
-根据识别的场景，需要参考对应的专业规则文件：
+---
 
-**📋 场景规则映射表（必须遵守）：**
-- **Web 项目** → 必读：`rules/web-development.mdc` + `rules/cloudbase-platform.mdc` + **`rules/ui-design.mdc`**（生成页面/界面时强制参考）
-- **微信小程序（小程序+ CloudBase）** → 必读：`rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc` + **`rules/ui-design.mdc`**（生成页面/界面时强制参考）
-- **云托管项目（部署后端服务）** → 必读：`rules/cloudrun-development.mdc` + `rules/cloudbase-platform.mdc`
-- **数据库操作** → 额外读：`rules/database.mdc`
-- **MySQL数据库操作** → 额外读：`rules/data-model-creation.mdc`
-- **UI 设计/界面生成** → **强制必读**：`rules/ui-design.mdc`（所有涉及页面、界面、组件、样式、原型设计的任务）
+## Core Capabilities (Must Be Done Well)
 
-### 3. 开发确认
-在开始工作前建议向用户确认：
-1. "我识别这是一个 [场景类型] 项目"
-2. "我将严格遵循以下规则文件：[具体文件列表]"
-3. "请确认我的理解是否正确"
+As the most important part of application development, the following four core capabilities must be done well, without needing to read different rules for different platforms:
 
-## 核心行为规则
-1. **工具优先**：关于腾讯云开发的操作，必须优先使用 cloudbase 的 MCP 工具
-2. **项目理解**：首先阅读当前项目的 README.md，遵照项目说明开发
-3. **目录规范**：在当前目录下产出项目代码之前，先检查当前目录文件
-4. **开发顺序**：在开发时，优先先开发前端，然后开发后端，确保前端界面和交互逻辑先完成，再实现后端业务逻辑
-5. **后端开发优先策略**：后端开发时，优先使用 SDK 直接调用云开发数据库，而非通过云函数，除非特别需要（如复杂业务逻辑、需要服务端计算、需要调用第三方 API 等场景）
-6. **部署顺序**：有后端依赖时，优先部署后端再预览前端
-7. **交互确认**：需求不明确时使用 interactiveDialog 澄清，执行高风险操作前必须确认
-8. **实时通信**：使用云开发的实时数据库 watch 能力
-9. **认证规则**：当用户开发项目的时候，如果用到用户登录认证，需要用到内置的认证功能，必须严格区分平台的认证方式
-   - **Web 项目**：必须使用 CloudBase Web SDK 内置认证（如 `auth.toDefaultLoginPage()`）
-   - **小程序项目**：天然免登录，云函数中获取 `wxContext.OPENID`
-10. **UI 设计规则强制应用**：当任务涉及生成页面、界面、组件、样式或任何前端视觉元素时，**必须首先阅读并严格遵循 `rules/ui-design.mdc` 规则文件**，确保生成具有独特美学风格和高质量视觉设计的界面，避免通用 AI 美学
+### 1. ⚠️ UI Design (CRITICAL - Highest Priority)
+**⚠️ MANDATORY: Must strictly follow `rule/ui-design-skill/SKILL.md` rules for ALL design work**
 
-## 工作流
+**Before generating ANY page, interface, component, or style:**
+1. **MUST FIRST read `rule/ui-design-skill/SKILL.md`** - This is not optional
+2. **MUST complete design specification output** before writing any code:
+   - Purpose Statement
+   - Aesthetic Direction (choose from specific options, NOT generic terms)
+   - Color Palette (with hex codes, avoid forbidden colors)
+   - Typography (specific font names, avoid forbidden fonts)
+   - Layout Strategy (asymmetric/creative approach, avoid centered templates)
+3. **MUST ensure** generated interfaces have distinctive aesthetic styles and high-quality visual design
+4. **MUST avoid** generic AI aesthetics (common fonts, clichéd color schemes, templated designs)
 
-你会根据用户的需求智能判断使用哪种模式来开发，默认情况下采用 spec 来开发
+**This applies to ALL tasks involving:**
+- Page generation
+- Interface creation
+- Component design
+- Style/visual effects
+- Any frontend visual elements
 
-**智能判断标准：**
-- **使用 spec**：新功能开发、复杂架构设计、多模块集成、涉及数据库/UI设计（**注意**：涉及 UI 设计时，spec 流程中必须参考 `rules/ui-design.mdc`）
-- **跳过 spec**：简单修复、文档更新、配置修改、代码重构（**注意**：即使是简单修复，如果涉及界面/样式修改，也必须参考 `rules/ui-design.mdc`）
+### 2. Database + Authentication
+**Strengthen database and authentication capabilities**
 
-### Workflow 命令控制
+**Authentication**:
+- **Web Projects**: 
+  - Must use CloudBase Web SDK built-in authentication, refer to `rule/auth-web-skill/SKILL.md`
+  - Platform development rules: Refer to `rule/web-development-skill/SKILL.md` for Web SDK integration, static hosting deployment, and build configuration
+- **Mini Program Projects**: 
+  - Naturally login-free, get `wxContext.OPENID` in cloud functions, refer to `rule/auth-wechat-skill/SKILL.md`
+  - Platform development rules: Refer to `rule/miniprogram-development-skill/SKILL.md` for mini program project structure, WeChat Developer Tools integration, and CloudBase capabilities
+- **Node.js Backend**: Refer to `rule/auth-nodejs-skill/SKILL.md`
 
-用户也可以通过指令来要求
+**Database Operations**:
+- **Web Projects**:
+  - NoSQL Database: Refer to `rule/no-sql-web-sdk/SKILL.md`
+  - MySQL Relational Database: Refer to `rule/relational-database-web-skill/SKILL.md` (Web application development) and `rule/relational-database-mcp-skill/SKILL.md` (Management via MCP tools)
+  - Platform development rules: Refer to `rule/web-development-skill/SKILL.md` for Web SDK database integration patterns
+- **Mini Program Projects**:
+  - NoSQL Database: Refer to `rule/no-sql-wx-mp-sdk/SKILL.md`
+  - MySQL Relational Database: Refer to `rule/relational-database-mcp-skill/SKILL.md` (via MCP tools)
+  - Platform development rules: Refer to `rule/miniprogram-development-skill/SKILL.md` for mini program database integration and wx.cloud usage
+- **Data Model Creation** (Universal): Refer to `rule/data-model-creation-skill/SKILL.md`
 
-**可用命令：**
-- **/spec** - 强制使用完整 spec 流程
-- **/no_spec** - 跳过 spec 流程，直接执行
-- **/help** - 显示命令帮助
+### 3. Static Hosting Deployment (Web)
+**Refer to deployment process in `rule/web-development-skill/SKILL.md`**
+- Use CloudBase static hosting after build completion
+- Deploy using `uploadFiles` tool
+- Remind users that CDN has a few minutes of cache after deployment
+- Generate markdown format access links with random queryString
 
+### 4. Backend Deployment (Cloud Functions or CloudRun)
+**Refer to `rule/cloudrun-development-skill/SKILL.md`**
+- **Cloud Function Deployment**: Use `getFunctionList` to query, then call `createFunction` or `updateFunctionCode` to deploy
+- **CloudRun Deployment**: Use `manageCloudRun` tool for containerized deployment
+- Ensure backend code supports CORS, prepare Dockerfile (for container type)
 
-以下是 spec 工作流：
-<spec_workflow>
-0. 请注意！必须遵守以下的规则，每个环节完成后都需要由我进行确认后才可进行下一个环节；
-1. 如果你判断我的输入提出的是一个新需求，可以按照下面的标准软件工程的方式独立开展工作, 必要时向我确认，可以采用 interactiveDialog 工具来收集
-2. 每当我输入新的需求的时候，为了规范需求质量和验收标准，必须首先会搞清楚问题和需求，必须跟我确认之后，然后再进入下一阶段
-3. 需求文档和验收标准设计：首先完成需求的设计,按照 EARS 简易需求语法方法来描述,如果你判断需求涉及到前端页面，**必须严格参考 `rules/ui-design.mdc` 规则文件**，在需求中提前确定好设计风格和配色，必须跟我进行确认需求细节，最终确认清楚后，需求定稿，然后再进入下一阶段，保存在 `specs/spec_name/requirements.md` 中，跟我确认清楚后，才继续进入下一个阶段，参考格式如下
+## Development Process Standards
 
-```markdown
-# 需求文档
+**Important: To ensure development quality, AI must complete the following steps before starting work:**
 
-## 介绍
+### 0. Environment Check (First Step)
+After user inputs any content, first check CloudBase environment status:
+- Ensure current CloudBase environment ID is known
+- If not present in conversation history, must call `envQuery` tool with parameter `action=info` to query current environment information and environment ID
+- **Important**: When environment ID configuration is involved in code later, automatically use the queried environment ID, no need for manual user input
 
-需求描述
+### 1. Scenario Identification
+Identify current development scenario type, mainly for understanding project type, but core capabilities apply to all projects:
+- **Web Projects**: React/Vue/native JS frontend projects
+- **WeChat Mini Programs**: Mini program CloudBase projects
+- **CloudRun Projects**: CloudBase Run backend service projects (supports any language: Java/Go/Python/Node.js/PHP/.NET, etc.)
+- **Database Related**: Projects involving data operations
+- **UI Design/Interface Generation**: Projects requiring interface design, page generation, prototype creation, component design, etc.
 
-## 需求
+### 2. Platform-Specific Quick Guide
 
-### 需求 1 - 需求名称
+**Web Projects - Required Rule Files:**
+- `rule/web-development-skill/SKILL.md` - Platform development rules (SDK integration, static hosting, build configuration)
+- `rule/auth-web-skill/SKILL.md` - Authentication (MUST use Web SDK built-in authentication)
+- `rule/no-sql-web-sdk/SKILL.md` - NoSQL database operations
+- `rule/relational-database-web-skill/SKILL.md` - MySQL database operations (Web)
+- `rule/relational-database-mcp-skill/SKILL.md` - MySQL database management (MCP tools)
+- `rule/cloudbase-platform-skill/SKILL.md` - Universal CloudBase platform knowledge
 
-**用户故事：** 用户故事内容
+**Mini Program Projects - Required Rule Files:**
+- `rule/miniprogram-development-skill/SKILL.md` - Platform development rules (project structure, WeChat Developer Tools, wx.cloud)
+- `rule/auth-wechat-skill/SKILL.md` - Authentication (naturally login-free, get OPENID in cloud functions)
+- `rule/no-sql-wx-mp-sdk/SKILL.md` - NoSQL database operations
+- `rule/relational-database-mcp-skill/SKILL.md` - MySQL database operations (via MCP tools)
+- `rule/cloudbase-platform-skill/SKILL.md` - Universal CloudBase platform knowledge
 
-#### 验收标准
+**Universal Rule Files (All Projects):**
+- **⚠️ `rule/ui-design-skill/SKILL.md`** - **MANDATORY - HIGHEST PRIORITY** - Must read FIRST before any UI/page/component/style generation
+- `rule/data-model-creation-skill/SKILL.md` - Data model creation and MySQL modeling
+- `rule/spec-workflow-skill/SKILL.md` - Standard software engineering process (if needed)
 
-1. 采用 ERAS 描述的子句 While <可选前置条件>, when <可选触发器>, the <系统名称> shall <系统响应>，例如 When 选择"静音"时，笔记本电脑应当抑制所有音频输出。
-2. ...
-...
-```
-4. 技术方案设计： 在完成需求的设计之后，你会根据当前的技术架构和前面确认好的需求，进行需求的技术方案设计，精简但是能够准确的描述技术的架构（例如架构、技术栈、技术选型、数据库/接口设计、测试策略、安全性），必要时可以用 mermaid 来绘图，保存在  `specs/spec_name/design.md`  中，必须跟我确认清楚后，然后再进入下一阶段
-5. 任务拆分：在完成技术方案设计后，你会根据需求文档和技术方案，细化具体要做的事情，必须跟我确认清楚后，，保存在`specs/spec_name/tasks.md` 中, 跟我确认清楚后，然后再进入下一阶段，开始正式执行任务，同时需要及时更新任务的状态，执行的时候尽可能独立自主运行，保证效率和质量
+### 3. Development Confirmation
+Before starting work, suggest confirming with user:
+1. "I identify this as a [scenario type] project"
+2. "I will strictly follow core capability requirements and refer to relevant rule files"
+3. "Please confirm if my understanding is correct"
 
-任务参考格式如下
+## Core Behavior Rules
+1. **Tool Priority**: For Tencent CloudBase operations, must prioritize using CloudBase MCP tools
+2. **Project Understanding**: First read current project's README.md, follow project instructions for development
+3. **Directory Standards**: Before outputting project code in current directory, first check current directory files
+4. **Development Order**: When developing, prioritize frontend first, then backend, ensuring frontend interface and interaction logic are completed first, then implement backend business logic
+5. **⚠️ UI Design Rules Mandatory Application**: When tasks involve generating pages, interfaces, components, styles, or any frontend visual elements, **MUST FIRST read and strictly follow `rule/ui-design-skill/SKILL.md` rule file**, ensuring generated interfaces have distinctive aesthetic styles and high-quality visual design, avoiding generic AI aesthetics
+6. **Backend Development Priority Strategy**: When developing backend, prioritize using SDK to directly call CloudBase database, rather than through cloud functions, unless specifically needed (such as complex business logic, server-side computation, calling third-party APIs, etc.)
+7. **Deployment Order**: When there are backend dependencies, prioritize deploying backend before previewing frontend
+8. **Interactive Confirmation**: Use interactiveDialog to clarify when requirements are unclear, must confirm before executing high-risk operations
+9. **Real-time Communication**: Use CloudBase real-time database watch capability
+10. **⚠️ Authentication Rules**: When users develop projects, if user login authentication is needed, must use built-in authentication functions, must strictly distinguish authentication methods by platform
+   - **Web Projects**: **MUST use CloudBase Web SDK built-in authentication** (e.g., `auth.toDefaultLoginPage()`), refer to `rule/auth-web-skill/SKILL.md`
+   - **Mini Program Projects**: **Naturally login-free**, get `wxContext.OPENID` in cloud functions, refer to `rule/auth-wechat-skill/SKILL.md`
 
-``` markdown
-# 实施计划
+## Development Workflow
 
-- [ ] 1. 任务信息
-  - 具体要做的事情
-  - ...
-  - _需求: 相关的需求点的编号
+### Development
 
-```
-</spec_workflow>
+1. **Download CloudBase AI Rules or Other Templates**: Recommend starting new projects from templates, can use downloadTemplate to download. If unable to download to current directory, can use scripts to copy, note that hidden files also need to be copied
 
-## 🔄 开发工作流程
+2. **Mini Program TabBar Material Download - Download Remote Material Links**: Mini program Tabbar and other material images must use **png** format, must use downloadRemoteFile tool to download files locally. Can select from Unsplash, wikimedia (generally choose 500 size), Pexels, Apple official UI and other resources
 
-## 开发
+**Important Reminder**: Before generating any page, interface, component, or style, must first read and understand `rule/ui-design-skill/SKILL.md` rule file, ensure following design thinking framework and frontend aesthetics guidelines, avoid generating generic AI aesthetic style interfaces.
 
-1. **下载云开发 AI 规则或者其他模板**：推荐从模板开始新的项目，可以使用downloadTemplate 来下载，如果无法下载到当前目录，可以使用脚本来进行复制，注意隐藏文件也需要复制
+If remote links are needed in the application, can continue to call uploadFile to upload and obtain temporary access links and cloud storage cloudId
 
-2. **小程序 TabBar等素材下载下载远程素材链接**：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，必须使用 downloadRemoteFile 工具下载文件到本地,可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择
+3. **Query Professional Knowledge from Knowledge Base**: If uncertain about any CloudBase knowledge, can use searchKnowledgeBase tool to intelligently search CloudBase knowledge base (supports CloudBase and cloud functions, mini program frontend knowledge, etc.), quickly obtain professional documents and answers through vector search
 
-**重要提醒**：在生成任何页面、界面、组件或样式之前，必须首先阅读并理解 `rules/ui-design.mdc` 规则文件，确保遵循设计思维框架和前端美学指南，避免生成通用 AI 美学风格的界面。
-
-如果应用中需要远程链接，可以继续调用 uploadFile 上传后获得临时访问链接和云存储的 cloudId
-
-3. **从知识库查询专业知识**： 如果对于云开发某块知识不确定，可以使用 searchKnowledgeBase 工具智能检索云开发知识库（支持云开发与云函数、小程序前端知识等），通过向量搜索快速获取专业文档与答案
-
-4. **微信开发者工具打开项目流程**：
-- 当检测到当前项目为小程序项目时，建议用户使用微信开发者工具进行预览调试和发布
-- 在打开前确认 project.config.json 中配置了 appid 字段，如果没有配置，必须向用户询问获取
-- 使用微信开发者内置的 CLI 命令打开项目（指向 project.config.json 所在目录）：
+4. **WeChat Developer Tools Open Project Workflow**:
+- When detecting current project is a mini program project, suggest user to use WeChat Developer Tools for preview, debugging, and publishing
+- Before opening, confirm project.config.json has appid field configured. If not configured, must ask user to provide it
+- Use WeChat Developer built-in CLI command to open project (pointing to directory containing project.config.json):
   - Windows: `"C:\Program Files (x86)\Tencent\微信web开发者工具\cli.bat" open --project "项目根目录路径"`
   - macOS: `/Applications/wechatwebdevtools.app/Contents/MacOS/cli open --project "/path/to/project/root"`
-- 项目根目录路径为包含 project.config.json 文件的目录
+- Project root directory path is the directory containing project.config.json file
 
-### 部署流程
-1. **部署云函数流程**：可以通过 getFunctionList MCP 工具来查询是否有云函数，然后直接调用 createFunction 或者 updateFunctionCode 更新云函数代码，只需要将functionRootPath 指向云函数目录的父目录(例如 cloudfuncitons 这个目录的绝对路径),不需要压缩代码等操作，上述工具会自动读取云函数父目录下的云函数同名目录的文件，并自动进行部署
+### Deployment Process
 
-2. **部署云托管流程**：对于非云函数的后端服务（Java、Go、PHP、Python、Node.js等），使用 manageCloudRun 工具进行部署。确保后端代码支持 CORS，准备好 Dockerfile，然后调用 manageCloudRun 进行容器化部署
+1. **Cloud Function Deployment Process**: Can use getFunctionList MCP tool to query if there are cloud functions, then directly call createFunction or updateFunctionCode to update cloud function code. Only need to point functionRootPath to parent directory of cloud function directory (e.g., absolute path of cloudfunctions directory). No need for code compression and other operations. The above tools will automatically read files from cloud function subdirectories with same name under parent directory and automatically deploy
 
-3. **部署静态托管流程**：通过使用 uploadFiles 工具部署，部署完毕后提醒用户 CDN 有几分钟缓存，可以生成一个带有随机 queryString 的markdown 格式 访问链接
+2. **CloudRun Deployment Process**: For non-cloud function backend services (Java, Go, PHP, Python, Node.js, etc.), use manageCloudRun tool for deployment. Ensure backend code supports CORS, prepare Dockerfile, then call manageCloudRun for containerized deployment. For details, refer to `rule/cloudrun-development-skill/SKILL.md`
 
+3. **Static Hosting Deployment Process**: Deploy using uploadFiles tool. After deployment, remind users that CDN has a few minutes of cache. Can generate markdown format access links with random queryString. For details, refer to `rule/web-development-skill/SKILL.md`
 
-### 文档生成规则
+### Documentation Generation Rules
 
-1. 你会在生成项目后生成一个 README.md 文件，里面包含项目的基本信息，例如项目名称、项目描述, 最关键的是要把项目的架构和涉及到的云开发资源说清楚，让维护者可以参考来进行修改和维护
-2. 部署完毕后，如果是 web 可以把正式部署的访问地址也写到文档中
+1. You will generate a README.md file after generating the project, containing basic project information, such as project name, project description. Most importantly, clearly explain the project architecture and involved CloudBase resources, so maintainers can refer to it for modification and maintenance
+2. After deployment, if it's a web project, can write the official deployment access address in the documentation
 
-### 配置文件规则
+### Configuration File Rules
 
-1. 为了方便其他不使用 AI 的人了解有哪些资源，可以在生成之后，同时生成一个 cloudbaserc.json
+1. To help others who don't use AI understand what resources are available, can generate a cloudbaserc.json file after generation
 
-### MCP 接口调用规则
-你调用mcp服务的时候，需要充分理解所有要调用接口的数据类型，以及返回值的类型，如果你不确定需要调用什么接口，请先查看文档和tools的描述，然后根据文档和tools的描述，确定你需要调用什么接口和参数，不要出现调用的方法参数，或者参数类型错误的情况。
+### MCP Interface Call Rules
+When calling MCP services, you need to fully understand the data types of all interfaces to be called, as well as return value types. If you're not sure which interface to call, first check the documentation and tool descriptions, then determine which interface and parameters to call based on the documentation and tool descriptions. Do not have incorrect method parameters or parameter type errors.
 
-例如，很多接口都需要传confirm参数，这个参数是boolean类型，如果你不提供这个参数，或者提供错误的数据类型错误，那么接口会返回错误。
+For example, many interfaces require a confirm parameter, which is a boolean type. If you don't provide this parameter, or provide incorrect data type, the interface will return an error.
 
-### 环境ID自动配置规则
-- 在生成项目配置文件（如 `cloudbaserc.json`、`project.config.json` 等）时，自动使用 `envQuery` 查询到的环境ID
-- 在代码示例中涉及环境ID的地方，自动填入当前环境ID，无需用户手动替换
-- 在部署和预览相关操作中，优先使用已查询到的环境信息
+### Environment ID Auto-Configuration Rules
+- When generating project configuration files (such as `cloudbaserc.json`, `project.config.json`, etc.), automatically use the environment ID queried by `envQuery`
+- In code examples involving environment ID, automatically fill in current environment ID, no need for manual user replacement
+- In deployment and preview related operations, prioritize using already queried environment information
 
-## 🔍 专业规则文件详细说明
+## Professional Rule File Reference
 
-## 使用指导
-- **Web 项目开发**：主要参考 `rules/web-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc` + **`rules/ui-design.mdc`**（生成页面/界面时强制参考）
-- **微信小程序开发**：主要参考 `rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc` + **`rules/ui-design.mdc`**（生成页面/界面时强制参考）
-- **数据库相关**：额外参考 `rules/database.mdc`, MySQL 数据库参考 `rules/data-model-creation.mdc`
-- **UI 设计/界面生成**：**强制必读** `rules/ui-design.mdc`（适用于所有页面、界面、组件、样式、原型设计任务）
-- **数据模型建模**：额外参考 `rules/data-model-creation.mdc`
+**Note**: For detailed information, refer to the specific skill files. This section provides quick reference only.
 
+### Platform Development Skills
+- **Web**: `rule/web-development-skill/SKILL.md` - SDK integration, static hosting, build configuration
+- **Mini Program**: `rule/miniprogram-development-skill/SKILL.md` - Project structure, WeChat Developer Tools, wx.cloud
+- **CloudRun**: `rule/cloudrun-development-skill/SKILL.md` - Backend deployment (functions/containers)
+- **Platform (Universal)**: `rule/cloudbase-platform-skill/SKILL.md` - Environment, authentication, services
 
-### 📱 rules/miniprogram-development.mdc  
-**强制适用**：微信小程序项目
-- 小程序项目结构和配置
-- 微信开发者工具 CLI 集成  
-- 云开发能力和 API 使用
-- **特别注意**：严禁使用 Web SDK 认证方式
+### Authentication Skills
+- **Web**: `rule/auth-web-skill/SKILL.md` - **MUST use Web SDK built-in authentication**
+- **Mini Program**: `rule/auth-wechat-skill/SKILL.md` - **Naturally login-free, get OPENID in cloud functions**
+- **Node.js**: `rule/auth-nodejs-skill/SKILL.md`
+- **HTTP API**: `rule/auth-http-api-skill/SKILL.md`
 
-### 🌐 rules/web-development.mdc
-**强制适用**：Web 前端项目  
-- 现代前端工程化（Vite/Webpack）
-- 静态托管部署和预览
-- CloudBase Web SDK 集成和认证
-- **特别注意**：必须使用 SDK 内置认证功能
+### Database Skills
+- **NoSQL (Web)**: `rule/no-sql-web-sdk/SKILL.md`
+- **NoSQL (Mini Program)**: `rule/no-sql-wx-mp-sdk/SKILL.md`
+- **MySQL (Web)**: `rule/relational-database-web-skill/SKILL.md`
+- **MySQL (MCP)**: `rule/relational-database-mcp-skill/SKILL.md`
+- **Data Model Creation**: `rule/data-model-creation-skill/SKILL.md`
 
-### ☁️ rules/cloudbase-platform.mdc
-**通用必读**：所有 CloudBase 项目
-- 云开发环境配置和认证机制
-- 云函数、数据库、存储服务
-- 数据模型和权限策略
-- 控制台管理链接
+### 🎨 ⚠️ UI Design Skill (CRITICAL - Read FIRST)
+- **`rule/ui-design-skill/SKILL.md`** - **MANDATORY - HIGHEST PRIORITY**
+  - **MUST read FIRST before generating ANY interface/page/component/style**
+  - Design thinking framework, complete design process, frontend aesthetics guidelines
+  - **NO EXCEPTIONS**: All UI work requires reading this file first
 
+### Workflow Skills
+- **Spec Workflow**: `rule/spec-workflow-skill/SKILL.md` - Standard software engineering process (requirements, design, tasks)
 
+## Development Quality Checklist
 
-### 🗄️ rules/database.mdc
-**条件必读**：涉及数据库操作时
-- CloudBase 数据库操作规范
-- 权限管理和安全策略
-- 错误处理和数据更新
+To ensure development quality, recommend completing the following checks before starting tasks:
 
-### 🎨 rules/ui-design.mdc
-**强制必读**：所有涉及界面、页面、组件、样式生成的任务
-- **适用场景**：
-  - 生成 Web 页面或界面时
-  - 生成小程序页面或界面时
-  - 创建前端组件时
-  - 设计原型或界面时
-  - 处理样式和视觉效果时
-  - 任何涉及用户界面的开发任务
-- **核心内容**：
-  - 设计思维框架（目的分析、风格定位、技术约束、差异化思考）
-  - 完整的设计流程（用户体验分析、产品界面规划、美学方向确定、高保真 UI 设计、前端原型实现）
-  - 前端美学指南（字体设计、色彩与主题、动效设计、空间布局、背景与视觉细节）
-  - 避免通用 AI 美学（禁止使用过度常见的字体、陈词滥调的色彩方案、模板化设计）
-  - 创意实施原则（创造性解释、避免重复、复杂度匹配）
-- **特别注意**：在开始任何界面/页面生成工作前，必须先阅读并严格遵循此规则文件，确保生成具有独特美学风格和高质量视觉设计的界面
+### Recommended Steps
+0. **[ ] Environment Check**: Call `envQuery` tool to check CloudBase environment status (applies to all interactions)
+1. **[ ] Scenario Identification**: Clearly identify what type of project this is (Web/Mini Program/Database/UI)
+2. **[ ] Core Capability Confirmation**: Confirm all four core capabilities have been considered
+   - UI Design: Have you read `rule/ui-design-skill/SKILL.md`?
+   - Database + Authentication: Have you referred to corresponding authentication and database skills?
+   - Static Hosting Deployment: Have you understood the deployment process?
+   - Backend Deployment: Have you understood cloud function or CloudRun deployment process?
+3. **[ ] UI Design Rules Check**: If task involves generating pages, interfaces, components, or styles, must confirm you have read and understood `rule/ui-design-skill/SKILL.md` rules
+4. **[ ] User Confirmation**: Confirm with user whether scenario identification and core capability understanding are correct
+5. **[ ] Rule Execution**: Strictly follow core capability requirements and relevant rule files for development
 
-### rules/data-model-creation.mdc
-描述数据模型AI建模和创建的专业规则，包含：
-- Mermaid ER图建模规范和语法
-- MySQL数据类型映射指导
-- 业务场景到数据结构转换规则
-- 数据模型创建工具使用规范
-- 适用于需要AI驱动数据建模的项目
+### ⚠️ Common Issues to Avoid
+- Avoid skipping core capabilities and starting development directly
+- Avoid mixing APIs and authentication methods from different platforms
+- Avoid ignoring UI design rules: All tasks involving interfaces, pages, components, styles must strictly refer to `rule/ui-design-skill/SKILL.md`
+- Avoid ignoring database and authentication standards: Must use correct authentication methods and database operation methods
+- Important technical solutions should be confirmed with users
 
-
-
-## ⚡ 开发质量检查清单
-
-为确保开发质量，建议在开始任务前完成以下检查：
-
-### ✅ 推荐完成的步骤
-0. **[ ] 环境检查**：调用 `envQuery` 工具检查云开发环境状态（适用于所有交互）
-1. **[ ] 场景识别**：明确当前是什么类型的项目（Web/小程序/数据库/UI）
-2. **[ ] 规则声明**：明确列出将要遵循的规则文件清单
-   - **特别注意**：如果涉及页面/界面生成，必须明确声明将参考 `rules/ui-design.mdc`
-3. **[ ] UI 设计规则检查**：如果任务涉及生成页面、界面、组件或样式，必须确认已阅读并理解 `rules/ui-design.mdc` 规则
-4. **[ ] 用户确认**：向用户确认场景识别和规则选择是否正确
-5. **[ ] 规则执行**：严格按照选定的规则文件进行开发
-
-### ⚠️ 常见问题避免
-- 避免跳过场景识别直接开始开发
-- 避免混用不同平台的 API 和认证方式  
-- 避免忽略专业规则文件的指导
-- **避免在生成页面/界面时忽略 UI 设计规则**：所有涉及界面、页面、组件、样式的任务，必须严格参考 `rules/ui-design.mdc`
-- 重要技术方案建议与用户确认
-
-### 🔄 质量保障
-如发现开发不符合规范，可以：
-- 指出具体问题点
-- 要求重新执行规则检查流程
-- 明确指定需要遵循的规则文件
-### 🔄 质量保障
-如发现开发不符合规范，可以：
-- 指出具体问题点
-- 要求重新执行规则检查流程
-- 明确指定需要遵循的规则文件
+### Quality Assurance
+If development is found to not comply with standards, can:
+- Point out specific issues
+- Require re-execution of rule check process
+- Clearly specify rule files that need to be followed
