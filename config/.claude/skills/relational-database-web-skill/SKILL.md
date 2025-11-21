@@ -1,5 +1,5 @@
 ---
-name: CloudBase Relational Database Web
+name: relational-database-web-cloudbase
 description: Use when building frontend Web apps that talk to CloudBase Relational Database via @cloudbase/js-sdk – provides the canonical init pattern so you can then use Supabase-style queries from the browser.
 alwaysApply: false
 ---
@@ -134,4 +134,3 @@ await db.from("posts").delete().eq("id", 1);
 - After you have `db = app.rdb()`, use **Supabase documentation and patterns** for all queries.
 - This skill only standardizes **Web initialization and client sharing**.
 - Do not duplicate Supabase docs into this skill; rely on the model's built-in Supabase knowledge for query shapes and options.
-
