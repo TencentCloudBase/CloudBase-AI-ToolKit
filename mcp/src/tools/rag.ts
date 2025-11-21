@@ -64,7 +64,7 @@ async function prepareKnowledgeBaseWebTemplate() {
   const zip = new AdmZip(zipPath);
   zip.extractAllTo(extractDir, true);
 
-  return collectSkillDescriptions(extractDir);
+  return collectSkillDescriptions(path.join(extractDir, ".claude", "skills"));
 }
 
 export async function registerRagTools(server: ExtendedMcpServer) {
@@ -193,17 +193,38 @@ export async function registerRagTools(server: ExtendedMcpServer) {
     "searchKnowledgeBase",
     {
       title: "云开发知识库检索",
-      description: "云开发知识库智能检索工具，支持云开发与云函数知识的向量查询",
+      description: `云开发知识库智能检索工具，支持向量查询 (vector) 和固定文档 (doc) 查询。
+
+      强烈推荐始终优先使用固定文档 (doc) 模式进行检索，仅当固定文档无法覆盖你的问题时，再使用向量查询 (vector) 模式。
+
+      固定文档 (doc) 查询当前支持 ${skills.length} 个固定文档，分别是：
+      ${skills
+        .map(
+          (skill) =>
+            `文档名：${path.basename(path.dirname(skill.absolutePath))} 文档介绍：${
+              skill.description
+            }`,
+        )
+        .join("\n")}`,
       inputSchema: {
+        mode: z.enum(["vector", "doc"]),
+        docName: z
+          .enum(
+            skills.map((skill) =>
+              path.basename(path.dirname(skill.absolutePath)),
+            ) as unknown as [string, ...string[]],
+          )
+          .optional()
+          .describe("mode=doc 时指定。文档名称。"),
         threshold: z
           .number()
           .default(0.5)
           .optional()
-          .describe("相似性检索阈值"),
-        id: KnowledgeBaseEnum.describe(
-          "知识库范围，cloudbase=云开发全量知识，scf=云开发的云函数知识, miniprogram=小程序知识（不包含云开发与云函数知识）",
+          .describe("mode=vector 时指定。相似性检索阈值"),
+        id: KnowledgeBaseEnum.optional().describe(
+          "mode=vector 时指定。知识库范围，cloudbase=云开发全量知识，scf=云开发的云函数知识, miniprogram=小程序知识（不包含云开发与云函数知识）",
         ),
-        content: z.string().describe("检索内容"),
+        content: z.string().describe("mode=vector 时指定。检索内容").optional(),
         options: z
           .object({
             chunkExpand: z
@@ -216,12 +237,12 @@ export async function registerRagTools(server: ExtendedMcpServer) {
               ),
           })
           .optional()
-          .describe("其他选项"),
+          .describe("mode=vector 时指定。其他选项"),
         limit: z
           .number()
           .default(5)
           .optional()
-          .describe("指定返回最相似的 Top K 的 K 的值"),
+          .describe("mode=vector 时指定。指定返回最相似的 Top K 的 K 的值"),
       },
       annotations: {
         readOnlyHint: true,
@@ -235,13 +256,23 @@ export async function registerRagTools(server: ExtendedMcpServer) {
       options: { chunkExpand = [3, 3] } = {},
       limit = 5,
       threshold = 0.5,
-    }: {
-      id: string;
-      content: string;
-      options?: { chunkExpand?: number[] };
-      limit?: number;
-      threshold?: number;
+      mode,
+      docName,
     }) => {
+      if (mode === "doc") {
+        const absolutePath = skills.find((skill) =>
+          skill.absolutePath.includes(docName!),
+        )!.absolutePath;
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `The doc's absolute path is: ${absolutePath}. ${(await fs.readFile(absolutePath)).toString()}`,
+            },
+          ],
+        };
+      }
       // 枚举到后端 id 映射
       const backendId =
         KnowledgeBaseIdMap[id as keyof typeof KnowledgeBaseIdMap] || id;
