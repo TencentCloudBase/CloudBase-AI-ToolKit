@@ -170,6 +170,61 @@ function createBackup(targetDir) {
 }
 
 /**
+ * 获取 config 目录下的所有目录列表
+ * @returns {Array<string>} 目录名称数组
+ */
+function getConfigDirectories() {
+  try {
+    const items = fs.readdirSync(configDir);
+    const directories = items.filter(item => {
+      const itemPath = path.join(configDir, item);
+      return fs.statSync(itemPath).isDirectory();
+    });
+    return directories;
+  } catch (error) {
+    console.error('获取 config 目录列表失败:', error.message);
+    return [];
+  }
+}
+
+/**
+ * 清理目标目录中的指定目录
+ * @param {string} targetDir 目标目录
+ * @param {Array<string>} dirsToClean 要清理的目录列表
+ */
+function cleanDirectories(targetDir, dirsToClean) {
+  if (!fs.existsSync(targetDir)) {
+    return;
+  }
+  
+  console.log(`  🧹 清理目标目录中的旧目录...`);
+  let cleanedCount = 0;
+  
+  for (const dirName of dirsToClean) {
+    const dirPath = path.join(targetDir, dirName);
+    
+    if (fs.existsSync(dirPath)) {
+      try {
+        const stat = fs.statSync(dirPath);
+        if (stat.isDirectory()) {
+          fs.rmSync(dirPath, { recursive: true, force: true });
+          console.log(`    🗑️  已删除: ${dirName}`);
+          cleanedCount++;
+        }
+      } catch (error) {
+        console.error(`    ❌ 删除目录失败: ${dirName}`, error.message);
+      }
+    }
+  }
+  
+  if (cleanedCount > 0) {
+    console.log(`  ✅ 已清理 ${cleanedCount} 个目录`);
+  } else {
+    console.log(`  ℹ️  没有需要清理的目录`);
+  }
+}
+
+/**
  * 主同步函数
  */
 async function syncConfigs(options = {}) {
@@ -204,6 +259,11 @@ async function syncConfigs(options = {}) {
   console.log(`📋 共需要同步 ${templateConfigs.length} 个模板`);
   console.log(`🔧 模式: ${dryRun ? '干运行' : '实际执行'}\n`);
   
+  // 获取要清理的目录列表（config 目录下的所有目录 + skills 目录）
+  const configDirectories = getConfigDirectories();
+  const dirsToClean = [...configDirectories, 'skills'];
+  console.log(`📋 将清理的目录: ${dirsToClean.join(', ')}\n`);
+  
   let successCount = 0;
   let skipCount = 0;
   
@@ -229,6 +289,16 @@ async function syncConfigs(options = {}) {
     
     if (dryRun) {
       console.log(`  🔍 [干运行] 将同步到: ${targetDir}`);
+      // 显示将要清理的目录
+      const existingDirs = dirsToClean.filter(dirName => {
+        const dirPath = path.join(targetDir, dirName);
+        return fs.existsSync(dirPath) && fs.statSync(dirPath).isDirectory();
+      });
+      if (existingDirs.length > 0) {
+        console.log(`  🔍 [干运行] 将清理目录: ${existingDirs.join(', ')}`);
+      } else {
+        console.log(`  🔍 [干运行] 没有需要清理的目录`);
+      }
       successCount++;
       continue;
     }
@@ -242,6 +312,9 @@ async function syncConfigs(options = {}) {
     if (!fs.existsSync(targetDir)) {
       fs.mkdirSync(targetDir, { recursive: true });
     }
+    
+    // 清理目标目录中的旧目录
+    cleanDirectories(targetDir, dirsToClean);
     
     // 同步config目录下的所有内容
     if (includePatterns) {
