@@ -221,7 +221,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
     "updateFunctionCode",
     {
       title: "更新云函数代码",
-      description: "更新函数代码",
+      description: "更新已存在函数的代码。注意：此工具仅用于更新代码，不支持修改函数配置（如 runtime）。如果需要修改 runtime，需要删除函数后使用 createFunction 重新创建。",
       inputSchema: {
         name: z.string().describe("函数名称"),
         functionRootPath: z.string().describe("函数根目录（云函数目录的父目录），这里需要传操作系统上文件的绝对路径"),
@@ -237,28 +237,22 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         category: "functions"
       }
     },
-    async ({ name, functionRootPath, zipFile, handler, runtime }: {
+    async ({ name, functionRootPath, zipFile, handler }: {
       name: string;
       functionRootPath?: string;
       zipFile?: string;
       handler?: string;
-      runtime?: string;
     }) => {
-      // 自动填充默认 runtime
-      if (!runtime) {
-        runtime = DEFAULT_NODEJS_RUNTIME;
-      }
-
       // 处理函数根目录路径，确保不包含函数名
       const processedRootPath = processFunctionRootPath(functionRootPath, name);
 
       // 构建更新参数，强制设置 installDependency 为 true（不暴露给AI）
+      // 注意：不包含 runtime 参数，因为云开发平台不支持修改已存在函数的 runtime
       const updateParams: any = {
         func: {
           name,
           installDependency: true,
-          ...(handler && { handler }),
-          ...(runtime && { runtime })
+          ...(handler && { handler })
         },
         functionRootPath: processedRootPath
       };

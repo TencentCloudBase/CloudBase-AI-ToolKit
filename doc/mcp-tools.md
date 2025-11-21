@@ -394,6 +394,8 @@ classDiagram
 ### `updateFunctionCode`
 更新函数代码
 
+**注意**：此工具仅用于更新已存在函数的代码，不支持修改函数配置（如 runtime）。如果需要修改 runtime，需要删除函数后使用 `createFunction` 重新创建。
+
 #### 参数
 
 <table>
