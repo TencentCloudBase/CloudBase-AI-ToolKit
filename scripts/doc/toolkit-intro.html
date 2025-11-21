@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudBase AI Toolkit 2.0 - 架构重构与能力升级</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-green: #00FF88;
+            --neon-orange: #FF6B35;
+            --neon-cyan: #00D4FF;
+            --dark-bg: #0A0E27;
+            --dark-surface: #141B2D;
+            --text-primary: #E8EAED;
+            --text-secondary: #9AA0A6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Glitch Effect */
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        /* Hero Section - Asymmetric Layout */
+        .hero {
+            min-height: 100vh;
+            padding: 6rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 6rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            background: radial-gradient(ellipse at top right, rgba(0, 255, 136, 0.1) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+        }
+
+        .version-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: var(--dark-surface);
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 3rem;
+            transform: rotate(-3deg) skew(-5deg);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            animation: glitch 3s infinite;
+        }
+
+        h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 6rem;
+            font-weight: 400;
+            line-height: 0.9;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            text-shadow: 
+                0 0 10px rgba(0, 255, 136, 0.5),
+                0 0 20px rgba(0, 255, 136, 0.3);
+            transform: rotate(-2deg);
+        }
+
+        .hero-title-accent {
+            color: var(--neon-green);
+            display: block;
+            transform: rotate(1deg) translateX(20px);
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-weight: 400;
+            line-height: 1.8;
+            max-width: 500px;
+        }
+
+        .hero-visual {
+            position: relative;
+            transform: rotate(5deg);
+        }
+
+        .code-block {
+            background: var(--dark-surface);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 8px;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.8;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--neon-green);
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .code-line {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .code-keyword { color: var(--neon-cyan); }
+        .code-string { color: var(--neon-green); }
+        .code-comment { color: #666; }
+
+        /* Feature Section - Diagonal Layout */
+        .features-section {
+            padding: 8rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-header {
+            margin-bottom: 8rem;
+            transform: rotate(-1deg);
+        }
+
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 5rem;
+            font-weight: 400;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .section-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            transform: translateX(50px);
+        }
+
+        /* Feature Cards - Overlapping & Tilted */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4rem;
+            margin-bottom: 6rem;
+        }
+
+        .feature-card {
+            background: var(--dark-surface);
+            border: 2px solid rgba(0, 255, 136, 0.2);
+            padding: 3rem;
+            position: relative;
+            transform: rotate(var(--rotation, 0deg));
+            transition: all 0.4s ease;
+            overflow: hidden;
+        }
+
+        .feature-card:nth-child(odd) {
+            --rotation: -2deg;
+            margin-top: 4rem;
+        }
+
+        .feature-card:nth-child(even) {
+            --rotation: 2deg;
+            margin-top: -2rem;
+        }
+
+        .feature-card:hover {
+            transform: rotate(0deg) scale(1.05);
+            border-color: var(--neon-green);
+            box-shadow: 
+                0 0 30px rgba(0, 255, 136, 0.3),
+                inset 0 0 30px rgba(0, 255, 136, 0.1);
+        }
+
+        .feature-number {
+            position: absolute;
+            top: -20px;
+            right: 20px;
+            font-size: 8rem;
+            font-weight: 700;
+            color: rgba(0, 255, 136, 0.1);
+            font-family: 'DM Serif Display', serif;
+        }
+
+        .feature-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2.5rem;
+            color: var(--neon-green);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .feature-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Version 2.0 Section - Asymmetric Grid */
+        .v2-section {
+            padding: 8rem 4rem;
+            background: var(--dark-surface);
+            position: relative;
+            z-index: 1;
+        }
+
+        .v2-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .v2-header {
+            margin-bottom: 6rem;
+            transform: rotate(1deg);
+        }
+
+        .v2-highlights {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            grid-auto-rows: minmax(300px, auto);
+        }
+
+        .highlight-card {
+            background: var(--dark-bg);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            padding: 2.5rem;
+            position: relative;
+            transform: skew(-2deg, 0deg);
+            transition: all 0.3s ease;
+        }
+
+        .highlight-card:nth-child(2),
+        .highlight-card:nth-child(5) {
+            transform: skew(2deg, 0deg);
+            margin-top: 3rem;
+        }
+
+        .highlight-card:hover {
+            transform: skew(0deg) scale(1.02);
+            border-color: var(--neon-orange);
+            box-shadow: 0 0 40px rgba(255, 107, 53, 0.2);
+        }
+
+        .highlight-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 10px var(--neon-orange));
+        }
+
+        .highlight-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.75rem;
+            color: var(--neon-orange);
+            margin-bottom: 1rem;
+        }
+
+        .highlight-content {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight-list {
+            list-style: none;
+        }
+
+        .highlight-list li {
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .highlight-list li::before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: var(--neon-orange);
+            font-size: 0.75rem;
+        }
+
+        /* Stats Section - Diagonal Layout */
+        .stats-section {
+            padding: 6rem 4rem;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-surface) 100%);
+            position: relative;
+            z-index: 1;
+            transform: rotate(-1deg);
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4rem;
+            transform: rotate(1deg);
+        }
+
+        .stat-item {
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-number {
+            font-family: 'DM Serif Display', serif;
+            font-size: 5rem;
+            font-weight: 400;
+            display: block;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 4rem;
+            background: var(--dark-bg);
+            border-top: 1px solid rgba(0, 255, 136, 0.2);
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-green);
+            transition: width 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--neon-green);
+        }
+
+        .footer-link:hover::after {
+            width: 100%;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--neon-green);
+            color: var(--dark-bg);
+            border: 2px solid var(--neon-green);
+            margin-right: 1rem;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--neon-green);
+            border: 2px solid var(--neon-green);
+        }
+
+        .btn-secondary:hover {
+            background: var(--neon-green);
+            color: var(--dark-bg);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .v2-highlights {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            .section-title {
+                font-size: 3rem;
+            }
+
+            .v2-highlights {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card {
+                transform: rotate(0deg) !important;
+            }
+        }
+
+        /* Scroll Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="version-badge">VERSION 2.0</span>
+            <h1>
+                CloudBase<br/>
+                <span class="hero-title-accent">AI Toolkit</span>
+            </h1>
+            <p class="subtitle">
+                从规则到技能，从工具到生态<br/>
+                让 AI 开发更智能、更专业、更高效
+            </p>
+            <div style="margin-top: 3rem;">
+                <a href="https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/" class="btn btn-primary">查看文档</a>
+                <a href="https://github.com/TencentCloudBase/CloudBase-AI-ToolKit" class="btn btn-secondary">GitHub</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="code-block">
+                <div class="code-line"><span class="code-keyword">const</span> <span class="code-string">toolkit</span> = {</div>
+                <div class="code-line" style="padding-left: 1rem;"><span class="code-keyword">version</span>: <span class="code-string">'2.0'</span>,</div>
+                <div class="code-line" style="padding-left: 1rem;"><span class="code-keyword">mcpTools</span>: <span class="code-string">39</span>,</div>
+                <div class="code-line" style="padding-left: 1rem;"><span class="code-keyword">ideSupport</span>: <span class="code-string">'15+'</span>,</div>
+                <div class="code-line" style="padding-left: 1rem;"><span class="code-keyword">features</span>: [</div>
+                <div class="code-line" style="padding-left: 2rem;"><span class="code-string">'AI Native'</span>,</div>
+                <div class="code-line" style="padding-left: 2rem;"><span class="code-string">'One-Click Deploy'</span>,</div>
+                <div class="code-line" style="padding-left: 2rem;"><span class="code-string">'Smart Debug'</span></div>
+                <div class="code-line" style="padding-left: 1rem;">]</div>
+                <div class="code-line">};</div>
+                <div class="code-line" style="margin-top: 1rem;"><span class="code-comment">// Ready to deploy</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Features -->
+    <section class="features-section">
+        <div class="section-header">
+            <h2 class="section-title">核心特性</h2>
+            <p class="section-subtitle">连接 AI IDE 与腾讯云 CloudBase 的部署桥梁，让你的 AI 应用即刻上线</p>
+        </div>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-number">01</div>
+                <h3 class="feature-title">AI 原生</h3>
+                <p class="feature-description">
+                    内置规则库专为 AI 编程设计，AI 直接生成符合 CloudBase 最佳实践的可部署代码。无需繁琐配置，AI 自动处理数据库、云函数、安全规则等所有云上资源。
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-number">02</div>
+                <h3 class="feature-title">一键部署</h3>
+                <p class="feature-description">
+                    自动化 MCP 部署流，AI 帮你搞定从云函数、数据库到静态网站的所有云上资源配置。智能检测项目类型，自动配置部署参数，实时显示部署进度。
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-number">03</div>
+                <h3 class="feature-title">智能调试</h3>
+                <p class="feature-description">
+                    部署出错？不用怕。AI 自动读取日志，分析错误原因，生成修复代码并自动重新部署。真正实现开发-部署-调试的完整闭环。
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-number">04</div>
+                <h3 class="feature-title">知识检索</h3>
+                <p class="feature-description">
+                    内置云开发、微信小程序等专业知识库的智能向量检索，让 AI 更懂云开发。快速获取相关文档和最佳实践，提供代码示例和解决方案。
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-number">05</div>
+                <h3 class="feature-title">灵活工作流</h3>
+                <p class="feature-description">
+                    支持 /spec 和 /no_spec 命令，根据任务复杂度智能选择。完整工作流适合复杂项目，快速迭代适合简单需求，让开发更高效。
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-number">06</div>
+                <h3 class="feature-title">全栈支持</h3>
+                <p class="feature-description">
+                    Web 应用、小程序、后端服务全覆盖。无论是 React/Vue 前端、微信小程序还是 Node.js/Python 后端，AI 都能为你处理，你只需专注业务逻辑。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Version 2.0 Highlights -->
+    <section class="v2-section">
+        <div class="v2-container">
+            <div class="v2-header">
+                <h2 class="section-title">Version 2.0 核心更新</h2>
+                <p class="section-subtitle" style="transform: translateX(0);">架构重构与能力升级 - 一次架构级的进化</p>
+            </div>
+            
+            <div class="v2-highlights">
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="10" width="40" height="40" fill="none" stroke="#FF6B35" stroke-width="3" rx="4"/>
+                            <rect x="20" y="20" width="20" height="20" fill="#FF6B35" opacity="0.3"/>
+                            <line x1="10" y1="30" x2="50" y2="30" stroke="#00D4FF" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3 class="highlight-title">Rules → Skills 体系</h3>
+                    <p class="highlight-content">AI 开发者现在可以像专业开发者一样，按照技能模块组织知识，提升代码生成质量和开发效率。</p>
+                    <ul class="highlight-list">
+                        <li>将规则文件重构为技能结构</li>
+                        <li>每个技能包含完整的知识体系</li>
+                        <li>支持技能的组合和复用</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="15" y="15" width="30" height="20" fill="#00D4FF" opacity="0.3" rx="2"/>
+                            <circle cx="20" cy="25" r="3" fill="#FF6B35"/>
+                            <circle cx="30" cy="25" r="3" fill="#FF6B35"/>
+                            <circle cx="40" cy="25" r="3" fill="#FF6B35"/>
+                            <line x1="15" y1="40" x2="45" y2="40" stroke="#00FF88" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3 class="highlight-title">专业级设计规范</h3>
+                    <p class="highlight-content">AI 现在能够生成具有独特美学风格的界面，告别千篇一律的 AI 风格，产出真正专业的设计。</p>
+                    <ul class="highlight-list">
+                        <li>引入 Claude Code 设计原则</li>
+                        <li>强制设计规范输出流程</li>
+                        <li>禁止通用 AI 美学</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="15" width="20" height="15" fill="#00D4FF" opacity="0.3" rx="2"/>
+                            <rect x="30" y="15" width="20" height="15" fill="#FF6B35" opacity="0.3" rx="2"/>
+                            <line x1="20" y1="35" x2="40" y2="35" stroke="#00FF88" stroke-width="2"/>
+                            <circle cx="15" cy="45" r="4" fill="#00D4FF"/>
+                            <circle cx="30" cy="45" r="4" fill="#FF6B35"/>
+                            <circle cx="45" cy="45" r="4" fill="#00FF88"/>
+                        </svg>
+                    </div>
+                    <h3 class="highlight-title">MySQL + NoSQL 支持</h3>
+                    <p class="highlight-content">开发者现在可以通过 AI 完成从数据建模到数据库操作的全流程，支持 MySQL 和 NoSQL 两种数据库类型。</p>
+                    <ul class="highlight-list">
+                        <li>新增 MySQL 数据库支持</li>
+                        <li>新增 NoSQL Skills</li>
+                        <li>支持多数据库实例管理</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="30" cy="20" r="8" fill="none" stroke="#FF6B35" stroke-width="2"/>
+                            <line x1="30" y1="28" x2="30" y2="40" stroke="#00FF88" stroke-width="2"/>
+                            <line x1="20" y1="50" x2="40" y2="50" stroke="#00FF88" stroke-width="2"/>
+                            <line x1="25" y1="45" x2="35" y2="45" stroke="#00D4FF" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3 class="highlight-title">平台化认证体系</h3>
+                    <p class="highlight-content">AI 现在能够根据不同平台（Web、小程序）自动选择正确的认证方式，减少配置错误。</p>
+                    <ul class="highlight-list">
+                        <li>新增认证技能体系</li>
+                        <li>区分 Web 和小程序认证</li>
+                        <li>支持小程序 SDK 集成</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="15" y="20" width="30" height="20" fill="#00D4FF" opacity="0.3" rx="2"/>
+                            <circle cx="20" cy="30" r="2" fill="#FF6B35"/>
+                            <circle cx="30" cy="30" r="2" fill="#FF6B35"/>
+                            <circle cx="40" cy="30" r="2" fill="#FF6B35"/>
+                            <path d="M 20 45 Q 30 50, 40 45" stroke="#00FF88" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <h3 class="highlight-title">模板下载与文档搜索</h3>
+                    <p class="highlight-content">开发者可以快速启动项目，AI 可以智能搜索文档，大幅提升开发效率。</p>
+                    <ul class="highlight-list">
+                        <li>新增模板下载工具</li>
+                        <li>新增文档搜索工具</li>
+                        <li>强制使用模板下载</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="15" width="40" height="30" fill="none" stroke="#00FF88" stroke-width="2" rx="2"/>
+                            <line x1="15" y1="25" x2="45" y2="25" stroke="#00D4FF" stroke-width="2"/>
+                            <line x1="15" y1="30" x2="35" y2="30" stroke="#00D4FF" stroke-width="2"/>
+                            <line x1="15" y1="35" x2="40" y2="35" stroke="#00D4FF" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3 class="highlight-title">日志系统与配置同步</h3>
+                    <p class="highlight-content">更稳定的日志系统，更智能的配置同步，提升整体系统可靠性。</p>
+                    <ul class="highlight-list">
+                        <li>使用 Winston 日志系统</li>
+                        <li>优化配置同步脚本</li>
+                        <li>改进环境管理</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-item">
+                <span class="stat-number">39</span>
+                <span class="stat-label">MCP 工具</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">15+</span>
+                <span class="stat-label">AI IDE 支持</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">2.0</span>
+                <span class="stat-label">最新版本</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">55</span>
+                <span class="stat-label">2.0 更新项</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/" class="footer-link">文档</a>
+            <a href="https://github.com/TencentCloudBase/CloudBase-AI-ToolKit" class="footer-link">GitHub</a>
+            <a href="https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues" class="footer-link">问题反馈</a>
+            <a href="https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/releases" class="footer-link">更新日志</a>
+        </div>
+        <p style="opacity: 0.7; font-size: 0.875rem; color: var(--text-secondary);">
+            © 2025 TencentCloudBase. MIT License.
+        </p>
+    </footer>
+</body>
+</html>

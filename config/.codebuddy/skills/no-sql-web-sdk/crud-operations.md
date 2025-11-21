@@ -518,6 +518,6 @@ await db.runTransaction(async transaction => {
 6. **Soft deletes**: Consider soft delete for important data
 7. **Index fields**: Index frequently queried/updated fields
 8. **Limit updates**: Only update changed fields
-9. **Test permissions**: Ensure database security rules allow operations
+9. **Configure security rules**: Use `writeSecurityRule` MCP tool to set database permissions before operations. See `./security-rules.md` for details. **Note:** Security rule changes take effect after a few minutes due to caching.
 10. **Log operations**: Track important data changes
 
