@@ -59,6 +59,9 @@ Use this skill for **CloudBase platform knowledge** when you need to:
 1. **SDK Initialization**:
    - CloudBase SDK initialization requires environment ID
    - Can query environment ID via `envQuery` tool
+   - For Web, always initialize synchronously:
+     - `import cloudbase from "@cloudbase/js-sdk"; const app = cloudbase.init({ env: "xxxx-yyy" });`
+     - Do **not** use dynamic imports like `import("@cloudbase/js-sdk")` or async wrappers such as `initCloudBase()` with internal `initPromise`
    - Then proceed with login, for example using anonymous login
 
 ## Authentication Best Practices

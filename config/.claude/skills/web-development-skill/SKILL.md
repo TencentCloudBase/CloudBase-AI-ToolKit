@@ -82,8 +82,10 @@ Use this skill for **Web frontend project development** when you need to:
 **Important: Authentication must use SDK built-in features. It is strictly forbidden to implement login authentication logic using cloud functions!**
 
 ```js
+import cloudbase from "@cloudbase/js-sdk";
+
 const app = cloudbase.init({
-  env: 'xxxx-yyy'; // Can query environment ID via envQuery tool
+  env: "xxxx-yyy", // Can query environment ID via envQuery tool
 });
 const auth = app.auth();
 
@@ -93,17 +95,59 @@ let loginState = await auth.getLoginState();
 if (loginState && loginState.user) {
   // Logged in
   const user = await auth.getCurrentUser();
-  console.log('Current user:', user);
+  console.log("Current user:", user);
 } else {
   // Not logged in - use SDK built-in authentication features
   // Method 1: Redirect to default login page (recommended)
-  await auth.toDefaultLoginPage();
-  
+  await auth.toDefaultLoginPage({});
+
   // Method 2: Anonymous login
   // await auth.signInAnonymously();
 }
 ```
 
+**Initialization rules (Web, @cloudbase/js-sdk):**
+
+- Always use **synchronous initialization** with the pattern above
+- Do **not** lazy-load the SDK with `import("@cloudbase/js-sdk")`
+- Do **not** wrap SDK initialization in async helpers such as `initCloudBase()` with internal `initPromise` caches
+- Keep a single shared `app`/`auth` instance in your frontend app; reuse it instead of re-initializing
+
+### Web SDK API usage rules
+
+- Only use **documented** CloudBase Web SDK methods
+- Before calling any method on `app`, `auth`, `db`, or other SDK objects, **confirm it exists in the official CloudBase Web SDK documentation**
+- If a method or option is **not** mentioned in the official docs (for example some guessed method name), **do NOT invent or use it**
+
+
+### Local development proxy for default login page
+
+When using `auth.toDefaultLoginPage()` in local development, you must proxy the `/__auth` path to your CloudBase Web hosting domain. For example, in a Vite + React project:
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [react()],
+  base: "./", // Use relative paths to avoid asset issues on static hosting
+  server: {
+    host: "127.0.0.1",
+    proxy: {
+      "/__auth": {
+        target: "https://envId-appid.tcloudbaseapp.com/", // Replace with your CloudBase Web app domain
+        changeOrigin: true,
+      },
+    },
+    allowedHosts: true,
+  },
+});
+```
+
+The CloudBase Web hosting domain can be obtained via the CloudBase MCP `envQuery` tool (Static hosting config); in the response, use the value from the `StaticDomain` field.
+
+In other dev servers/build tools (Webpack dev server, Next.js custom dev server, etc.), implement an **equivalent proxy rule** so that all `/__auth` requests are forwarded to the CloudBase domain during local development.
 ## Authentication Best Practices
 
 1. **Must use SDK built-in authentication**: CloudBase Web SDK provides complete authentication features, including default login page, anonymous login, custom login, etc.
@@ -117,4 +161,3 @@ if (loginState && loginState.user) {
 ## Build Process
 
 **Web project build process**: Ensure `npm install` command has been executed first, then refer to project documentation for building
-
