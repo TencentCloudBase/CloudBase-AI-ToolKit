@@ -4,6 +4,7 @@ import { getCloudBaseManager, resetCloudBaseManagerCache } from '../cloudbase-ma
 import { ExtendedMcpServer } from '../server.js';
 import { debug } from '../utils/logger.js';
 import { _promptAndSetEnvironmentId } from './interactive.js';
+import { getClaudePrompt } from './rag.js';
 
 export function registerEnvTools(server: ExtendedMcpServer) {
   // 获取 cloudBaseOptions，如果没有则为 undefined
@@ -16,7 +17,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
     "login",
     {
       title: "登录云开发",
-      description: "登录云开发环境并选择要使用的环境",
+      description: "⚠️ 使用云开发相关功能前必须先调用此工具进行登录。登录云开发环境并选择要使用的环境。",
       inputSchema: {
         forceUpdate: z.boolean().optional().describe("是否强制重新选择环境")
       },
@@ -43,10 +44,24 @@ export function registerEnvTools(server: ExtendedMcpServer) {
         }
 
         if (selectedEnvId) {
+          // Get CLAUDE.md prompt content
+          let promptContent = "";
+          try {
+            promptContent = await getClaudePrompt();
+          } catch (promptError) {
+            debug("Failed to get CLAUDE prompt", { error: promptError });
+            // Continue with login success even if prompt fetch fails
+          }
+
+          const successMessage = `✅ 登录成功，当前环境: ${selectedEnvId}`;
+          const promptMessage = promptContent
+            ? `\n\n⚠️ 重要提示：后续所有云开发相关的开发工作必须严格遵循以下开发规范和最佳实践：\n\n${promptContent}`
+            : "";
+
           return {
             content: [{
               type: "text",
-              text: `✅ 登录成功，当前环境: ${selectedEnvId}`
+              text: successMessage + promptMessage
             }]
           };
         }
@@ -181,10 +196,25 @@ export function registerEnvTools(server: ExtendedMcpServer) {
             throw new Error(`不支持的查询类型: ${action}`);
         }
 
+        let responseText = JSON.stringify(result, null, 2);
+
+        // For info action, append CLAUDE.md prompt content
+        if (action === "info") {
+          try {
+            const promptContent = await getClaudePrompt();
+            if (promptContent) {
+              responseText += `\n\n⚠️ 重要提示：后续所有云开发相关的开发工作必须严格遵循以下开发规范和最佳实践：\n\n${promptContent}`;
+            }
+          } catch (promptError) {
+            debug("Failed to get CLAUDE prompt in envQuery", { error: promptError });
+            // Continue without prompt if fetch fails
+          }
+        }
+
         return {
           content: [{
             type: "text",
-            text: JSON.stringify(result, null, 2)
+            text: responseText
           }]
         };
       } catch (error) {

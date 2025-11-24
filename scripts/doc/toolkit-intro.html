@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloudBase AI Toolkit 2.0 - 架构重构与能力升级</title>
+    <title>CloudBase AI Toolkit 2.0 - 让 AI 编程一键上线</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,30 +56,36 @@
             100% { transform: translate(50px, 50px); }
         }
 
-        /* Glitch Effect */
-        @keyframes glitch {
-            0%, 100% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-        }
-
-        /* Hero Section - Asymmetric Layout */
+        /* Hero Section - User-Focused */
         .hero {
             min-height: 100vh;
             padding: 6rem 4rem;
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 6rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            text-align: center;
             position: relative;
             z-index: 1;
-            background: radial-gradient(ellipse at top right, rgba(0, 255, 136, 0.1) 0%, transparent 50%);
+            background: radial-gradient(ellipse at center, rgba(0, 255, 136, 0.05) 0%, transparent 70%);
         }
 
-        .hero-content {
-            position: relative;
+        .hero h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 5rem;
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 800px;
+            line-height: 1.8;
         }
 
         .version-badge {
@@ -92,58 +98,268 @@
             font-weight: 700;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            margin-bottom: 3rem;
-            transform: rotate(-3deg) skew(-5deg);
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
-            animation: glitch 3s infinite;
-        }
-
-        h1 {
-            font-family: 'DM Serif Display', serif;
-            font-size: 6rem;
-            font-weight: 400;
-            line-height: 0.9;
             margin-bottom: 2rem;
-            color: var(--text-primary);
-            text-shadow: 
-                0 0 10px rgba(0, 255, 136, 0.5),
-                0 0 20px rgba(0, 255, 136, 0.3);
-            transform: rotate(-2deg);
         }
 
-        .hero-title-accent {
-            color: var(--neon-green);
-            display: block;
-            transform: rotate(1deg) translateX(20px);
-        }
-
-        .subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            margin-bottom: 3rem;
-            font-weight: 400;
-            line-height: 1.8;
-            max-width: 500px;
-        }
-
-        .hero-visual {
+        /* Problem Section - User Pain Points */
+        .problem-section {
+            padding: 8rem 4rem;
             position: relative;
-            transform: rotate(5deg);
+            z-index: 1;
+            background: var(--dark-surface);
         }
 
-        .code-block {
+        .problem-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 4rem;
+            font-weight: 400;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .problem-card {
+            background: var(--dark-bg);
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            padding: 3rem;
+            position: relative;
+            transform: rotate(-1deg);
+            transition: all 0.3s ease;
+        }
+
+        .problem-card:nth-child(even) {
+            transform: rotate(1deg);
+        }
+
+        .problem-card:hover {
+            transform: rotate(0deg) scale(1.02);
+            border-color: var(--neon-orange);
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.2);
+        }
+
+        .problem-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .problem-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            color: var(--neon-orange);
+            margin-bottom: 1rem;
+        }
+
+        .problem-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        /* Solution Section */
+        .solution-section {
+            padding: 8rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .solution-visual {
+            max-width: 1000px;
+            margin: 4rem auto;
             background: var(--dark-surface);
-            border: 1px solid rgba(0, 255, 136, 0.2);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            padding: 3rem;
             border-radius: 8px;
+            position: relative;
+        }
+
+        .solution-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .flow-step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: '→';
+            position: absolute;
+            right: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--neon-green);
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .flow-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: var(--dark-bg);
+            border: 2px solid var(--neon-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .flow-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .flow-text {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        /* Feature Section - User Benefits */
+        .feature-section {
+            padding: 8rem 4rem;
+            background: var(--dark-surface);
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-card {
+            background: var(--dark-bg);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.75rem;
+            color: var(--neon-green);
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .feature-benefit {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .benefit-title {
+            color: var(--neon-cyan);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-text {
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        /* Use Case Section */
+        .usecase-section {
+            padding: 8rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .usecase-item {
+            max-width: 1000px;
+            margin: 0 auto 6rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .usecase-item:nth-child(even) {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .usecase-item:nth-child(even) .usecase-visual {
+            order: 2;
+        }
+
+        .usecase-item:nth-child(even) .usecase-content {
+            order: 1;
+        }
+
+        .usecase-visual {
+            background: var(--dark-surface);
+            border: 2px solid rgba(0, 255, 136, 0.2);
             padding: 2rem;
+            border-radius: 8px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.875rem;
             line-height: 1.8;
             position: relative;
-            overflow: hidden;
         }
 
-        .code-block::before {
+        .usecase-visual::before {
             content: '';
             position: absolute;
             top: 0;
@@ -154,105 +370,38 @@
             box-shadow: 0 0 10px var(--neon-green);
         }
 
-        .code-line {
+        .usecase-content h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .usecase-content p {
             color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .usecase-result {
+            background: var(--dark-surface);
+            border-left: 4px solid var(--neon-green);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .usecase-result-title {
+            color: var(--neon-green);
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
 
-        .code-keyword { color: var(--neon-cyan); }
-        .code-string { color: var(--neon-green); }
-        .code-comment { color: #666; }
-
-        /* Feature Section - Diagonal Layout */
-        .features-section {
-            padding: 8rem 4rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .section-header {
-            margin-bottom: 8rem;
-            transform: rotate(-1deg);
-        }
-
-        .section-title {
-            font-family: 'DM Serif Display', serif;
-            font-size: 5rem;
-            font-weight: 400;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-            text-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
-        }
-
-        .section-subtitle {
-            font-size: 1.5rem;
+        .usecase-result-text {
             color: var(--text-secondary);
-            max-width: 600px;
-            transform: translateX(50px);
         }
 
-        /* Feature Cards - Overlapping & Tilted */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 4rem;
-            margin-bottom: 6rem;
-        }
-
-        .feature-card {
-            background: var(--dark-surface);
-            border: 2px solid rgba(0, 255, 136, 0.2);
-            padding: 3rem;
-            position: relative;
-            transform: rotate(var(--rotation, 0deg));
-            transition: all 0.4s ease;
-            overflow: hidden;
-        }
-
-        .feature-card:nth-child(odd) {
-            --rotation: -2deg;
-            margin-top: 4rem;
-        }
-
-        .feature-card:nth-child(even) {
-            --rotation: 2deg;
-            margin-top: -2rem;
-        }
-
-        .feature-card:hover {
-            transform: rotate(0deg) scale(1.05);
-            border-color: var(--neon-green);
-            box-shadow: 
-                0 0 30px rgba(0, 255, 136, 0.3),
-                inset 0 0 30px rgba(0, 255, 136, 0.1);
-        }
-
-        .feature-number {
-            position: absolute;
-            top: -20px;
-            right: 20px;
-            font-size: 8rem;
-            font-weight: 700;
-            color: rgba(0, 255, 136, 0.1);
-            font-family: 'DM Serif Display', serif;
-        }
-
-        .feature-title {
-            font-family: 'DM Serif Display', serif;
-            font-size: 2.5rem;
-            color: var(--neon-green);
-            margin-bottom: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .feature-description {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            line-height: 1.8;
-        }
-
-        /* Version 2.0 Section - Asymmetric Grid */
+        /* Version 2.0 Section */
         .v2-section {
             padding: 8rem 4rem;
             background: var(--dark-surface);
@@ -265,16 +414,11 @@
             margin: 0 auto;
         }
 
-        .v2-header {
-            margin-bottom: 6rem;
-            transform: rotate(1deg);
-        }
-
         .v2-highlights {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 3rem;
-            grid-auto-rows: minmax(300px, auto);
+            margin-top: 4rem;
         }
 
         .highlight-card {
@@ -282,14 +426,14 @@
             border: 1px solid rgba(255, 107, 53, 0.3);
             padding: 2.5rem;
             position: relative;
-            transform: skew(-2deg, 0deg);
+            transform: skew(-1deg, 0deg);
             transition: all 0.3s ease;
         }
 
         .highlight-card:nth-child(2),
         .highlight-card:nth-child(5) {
-            transform: skew(2deg, 0deg);
-            margin-top: 3rem;
+            transform: skew(1deg, 0deg);
+            margin-top: 2rem;
         }
 
         .highlight-card:hover {
@@ -338,13 +482,12 @@
             font-size: 0.75rem;
         }
 
-        /* Stats Section - Diagonal Layout */
+        /* Stats Section */
         .stats-section {
             padding: 6rem 4rem;
             background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-surface) 100%);
             position: relative;
             z-index: 1;
-            transform: rotate(-1deg);
         }
 
         .stats-container {
@@ -353,12 +496,7 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 4rem;
-            transform: rotate(1deg);
-        }
-
-        .stat-item {
             text-align: center;
-            position: relative;
         }
 
         .stat-number {
@@ -371,7 +509,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
         }
 
         .stat-label {
@@ -379,6 +516,65 @@
             text-transform: uppercase;
             letter-spacing: 0.2em;
             color: var(--text-secondary);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 8rem 4rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 3.5rem;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .cta-description {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+            margin: 0 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--neon-green);
+            color: var(--dark-bg);
+            border: 2px solid var(--neon-green);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--neon-green);
+            border: 2px solid var(--neon-green);
+        }
+
+        .btn-secondary:hover {
+            background: var(--neon-green);
+            color: var(--dark-bg);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
         }
 
         /* Footer */
@@ -424,52 +620,11 @@
             width: 100%;
         }
 
-        /* Buttons */
-        .btn {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            text-decoration: none;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary {
-            background: var(--neon-green);
-            color: var(--dark-bg);
-            border: 2px solid var(--neon-green);
-            margin-right: 1rem;
-        }
-
-        .btn-primary:hover {
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--neon-green);
-            border: 2px solid var(--neon-green);
-        }
-
-        .btn-secondary:hover {
-            background: var(--neon-green);
-            color: var(--dark-bg);
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
-        }
-
         /* Responsive */
         @media (max-width: 1024px) {
-            .hero {
-                grid-template-columns: 1fr;
-                gap: 4rem;
-            }
-
+            .problem-grid,
             .feature-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .v2-highlights {
@@ -478,18 +633,28 @@
 
             .stats-container {
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            .usecase-item {
+                grid-template-columns: 1fr !important;
+            }
+
+            .usecase-visual {
+                order: -1 !important;
             }
         }
 
         @media (max-width: 768px) {
-            h1 {
+            .hero h1 {
                 font-size: 3rem;
             }
 
             .section-title {
-                font-size: 3rem;
+                font-size: 2.5rem;
             }
 
+            .problem-grid,
+            .feature-grid,
             .v2-highlights {
                 grid-template-columns: 1fr;
             }
@@ -498,117 +663,279 @@
                 grid-template-columns: 1fr;
             }
 
-            .feature-card {
+            .problem-card {
                 transform: rotate(0deg) !important;
             }
-        }
 
-        /* Scroll Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
+            .highlight-card {
+                transform: skew(0deg) !important;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            animation: fadeInUp 0.8s ease-out;
         }
     </style>
 </head>
 <body>
-    <!-- Hero Section -->
+    <!-- Hero Section - User-Focused -->
     <section class="hero">
-        <div class="hero-content">
-            <span class="version-badge">VERSION 2.0</span>
-            <h1>
-                CloudBase<br/>
-                <span class="hero-title-accent">AI Toolkit</span>
-            </h1>
-            <p class="subtitle">
-                从规则到技能，从工具到生态<br/>
-                让 AI 开发更智能、更专业、更高效
-            </p>
-            <div style="margin-top: 3rem;">
-                <a href="https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/" class="btn btn-primary">查看文档</a>
-                <a href="https://github.com/TencentCloudBase/CloudBase-AI-ToolKit" class="btn btn-secondary">GitHub</a>
-            </div>
+        <span class="version-badge">Version 2.0</span>
+        <h1>AI 编程，一键上线</h1>
+        <p class="hero-subtitle">
+            AI 帮你写代码，但部署到云端还要手动配置？<br/>
+            CloudBase AI Toolkit 让 AI 直接帮你部署，从想法到上线，一句话搞定
+        </p>
+        <div style="margin-top: 3rem;">
+            <a href="https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/" class="btn btn-primary">立即开始</a>
+            <a href="https://github.com/TencentCloudBase/CloudBase-AI-ToolKit" class="btn btn-secondary">查看代码</a>
         </div>
-        <div class="hero-visual">
-            <div class="code-block">
-                <div class="code-line"><span class="code-keyword">const</span> <span class="code-string">toolkit</span> = {</div>
-                <div class="code-line" style="padding-left: 1rem;"><span class="code-keyword">version</span>: <span class="code-string">'2.0'</span>,</div>
-                <div class="code-line" style="padding-left: 1rem;"><span class="code-keyword">mcpTools</span>: <span class="code-string">39</span>,</div>
-                <div class="code-line" style="padding-left: 1rem;"><span class="code-keyword">ideSupport</span>: <span class="code-string">'15+'</span>,</div>
-                <div class="code-line" style="padding-left: 1rem;"><span class="code-keyword">features</span>: [</div>
-                <div class="code-line" style="padding-left: 2rem;"><span class="code-string">'AI Native'</span>,</div>
-                <div class="code-line" style="padding-left: 2rem;"><span class="code-string">'One-Click Deploy'</span>,</div>
-                <div class="code-line" style="padding-left: 2rem;"><span class="code-string">'Smart Debug'</span></div>
-                <div class="code-line" style="padding-left: 1rem;">]</div>
-                <div class="code-line">};</div>
-                <div class="code-line" style="margin-top: 1rem;"><span class="code-comment">// Ready to deploy</span></div>
+    </section>
+
+    <!-- Problem Section - User Pain Points -->
+    <section class="problem-section">
+        <div class="problem-container">
+            <h2 class="section-title">你是否遇到过这些问题？</h2>
+            <p class="section-subtitle">AI 编程工具解决了代码生成，但部署依然是个难题</p>
+            
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <span class="problem-icon">😫</span>
+                    <h3 class="problem-title">代码写好了，但不会部署</h3>
+                    <p class="problem-description">
+                        AI 帮你生成了完整的代码，但如何部署到云端？云函数怎么配置？数据库怎么设置？CDN 怎么绑定？这些 DevOps 知识让人头疼。
+                    </p>
+                </div>
+
+                <div class="problem-card">
+                    <span class="problem-icon">🔄</span>
+                    <h3 class="problem-title">在 IDE 和控制台之间反复切换</h3>
+                    <p class="problem-description">
+                        写代码在 IDE，部署要去云控制台，查看日志又要切换，调试错误还要回来改代码。来来回回，效率低下。
+                    </p>
+                </div>
+
+                <div class="problem-card">
+                    <span class="problem-icon">📝</span>
+                    <h3 class="problem-title">配置文件和 YAML 让人头疼</h3>
+                    <p class="problem-description">
+                        部署需要写配置文件、YAML 文件，还要了解各种云服务的配置项。对于只想快速上线的开发者来说，太复杂了。
+                    </p>
+                </div>
+
+                <div class="problem-card">
+                    <span class="problem-icon">⏰</span>
+                    <h3 class="problem-title">从想法到上线，时间太长</h3>
+                    <p class="problem-description">
+                        有了好想法，写代码可能只需要几分钟，但部署配置却要花几小时。等你部署好了，可能已经失去了最佳时机。
+                    </p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Core Features -->
-    <section class="features-section">
-        <div class="section-header">
-            <h2 class="section-title">核心特性</h2>
-            <p class="section-subtitle">连接 AI IDE 与腾讯云 CloudBase 的部署桥梁，让你的 AI 应用即刻上线</p>
+    <!-- Solution Section -->
+    <section class="solution-section">
+        <div class="problem-container">
+            <h2 class="section-title">CloudBase AI Toolkit 的解决方案</h2>
+            <p class="section-subtitle">一句话描述需求，AI 自动生成代码并部署到云端</p>
+            
+            <div class="solution-visual">
+                <div class="solution-flow">
+                    <div class="flow-step">
+                        <div class="flow-icon">💬</div>
+                        <div class="flow-label">你说</div>
+                        <div class="flow-text">"做个五子棋游戏"</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-icon">🤖</div>
+                        <div class="flow-label">AI 生成</div>
+                        <div class="flow-text">完整代码</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-icon">☁️</div>
+                        <div class="flow-label">自动部署</div>
+                        <div class="flow-text">到云端</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-icon">🎉</div>
+                        <div class="flow-label">获得链接</div>
+                        <div class="flow-text">立即访问</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem; text-align: center;">
+                <div style="background: var(--dark-surface); border: 2px solid rgba(0, 255, 136, 0.3); padding: 2rem; border-radius: 8px; max-width: 800px; margin: 0 auto; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.8; text-align: left;">
+                    <div style="color: var(--neon-cyan); margin-bottom: 1rem;">// 真实对话示例</div>
+                    <div style="color: var(--text-secondary);">你：做个双人在线对战五子棋网站，支持联机对战，最后进行部署</div>
+                    <div style="color: var(--neon-green); margin-top: 1rem;">AI：</div>
+                    <div style="color: var(--text-primary); margin-left: 1rem;">1. 正在生成前端代码...</div>
+                    <div style="color: var(--text-primary); margin-left: 1rem;">2. 正在配置云数据库...</div>
+                    <div style="color: var(--text-primary); margin-left: 1rem;">3. 正在部署到云端...</div>
+                    <div style="color: var(--neon-green); margin-top: 1rem;">✅ 部署完成！访问地址：https://your-app.tcloudbaseapp.com</div>
+                </div>
+            </div>
         </div>
-        
-        <div class="feature-grid">
-            <div class="feature-card">
-                <div class="feature-number">01</div>
-                <h3 class="feature-title">AI 原生</h3>
-                <p class="feature-description">
-                    内置规则库专为 AI 编程设计，AI 直接生成符合 CloudBase 最佳实践的可部署代码。无需繁琐配置，AI 自动处理数据库、云函数、安全规则等所有云上资源。
-                </p>
+    </section>
+
+    <!-- Feature Section - User Benefits -->
+    <section class="feature-section">
+        <div class="problem-container">
+            <h2 class="section-title">你能得到什么？</h2>
+            <p class="section-subtitle">不只是工具，更是完整的开发体验</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <h3 class="feature-title">10 倍开发速度</h3>
+                    <p class="feature-description">
+                        从想法到上线，传统方式需要几小时甚至几天，现在只需要几分钟。AI 自动处理所有部署配置，你只需专注业务逻辑。
+                    </p>
+                    <div class="feature-benefit">
+                        <div class="benefit-title">实际效果</div>
+                        <div class="benefit-text">一个完整的五子棋游戏，从零到上线，2 小时完成</div>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🎯</span>
+                    <h3 class="feature-title">零 DevOps 知识</h3>
+                    <p class="feature-description">
+                        不需要了解云函数、数据库、CDN 的配置细节。AI 自动帮你配置好一切，你只需要告诉 AI 你想要什么功能。
+                    </p>
+                    <div class="feature-benefit">
+                        <div class="benefit-title">实际效果</div>
+                        <div class="benefit-text">新手也能在几分钟内完成全栈应用的部署</div>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🔄</span>
+                    <h3 class="feature-title">一站式开发</h3>
+                    <p class="feature-description">
+                        写代码、部署、调试，全部在 AI IDE 中完成。不需要切换工具，不需要打开浏览器，一切都在你的开发环境中。
+                    </p>
+                    <div class="feature-benefit">
+                        <div class="benefit-title">实际效果</div>
+                        <div class="benefit-text">告别在多个工具间切换的烦恼</div>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🐛</span>
+                    <h3 class="feature-title">智能调试</h3>
+                    <p class="feature-description">
+                        部署出错了？AI 自动查看日志，分析错误原因，生成修复代码并重新部署。真正实现开发-部署-调试的闭环。
+                    </p>
+                    <div class="feature-benefit">
+                        <div class="benefit-title">实际效果</div>
+                        <div class="benefit-text">错误修复从手动排查变成 AI 自动处理</div>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">📚</span>
+                    <h3 class="feature-title">AI 更懂云开发</h3>
+                    <p class="feature-description">
+                        内置云开发专业知识库，AI 知道如何正确使用云函数、数据库、存储等云服务，生成符合最佳实践的代码。
+                    </p>
+                    <div class="feature-benefit">
+                        <div class="benefit-title">实际效果</div>
+                        <div class="benefit-text">生成的代码直接可用，无需二次修改</div>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🌐</span>
+                    <h3 class="feature-title">全栈支持</h3>
+                    <p class="feature-description">
+                        Web 应用、微信小程序、后端服务，无论你想做什么类型的应用，AI 都能帮你处理。一个工具，覆盖所有场景。
+                    </p>
+                    <div class="feature-benefit">
+                        <div class="benefit-title">实际效果</div>
+                        <div class="benefit-text">从个人博客到企业应用，都能快速上线</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Case Section - Real Scenarios -->
+    <section class="usecase-section">
+        <div class="problem-container">
+            <h2 class="section-title">真实使用场景</h2>
+            <p class="section-subtitle">看看其他开发者是如何使用的</p>
+            
+            <div class="usecase-item">
+                <div class="usecase-content">
+                    <h3>场景 1：快速验证想法</h3>
+                    <p>
+                        你有一个新想法，想快速验证是否可行。传统方式需要搭建环境、写代码、配置服务器，可能需要几天时间。
+                    </p>
+                    <p>
+                        使用 CloudBase AI Toolkit，你只需要在 AI IDE 中描述你的想法，AI 自动生成代码并部署，几分钟就能看到效果。
+                    </p>
+                    <div class="usecase-result">
+                        <div class="usecase-result-title">实际案例</div>
+                        <div class="usecase-result-text">开发者用 2 小时完成了一个完整的联机五子棋游戏，包括前端、后端、数据库和部署</div>
+                    </div>
+                </div>
+                <div class="usecase-visual">
+                    <div style="color: var(--text-secondary);">// 用户输入</div>
+                    <div style="color: var(--neon-green); margin-top: 1rem;">"做个双人在线对战五子棋网站，支持联机对战，最后进行部署"</div>
+                    <div style="color: var(--text-secondary); margin-top: 2rem;">// AI 自动完成</div>
+                    <div style="color: var(--text-primary); margin-top: 1rem;">✓ 生成前端代码</div>
+                    <div style="color: var(--text-primary);">✓ 配置云数据库</div>
+                    <div style="color: var(--text-primary);">✓ 部署到云端</div>
+                    <div style="color: var(--neon-green); margin-top: 1rem;">→ https://gobang.tcloudbaseapp.com</div>
+                </div>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-number">02</div>
-                <h3 class="feature-title">一键部署</h3>
-                <p class="feature-description">
-                    自动化 MCP 部署流，AI 帮你搞定从云函数、数据库到静态网站的所有云上资源配置。智能检测项目类型，自动配置部署参数，实时显示部署进度。
-                </p>
+            <div class="usecase-item">
+                <div class="usecase-content">
+                    <h3>场景 2：学习全栈开发</h3>
+                    <p>
+                        你想学习全栈开发，但不知道如何开始。配置环境、学习框架、理解部署，每一步都是门槛。
+                    </p>
+                    <p>
+                        使用 CloudBase AI Toolkit，你可以专注于学习业务逻辑，AI 帮你处理所有技术细节。通过观察 AI 生成的代码，快速学习最佳实践。
+                    </p>
+                    <div class="usecase-result">
+                        <div class="usecase-result-title">实际案例</div>
+                        <div class="usecase-result-text">新手开发者通过 AI 生成的代码，快速理解了 React、云函数、数据库的使用方式</div>
+                    </div>
+                </div>
+                <div class="usecase-visual">
+                    <div style="color: var(--text-secondary);">// 学习路径</div>
+                    <div style="color: var(--text-primary); margin-top: 1rem;">1. 描述需求</div>
+                    <div style="color: var(--text-primary);">2. 观察 AI 生成的代码</div>
+                    <div style="color: var(--text-primary);">3. 理解代码逻辑</div>
+                    <div style="color: var(--text-primary);">4. 修改和优化</div>
+                    <div style="color: var(--neon-green); margin-top: 1rem;">→ 快速掌握全栈开发</div>
+                </div>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-number">03</div>
-                <h3 class="feature-title">智能调试</h3>
-                <p class="feature-description">
-                    部署出错？不用怕。AI 自动读取日志，分析错误原因，生成修复代码并自动重新部署。真正实现开发-部署-调试的完整闭环。
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-number">04</div>
-                <h3 class="feature-title">知识检索</h3>
-                <p class="feature-description">
-                    内置云开发、微信小程序等专业知识库的智能向量检索，让 AI 更懂云开发。快速获取相关文档和最佳实践，提供代码示例和解决方案。
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-number">05</div>
-                <h3 class="feature-title">灵活工作流</h3>
-                <p class="feature-description">
-                    支持 /spec 和 /no_spec 命令，根据任务复杂度智能选择。完整工作流适合复杂项目，快速迭代适合简单需求，让开发更高效。
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-number">06</div>
-                <h3 class="feature-title">全栈支持</h3>
-                <p class="feature-description">
-                    Web 应用、小程序、后端服务全覆盖。无论是 React/Vue 前端、微信小程序还是 Node.js/Python 后端，AI 都能为你处理，你只需专注业务逻辑。
-                </p>
+            <div class="usecase-item">
+                <div class="usecase-content">
+                    <h3>场景 3：快速修复线上问题</h3>
+                    <p>
+                        你的应用上线后出现了问题，需要快速修复。传统方式需要查看日志、定位问题、修改代码、重新部署，流程繁琐。
+                    </p>
+                    <p>
+                        使用 CloudBase AI Toolkit，你只需要告诉 AI "应用报错了，错误是 xxx"，AI 自动查看日志、分析问题、生成修复代码并重新部署。
+                    </p>
+                    <div class="usecase-result">
+                        <div class="usecase-result-title">实际案例</div>
+                        <div class="usecase-result-text">开发者发现数据库连接错误，AI 自动分析日志，修复配置问题，5 分钟完成修复和重新部署</div>
+                    </div>
+                </div>
+                <div class="usecase-visual">
+                    <div style="color: var(--neon-orange);">// 发现问题</div>
+                    <div style="color: var(--text-secondary); margin-top: 1rem;">"应用报错了，错误是数据库连接失败"</div>
+                    <div style="color: var(--text-secondary); margin-top: 2rem;">// AI 自动处理</div>
+                    <div style="color: var(--text-primary); margin-top: 1rem;">✓ 查看云函数日志</div>
+                    <div style="color: var(--text-primary);">✓ 分析错误原因</div>
+                    <div style="color: var(--text-primary);">✓ 生成修复代码</div>
+                    <div style="color: var(--text-primary);">✓ 重新部署</div>
+                    <div style="color: var(--neon-green); margin-top: 1rem;">→ 问题已解决</div>
+                </div>
             </div>
         </div>
     </section>
@@ -616,10 +943,8 @@
     <!-- Version 2.0 Highlights -->
     <section class="v2-section">
         <div class="v2-container">
-            <div class="v2-header">
-                <h2 class="section-title">Version 2.0 核心更新</h2>
-                <p class="section-subtitle" style="transform: translateX(0);">架构重构与能力升级 - 一次架构级的进化</p>
-            </div>
+            <h2 class="section-title">Version 2.0 新功能</h2>
+            <p class="section-subtitle">更智能、更专业、更高效</p>
             
             <div class="v2-highlights">
                 <div class="highlight-card">
@@ -630,12 +955,12 @@
                             <line x1="10" y1="30" x2="50" y2="30" stroke="#00D4FF" stroke-width="2"/>
                         </svg>
                     </div>
-                    <h3 class="highlight-title">Rules → Skills 体系</h3>
-                    <p class="highlight-content">AI 开发者现在可以像专业开发者一样，按照技能模块组织知识，提升代码生成质量和开发效率。</p>
+                    <h3 class="highlight-title">更智能的 AI</h3>
+                    <p class="highlight-content">AI 现在能够像专业开发者一样思考，按照技能模块组织知识，生成更高质量的代码。</p>
                     <ul class="highlight-list">
-                        <li>将规则文件重构为技能结构</li>
-                        <li>每个技能包含完整的知识体系</li>
-                        <li>支持技能的组合和复用</li>
+                        <li>技能体系让 AI 更专业</li>
+                        <li>代码质量显著提升</li>
+                        <li>减少返工和修改</li>
                     </ul>
                 </div>
                 
@@ -649,12 +974,12 @@
                             <line x1="15" y1="40" x2="45" y2="40" stroke="#00FF88" stroke-width="2"/>
                         </svg>
                     </div>
-                    <h3 class="highlight-title">专业级设计规范</h3>
-                    <p class="highlight-content">AI 现在能够生成具有独特美学风格的界面，告别千篇一律的 AI 风格，产出真正专业的设计。</p>
+                    <h3 class="highlight-title">更专业的设计</h3>
+                    <p class="highlight-content">AI 生成的界面不再千篇一律，每个设计都有独特的风格，真正达到专业设计师的水准。</p>
                     <ul class="highlight-list">
-                        <li>引入 Claude Code 设计原则</li>
-                        <li>强制设计规范输出流程</li>
-                        <li>禁止通用 AI 美学</li>
+                        <li>告别紫色渐变和系统字体</li>
+                        <li>每个设计都有独特风格</li>
+                        <li>专业级视觉设计</li>
                     </ul>
                 </div>
                 
@@ -669,12 +994,12 @@
                             <circle cx="45" cy="45" r="4" fill="#00FF88"/>
                         </svg>
                     </div>
-                    <h3 class="highlight-title">MySQL + NoSQL 支持</h3>
-                    <p class="highlight-content">开发者现在可以通过 AI 完成从数据建模到数据库操作的全流程，支持 MySQL 和 NoSQL 两种数据库类型。</p>
+                    <h3 class="highlight-title">更强的数据库能力</h3>
+                    <p class="highlight-content">现在支持 MySQL 和 NoSQL 两种数据库，AI 可以帮你完成从数据建模到数据库操作的全流程。</p>
                     <ul class="highlight-list">
-                        <li>新增 MySQL 数据库支持</li>
-                        <li>新增 NoSQL Skills</li>
-                        <li>支持多数据库实例管理</li>
+                        <li>MySQL 数据库完整支持</li>
+                        <li>NoSQL 数据库优化</li>
+                        <li>智能数据建模</li>
                     </ul>
                 </div>
                 
@@ -687,12 +1012,12 @@
                             <line x1="25" y1="45" x2="35" y2="45" stroke="#00D4FF" stroke-width="2"/>
                         </svg>
                     </div>
-                    <h3 class="highlight-title">平台化认证体系</h3>
-                    <p class="highlight-content">AI 现在能够根据不同平台（Web、小程序）自动选择正确的认证方式，减少配置错误。</p>
+                    <h3 class="highlight-title">更简单的认证</h3>
+                    <p class="highlight-content">AI 自动识别项目类型，Web 和小程序使用不同的认证方式，你不需要了解技术细节。</p>
                     <ul class="highlight-list">
-                        <li>新增认证技能体系</li>
-                        <li>区分 Web 和小程序认证</li>
-                        <li>支持小程序 SDK 集成</li>
+                        <li>自动选择认证方式</li>
+                        <li>减少配置错误</li>
+                        <li>开箱即用</li>
                     </ul>
                 </div>
                 
@@ -706,12 +1031,12 @@
                             <path d="M 20 45 Q 30 50, 40 45" stroke="#00FF88" stroke-width="2" fill="none"/>
                         </svg>
                     </div>
-                    <h3 class="highlight-title">模板下载与文档搜索</h3>
-                    <p class="highlight-content">开发者可以快速启动项目，AI 可以智能搜索文档，大幅提升开发效率。</p>
+                    <h3 class="highlight-title">更快的启动</h3>
+                    <p class="highlight-content">一键下载项目模板，AI 自动搜索文档，让你快速开始开发，不需要从零开始。</p>
                     <ul class="highlight-list">
-                        <li>新增模板下载工具</li>
-                        <li>新增文档搜索工具</li>
-                        <li>强制使用模板下载</li>
+                        <li>模板一键下载</li>
+                        <li>智能文档搜索</li>
+                        <li>快速启动项目</li>
                     </ul>
                 </div>
                 
@@ -724,12 +1049,12 @@
                             <line x1="15" y1="35" x2="40" y2="35" stroke="#00D4FF" stroke-width="2"/>
                         </svg>
                     </div>
-                    <h3 class="highlight-title">日志系统与配置同步</h3>
-                    <p class="highlight-content">更稳定的日志系统，更智能的配置同步，提升整体系统可靠性。</p>
+                    <h3 class="highlight-title">更稳定的系统</h3>
+                    <p class="highlight-content">升级日志系统，优化配置同步，修复各种问题，让整个系统更稳定可靠。</p>
                     <ul class="highlight-list">
-                        <li>使用 Winston 日志系统</li>
-                        <li>优化配置同步脚本</li>
-                        <li>改进环境管理</li>
+                        <li>更稳定的日志系统</li>
+                        <li>更智能的配置同步</li>
+                        <li>修复多个问题</li>
                     </ul>
                 </div>
             </div>
@@ -755,6 +1080,18 @@
                 <span class="stat-number">55</span>
                 <span class="stat-label">2.0 更新项</span>
             </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2 class="cta-title">准备好开始了吗？</h2>
+        <p class="cta-description">
+            一行配置，立即使用。让 AI 帮你完成从想法到上线的全过程。
+        </p>
+        <div style="margin-top: 3rem;">
+            <a href="https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/" class="btn btn-primary">查看文档</a>
+            <a href="https://github.com/TencentCloudBase/CloudBase-AI-ToolKit" class="btn btn-secondary">GitHub</a>
         </div>
     </section>
 
