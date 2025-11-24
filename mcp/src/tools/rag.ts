@@ -1,9 +1,10 @@
-import { z } from "zod";
-import { ExtendedMcpServer } from "../server.js";
+import AdmZip from "adm-zip";
+import * as fs from "fs/promises";
 import * as os from "os";
 import * as path from "path";
-import * as fs from "fs/promises";
-import AdmZip from "adm-zip";
+import { z } from "zod";
+import { FALLBACK_CLAUDE_PROMPT } from "../config/claude-prompt.js";
+import { ExtendedMcpServer } from "../server.js";
 import { warn } from "../utils/logger.js";
 
 // 1. 枚举定义
@@ -40,7 +41,9 @@ function safeStringify(obj: any) {
   }
 }
 
-async function prepareKnowledgeBaseWebTemplate() {
+// Download and extract web template, return extract directory path
+// Implements caching: only downloads if extractDir doesn't exist
+export async function downloadWebTemplate(): Promise<string> {
   const baseDir = path.join(os.homedir(), ".cloudbase-mcp");
   const zipPath = path.join(baseDir, "web-cloudbase-project.zip");
   const extractDir = path.join(baseDir, "web-template");
@@ -49,7 +52,18 @@ async function prepareKnowledgeBaseWebTemplate() {
 
   await fs.mkdir(baseDir, { recursive: true });
 
-  // 下载 zip 到指定路径（覆盖写入）
+  // Check if extractDir already exists (cache hit)
+  try {
+    const stats = await fs.stat(extractDir);
+    if (stats.isDirectory()) {
+      // Directory exists, return it directly (use cache)
+      return extractDir;
+    }
+  } catch (error) {
+    // Directory doesn't exist, proceed with download
+  }
+
+  // Download zip to specified path (overwrite)
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`下载模板失败，状态码: ${response.status}`);
@@ -57,14 +71,47 @@ async function prepareKnowledgeBaseWebTemplate() {
   const buffer = Buffer.from(await response.arrayBuffer());
   await fs.writeFile(zipPath, buffer);
 
-  // 清理并重建解压目录
+  // Clean and recreate extract directory
   await fs.rm(extractDir, { recursive: true, force: true });
   await fs.mkdir(extractDir, { recursive: true });
 
   const zip = new AdmZip(zipPath);
   zip.extractAllTo(extractDir, true);
 
+  return extractDir;
+}
+
+async function prepareKnowledgeBaseWebTemplate() {
+  const extractDir = await downloadWebTemplate();
   return collectSkillDescriptions(path.join(extractDir, ".claude", "skills"));
+}
+
+// Get CLAUDE.md prompt content
+// Priority: 1. From downloaded template, 2. Fallback to embedded constant
+export async function getClaudePrompt(): Promise<string> {
+  try {
+    // Try to get from downloaded template
+    const extractDir = await downloadWebTemplate();
+    const claudePath = path.join(extractDir, "CLAUDE.md");
+    
+    try {
+      const content = await fs.readFile(claudePath, "utf8");
+      return content;
+    } catch (error) {
+      // CLAUDE.md not found in template, use fallback
+      warn("[getClaudePrompt] CLAUDE.md not found in template, using fallback", {
+        error,
+        path: claudePath,
+      });
+      return FALLBACK_CLAUDE_PROMPT;
+    }
+  } catch (error) {
+    // Template download failed, use fallback
+    warn("[getClaudePrompt] Template download failed, using fallback", {
+      error,
+    });
+    return FALLBACK_CLAUDE_PROMPT;
+  }
 }
 
 export async function registerRagTools(server: ExtendedMcpServer) {
