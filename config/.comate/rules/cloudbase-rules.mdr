@@ -19,7 +19,7 @@ alwaysApply: true
 6. **Authentication**: Read `rules/auth-web/rule.md` - **MUST use Web SDK built-in authentication**
 7. **Database**: 
    - NoSQL: `rules/no-sql-web-sdk/rule.md`
-   - MySQL: `rules/relational-database-web/rule.md` + `rules/relational-database-mcp/rule.md`
+   - MySQL: `rules/relational-database-web/rule.md` + `rules/relational-database-tool/rule.md`
 
 ### When Developing a Mini Program Project:
 1. **Environment Check**: Call `envQuery` tool first (applies to all interactions)
@@ -30,7 +30,7 @@ alwaysApply: true
 6. **Authentication**: Read `rules/auth-wechat/rule.md` - **Naturally login-free, get OPENID in cloud functions**
 7. **Database**: 
    - NoSQL: `rules/no-sql-wx-mp-sdk/rule.md`
-   - MySQL: `rules/relational-database-mcp/rule.md` (via MCP tools)
+   - MySQL: `rules/relational-database-tool/rule.md` (via tools)
 
 ---
 
@@ -78,11 +78,11 @@ As the most important part of application development, the following four core c
 **Database Operations**:
 - **Web Projects**:
   - NoSQL Database: Refer to `rules/no-sql-web-sdk/rule.md`
-  - MySQL Relational Database: Refer to `rules/relational-database-web/rule.md` (Web application development) and `rules/relational-database-mcp/rule.md` (Management via MCP tools)
+  - MySQL Relational Database: Refer to `rules/relational-database-web/rule.md` (Web application development) and `rules/relational-database-tool/rule.md` (Management via tools)
   - Platform development rules: Refer to `rules/web-development/rule.md` for Web SDK database integration patterns
 - **Mini Program Projects**:
   - NoSQL Database: Refer to `rules/no-sql-wx-mp-sdk/rule.md`
-  - MySQL Relational Database: Refer to `rules/relational-database-mcp/rule.md` (via MCP tools)
+  - MySQL Relational Database: Refer to `rules/relational-database-tool/rule.md` (via tools)
   - Platform development rules: Refer to `rules/miniprogram-development/rule.md` for mini program database integration and wx.cloud usage
 - **Data Model Creation** (Universal): Refer to `rules/data-model-creation/rule.md`
 
@@ -124,14 +124,14 @@ Identify current development scenario type, mainly for understanding project typ
 - `rules/auth-web/rule.md` - Authentication (MUST use Web SDK built-in authentication)
 - `rules/no-sql-web-sdk/rule.md` - NoSQL database operations
 - `rules/relational-database-web/rule.md` - MySQL database operations (Web)
-- `rules/relational-database-mcp/rule.md` - MySQL database management (MCP tools)
+- `rules/relational-database-tool/rule.md` - MySQL database management (tools)
 - `rules/cloudbase-platform/rule.md` - Universal CloudBase platform knowledge
 
 **Mini Program Projects - Required Rule Files:**
 - `rules/miniprogram-development/rule.md` - Platform development rules (project structure, WeChat Developer Tools, wx.cloud)
 - `rules/auth-wechat/rule.md` - Authentication (naturally login-free, get OPENID in cloud functions)
 - `rules/no-sql-wx-mp-sdk/rule.md` - NoSQL database operations
-- `rules/relational-database-mcp/rule.md` - MySQL database operations (via MCP tools)
+- `rules/relational-database-tool/rule.md` - MySQL database operations (via tools)
 - `rules/cloudbase-platform/rule.md` - Universal CloudBase platform knowledge
 
 **Universal Rule Files (All Projects):**
@@ -146,7 +146,7 @@ Before starting work, suggest confirming with user:
 3. "Please confirm if my understanding is correct"
 
 ## Core Behavior Rules
-1. **Tool Priority**: For Tencent CloudBase operations, must prioritize using CloudBase MCP tools
+1. **Tool Priority**: For Tencent CloudBase operations, must prioritize using CloudBase tools
 2. **⚠️ Template Download (MANDATORY)**: **When starting a new project or when user requests to develop an application, MUST FIRST call `downloadTemplate` tool** - Do NOT manually create project files. Use `downloadTemplate` with appropriate template type (`react`, `vue`, `miniprogram`, `uniapp`). Only create files manually if template download fails or user explicitly requests manual creation. This ensures proper project structure, configuration files, and best practices.
 3. **Project Understanding**: First read current project's README.md, follow project instructions for development
 4. **Directory Standards**: Before outputting project code in current directory, first check current directory files
@@ -194,7 +194,7 @@ If remote links are needed in the application, can continue to call uploadFile t
 
 ### Deployment Process
 
-1. **Cloud Function Deployment Process**: Can use getFunctionList MCP tool to query if there are cloud functions, then directly call createFunction or updateFunctionCode to update cloud function code. Only need to point functionRootPath to parent directory of cloud function directory (e.g., absolute path of cloudfunctions directory). No need for code compression and other operations. The above tools will automatically read files from cloud function subdirectories with same name under parent directory and automatically deploy
+1. **Cloud Function Deployment Process**: Can use getFunctionList tool to query if there are cloud functions, then directly call createFunction or updateFunctionCode to update cloud function code. Only need to point functionRootPath to parent directory of cloud function directory (e.g., absolute path of cloudfunctions directory). No need for code compression and other operations. The above tools will automatically read files from cloud function subdirectories with same name under parent directory and automatically deploy
 
 2. **CloudRun Deployment Process**: For non-cloud function backend services (Java, Go, PHP, Python, Node.js, etc.), use manageCloudRun tool for deployment. Ensure backend code supports CORS, prepare Dockerfile, then call manageCloudRun for containerized deployment. For details, refer to `rules/cloudrun-development/rule.md`
 
@@ -209,8 +209,8 @@ If remote links are needed in the application, can continue to call uploadFile t
 
 1. To help others who don't use AI understand what resources are available, can generate a cloudbaserc.json file after generation
 
-### MCP Interface Call Rules
-When calling MCP services, you need to fully understand the data types of all interfaces to be called, as well as return value types. If you're not sure which interface to call, first check the documentation and tool descriptions, then determine which interface and parameters to call based on the documentation and tool descriptions. Do not have incorrect method parameters or parameter type errors.
+### Tool Interface Call Rules
+When calling tool services, you need to fully understand the data types of all interfaces to be called, as well as return value types. If you're not sure which interface to call, first check the documentation and tool descriptions, then determine which interface and parameters to call based on the documentation and tool descriptions. Do not have incorrect method parameters or parameter type errors.
 
 For example, many interfaces require a confirm parameter, which is a boolean type. If you don't provide this parameter, or provide incorrect data type, the interface will return an error.
 
@@ -239,7 +239,7 @@ For example, many interfaces require a confirm parameter, which is a boolean typ
 - **NoSQL (Web)**: `rules/no-sql-web-sdk/rule.md`
 - **NoSQL (Mini Program)**: `rules/no-sql-wx-mp-sdk/rule.md`
 - **MySQL (Web)**: `rules/relational-database-web/rule.md`
-- **MySQL (MCP)**: `rules/relational-database-mcp/rule.md`
+- **MySQL (Tool)**: `rules/relational-database-tool/rule.md`
 - **Data Model Creation**: `rules/data-model-creation/rule.md`
 
 ### 🎨 ⚠️ UI Design Skill (CRITICAL - Read FIRST)

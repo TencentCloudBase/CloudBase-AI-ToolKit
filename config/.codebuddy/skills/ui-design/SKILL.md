@@ -41,10 +41,12 @@ Use this skill for **frontend UI design and interface creation** in any project 
    - Never use forbidden colors (purple, violet, indigo, fuchsia, blue-purple gradients)
    - Never use forbidden fonts (Inter, Roboto, Arial, Helvetica, system-ui, -apple-system)
    - Never use standard centered layouts without creative breaking
+   - Never use emoji as icons - always use professional icon libraries (FontAwesome, Heroicons, etc.)
 
 4. **Run Self-Audit Before Submitting**
    - Color audit (check for forbidden colors)
    - Font audit (check for forbidden fonts)
+   - Icon audit (verify no emoji icons, using professional icon libraries)
    - Layout audit (verify asymmetry/creativity)
    - Design specification compliance check
 
@@ -101,6 +103,7 @@ DESIGN SPECIFICATION
 - "card" + "centered" + "shadow"
 - "Inter" or "Roboto" or "system-ui"
 - "modern" or "clean" or "simple" (without specific style direction)
+- Emoji characters (🚀, ⭐, ❤️, etc.) as icons
 
 **Action**: Go back to Design Specification → Choose alternative aesthetic → Proceed
 
@@ -114,7 +117,7 @@ DESIGN SPECIFICATION
 
 4. **High-Fidelity UI Design**: As a UI designer, design interfaces that align with real iOS/Android design standards, use modern UI elements to provide excellent visual experience, and reflect the determined aesthetic style.
 
-5. **Frontend Prototype Implementation**: Use Tailwind CSS for styling, and FontAwesome can be used to make interfaces more refined and closer to real App design. Split code files and maintain clear structure.
+5. **Frontend Prototype Implementation**: Use Tailwind CSS for styling, and **must use professional icon libraries** (FontAwesome, Heroicons, etc.) - **never use emoji as icons**. Split code files and maintain clear structure.
 
 6. **Realism Enhancement**:
    - Use real UI images instead of placeholder images (can be selected from Unsplash, Pexels, Apple official UI resources)
@@ -138,6 +141,17 @@ DESIGN SPECIFICATION
 - **Technology Choice**: Prioritize CSS-only solutions for HTML, React projects can use Motion library
 - **High-Impact Moments**: Focus on high-impact moments. One well-orchestrated page load animation (using animation-delay for staggered reveals) creates more delight than scattered micro-interactions
 - **Interactive Surprises**: Use scroll-triggering and hover states to create surprises
+
+### Icons
+- **❌ FORBIDDEN: Emoji Icons**: Never use emoji characters as icons (🚀, ⭐, ❤️, etc.)
+- **✅ REQUIRED: Professional Icon Libraries**: Must use professional icon libraries such as:
+  - FontAwesome (recommended for most projects)
+  - Heroicons (for Tailwind CSS projects)
+  - Material Icons
+  - Feather Icons
+  - Lucide Icons
+- **Icon Consistency**: Use icons from a single library throughout the project for visual consistency
+- **Icon Styling**: Icons should match the overall aesthetic direction and color palette
 
 ### Spatial Composition
 - **Break Conventions**: Use unexpected layouts, asymmetry, overlap, diagonal flow
@@ -163,6 +177,7 @@ DESIGN SPECIFICATION
 - Cliched color schemes (particularly purple gradients on white backgrounds)
 - Predictable layouts and component patterns
 - Cookie-cutter design that lacks context-specific character
+- **Emoji icons**: Never use emoji characters (🚀, ⭐, ❤️, etc.) as icons - always use professional icon libraries
 
 ### ❌ ANTI-PATTERNS (Code Examples to NEVER Use)
 
@@ -192,6 +207,14 @@ font-family: 'Roboto', -apple-system, sans-serif
 font-family: 'Playfair Display', serif // Editorial
 font-family: 'Space Mono', monospace // Brutalist
 font-family: 'DM Serif Display', serif // Luxury
+
+// ❌ BAD: Emoji icons
+<span>🚀</span>
+<button>⭐ Favorite</button>
+
+// ✅ GOOD: Professional icon libraries
+<i className="fas fa-rocket"></i> // FontAwesome
+<svg className="w-5 h-5">...</svg> // Heroicons
 ```
 
 ### Creative Implementation Principles
@@ -235,12 +258,20 @@ All interface prototypes must:
    # If found → VIOLATION → Use distinctive font from Design Specification
    ```
 
-3. **Layout Audit**:
+3. **Icon Audit**:
+   ```bash
+   # Search for emoji usage (common emoji patterns)
+   grep -iE "(🚀|⭐|❤️|👍|🔥|💡|🎉|✨)" [your-file]
+   # If found → VIOLATION → Replace with FontAwesome or other professional icon library
+   # Verify icon library is properly imported and used
+   ```
+
+4. **Layout Audit**:
    - Does the layout use asymmetry/diagonal/overlap? (Required: YES)
    - Is there creative grid-breaking? (Required: YES)
    - Are elements only centered with symmetric spacing? (Allowed: NO)
 
-4. **Design Specification Compliance**:
+5. **Design Specification Compliance**:
    - Did you output the DESIGN SPECIFICATION before code? (Required: YES)
    - Does the code match the aesthetic direction you declared? (Required: YES)
 
