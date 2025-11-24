@@ -17,7 +17,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
     "login",
     {
       title: "登录云开发",
-      description: "⚠️ 使用云开发相关功能前必须先调用此工具进行登录。登录云开发环境并选择要使用的环境。",
+      description: "登录云开发环境，在生成包含云开发 CloudBase 相关功能前**必须**先调用此工具进行登录。登录云开发环境并选择要使用的环境。",
       inputSchema: {
         forceUpdate: z.boolean().optional().describe("是否强制重新选择环境")
       },

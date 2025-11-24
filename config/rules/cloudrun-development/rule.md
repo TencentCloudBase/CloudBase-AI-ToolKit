@@ -238,14 +238,19 @@ const res = await wx.cloud.callContainer({
 ### Web (JS SDK, need to configure security domain and authentication)
 ```js
 import cloudbase from "@cloudbase/js-sdk";
+
 const app = cloudbase.init({ env: "<envId>" });
-await app.auth().toDefaultLoginPage();
+await app.auth().toDefaultLoginPage({});
 const res = await app.callContainer({
   name: "<serviceName>", method: "POST", path: "/api",
   header: { "Content-Type": "application/json" },
   data: { key: "value" }
 });
 ```
+
+// Web JS SDK initialization MUST be synchronous:
+// - Always use top-level `import cloudbase from "@cloudbase/js-sdk";`
+// - Do NOT use dynamic imports like `import("@cloudbase/js-sdk")` or async wrappers such as `initCloudBase()` with internal `initPromise`
 
 ### Node.js (server-side/cloud function internal call)
 ```js
@@ -260,4 +265,3 @@ const res = await app.callContainer({
 ### Recommendations
 - Mini Program/Server side prioritize internal network (VPC/PRIVATE) calls, reduce exposure surface
 - Web scenarios need to enable WEB, public domain and security domain, and use SDK authentication
-

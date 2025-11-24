@@ -56,6 +56,13 @@ const db = app.rdb();
 // Use db exactly like a Supabase client
 ```
 
+**Initialization rules (Web, @cloudbase/js-sdk):**
+
+- Always use **synchronous initialization** with the pattern above
+- Do **not** lazy-load the SDK with `import("@cloudbase/js-sdk")`
+- Do **not** wrap SDK initialization in async helpers such as `initCloudBase()` with internal `initPromise` caches
+- Create a single shared `db` client and reuse it instead of re-initializing
+
 **Rules:**
 
 - Do **not** invent new properties on the `cloudbase.init` options.

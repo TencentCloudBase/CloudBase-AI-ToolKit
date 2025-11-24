@@ -487,7 +487,9 @@ function copyDirectoryRecursive(srcDir, destDir) {
 
     for (const entry of entries) {
       const srcPath = path.join(src, entry.name);
-      const destPath = path.join(dest, entry.name);
+      // Rename SKILL.md to rule.md when copying
+      const destFileName = entry.name === 'SKILL.md' ? 'rule.md' : entry.name;
+      const destPath = path.join(dest, destFileName);
 
       if (entry.isDirectory()) {
         copyRecursive(srcPath, destPath);

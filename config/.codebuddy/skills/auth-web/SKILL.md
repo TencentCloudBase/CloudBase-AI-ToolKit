@@ -40,6 +40,9 @@ Use it when you need to:
 
      const auth = app.auth();
      ```
+   - CloudBase Web JS SDK **must be initialized synchronously**:
+     - Always use top-level `import cloudbase from "@cloudbase/js-sdk";`
+     - Do **not** use dynamic imports like `import("@cloudbase/js-sdk")` or async wrappers such as `initCloudBase()` with internal `initPromise`
 
 2. **Check console configuration (do not assume it's done)**
    - **⚠️ MANDATORY: Always guide users to configure login methods in console**
@@ -85,6 +88,42 @@ const app = cloudbase.init({
 
 const auth = app.auth();
 ```
+
+**Initialization rules (Web, @cloudbase/js-sdk):**
+
+- Always use **synchronous initialization** with the pattern above
+- Do **not** lazy-load the SDK with `import("@cloudbase/js-sdk")`
+- Do **not** wrap SDK initialization in async helpers such as `initCloudBase()` with internal `initPromise` caches
+- Keep a single shared `app`/`auth` instance in your frontend app; reuse it instead of re-initializing
+
+### Local development proxy for default login page
+
+When using `auth.toDefaultLoginPage()` during local development, you must ensure that the `/__auth` path is proxied to your CloudBase Web hosting domain. For example, in a Vite + React project:
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react"; 
+
+export default defineConfig({
+  plugins: [react()],
+  base: "./", // Use relative paths to avoid asset issues on static hosting
+  server: {
+    host: "127.0.0.1",
+    proxy: {
+      "/__auth": {
+        target: "https://envId-appid.tcloudbaseapp.com/", // Replace with your CloudBase Web app domain
+        changeOrigin: true,
+      },
+    },
+    allowedHosts: true,
+  },
+});
+```
+
+The CloudBase Web hosting domain can be obtained via the CloudBase MCP `envQuery` tool (Static hosting config); in the response, use the value from the `StaticDomain` field.
+
+For other tooling (Webpack dev server, Next.js, custom Node dev servers, etc.), configure an **equivalent `/__auth` proxy rule** so that all `/__auth` requests are forwarded to the CloudBase domain during local development.
 
 **⚠️ Important: Console Configuration Required**
 
@@ -153,7 +192,7 @@ await auth.signInWithSms({
 });
 
 // Logged in
-const user = auth.currentUser;
+const user = await auth.getCurrentUser();
 ```
 
 ### Scenario 2: Email login (passwordless)
@@ -323,7 +362,7 @@ await auth.signOut();
 ### Scenario 10: Get current user
 
 ```js
-const user = auth.currentUser; // sync
+const user = await auth.getCurrentUser();
 
 if (user) {
   console.log(user.uid, user.name, user.email, user.phone);
@@ -333,7 +372,11 @@ if (user) {
 ### Scenario 11: Update user profile (User.update)
 
 ```js
-const user = auth.currentUser;
+const user = await auth.getCurrentUser();
+
+if (!user) {
+  throw new Error("No current user. Please sign in before updating profile.");
+}
 
 await user.update({
   name: "New Name",
@@ -346,7 +389,7 @@ await user.update({
 
 **CloudBase flow**
 
-1. 用户已登录（`auth.currentUser` 存在）。
+1. 用户已登录（可以通过 `await auth.getCurrentUser()` 获取到用户）。
 2. 通过 `auth.sudo(...)` 获取 `sudo_token`：
    - 可以通过当前密码，或短信/邮箱验证码。
 3. 调用 `auth.setPassword({ new_password, sudo_token })` 更新密码。
@@ -393,7 +436,7 @@ await auth.resetPassword({
 
 **CloudBase flow**
 
-1. 用户已登录（`auth.currentUser` 存在）。
+1. 用户已登录（可以通过 `await auth.getCurrentUser()` 获取到用户）。
 2. 通过 `auth.genProviderRedirectUri` 获取微信授权地址并跳转。
 3. 在回调页使用 `auth.grantProviderToken` 获取 `provider_token`。
 4. 调用 `auth.bindWithProvider({ provider_token })` 将微信账号绑定到当前 CloudBase 账号。
@@ -535,7 +578,7 @@ await fetch("/api/protected", {
 ### Scenario 19: Refresh user data from server
 
 ```js
-const user = auth.currentUser;
+const user = await auth.getCurrentUser();
 
 if (user) {
   await user.refresh();
@@ -615,7 +658,7 @@ try {
 
 ### UX
 
-1. **Check existing login** - 页面初始化时检查 `auth.currentUser`，避免重复登录。
+1. **Check existing login** - 页面初始化时通过 `await auth.getCurrentUser()` 检查当前登录状态，避免重复登录。
 2. **Handle session expiry** - 使用 `onLoginStateChanged` 监听 token 失效，提示用户重新登录。
 3. **Show loading states** - 登录/注册按钮要有 loading 状态和防抖。
 4. **Clear error messages** - 将错误码映射为用户可读的中文提示。
@@ -623,8 +666,8 @@ try {
 
 ### Performance
 
-1. **Lazy load SDK** - 在需要登录时再按需加载 `@cloudbase/js-sdk`。
-2. **Cache user data** - 用 `auth.currentUser` + `user.refresh()`，避免重复请求。
+1. **SDK initialization** - Always use **synchronous initialization** with `import cloudbase from "@cloudbase/js-sdk"; const app = cloudbase.init({ env: "xxxx-yyy" });`, do **not** lazy-load SDK or wrap it in async helpers like `initCloudBase()`
+2. **Cache user data** - 通过 `await auth.getCurrentUser()` 获取用户实例后调用 `user.refresh()`，避免重复请求。
 3. **Batch operations** - 使用一次 `user.update()` 更新多个字段。
 
 ### Example: Login form with validation
