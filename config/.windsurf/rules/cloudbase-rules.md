@@ -13,24 +13,24 @@ alwaysApply: true
 ### When Developing a Web Project:
 1. **Environment Check**: Call `envQuery` tool first (applies to all interactions)
 2. **⚠️ Template Download (MANDATORY for New Projects)**: **MUST call `downloadTemplate` tool FIRST when starting a new project** - Do NOT create files manually. Use `downloadTemplate` with `template="react"` or `template="vue"` to get the complete project structure. Only proceed with manual file creation if template download fails or user explicitly requests it.
-3. **⚠️ UI Design (CRITICAL)**: **MUST read `rule/ui-design-skill/SKILL.md` FIRST before generating any page, interface, component, or style** - This is NOT optional. You MUST explicitly read this file and output the design specification before writing any UI code.
+3. **⚠️ UI Design (CRITICAL)**: **MUST read `rules/ui-design/rule.md` FIRST before generating any page, interface, component, or style** - This is NOT optional. You MUST explicitly read this file and output the design specification before writing any UI code.
 4. **Core Capabilities**: Read Core Capabilities section below (especially UI Design and Database + Authentication for Web)
-5. **Platform Rules**: Read `rule/web-development-skill/SKILL.md` for platform-specific rules (SDK integration, static hosting, build configuration)
-6. **Authentication**: Read `rule/auth-web-skill/SKILL.md` - **MUST use Web SDK built-in authentication**
+5. **Platform Rules**: Read `rules/web-development/rule.md` for platform-specific rules (SDK integration, static hosting, build configuration)
+6. **Authentication**: Read `rules/auth-web/rule.md` - **MUST use Web SDK built-in authentication**
 7. **Database**: 
-   - NoSQL: `rule/no-sql-web-sdk/SKILL.md`
-   - MySQL: `rule/relational-database-web-skill/SKILL.md` + `rule/relational-database-mcp-skill/SKILL.md`
+   - NoSQL: `rules/no-sql-web-sdk/rule.md`
+   - MySQL: `rules/relational-database-web/rule.md` + `rules/relational-database-mcp/rule.md`
 
 ### When Developing a Mini Program Project:
 1. **Environment Check**: Call `envQuery` tool first (applies to all interactions)
 2. **⚠️ Template Download (MANDATORY for New Projects)**: **MUST call `downloadTemplate` tool FIRST when starting a new project** - Do NOT create files manually. Use `downloadTemplate` with `template="miniprogram"` to get the complete project structure. Only proceed with manual file creation if template download fails or user explicitly requests it.
-3. **⚠️ UI Design (CRITICAL)**: **MUST read `rule/ui-design-skill/SKILL.md` FIRST before generating any page, interface, component, or style** - This is NOT optional. You MUST explicitly read this file and output the design specification before writing any UI code.
+3. **⚠️ UI Design (CRITICAL)**: **MUST read `rules/ui-design/rule.md` FIRST before generating any page, interface, component, or style** - This is NOT optional. You MUST explicitly read this file and output the design specification before writing any UI code.
 4. **Core Capabilities**: Read Core Capabilities section below (especially UI Design and Database + Authentication for Mini Program)
-5. **Platform Rules**: Read `rule/miniprogram-development-skill/SKILL.md` for platform-specific rules (project structure, WeChat Developer Tools, wx.cloud usage)
-6. **Authentication**: Read `rule/auth-wechat-skill/SKILL.md` - **Naturally login-free, get OPENID in cloud functions**
+5. **Platform Rules**: Read `rules/miniprogram-development/rule.md` for platform-specific rules (project structure, WeChat Developer Tools, wx.cloud usage)
+6. **Authentication**: Read `rules/auth-wechat/rule.md` - **Naturally login-free, get OPENID in cloud functions**
 7. **Database**: 
-   - NoSQL: `rule/no-sql-wx-mp-sdk/SKILL.md`
-   - MySQL: `rule/relational-database-mcp-skill/SKILL.md` (via MCP tools)
+   - NoSQL: `rules/no-sql-wx-mp-sdk/rule.md`
+   - MySQL: `rules/relational-database-mcp/rule.md` (via MCP tools)
 
 ---
 
@@ -39,12 +39,12 @@ alwaysApply: true
 As the most important part of application development, the following four core capabilities must be done well, without needing to read different rules for different platforms:
 
 ### 1. ⚠️ UI Design (CRITICAL - Highest Priority)
-**⚠️ MANDATORY: Must strictly follow `rule/ui-design-skill/SKILL.md` rules for ALL design work**
+**⚠️ MANDATORY: Must strictly follow `rules/ui-design/rule.md` rules for ALL design work**
 
-**🚨 CRITICAL ENFORCEMENT: You MUST explicitly read the file `rule/ui-design-skill/SKILL.md` before generating ANY UI code. This is NOT a suggestion - it is a MANDATORY requirement.**
+**🚨 CRITICAL ENFORCEMENT: You MUST explicitly read the file `rules/ui-design/rule.md` before generating ANY UI code. This is NOT a suggestion - it is a MANDATORY requirement.**
 
 **Before generating ANY page, interface, component, or style:**
-1. **MUST FIRST explicitly read `rule/ui-design-skill/SKILL.md` file** - Use file reading tools to read this file, do NOT skip this step
+1. **MUST FIRST explicitly read `rules/ui-design/rule.md` file** - Use file reading tools to read this file, do NOT skip this step
 2. **MUST complete design specification output** before writing any code:
    - Purpose Statement
    - Aesthetic Direction (choose from specific options, NOT generic terms)
@@ -61,40 +61,40 @@ As the most important part of application development, the following four core c
 - Style/visual effects
 - Any frontend visual elements
 
-**⚠️ VIOLATION DETECTION: If you find yourself writing UI code without first reading `rule/ui-design-skill/SKILL.md`, STOP immediately and read the file first.**
+**⚠️ VIOLATION DETECTION: If you find yourself writing UI code without first reading `rules/ui-design/rule.md`, STOP immediately and read the file first.**
 
 ### 2. Database + Authentication
 **Strengthen database and authentication capabilities**
 
 **Authentication**:
 - **Web Projects**: 
-  - Must use CloudBase Web SDK built-in authentication, refer to `rule/auth-web-skill/SKILL.md`
-  - Platform development rules: Refer to `rule/web-development-skill/SKILL.md` for Web SDK integration, static hosting deployment, and build configuration
+  - Must use CloudBase Web SDK built-in authentication, refer to `rules/auth-web/rule.md`
+  - Platform development rules: Refer to `rules/web-development/rule.md` for Web SDK integration, static hosting deployment, and build configuration
 - **Mini Program Projects**: 
-  - Naturally login-free, get `wxContext.OPENID` in cloud functions, refer to `rule/auth-wechat-skill/SKILL.md`
-  - Platform development rules: Refer to `rule/miniprogram-development-skill/SKILL.md` for mini program project structure, WeChat Developer Tools integration, and CloudBase capabilities
-- **Node.js Backend**: Refer to `rule/auth-nodejs-skill/SKILL.md`
+  - Naturally login-free, get `wxContext.OPENID` in cloud functions, refer to `rules/auth-wechat/rule.md`
+  - Platform development rules: Refer to `rules/miniprogram-development/rule.md` for mini program project structure, WeChat Developer Tools integration, and CloudBase capabilities
+- **Node.js Backend**: Refer to `rules/auth-nodejs/rule.md`
 
 **Database Operations**:
 - **Web Projects**:
-  - NoSQL Database: Refer to `rule/no-sql-web-sdk/SKILL.md`
-  - MySQL Relational Database: Refer to `rule/relational-database-web-skill/SKILL.md` (Web application development) and `rule/relational-database-mcp-skill/SKILL.md` (Management via MCP tools)
-  - Platform development rules: Refer to `rule/web-development-skill/SKILL.md` for Web SDK database integration patterns
+  - NoSQL Database: Refer to `rules/no-sql-web-sdk/rule.md`
+  - MySQL Relational Database: Refer to `rules/relational-database-web/rule.md` (Web application development) and `rules/relational-database-mcp/rule.md` (Management via MCP tools)
+  - Platform development rules: Refer to `rules/web-development/rule.md` for Web SDK database integration patterns
 - **Mini Program Projects**:
-  - NoSQL Database: Refer to `rule/no-sql-wx-mp-sdk/SKILL.md`
-  - MySQL Relational Database: Refer to `rule/relational-database-mcp-skill/SKILL.md` (via MCP tools)
-  - Platform development rules: Refer to `rule/miniprogram-development-skill/SKILL.md` for mini program database integration and wx.cloud usage
-- **Data Model Creation** (Universal): Refer to `rule/data-model-creation-skill/SKILL.md`
+  - NoSQL Database: Refer to `rules/no-sql-wx-mp-sdk/rule.md`
+  - MySQL Relational Database: Refer to `rules/relational-database-mcp/rule.md` (via MCP tools)
+  - Platform development rules: Refer to `rules/miniprogram-development/rule.md` for mini program database integration and wx.cloud usage
+- **Data Model Creation** (Universal): Refer to `rules/data-model-creation/rule.md`
 
 ### 3. Static Hosting Deployment (Web)
-**Refer to deployment process in `rule/web-development-skill/SKILL.md`**
+**Refer to deployment process in `rules/web-development/rule.md`**
 - Use CloudBase static hosting after build completion
 - Deploy using `uploadFiles` tool
 - Remind users that CDN has a few minutes of cache after deployment
 - Generate markdown format access links with random queryString
 
 ### 4. Backend Deployment (Cloud Functions or CloudRun)
-**Refer to `rule/cloudrun-development-skill/SKILL.md`**
+**Refer to `rules/cloudrun-development/rule.md`**
 - **Cloud Function Deployment**: Use `getFunctionList` to query, then call `createFunction` or `updateFunctionCode` to deploy
 - **CloudRun Deployment**: Use `manageCloudRun` tool for containerized deployment
 - Ensure backend code supports CORS, prepare Dockerfile (for container type)
@@ -120,24 +120,24 @@ Identify current development scenario type, mainly for understanding project typ
 ### 2. Platform-Specific Quick Guide
 
 **Web Projects - Required Rule Files:**
-- `rule/web-development-skill/SKILL.md` - Platform development rules (SDK integration, static hosting, build configuration)
-- `rule/auth-web-skill/SKILL.md` - Authentication (MUST use Web SDK built-in authentication)
-- `rule/no-sql-web-sdk/SKILL.md` - NoSQL database operations
-- `rule/relational-database-web-skill/SKILL.md` - MySQL database operations (Web)
-- `rule/relational-database-mcp-skill/SKILL.md` - MySQL database management (MCP tools)
-- `rule/cloudbase-platform-skill/SKILL.md` - Universal CloudBase platform knowledge
+- `rules/web-development/rule.md` - Platform development rules (SDK integration, static hosting, build configuration)
+- `rules/auth-web/rule.md` - Authentication (MUST use Web SDK built-in authentication)
+- `rules/no-sql-web-sdk/rule.md` - NoSQL database operations
+- `rules/relational-database-web/rule.md` - MySQL database operations (Web)
+- `rules/relational-database-mcp/rule.md` - MySQL database management (MCP tools)
+- `rules/cloudbase-platform/rule.md` - Universal CloudBase platform knowledge
 
 **Mini Program Projects - Required Rule Files:**
-- `rule/miniprogram-development-skill/SKILL.md` - Platform development rules (project structure, WeChat Developer Tools, wx.cloud)
-- `rule/auth-wechat-skill/SKILL.md` - Authentication (naturally login-free, get OPENID in cloud functions)
-- `rule/no-sql-wx-mp-sdk/SKILL.md` - NoSQL database operations
-- `rule/relational-database-mcp-skill/SKILL.md` - MySQL database operations (via MCP tools)
-- `rule/cloudbase-platform-skill/SKILL.md` - Universal CloudBase platform knowledge
+- `rules/miniprogram-development/rule.md` - Platform development rules (project structure, WeChat Developer Tools, wx.cloud)
+- `rules/auth-wechat/rule.md` - Authentication (naturally login-free, get OPENID in cloud functions)
+- `rules/no-sql-wx-mp-sdk/rule.md` - NoSQL database operations
+- `rules/relational-database-mcp/rule.md` - MySQL database operations (via MCP tools)
+- `rules/cloudbase-platform/rule.md` - Universal CloudBase platform knowledge
 
 **Universal Rule Files (All Projects):**
-- **⚠️ `rule/ui-design-skill/SKILL.md`** - **MANDATORY - HIGHEST PRIORITY** - Must read FIRST before any UI/page/component/style generation
-- `rule/data-model-creation-skill/SKILL.md` - Data model creation and MySQL modeling
-- `rule/spec-workflow-skill/SKILL.md` - Standard software engineering process (if needed)
+- **⚠️ `rules/ui-design/rule.md`** - **MANDATORY - HIGHEST PRIORITY** - Must read FIRST before any UI/page/component/style generation
+- `rules/data-model-creation/rule.md` - Data model creation and MySQL modeling
+- `rules/spec-workflow/rule.md` - Standard software engineering process (if needed)
 
 ### 3. Development Confirmation
 Before starting work, suggest confirming with user:
@@ -151,14 +151,14 @@ Before starting work, suggest confirming with user:
 3. **Project Understanding**: First read current project's README.md, follow project instructions for development
 4. **Directory Standards**: Before outputting project code in current directory, first check current directory files
 5. **Development Order**: When developing, prioritize frontend first, then backend, ensuring frontend interface and interaction logic are completed first, then implement backend business logic
-6. **⚠️ UI Design Rules Mandatory Application**: When tasks involve generating pages, interfaces, components, styles, or any frontend visual elements, **MUST FIRST explicitly read the file `rule/ui-design-skill/SKILL.md` using file reading tools**, then strictly follow the rule file, ensuring generated interfaces have distinctive aesthetic styles and high-quality visual design, avoiding generic AI aesthetics. **You MUST output the design specification before writing any UI code.**
+6. **⚠️ UI Design Rules Mandatory Application**: When tasks involve generating pages, interfaces, components, styles, or any frontend visual elements, **MUST FIRST explicitly read the file `rules/ui-design/rule.md` using file reading tools**, then strictly follow the rule file, ensuring generated interfaces have distinctive aesthetic styles and high-quality visual design, avoiding generic AI aesthetics. **You MUST output the design specification before writing any UI code.**
 7. **Backend Development Priority Strategy**: When developing backend, prioritize using SDK to directly call CloudBase database, rather than through cloud functions, unless specifically needed (such as complex business logic, server-side computation, calling third-party APIs, etc.)
 8. **Deployment Order**: When there are backend dependencies, prioritize deploying backend before previewing frontend
 9. **Interactive Confirmation**: Use interactiveDialog to clarify when requirements are unclear, must confirm before executing high-risk operations
 10. **Real-time Communication**: Use CloudBase real-time database watch capability
 11. **⚠️ Authentication Rules**: When users develop projects, if user login authentication is needed, must use built-in authentication functions, must strictly distinguish authentication methods by platform
-   - **Web Projects**: **MUST use CloudBase Web SDK built-in authentication** (e.g., `auth.toDefaultLoginPage()`), refer to `rule/auth-web-skill/SKILL.md`
-   - **Mini Program Projects**: **Naturally login-free**, get `wxContext.OPENID` in cloud functions, refer to `rule/auth-wechat-skill/SKILL.md`
+   - **Web Projects**: **MUST use CloudBase Web SDK built-in authentication** (e.g., `auth.toDefaultLoginPage()`), refer to `rules/auth-web/rule.md`
+   - **Mini Program Projects**: **Naturally login-free**, get `wxContext.OPENID` in cloud functions, refer to `rules/auth-wechat/rule.md`
 
 ## Development Workflow
 
@@ -173,7 +173,7 @@ Before starting work, suggest confirming with user:
    - If unable to download to current directory, can use scripts to copy, note that hidden files also need to be copied
 
 2. **⚠️ UI Design Document Reading (MANDATORY)**: 
-   - **Before generating ANY page, interface, component, or style, MUST FIRST explicitly read the file `rule/ui-design-skill/SKILL.md` using file reading tools**
+   - **Before generating ANY page, interface, component, or style, MUST FIRST explicitly read the file `rules/ui-design/rule.md` using file reading tools**
    - **MUST output the design specification** (Purpose Statement, Aesthetic Direction, Color Palette, Typography, Layout Strategy) before writing any UI code
    - This is NOT optional - you MUST read the file and follow the design thinking framework and frontend aesthetics guidelines
    - Avoid generating generic AI aesthetic style interfaces
@@ -196,9 +196,9 @@ If remote links are needed in the application, can continue to call uploadFile t
 
 1. **Cloud Function Deployment Process**: Can use getFunctionList MCP tool to query if there are cloud functions, then directly call createFunction or updateFunctionCode to update cloud function code. Only need to point functionRootPath to parent directory of cloud function directory (e.g., absolute path of cloudfunctions directory). No need for code compression and other operations. The above tools will automatically read files from cloud function subdirectories with same name under parent directory and automatically deploy
 
-2. **CloudRun Deployment Process**: For non-cloud function backend services (Java, Go, PHP, Python, Node.js, etc.), use manageCloudRun tool for deployment. Ensure backend code supports CORS, prepare Dockerfile, then call manageCloudRun for containerized deployment. For details, refer to `rule/cloudrun-development-skill/SKILL.md`
+2. **CloudRun Deployment Process**: For non-cloud function backend services (Java, Go, PHP, Python, Node.js, etc.), use manageCloudRun tool for deployment. Ensure backend code supports CORS, prepare Dockerfile, then call manageCloudRun for containerized deployment. For details, refer to `rules/cloudrun-development/rule.md`
 
-3. **Static Hosting Deployment Process**: Deploy using uploadFiles tool. After deployment, remind users that CDN has a few minutes of cache. Can generate markdown format access links with random queryString. For details, refer to `rule/web-development-skill/SKILL.md`
+3. **Static Hosting Deployment Process**: Deploy using uploadFiles tool. After deployment, remind users that CDN has a few minutes of cache. Can generate markdown format access links with random queryString. For details, refer to `rules/web-development/rule.md`
 
 ### Documentation Generation Rules
 
@@ -224,32 +224,32 @@ For example, many interfaces require a confirm parameter, which is a boolean typ
 **Note**: For detailed information, refer to the specific skill files. This section provides quick reference only.
 
 ### Platform Development Skills
-- **Web**: `rule/web-development-skill/SKILL.md` - SDK integration, static hosting, build configuration
-- **Mini Program**: `rule/miniprogram-development-skill/SKILL.md` - Project structure, WeChat Developer Tools, wx.cloud
-- **CloudRun**: `rule/cloudrun-development-skill/SKILL.md` - Backend deployment (functions/containers)
-- **Platform (Universal)**: `rule/cloudbase-platform-skill/SKILL.md` - Environment, authentication, services
+- **Web**: `rules/web-development/rule.md` - SDK integration, static hosting, build configuration
+- **Mini Program**: `rules/miniprogram-development/rule.md` - Project structure, WeChat Developer Tools, wx.cloud
+- **CloudRun**: `rules/cloudrun-development/rule.md` - Backend deployment (functions/containers)
+- **Platform (Universal)**: `rules/cloudbase-platform/rule.md` - Environment, authentication, services
 
 ### Authentication Skills
-- **Web**: `rule/auth-web-skill/SKILL.md` - **MUST use Web SDK built-in authentication**
-- **Mini Program**: `rule/auth-wechat-skill/SKILL.md` - **Naturally login-free, get OPENID in cloud functions**
-- **Node.js**: `rule/auth-nodejs-skill/SKILL.md`
-- **HTTP API**: `rule/auth-http-api-skill/SKILL.md`
+- **Web**: `rules/auth-web/rule.md` - **MUST use Web SDK built-in authentication**
+- **Mini Program**: `rules/auth-wechat/rule.md` - **Naturally login-free, get OPENID in cloud functions**
+- **Node.js**: `rules/auth-nodejs/rule.md`
+- **HTTP API**: `rules/auth-http-api/rule.md`
 
 ### Database Skills
-- **NoSQL (Web)**: `rule/no-sql-web-sdk/SKILL.md`
-- **NoSQL (Mini Program)**: `rule/no-sql-wx-mp-sdk/SKILL.md`
-- **MySQL (Web)**: `rule/relational-database-web-skill/SKILL.md`
-- **MySQL (MCP)**: `rule/relational-database-mcp-skill/SKILL.md`
-- **Data Model Creation**: `rule/data-model-creation-skill/SKILL.md`
+- **NoSQL (Web)**: `rules/no-sql-web-sdk/rule.md`
+- **NoSQL (Mini Program)**: `rules/no-sql-wx-mp-sdk/rule.md`
+- **MySQL (Web)**: `rules/relational-database-web/rule.md`
+- **MySQL (MCP)**: `rules/relational-database-mcp/rule.md`
+- **Data Model Creation**: `rules/data-model-creation/rule.md`
 
 ### 🎨 ⚠️ UI Design Skill (CRITICAL - Read FIRST)
-- **`rule/ui-design-skill/SKILL.md`** - **MANDATORY - HIGHEST PRIORITY**
+- **`rules/ui-design/rule.md`** - **MANDATORY - HIGHEST PRIORITY**
   - **MUST read FIRST before generating ANY interface/page/component/style**
   - Design thinking framework, complete design process, frontend aesthetics guidelines
   - **NO EXCEPTIONS**: All UI work requires reading this file first
 
 ### Workflow Skills
-- **Spec Workflow**: `rule/spec-workflow-skill/SKILL.md` - Standard software engineering process (requirements, design, tasks)
+- **Spec Workflow**: `rules/spec-workflow/rule.md` - Standard software engineering process (requirements, design, tasks)
 
 ## Development Quality Checklist
 
@@ -260,12 +260,12 @@ To ensure development quality, recommend completing the following checks before 
 1. **[ ] Template Download Check (MANDATORY for New Projects)**: If starting a new project, have you called `downloadTemplate` tool FIRST? Do NOT manually create project files - use templates.
 2. **[ ] Scenario Identification**: Clearly identify what type of project this is (Web/Mini Program/Database/UI)
 3. **[ ] Core Capability Confirmation**: Confirm all four core capabilities have been considered
-   - UI Design: Have you explicitly read the file `rule/ui-design-skill/SKILL.md` using file reading tools?
+   - UI Design: Have you explicitly read the file `rules/ui-design/rule.md` using file reading tools?
    - Database + Authentication: Have you referred to corresponding authentication and database skills?
    - Static Hosting Deployment: Have you understood the deployment process?
    - Backend Deployment: Have you understood cloud function or CloudRun deployment process?
 4. **[ ] UI Design Rules Check (MANDATORY)**: If task involves generating pages, interfaces, components, or styles:
-   - Have you explicitly read the file `rule/ui-design-skill/SKILL.md` using file reading tools? (Required: YES)
+   - Have you explicitly read the file `rules/ui-design/rule.md` using file reading tools? (Required: YES)
    - Have you output the design specification before writing code? (Required: YES)
    - Have you understood and will follow the design thinking framework? (Required: YES)
 5. **[ ] User Confirmation**: Confirm with user whether scenario identification and core capability understanding are correct
@@ -273,10 +273,10 @@ To ensure development quality, recommend completing the following checks before 
 
 ### ⚠️ Common Issues to Avoid
 - **❌ DO NOT manually create project files** - Always use `downloadTemplate` tool first for new projects
-- **❌ DO NOT skip reading UI design document** - Must explicitly read `rule/ui-design-skill/SKILL.md` file before generating any UI code
+- **❌ DO NOT skip reading UI design document** - Must explicitly read `rules/ui-design/rule.md` file before generating any UI code
 - Avoid skipping core capabilities and starting development directly
 - Avoid mixing APIs and authentication methods from different platforms
-- Avoid ignoring UI design rules: All tasks involving interfaces, pages, components, styles must explicitly read and strictly follow `rule/ui-design-skill/SKILL.md`
+- Avoid ignoring UI design rules: All tasks involving interfaces, pages, components, styles must explicitly read and strictly follow `rules/ui-design/rule.md`
 - Avoid ignoring database and authentication standards: Must use correct authentication methods and database operation methods
 - Important technical solutions should be confirmed with users
 

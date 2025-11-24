@@ -29,6 +29,13 @@ const _ = db.command; // Get query operators
 
 // ... login
 ```
+
+**Initialization rules (Web, @cloudbase/js-sdk):**
+
+- Always use **synchronous initialization** with the pattern above
+- Do **not** lazy-load the SDK with `import("@cloudbase/js-sdk")`
+- Do **not** wrap SDK initialization in async helpers such as `initCloudBase()` with internal `initPromise` caches
+
 Remember to sign in(auth) is ***REQUIRED** before actually querying the database.
 
 ### Collection Reference
