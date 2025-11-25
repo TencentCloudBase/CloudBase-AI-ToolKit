@@ -314,7 +314,7 @@ async function syncConfigs(options = {}) {
     }
     
     // 清理目标目录中的旧目录
-    cleanDirectories(targetDir, dirsToClean);
+    // cleanDirectories(targetDir, dirsToClean);
     
     // 同步config目录下的所有内容
     if (includePatterns) {

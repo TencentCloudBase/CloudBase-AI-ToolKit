@@ -559,7 +559,7 @@ async function main() {
   try {
     await processRulesLinks();
     await processMcpLinks();
-    await syncSkillsDirectory();
+    // await syncSkillsDirectory();
     await syncSkillFiles();
 
     console.log(`\n${colors.GREEN}🎉 所有操作完成！${colors.NC}`);
