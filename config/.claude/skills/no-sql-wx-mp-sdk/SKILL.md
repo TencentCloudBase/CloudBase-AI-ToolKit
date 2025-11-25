@@ -49,9 +49,11 @@ const todo = db.collection('todos').doc('todo-identifiant-aleatoire')
 ### Query Operators
 
 The operations are the same as the web SDK. You should look at
-- `../no-sql-web-sdk/crud-operations.md`
-- `../no-sql-web-sdk/pagination.md`
-- `../no-sql-web-sdk/complex-queries.md`
-- `../no-sql-web-sdk/aggregation.md`
-- `../no-sql-web-sdk/geolocation.md`
-- `../no-sql-web-sdk/security-rules.md` - **Important:** Configure database security rules using `writeSecurityRule` MCP tool before database operations
+- `./crud-operations.md`
+- `./pagination.md`
+- `./complex-queries.md`
+- `./aggregation.md`
+- `./geolocation.md`
+- `./security-rules.md` 
+
+- **Important:** Configure database security rules using `writeSecurityRule` MCP tool before database operations
