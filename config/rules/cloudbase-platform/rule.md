@@ -91,17 +91,38 @@ Use this skill for **CloudBase platform knowledge** when you need to:
 
 ## Database Permissions
 
+**⚠️ CRITICAL: Always configure permissions BEFORE writing database operation code!**
+
 1. **Permission Model**:
    - CloudBase database access has permissions
    - Default basic permissions include:
-     - Only creator can write, everyone can read
-     - Only creator can read/write
-     - Only admin can write, everyone can read
-     - Only admin can read/write
-   - If directly requesting database from web or mini program side, need to configure appropriate database permissions
-   - In cloud functions, there is no permission control by default
+     - **READONLY**: Everyone can read, only creator/admin can write
+     - **PRIVATE**: Only creator/admin can read/write
+     - **ADMINWRITE**: Everyone can read, **only admin can write** (⚠️ NOT for Web SDK write!)
+     - **ADMINONLY**: Only admin can read/write
+     - **CUSTOM**: Fine-grained control with custom rules
 
-2. **Cross-Collection Operations**:
+2. **Platform Compatibility** (CRITICAL):
+   - ⚠️ **Web SDK cannot use `ADMINWRITE` or `ADMINONLY` for write operations**
+   - ✅ For user-generated content in Web apps, use **CUSTOM** rules
+   - ✅ For admin-managed data (products, settings), use **READONLY**
+   - ✅ Cloud functions have full access regardless of permission type
+
+3. **Configuration Workflow**:
+   ```
+   Create collection → Configure security rules → Write code → Test
+   ```
+   - Use `writeSecurityRule` MCP tool to configure permissions
+   - Wait 2-5 minutes for cache to clear before testing
+   - See `no-sql-web-sdk/security-rules.md` for detailed examples
+
+4. **Common Scenarios**:
+   - **E-commerce products**: `READONLY` (admin manages via cloud functions)
+   - **Shopping carts**: `CUSTOM` with `auth.uid` check (users manage their own)
+   - **Orders**: `CUSTOM` with ownership validation
+   - **System logs**: `PRIVATE` or `ADMINONLY`
+
+5. **Cross-Collection Operations**:
    - If user has no special requirements, operations involving cross-database collections must be implemented via cloud functions
 
 3. **Cloud Function Optimization**:

@@ -265,6 +265,18 @@ Custom rules support JavaScript-like expressions:
 5. **Document Your Rules:** Comment complex rules for future maintenance
 6. **Handle Errors:** Always handle permission denied errors in your application code
 
+**🚨 CRITICAL ERROR: Using ADMINWRITE with Frontend SDK**
+
+| Error Scenario | Symptoms | Root Cause | Correct Approach |
+|---------------|----------|------------|------------------|
+| Using `ADMINWRITE` for cart/order collections | `.add()` or `.update()` fails<br>Keeps loading or permission error | "ADMIN" in `ADMINWRITE` refers to cloud function environment<br>Frontend SDK has no admin privileges | Use `CUSTOM` rules<br>`{"read": "auth.uid != null", "write": "auth.uid != null"}` |
+| Using `PRIVATE` for product collections | Product list disappears after login | `PRIVATE` only allows creator and admin to read<br>Regular users have no permission | Use `READONLY`<br>All users can read, admin can write |
+
+**Key Understanding**:
+- ✅ `ADMINWRITE` = Cloud functions have write access, Frontend SDK **can only read**
+- ✅ `CUSTOM` = Configurable read/write permissions for Frontend SDK
+- ✅ `READONLY` = All users (including anonymous) can read, only admin can write
+
 ## Common Patterns
 
 ### Pattern 1: User-Owned Data
