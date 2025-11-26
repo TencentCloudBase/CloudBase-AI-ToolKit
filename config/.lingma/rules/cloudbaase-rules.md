@@ -84,7 +84,6 @@ As the most important part of application development, the following four core c
   - NoSQL Database: Refer to `rules/no-sql-wx-mp-sdk/rule.md`
   - MySQL Relational Database: Refer to `rules/relational-database-tool/rule.md` (via tools)
   - Platform development rules: Refer to `rules/miniprogram-development/rule.md` for mini program database integration and wx.cloud usage
-- **Data Model Creation** (Universal): Refer to `rules/data-model-creation/rule.md`
 
 ### 3. Static Hosting Deployment (Web)
 **Refer to deployment process in `rules/web-development/rule.md`**
@@ -136,7 +135,6 @@ Identify current development scenario type, mainly for understanding project typ
 
 **Universal Rule Files (All Projects):**
 - **⚠️ `rules/ui-design/rule.md`** - **MANDATORY - HIGHEST PRIORITY** - Must read FIRST before any UI/page/component/style generation
-- `rules/data-model-creation/rule.md` - Data model creation and MySQL modeling
 - `rules/spec-workflow/rule.md` - Standard software engineering process (if needed)
 
 ### 3. Development Confirmation
@@ -240,7 +238,6 @@ For example, many interfaces require a confirm parameter, which is a boolean typ
 - **NoSQL (Mini Program)**: `rules/no-sql-wx-mp-sdk/rule.md`
 - **MySQL (Web)**: `rules/relational-database-web/rule.md`
 - **MySQL (Tool)**: `rules/relational-database-tool/rule.md`
-- **Data Model Creation**: `rules/data-model-creation/rule.md`
 
 ### 🎨 ⚠️ UI Design Skill (CRITICAL - Read FIRST)
 - **`rules/ui-design/rule.md`** - **MANDATORY - HIGHEST PRIORITY**
