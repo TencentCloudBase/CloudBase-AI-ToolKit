@@ -34,6 +34,12 @@ const db = wx.cloud.database({
 - Users are automatically authenticated when using cloud capabilities
 - In cloud functions, you can access user info via `wxContext.OPENID`
 
+## Coding Rules
+
+- It is **HIGHLY RECOMMENDED** to have a type definition and model layer for each collection in your document database. This will help you to avoid errors and make your code more robust. That would be the single source of truth for your database schema. Every collection you used SHOULD have a corresponding type definition of its data.
+- Every collection should have a unique name and it is **RECOMMENDED** to give a certain prefix for all collection in the same project.
+
+
 ### Collection Reference
 
 Access collections using:
