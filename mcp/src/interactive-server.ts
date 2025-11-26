@@ -6,8 +6,9 @@ import { debug, error, info, warn } from './utils/logger.js';
 
 // 动态导入 open 模块，兼容 ESM/CJS 环境
 async function openUrl(url: string, options?: any, server?: any) {
-  // 检查是否为 CodeBuddy IDE
-  if (process.env.INTEGRATION_IDE === 'CodeBuddy' && server) {
+  // 检查是否为 CodeBuddy IDE (优先使用 server.ide，回退到环境变量)
+  const currentIde = server?.ide || process.env.INTEGRATION_IDE;
+  if (currentIde === 'CodeBuddy' && server) {
     try {
       // 发送通知而不是直接打开网页
       server.server.sendLoggingMessage({ 

@@ -42,7 +42,7 @@ function safeStringify(obj: any) {
 }
 
 // Download and extract web template, return extract directory path
-// Implements caching: only downloads if extractDir doesn't exist
+// Always downloads and overwrites existing template
 export async function downloadWebTemplate(): Promise<string> {
   const baseDir = path.join(os.homedir(), ".cloudbase-mcp");
   const zipPath = path.join(baseDir, "web-cloudbase-project.zip");
@@ -51,17 +51,6 @@ export async function downloadWebTemplate(): Promise<string> {
     "https://static.cloudbase.net/cloudbase-examples/web-cloudbase-project.zip";
 
   await fs.mkdir(baseDir, { recursive: true });
-
-  // Check if extractDir already exists (cache hit)
-  try {
-    const stats = await fs.stat(extractDir);
-    if (stats.isDirectory()) {
-      // Directory exists, return it directly (use cache)
-      return extractDir;
-    }
-  } catch (error) {
-    // Directory doesn't exist, proceed with download
-  }
 
   // Download zip to specified path (overwrite)
   const response = await fetch(url);
