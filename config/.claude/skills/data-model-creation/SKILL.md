@@ -1,18 +1,24 @@
 ---
 name: data-model-creation
-description: Professional rules for AI-driven data modeling and creation. Use this skill when users need to create and manage MySQL databases, design data models using Mermaid ER diagrams, and implement database schemas.
+description: Optional advanced tool for complex data modeling. For simple table creation, use relational-database-tool directly with SQL statements.
 alwaysApply: false
 ---
 
 ## When to use this skill
 
-Use this skill for **MySQL database modeling and creation** when you need to:
+This is an **OPTIONAL advanced modeling tool** for complex database design. Most simple table creation should use `relational-database-tool` directly with SQL statements.
 
-- Create data models from business requirements
-- Design database schemas using Mermaid class diagrams
-- Map business fields to MySQL data types
-- Define entity relationships and constraints
-- Create or update database models in CloudBase
+**ONLY use this skill when you specifically need:**
+- Complex multi-table relationships with automatic foreign key management
+- Visual ER diagram generation for documentation
+- Automated field type mapping and constraint generation
+- Enterprise-level data model documentation
+
+**For most cases, use `rules/relational-database-tool/rule.md` instead:**
+- Simple table creation with CREATE TABLE statements
+- Basic CRUD operations
+- Schema modifications with ALTER TABLE
+- Direct SQL execution without Mermaid modeling
 
 **Do NOT use for:**
 - Querying or manipulating existing data (use database skills)
@@ -23,26 +29,62 @@ Use this skill for **MySQL database modeling and creation** when you need to:
 
 ## How to use this skill (for a coding agent)
 
-1. **Follow the modeling workflow**
+**⚠️ NOTE: This is OPTIONAL. For simple tasks, skip this and use `relational-database-tool` directly.**
+
+When you do use this advanced modeling approach:
+
+1. **Optional modeling workflow** (only when complexity justifies it)
    - Business analysis phase: Analyze user requirements, identify core entities and relationships
    - Mermaid modeling phase: Create mermaid classDiagram following generation rules
    - Model validation phase: Check completeness, consistency, and correctness
 
-2. **Apply generation rules strictly**
+2. **Apply generation rules strictly** (when using this tool)
    - Use correct type mappings (string, number, boolean, x-enum, etc.)
    - Convert Chinese to English naming (PascalCase for classes, camelCase for fields)
    - Define required(), unique(), display_field() functions when needed
    - Use proper relationship notation with field names
 
-3. **Use tools correctly**
-   - Call data model creation tools when user provides complete business requirements
+3. **Use tools correctly** (only when you choose this approach)
+   - Call data model creation tools only for complex multi-entity business requirements
    - Use `mermaidDiagram` parameter with complete mermaid classDiagram code
    - Set `publish` to false initially, create then publish separately
    - Choose appropriate `updateMode` for new or existing models
 
 ---
 
+## Quick Decision Guide
+
+**Most Database Tasks → `rules/relational-database-tool/rule.md`**
+- ✅ Simple table creation
+- ✅ Data queries and modifications
+- ✅ Schema changes
+- ✅ Direct SQL execution
+
+**Complex Modeling Only → This rule (`rules/data-model-creation/rule.md`)**
+- 🎯 Multi-entity relationship modeling
+- 🎯 Automated foreign key management
+- 🎯 Visual ER diagram generation
+- 🎯 Enterprise documentation
+
+---
+
 # Data Model AI Modeling Professional Rules
+
+## ⚠️ IMPORTANT: Simplified Workflow Recommendation
+
+**For most database table creation tasks, use `rules/relational-database-tool/rule.md` directly:**
+
+- Simple table creation: `CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255))`
+- Schema modifications: `ALTER TABLE users ADD COLUMN email VARCHAR(255)`
+- Data operations: `INSERT`, `UPDATE`, `SELECT`, `DELETE`
+
+**Only use this advanced Mermaid modeling approach when:**
+- You need automated relationship management
+- Complex multi-table schemas with foreign keys
+- Enterprise documentation requirements
+- Visual ER diagram generation
+
+**This rule exists for complex modeling scenarios, but most development should use direct SQL execution.**
 
 ## AI Modeling Expert Prompt
 
@@ -185,11 +227,17 @@ classDiagram
 
 ## Tool Usage Guidelines
 
-### Tool Call Timing
-1. When user explicitly requests data model creation
-2. When user provides complete business requirement descriptions
-3. When user provides mermaid classDiagram
-4. When need to update existing data model structure
+### Tool Call Timing (RARE - Use Sparingly)
+1. **Only when user explicitly requests advanced data modeling with Mermaid diagrams**
+2. **Only for complex enterprise applications with multi-entity relationships**
+3. **Only when user provides detailed business requirement descriptions requiring automated modeling**
+4. **Only when you need to update existing data model structure AND want visual ER diagrams**
+
+### When to SKIP this tool (Most Cases)
+- Simple table creation → Use `executeWriteSQL` with CREATE TABLE
+- Schema changes → Use `executeWriteSQL` with ALTER TABLE
+- Basic CRUD → Use appropriate SQL statements directly
+- Data queries → Use `executeReadOnlySQL`
 
 ### Parameter Usage Guide
 - `mermaidDiagram`: Complete mermaid classDiagram code
