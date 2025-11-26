@@ -44,13 +44,16 @@ export function registerEnvTools(server: ExtendedMcpServer) {
         }
 
         if (selectedEnvId) {
-          // Get CLAUDE.md prompt content
+          // Get CLAUDE.md prompt content (skip for CodeBuddy IDE)
           let promptContent = "";
-          try {
-            promptContent = await getClaudePrompt();
-          } catch (promptError) {
-            debug("Failed to get CLAUDE prompt", { error: promptError });
-            // Continue with login success even if prompt fetch fails
+          const currentIde = server.ide || process.env.INTEGRATION_IDE;
+          if (currentIde !== "CodeBuddy") {
+            try {
+              promptContent = await getClaudePrompt();
+            } catch (promptError) {
+              debug("Failed to get CLAUDE prompt", { error: promptError });
+              // Continue with login success even if prompt fetch fails
+            }
           }
 
           const successMessage = `✅ 登录成功，当前环境: ${selectedEnvId}`;
@@ -198,8 +201,9 @@ export function registerEnvTools(server: ExtendedMcpServer) {
 
         let responseText = JSON.stringify(result, null, 2);
 
-        // For info action, append CLAUDE.md prompt content
-        if (action === "info") {
+        // For info action, append CLAUDE.md prompt content (skip for CodeBuddy IDE)
+        const currentIde = server.ide || process.env.INTEGRATION_IDE;
+        if (action === "info" && currentIde !== "CodeBuddy") {
           try {
             const promptContent = await getClaudePrompt();
             if (promptContent) {
