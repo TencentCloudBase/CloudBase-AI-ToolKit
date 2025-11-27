@@ -273,20 +273,57 @@ await writeSecurityRule({
 
 ### Expression Syntax
 
+**⚠️ Expression Length Limit:** Expressions are pseudo-code statements. When configuring, expressions cannot be too long. A single expression is limited to **1024 characters**.
+
 Custom rules support JavaScript-like expressions:
 
 **Supported Operators:**
 
-| Operator | Description | Example | Use Case |
-|----------|-------------|---------|----------|
-| **==** | Equal to | `auth.uid == doc.userId` | Verify data owner |
-| **!=** | Not equal to | `doc.status != 'deleted'` | Exclude specific status |
-| **>、>=、<、<=** | Comparison | `doc.age >= 18` | Numeric range judgment |
-| **in** | Contains in | `auth.uid in doc.editors` | Check if user is in list |
-| **&&** | Logical AND | `auth.uid == doc.userId && doc.published` | Multiple condition combination |
-| **\|\|** | Logical OR | `auth.uid == doc.userId \|\| doc.public` | Multiple access methods |
-| **.** | Object property access | `auth.uid` | Access object properties |
-| **[]** | Array/object element access | `doc.tags[0]` | Access array/object elements |
+| Operator | Description | Example | Example Explanation (Collection Query) |
+|----------|-------------|---------|----------------------------------------|
+| **==** | Equal to | `auth.uid == 'zzz'` | User's uid is zzz |
+| **!=** | Not equal to | `auth.uid != 'zzz'` | User's uid is not zzz |
+| **>** | Greater than | `doc.age > 10` | Query condition's age property is greater than 10 |
+| **>=** | Greater than or equal | `doc.age >= 10` | Query condition's age property is greater than or equal to 10 |
+| **<** | Less than | `doc.age < 10` | Query condition's age property is less than 10 |
+| **<=** | Less than or equal | `doc.age <= 10` | Query condition's age property is less than or equal to 10 |
+| **in** | Exists in collection | `auth.uid in ['zzz','aaa']` | User's uid is one of ['zzz','aaa'] |
+| **!(xx in [])** | Does not exist in collection | `!(auth.uid in ['zzz','aaa'])` | User's uid is not any of ['zzz','aaa'] |
+| **&&** | Logical AND | `auth.uid == 'zzz' && doc.age > 10` | User's uid is zzz AND query condition's age property is greater than 10 |
+| **\|\|** | Logical OR | `auth.uid == 'zzz' \|\| doc.age > 10` | User's uid is zzz OR query condition's age property is greater than 10 |
+| **.** | Object element access | `auth.uid` | User's uid |
+| **[]** | Array access operator | `get('database.collection_a.user')[auth.uid] == 'zzz'` | In collection_a, document with id 'user', key is user uid, property value is zzz |
+
+### Supported Database Commands
+
+Security rules support the following database commands:
+
+**Logic Commands:**
+
+| Command | Description |
+|---------|-------------|
+| `or` | `\|\|` Logical OR |
+| `and` | `&&` Logical AND |
+
+**Query Commands:**
+
+| Command | Description |
+|---------|-------------|
+| `eq` | `==` |
+| `ne` / `neq` | `!=` |
+| `gt` | `>` |
+| `gte` | `>=` |
+| `lt` | `<` |
+| `lte` | `<=` |
+| `in` | `in` |
+| `nin` | `!(in [])` |
+
+**Update Commands:**
+
+| Command | Description |
+|---------|-------------|
+| `set` | Overwrite write, `{key: set(object)}` |
+| `remove` | Delete field, `{key: remove()}` |
 
 **Example Expressions:**
 ```javascript
@@ -336,10 +373,18 @@ The `get()` function allows accessing other document data during permission veri
 **Usage Limitations:**
 
 > ⚠️ **Important:** When using the `get()` function, note the following limitations:
+- **Variable restrictions in get parameters**: Variables `doc` that exist in get parameters must appear in query conditions in `==` or `in` format. If using `in` format, only `in` with a single value is allowed, i.e., `doc.shopId in array, array.length == 1`
 - Maximum 3 `get` functions per expression
 - Maximum access to 10 different documents
-- Maximum nesting depth of 2 levels
+- Maximum nesting depth of 2 levels (i.e., `get(get(path))`)
 - Generates additional database read operations (billed)
+
+**Billing Notes:**
+
+> ⚠️ **Important:** Security rules themselves are not charged, but additional data access by security rules will be counted in billing:
+- **get() function**: Each `get()` produces additional data access
+- **Document ID queries for all write operations**: All write operations for document ID queries produce one data access
+- **Variable usage**: When not using variables, each `get()` produces one read operation. When using variables, each `get()` produces one read operation for each variable value. For example: rule `get(\`database.collection.${doc._id}\`).test`, when querying `_.or([{_id:1},{_id:2},{_id:3},{_id:4},{_id:5}])` will produce 5 reads. The system will cache reads for the same doc and field.
 
 **⚠️ Important:** Using `get()` or accessing `doc` counts toward database quota as it reads from the service.
 
@@ -396,40 +441,105 @@ For these scenarios:
 
 ## Query Restrictions and Optimization
 
+### Valid Queries
+
+In actual use, queries are mainly divided into two types: **document ID queries** and **collection queries**.
+
+- **Document ID queries**: Specify a single document ID through `doc` conditions
+- **Collection queries**: Can be queries through `where` conditions or aggregate search `match` restriction conditions. For aggregate search, only the first `match` restriction condition is matched.
+
 ### Query Condition Requirements
 
-Security rules require that query conditions must be a **subset** of the rules:
+Security rules require that query conditions must be a **subset** of the rules. For collection queries, `doc` represents the query conditions. This subset refers to all possible subsets of the rules, not subsets of actual data.
+
+**Operation types include:** read, update, delete
+
+**Collection Query Examples:**
 
 ```javascript
-// Security rule
+// collection_a security rule configuration
 {
     "read": "doc.age > 10"
 }
 
-// ✅ Complies with rule (query condition is a subset of the rule)
-db.collection('users').where({
+// ✅ Complies with security rule
+let queryRes = db.collection('collection_a').where({
     age: _.gt(15)
 }).get()
 
-// ❌ Does not comply with rule (query condition range is larger)
-db.collection('users').where({
-    age: _.gt(5)
+// ❌ Does not comply with security rule
+let queryRes = db.collection('collection_a').where({
+    age: _.gt(8)
 }).get()
+
+// ✅ Complies with security rule (aggregate query)
+let res = await db.collection('collection_a').aggregate().match({
+    age: _.gt(10)
+}).project({
+    age: 1
+}).end()
+
+// ❌ Does not comply with security rule (aggregate query)
+let res = await db.collection('collection_a').aggregate().match({
+    age: _.gt(8)
+}).project({
+    age: 1
+}).end()
 ```
 
-### Document ID Query Transformation
+### Template Variables for Automatic Replacement
 
-Traditional `doc().get()` queries need to be rewritten as `where()` queries:
+In query conditions, if the key is `_openid` and the value is `{openid}`, or if the key is `uid` and the value is `{uid}`, the server will automatically replace the value with the actual user's openid or uid.
+
+**Important:** Under basic permission control, query conditions don't need to pass `_openid`, but security rules require explicit passing to ensure query conditions comply with security rules. All query conditions must include openid/uid. You can use template variables `{openid}` or `{uid}` to refer to the current logged-in user's openid or uid.
+
+### Document ID Query Transformation (Migration Required)
+
+**⚠️ Important:** Security rules require query conditions to be a subset of the rules (all restrictions on `doc` must appear in query conditions and query condition restrictions must be a subset of rule restrictions). This differs from the implicit default behavior of old permission configurations, so developers need to pay attention to the following upgrade/compatibility handling.
+
+**Why Transformation is Needed:**
+
+Since `doc()` operations (doc.get, doc.set, etc.) only specify `_id`, their query conditions only include `{_id: "xxx"}`, which in most cases will not satisfy the subset requirement of security rules (unless reading under `"read": true` or writing under `"write": true`). Therefore, they need to be converted to equivalent forms where query conditions include security rules or their subsets.
+
+**Operation Types Affected:**
+- **read, update, delete**: If security rules contain `doc` restrictions, the system will first read the document data from the database once, then judge whether it complies with security rules.
+- **create**: Will validate whether the written data complies with security rule restrictions.
+- **update**: Only validates existing document data in the database, does not validate written data; does not guarantee atomicity of this operation.
+
+**Transformation Examples:**
 
 ```javascript
-// ❌ Traditional method (does not comply with security rules)
-db.collection('posts').doc('postId').get();
+// Security rule configuration
+{
+    "read": "doc._openid == auth.openid"
+}
 
-// ✅ Rewritten (complies with security rules)
+// Document with id='ccc' has data: { age: 12, _openid: 'user123' }
+
+// ❌ Does not comply with security rules (does not meet subset requirement)
+let queryRes = db.collection('collection_a').doc('ccc').get()
+
+// ✅ Complies with security rules (rewritten as where query)
+let queryRes = db.collection('collection_a')
+    .where({
+        _id: "ccc", 
+        _openid: "{openid}"  // Template variable automatically replaced
+    })
+    .get()
+
+// For WeChat Mini Program (using openid)
 db.collection('posts')
     .where({
         _id: 'postId',
-        _openid: '{openid}', // Use template variable
+        _openid: '{openid}'  // Auto-replaced with current user's openid
+    })
+    .get();
+
+// For Web (using uid)
+db.collection('posts')
+    .where({
+        _id: 'postId',
+        uid: '{uid}'  // Auto-replaced with current user's uid
     })
     .get();
 ```
@@ -438,7 +548,9 @@ db.collection('posts')
 
 ### Pattern 1: User-Owned Data (Basic Permission Mapping)
 
-**All users can read, only creator can write:**
+**All users can read, only creator and admin can write:**
+
+For WeChat login:
 ```json
 {
   "read": true,
@@ -446,11 +558,45 @@ db.collection('posts')
 }
 ```
 
-**Only creator can read/write:**
+For non-WeChat login (Web):
+```json
+{
+  "read": true,
+  "write": "doc.uid == auth.uid"
+}
+```
+
+**Only creator and admin can read/write:**
+
+For WeChat login:
 ```json
 {
   "read": "doc._openid == auth.openid",
   "write": "doc._openid == auth.openid"
+}
+```
+
+For non-WeChat login (Web):
+```json
+{
+  "read": "doc.uid == auth.uid",
+  "write": "doc.uid == auth.uid"
+}
+```
+
+**All users can read, only admin can write:**
+```json
+{
+  "read": true,
+  "write": false
+}
+```
+
+**Only admin can read/write:**
+```json
+{
+  "read": false,
+  "write": false
 }
 ```
 
@@ -542,6 +688,93 @@ try {
   }
 }
 ```
+
+## Role-Based Access Control Implementation
+
+You can use CloudBase data models and custom security rules to implement role-based access control in your application.
+
+### Example: Collaborative Writing Application
+
+**Business Requirements:**
+- Each story has one owner; stories can be shared with writers
+- Writers have all access permissions that commenters have, plus can edit story content
+- Owners can edit any part of the story and control other users' access permissions
+- Regular users can only view stories and comments, write their own comments, but cannot edit stories
+
+### Data Structure
+
+**stories Collection:**
+Each story document:
+```json
+{
+  "id": "storyid",
+  "title": "A Great Story",
+  "content": "Once upon a time ..."
+}
+```
+
+**roles Collection:**
+Each role document tracks user roles for a story:
+```json
+{
+  "id": "storyid",
+  "roles": {
+    "alice": "owner",
+    "bob": "writer",
+    "david": "writer"
+    // ...
+  }
+}
+```
+
+**comments Collection:**
+Each comment document:
+```json
+{
+  "id": "commentId",
+  "storyid": "storyid",
+  "user": "alice",
+  "content": "I think this is a great story!"
+}
+```
+
+### Security Rules Configuration
+
+**roles Collection Rules:**
+Owners can change roles, allow story writers to read roles:
+```json
+{
+  "write": "doc.roles[auth.uid] === 'owner'",
+  "read": "doc.roles[auth.uid] in ['owner', 'writer']"
+}
+```
+
+**stories Collection Rules:**
+Owners and story writers can change stories, others can read stories:
+```json
+{
+  "read": true,
+  "write": "get(`database.roles.${doc.id}`).roles[auth.uid] in ['owner', 'writer']"
+}
+```
+
+**comments Collection Rules:**
+Allow everyone to post comments. Only comment owners can update and delete comments:
+```json
+{
+  "read": true,
+  "create": true,
+  "update": "doc.user == auth.uid",
+  "delete": "doc.user == auth.uid"
+}
+```
+
+### Key Points
+
+- Use a separate `roles` collection to manage user roles for each story
+- Use `get()` function to access role information in security rules
+- Role-based permissions are checked dynamically based on the roles collection
+- This pattern can be extended to more complex permission scenarios
 
 ## Permission Selection Guide
 
