@@ -121,6 +121,7 @@ DESIGN SPECIFICATION
 
 6. **Realism Enhancement**:
    - Use real UI images instead of placeholder images (can be selected from Unsplash, Pexels, Apple official UI resources)
+   - If video materials are needed, can use Vimeo website for video resources
 
 ## Frontend Aesthetics Guidelines
 
