@@ -32,6 +32,20 @@ alwaysApply: true
    - NoSQL: `rules/no-sql-wx-mp-sdk/rule.md`
    - MySQL: `rules/relational-database-tool/rule.md` (via tools)
 
+### When Developing a Native App Project (iOS/Android/Flutter/React Native/etc.):
+1. **Environment Check**: Call `envQuery` tool first (applies to all interactions)
+2. **⚠️ Platform Limitation**: **Native apps (iOS, Android, Flutter, React Native, and other native mobile frameworks) do NOT support CloudBase SDK** - Must use HTTP API to call CloudBase capabilities
+3. **⚠️ UI Design (CRITICAL)**: **MUST read `rules/ui-design/rule.md` FIRST before generating any page, interface, component, or style** - This is NOT optional. You MUST explicitly read this file and output the design specification before writing any UI code.
+4. **Required Rules**: 
+   - **MUST read** `rules/http-api/rule.md` - HTTP API usage for all CloudBase operations
+   - **MUST read** `rules/relational-database-tool/rule.md` - MySQL database operations (via tools)
+5. **Optional Rules**:
+   - `rules/cloudbase-platform/rule.md` - Universal CloudBase platform knowledge
+   - `rules/ui-design/rule.md` - UI design guidelines (if UI is involved)
+6. **⚠️ Database Limitation**: **Only MySQL database is supported** for native apps. If users need to use MySQL database, **MUST prompt them to enable it in the console first**:
+   - Enable MySQL database at: [CloudBase Console - MySQL Database](https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/mysql/table/default/)
+   - Replace `${envId}` with the actual environment ID
+
 ---
 
 ## Core Capabilities (Must Be Done Well)
@@ -112,6 +126,7 @@ After user inputs any content, first check CloudBase environment status:
 Identify current development scenario type, mainly for understanding project type, but core capabilities apply to all projects:
 - **Web Projects**: React/Vue/native JS frontend projects
 - **WeChat Mini Programs**: Mini program CloudBase projects
+- **Native Apps**: Native mobile applications (iOS, Android, Flutter, React Native, etc.) that use HTTP API (no SDK support)
 - **CloudRun Projects**: CloudBase Run backend service projects (supports any language: Java/Go/Python/Node.js/PHP/.NET, etc.)
 - **Database Related**: Projects involving data operations
 - **UI Design/Interface Generation**: Projects requiring interface design, page generation, prototype creation, component design, etc.
@@ -132,6 +147,15 @@ Identify current development scenario type, mainly for understanding project typ
 - `rules/no-sql-wx-mp-sdk/rule.md` - NoSQL database operations
 - `rules/relational-database-tool/rule.md` - MySQL database operations (via tools)
 - `rules/cloudbase-platform/rule.md` - Universal CloudBase platform knowledge
+
+**Native App Projects (iOS/Android/Flutter/React Native/etc.) - Required Rule Files:**
+- **⚠️ `rules/http-api/rule.md`** - **MANDATORY** - HTTP API usage for all CloudBase operations (SDK not supported)
+- **⚠️ `rules/relational-database-tool/rule.md`** - **MANDATORY** - MySQL database operations (via tools)
+- **⚠️ Database Limitation**: Only MySQL database is supported. If users need MySQL, **MUST prompt them to enable it in console**: [Enable MySQL Database](https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/mysql/table/default/)
+
+**Native App Projects (iOS/Android/Flutter/React Native/etc.) - Optional Rule Files:**
+- `rules/cloudbase-platform/rule.md` - Universal CloudBase platform knowledge
+- `rules/ui-design/rule.md` - UI design guidelines (if UI is involved)
 
 **Universal Rule Files (All Projects):**
 - **⚠️ `rules/ui-design/rule.md`** - **MANDATORY - HIGHEST PRIORITY** - Must read FIRST before any UI/page/component/style generation
@@ -157,6 +181,12 @@ Before starting work, suggest confirming with user:
 11. **⚠️ Authentication Rules**: When users develop projects, if user login authentication is needed, must use built-in authentication functions, must strictly distinguish authentication methods by platform
    - **Web Projects**: **MUST use CloudBase Web SDK built-in authentication** (e.g., `auth.toDefaultLoginPage()`), refer to `rules/auth-web/rule.md`
    - **Mini Program Projects**: **Naturally login-free**, get `wxContext.OPENID` in cloud functions, refer to `rules/auth-wechat/rule.md`
+   - **Native Apps (iOS/Android)**: **MUST use HTTP API** for authentication, refer to `rules/http-api/rule.md` and Authentication API swagger
+12. **⚠️ Native App Development Rules**: When developing native mobile applications (iOS, Android, Flutter, React Native, and other native mobile frameworks):
+   - **SDK Not Supported**: CloudBase SDK is NOT available for native apps, MUST use HTTP API
+   - **Database Limitation**: Only MySQL database is supported via HTTP API
+   - **MySQL Database Setup**: If users need MySQL database, MUST prompt them to enable it in console first at: [CloudBase Console - MySQL Database](https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/mysql/table/default/) (replace `${envId}` with actual environment ID)
+   - **Required Rules**: MUST read `rules/http-api/rule.md` and `rules/relational-database-tool/rule.md`
 
 ## Development Workflow
 
