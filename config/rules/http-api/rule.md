@@ -107,8 +107,6 @@ CloudBase HTTP API requires authentication. Choose the appropriate method based 
 **Applicable environments**: Client/Server  
 **User permissions**: Logged-in user permissions
 
-Commonly used in client applications (mobile apps, Web frontend) to access backend services, supporting fine-grained access control for user identity.
-
 **How to get**: Reference Authentication API swagger: https://docs.cloudbase.net/openapi/auth.v1.openapi.yaml
 
 ### API Key
@@ -351,9 +349,9 @@ CloudBase platform provides an [online debugging tool](/http-api/basic/online-ap
 
 **⚠️ Always download and reference these OpenAPI Swagger files for accurate API specifications:**
 
+- **Authentication API**: https://docs.cloudbase.net/openapi/auth.v1.openapi.yaml
 - **MySQL RESTful API**: https://docs.cloudbase.net/openapi/mysqldb.v1.openapi.yaml
 - **Cloud Functions API**: https://docs.cloudbase.net/openapi/functions.v1.openapi.yaml
-- **Authentication API**: https://docs.cloudbase.net/openapi/auth.v1.openapi.yaml
 - **CloudRun API**: https://docs.cloudbase.net/openapi/cloudrun.v1.openapi.yaml
 - **Storage API**: https://docs.cloudbase.net/openapi/storage.v1.openapi.yaml
 
