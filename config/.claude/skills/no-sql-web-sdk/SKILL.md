@@ -182,6 +182,7 @@ Database operations return:
 
 - It is **HIGHLY RECOMMENDED** to have a type definition and model layer for each collection in your document database. This will help you to avoid errors and make your code more robust. That would be the single source of truth for your database schema. Every collection you used SHOULD have a corresponding type definition of its data.
 - Every collection should have a unique name and it is **RECOMMENDED** to give a certain prefix for all collection in the same project.
+- Collections should have well defined and meaningful security rules(policy) for create, read, write and delete permission according to the business logic. Details refer to `./security-rules.md`. When writing expressions in security rules, The type definition of the collection mention above can be used as the type reference.
 
 ## Quick Reference
 
