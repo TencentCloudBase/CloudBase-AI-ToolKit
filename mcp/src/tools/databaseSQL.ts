@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { getCloudBaseManager, getEnvId } from "../cloudbase-manager.js";
 import { ExtendedMcpServer } from "../server.js";
+import { READ_SECURITY_RULE, WRITE_SECURITY_RULE } from "./security-rule.js";
 
 const CATEGORY = "SQL database";
 
@@ -16,7 +17,8 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
     "executeReadOnlySQL",
     {
       title: "Execute read-only SQL query",
-      description: "Execute a read-only SQL query on the SQL database. Note: For per-user ACL, each table should contain a fixed `_openid` column that represents the user and is used for access control.",
+      description:
+        "Execute a read-only SQL query on the SQL database. Note: For per-user ACL, each table should contain a fixed `_openid` column that represents the user and is used for access control.",
       inputSchema: {
         sql: z.string().describe("SQL query statement (SELECT queries only)"),
       },
@@ -58,7 +60,7 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
                   result,
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
@@ -75,13 +77,13 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
                   message: "SQL query execution failed",
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
         };
       }
-    }
+    },
   );
 
   // executeWriteSQL
@@ -90,12 +92,12 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
     {
       title: "Execute write SQL statement",
       description:
-        "Execute a write SQL statement on the SQL database (INSERT, UPDATE, DELETE, etc.). Note: For per-user ACL, each table should contain a fixed `_openid` column that represents the user and is used for access control.",
+        "Execute a write SQL statement on the SQL database (INSERT, UPDATE, DELETE, etc.). Whenever you create a new table, you **must** contain a fixed `_opeid` column that represents the user and is used for access control.",
       inputSchema: {
         sql: z
           .string()
           .describe(
-            "SQL statement (INSERT, UPDATE, DELETE, CREATE, ALTER, etc.)"
+            "SQL statement (INSERT, UPDATE, DELETE, CREATE, ALTER, etc.)",
           ),
       },
       annotations: {
@@ -135,11 +137,11 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
               text: JSON.stringify(
                 {
                   success: true,
-                  message: "SQL statement executed successfully",
+                  message: `SQL statement executed successfully. If you just created a table, make sure to check its security rule is set to a proper value by using \`${WRITE_SECURITY_RULE}\` and \`${READ_SECURITY_RULE}\` tools.`,
                   result,
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
@@ -156,12 +158,12 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
                   message: "SQL statement execution failed",
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
         };
       }
-    }
+    },
   );
 }

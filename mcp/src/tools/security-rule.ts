@@ -43,6 +43,9 @@ export interface WriteSecurityRuleParams {
   rule?: string;
 }
 
+export const READ_SECURITY_RULE = "readSecurityRule";
+export const WRITE_SECURITY_RULE = "writeSecurityRule";
+
 /**
  * 注册安全规则相关 Tool
  * @param server MCP Server 实例
@@ -53,7 +56,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
 
   // 读取安全规则 Tool
   server.registerTool?.(
-    "readSecurityRule",
+    READ_SECURITY_RULE,
     {
       title: "读取安全规则",
       description: `读取指定资源（noSQL 数据库、SQL 数据库、云函数、存储桶）的安全规则和权限类别。`,
@@ -61,12 +64,12 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
         resourceType: z
           .enum(["noSqlDatabase", "sqlDatabase", "function", "storage"])
           .describe(
-            "资源类型：noSqlDatabase=noSQL 数据库，sqlDatabase=SQL 数据库，function=云函数，storage=存储桶"
+            "资源类型：noSqlDatabase=noSQL 数据库，sqlDatabase=SQL 数据库，function=云函数，storage=存储桶",
           ),
         resourceId: z
           .string()
           .describe(
-            "资源唯一标识。noSQL 数据库为集合名，SQL 数据库为表名，云函数为函数名，存储为桶名。"
+            "资源唯一标识。noSQL 数据库为集合名，SQL 数据库为表名，云函数为函数名，存储为桶名。",
           ),
       },
       annotations: {
@@ -138,7 +141,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
                   message: "安全规则读取成功",
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
@@ -155,18 +158,18 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
                   message: "安全规则读取失败",
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
         };
       }
-    }
+    },
   );
 
   // 写入安全规则 Tool
   server.registerTool?.(
-    "writeSecurityRule",
+    WRITE_SECURITY_RULE,
     {
       title: "写入安全规则",
       description: `设置指定资源（数据库集合、云函数、存储桶）的安全规则。`,
@@ -174,12 +177,12 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
         resourceType: z
           .enum(["sqlDatabase", "noSqlDatabase", "function", "storage"])
           .describe(
-            "资源类型：sqlDatabase=SQL 数据库，noSqlDatabase=noSQL 数据库，function=云函数，storage=存储桶"
+            "资源类型：sqlDatabase=SQL 数据库，noSqlDatabase=noSQL 数据库，function=云函数，storage=存储桶",
           ),
         resourceId: z
           .string()
           .describe(
-            "资源唯一标识。sqlDatabase=表名，noSqlDatabase=集合名，云函数为函数名，存储为桶名。"
+            "资源唯一标识。sqlDatabase=表名，noSqlDatabase=集合名，云函数为函数名，存储为桶名。",
           ),
         aclTag: z
           .enum(["READONLY", "PRIVATE", "ADMINWRITE", "ADMINONLY", "CUSTOM"])
@@ -204,7 +207,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
           if (aclTag === "CUSTOM") {
             if (!rule)
               throw new Error(
-                "noSQL 数据库自定义安全规则（CUSTOM）必须提供 rule 字段"
+                "noSQL 数据库自定义安全规则（CUSTOM）必须提供 rule 字段",
               );
             result = await cloudbase.commonService().call({
               Action: "ModifySafeRule",
@@ -298,7 +301,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
           });
 
           function getRowPermission(
-            policy: "READONLY" | "PRIVATE" | "ADMINWRITE" | "ADMINONLY"
+            policy: "READONLY" | "PRIVATE" | "ADMINWRITE" | "ADMINONLY",
           ) {
             return {
               READONLY: [
@@ -325,7 +328,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
                   message: "安全规则写入成功",
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
@@ -342,12 +345,12 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
                   message: "安全规则写入失败",
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
         };
       }
-    }
+    },
   );
 }
