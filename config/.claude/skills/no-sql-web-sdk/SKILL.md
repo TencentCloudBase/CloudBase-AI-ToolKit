@@ -29,13 +29,6 @@ const _ = db.command; // Get query operators
 
 // ... login
 ```
-
-**Initialization rules (Web, @cloudbase/js-sdk):**
-
-- Always use **synchronous initialization** with the pattern above
-- Do **not** lazy-load the SDK with `import("@cloudbase/js-sdk")`
-- Do **not** wrap SDK initialization in async helpers such as `initCloudBase()` with internal `initPromise` caches
-
 Remember to sign in(auth) is ***REQUIRED** before actually querying the database.
 
 ### Collection Reference
@@ -130,6 +123,14 @@ See `./geolocation.md` for:
 - Geographic indexing requirements
 - Distance-based features
 
+### Realtime Database
+See `./realtime.md` for:
+- Real-time data synchronization using watch() method
+- Setting up listeners for document changes
+- Handling real-time updates in chat and collaboration apps
+- Performance optimization and error handling
+- Common patterns for real-time applications
+
 ### Security Rules
 See `./security-rules.md` for:
 - Configuring database permissions
@@ -177,6 +178,12 @@ Database operations return:
 6. Handle errors appropriately
 7. Create indexes for frequently queried fields
 
+### Coding Rules
+
+- It is **HIGHLY RECOMMENDED** to have a type definition and model layer for each collection in your document database. This will help you to avoid errors and make your code more robust. That would be the single source of truth for your database schema. Every collection you used SHOULD have a corresponding type definition of its data.
+- Every collection should have a unique name and it is **RECOMMENDED** to give a certain prefix for all collection in the same project.
+- Collections should have well defined and meaningful security rules(policy) for create, read, write and delete permission according to the business logic. Details refer to `./security-rules.md`. When writing expressions in security rules, The type definition of the collection mention above can be used as the type reference.
+
 ## Quick Reference
 
 Common query examples:
@@ -203,3 +210,13 @@ db.collection('users')
 
 For more detailed examples and advanced usage patterns, refer to the companion reference files in this directory.
 
+## Error handling
+**EVERY** database operation(including `get()`, `add()`, `update()`, `delete()` etc)should check the return value's code for any errors. For example:
+```javascript
+const result = await db.collection('todos').add(newTodo);
+if(typeof result.code === 'string') {
+    // Handle error ...
+}
+```
+
+Error **MUST** be handled with detail and human-readable message and friendly UI.
