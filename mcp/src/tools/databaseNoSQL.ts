@@ -52,7 +52,7 @@ checkIndex: 检查索引是否存在`),
           .string()
           .optional()
           .describe(
-            "集合名称(describeCollection、listIndexes、checkIndex 操作时必填)"
+            "集合名称(describeCollection、listIndexes、checkIndex 操作时必填)",
           ),
         indexName: z
           .string()
@@ -86,7 +86,7 @@ checkIndex: 检查索引是否存在`),
                   message: "获取 NoSQL 数据库集合列表成功",
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
@@ -97,9 +97,8 @@ checkIndex: 检查索引是否存在`),
         if (!collectionName) {
           throw new Error("检查集合时必须提供 collectionName");
         }
-        const result = await cloudbase.database.checkCollectionExists(
-          collectionName
-        );
+        const result =
+          await cloudbase.database.checkCollectionExists(collectionName);
         return {
           content: [
             {
@@ -114,7 +113,7 @@ checkIndex: 检查索引是否存在`),
                     : "云开发数据库集合不存在",
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
@@ -125,9 +124,8 @@ checkIndex: 检查索引是否存在`),
         if (!collectionName) {
           throw new Error("查看集合详情时必须提供 collectionName");
         }
-        const result = await cloudbase.database.describeCollection(
-          collectionName
-        );
+        const result =
+          await cloudbase.database.describeCollection(collectionName);
         return {
           content: [
             {
@@ -141,7 +139,7 @@ checkIndex: 检查索引是否存在`),
                   message: "获取云开发数据库集合信息成功",
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
@@ -152,9 +150,8 @@ checkIndex: 检查索引是否存在`),
         if (!collectionName) {
           throw new Error("获取索引列表时必须提供 collectionName");
         }
-        const result = await cloudbase.database.describeCollection(
-          collectionName
-        );
+        const result =
+          await cloudbase.database.describeCollection(collectionName);
         return {
           content: [
             {
@@ -168,7 +165,7 @@ checkIndex: 检查索引是否存在`),
                   message: "获取索引列表成功",
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
@@ -181,7 +178,7 @@ checkIndex: 检查索引是否存在`),
         }
         const result = await cloudbase.database.checkIndexExists(
           collectionName,
-          indexName
+          indexName,
         );
         return {
           content: [
@@ -195,7 +192,7 @@ checkIndex: 检查索引是否存在`),
                   message: result.Exists ? "索引已存在" : "索引不存在",
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
@@ -203,7 +200,7 @@ checkIndex: 检查索引是否存在`),
       }
 
       throw new Error(`不支持的操作类型: ${action}`);
-    }
+    },
   );
 
   // writeNoSqlDatabaseStructure
@@ -229,17 +226,17 @@ updateCollection: 更新集合`),
                       z.object({
                         Name: z.string(),
                         Direction: z.string(),
-                      })
+                      }),
                     ),
                   }),
-                })
+                }),
               )
               .optional(),
             DropIndexes: z
               .array(
                 z.object({
                   IndexName: z.string(),
-                })
+                }),
               )
               .optional(),
           })
@@ -258,9 +255,8 @@ updateCollection: 更新集合`),
       try {
         const cloudbase = await getManager();
         if (action === "createCollection") {
-          const result = await cloudbase.database.createCollection(
-            collectionName
-          );
+          const result =
+            await cloudbase.database.createCollection(collectionName);
           return {
             content: [
               {
@@ -273,7 +269,7 @@ updateCollection: 更新集合`),
                     message: "云开发数据库集合创建成功",
                   },
                   null,
-                  2
+                  2,
                 ),
               },
             ],
@@ -286,7 +282,7 @@ updateCollection: 更新集合`),
           }
           const result = await cloudbase.database.updateCollection(
             collectionName,
-            updateOptions
+            updateOptions,
           );
           return {
             content: [
@@ -300,7 +296,7 @@ updateCollection: 更新集合`),
                     message: "云开发数据库集合更新成功",
                   },
                   null,
-                  2
+                  2,
                 ),
               },
             ],
@@ -321,13 +317,13 @@ updateCollection: 更新集合`),
                   message: "集合创建/更新操作失败",
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
         };
       }
-    }
+    },
   );
 
   // readNoSqlDatabaseContent
@@ -391,7 +387,7 @@ updateCollection: 更新集合`),
                   message: "文档查询成功",
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
@@ -408,13 +404,13 @@ updateCollection: 更新集合`),
                   message: "文档查询失败",
                 },
                 null,
-                2
+                2,
               ),
             },
           ],
         };
       }
-    }
+    },
   );
 
   // writeNoSqlDatabaseContent
@@ -431,12 +427,15 @@ deleteCollection: 删除数据`),
         collectionName: z.string().describe("集合名称"),
         documents: z
           .array(z.object({}).passthrough())
+          .optional()
           .describe("要插入的文档对象数组,每个文档都是对象(insert 操作必填)"),
         query: z
           .union([z.object({}).passthrough(), z.string()])
+          .optional()
           .describe("查询条件(对象或字符串,推荐对象)(update/delete 操作必填)"),
         update: z
           .union([z.object({}).passthrough(), z.string()])
+          .optional()
           .describe("更新内容(对象或字符串,推荐对象)(update 操作必填)"),
         isMulti: z
           .boolean()
@@ -465,6 +464,9 @@ deleteCollection: 删除数据`),
       upsert,
     }) => {
       if (action === "insert") {
+        if (!documents) {
+          throw new Error("insert 操作时必须提供 documents");
+        }
         const text = await insertDocuments({
           collectionName,
           documents,
@@ -480,6 +482,12 @@ deleteCollection: 删除数据`),
         };
       }
       if (action === "update") {
+        if (!query) {
+          throw new Error("update 操作时必须提供 query");
+        }
+        if (!update) {
+          throw new Error("update 操作时必须提供 update");
+        }
         const text = await updateDocuments({
           collectionName,
           query,
@@ -498,6 +506,9 @@ deleteCollection: 删除数据`),
         };
       }
       if (action === "delete") {
+        if (!query) {
+          throw new Error("delete 操作时必须提供 query");
+        }
         const text = await deleteDocuments({
           collectionName,
           query,
@@ -515,7 +526,7 @@ deleteCollection: 删除数据`),
       }
 
       throw new Error(`不支持的操作类型: ${action}`);
-    }
+    },
   );
 }
 
@@ -549,7 +560,7 @@ async function insertDocuments({
         message: "文档插入成功",
       },
       null,
-      2
+      2,
     );
   } catch (error: any) {
     return JSON.stringify(
@@ -559,7 +570,7 @@ async function insertDocuments({
         message: "文档插入失败",
       },
       null,
-      2
+      2,
     );
   }
 }
@@ -605,7 +616,7 @@ async function updateDocuments({
         message: "文档更新成功",
       },
       null,
-      2
+      2,
     );
   } catch (error: any) {
     return JSON.stringify(
@@ -615,7 +626,7 @@ async function updateDocuments({
         message: "文档更新失败",
       },
       null,
-      2
+      2,
     );
   }
 }
@@ -653,7 +664,7 @@ async function deleteDocuments({
         message: "文档删除成功",
       },
       null,
-      2
+      2,
     );
   } catch (error: any) {
     return JSON.stringify(
@@ -663,7 +674,7 @@ async function deleteDocuments({
         message: "文档删除失败",
       },
       null,
-      2
+      2,
     );
   }
 }
