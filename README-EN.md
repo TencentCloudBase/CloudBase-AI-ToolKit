@@ -2,7 +2,7 @@
 
 ![](scripts/assets/toolkit-better.gif)
 
-<h1>CloudBase AI ToolKit</h1>
+<h1>CloudBase MCP</h1>
 
 **🪐 Go from AI prompt to live app in one click**<br/>
 The bridge that connects your AI IDE (Cursor, Copilot, etc.) directly to Tencent CloudBase
@@ -35,13 +35,13 @@ The bridge that connects your AI IDE (Cursor, Copilot, etc.) directly to Tencent
 
 </div>
 
-## Why You Need CloudBase AI ToolKit
+## Why You Need CloudBase MCP
 
 AI programming tools (like Cursor, Copilot) solve the **code generation** challenge.
 
 However, there's still a gap between "generating code" and "application going live" (deployment, database configuration, CDN, domain setup).
 
-**CloudBase AI ToolKit bridges this gap.**
+**CloudBase MCP** (formerly CloudBase AI ToolKit) bridges this gap.
 
 You no longer need:
 - ❌ Complex DevOps configuration and YAML files
@@ -405,7 +405,7 @@ When an app has issues, AI automatically views logs, analyzes errors, and genera
 
 ## Contributors
 
-Thanks to all the developers who have contributed to CloudBase AI ToolKit!
+Thanks to all the developers who have contributed to CloudBase MCP!
 
 [![Contributors](https://contrib.rocks/image?repo=TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/graphs/contributors)
 

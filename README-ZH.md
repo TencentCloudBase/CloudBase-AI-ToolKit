@@ -2,7 +2,7 @@
 
 ![](scripts/assets/toolkit-better.gif)
 
-<h1>CloudBase AI ToolKit</h1>
+<h1>CloudBase MCP</h1>
 
 **🪐 AI 编程，一键上线**<br/>
 连接 AI IDE 与腾讯云 CloudBase 的部署桥梁，让你的 AI 应用即刻上线
@@ -35,13 +35,13 @@
 
 </div>
 
-## 为什么你需要 CloudBase AI ToolKit？
+## 为什么你需要 CloudBase MCP？
 
 AI 编程工具（如 Cursor、Copilot）解决了**代码生成**的难题。
 
 但是，从"生成代码"到"应用上线"（部署、配置数据库、CDN、域名），依然存在一条鸿沟。
 
-**CloudBase AI ToolKit 填补了这条鸿沟。**
+**CloudBase MCP**（原 CloudBase AI ToolKit）填补了这条鸿沟。
 
 你不再需要：
 - ❌ 繁琐的 DevOps 配置和 YAML 文件
@@ -405,7 +405,7 @@ CodeBuddy 已内置 CloudBase MCP，无需配置即可使用。
 
 ## Contributors
 
-感谢所有为 CloudBase AI ToolKit 做出贡献的开发者！
+感谢所有为 CloudBase MCP 做出贡献的开发者！
 
 [![Contributors](https://contrib.rocks/image?repo=TencentCloudBase/CloudBase-AI-ToolKit)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/graphs/contributors)
 
