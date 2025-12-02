@@ -85,10 +85,6 @@ AI 编程工具（如 Cursor、Copilot）解决了**代码生成**的难题。
 > 一键安装，自动配置，支持多种 AI 编程工具：
 > 
 > ```bash
-> # Mac/Linux/WSL
-> curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
-> 
-> # Windows PowerShell
 > npm install @cloudbase/cli@latest -g
 > ```
 > 

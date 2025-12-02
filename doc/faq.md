@@ -125,16 +125,10 @@ AI 会自动下载并更新最新的规则配置到你的项目目录。
 
 #### 快速安装步骤
 
-**1. 使用一键安装脚本**
+**1. 使用 npm 安装**
 
-Mac/Linux/Windows WSL 用户：
 ```bash
-curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
-```
-
-Windows PowerShell 用户：
-```powershell
-irm https://static.cloudbase.net/cli/install/install.ps1 | iex
+npm install @cloudbase/cli@latest -g
 ```
 
 **2. 验证安装**
@@ -224,10 +218,8 @@ CloudBase AI CLI 支持通过环境变量进行无浏览器授权，完美解决
 
 #### 安装 CloudBase AI CLI
 
-使用 CloudBase AI CLI 的快速安装脚本：
-
 ```bash
-curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
+npm install @cloudbase/cli@latest -g
 ```
 
 安装完成后会自动生成 `cloudbase-mcp` 全局命令。

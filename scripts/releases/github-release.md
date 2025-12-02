@@ -24,8 +24,8 @@
 
 ### 💻 快速开始
 ```bash
-# 一键安装
-curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
+# 安装
+npm install @cloudbase/cli@latest -g
 
 # 开始使用
 tcb ai

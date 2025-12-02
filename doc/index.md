@@ -62,11 +62,7 @@ CloudBase AI CLI 是一个集成多种主流 AI 编程工具的统一命令行�
 
 **一键安装**
 ```bash
-# Mac/Linux/Windows 的 WSL
-curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
-
-# Windows PowerShell
-irm https://static.cloudbase.net/cli/install/install.ps1 | iex
+npm install @cloudbase/cli@latest -g
 ```
 
 **开始使用**

@@ -85,10 +85,6 @@ In AI IDEs that support MCP (Cursor, WindSurf, CodeBuddy, etc.), just add one li
 > One-click installation, automatic configuration, supports multiple AI programming tools:
 > 
 > ```bash
-> # Mac/Linux/WSL
-> curl https://static.cloudbase.net/cli/install/install.sh -fsS | bash
-> 
-> # Windows PowerShell
 > npm install @cloudbase/cli@latest -g
 > ```
 > 
