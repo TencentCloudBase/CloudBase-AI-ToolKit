@@ -55,9 +55,8 @@
 > [!TIP] 
 > 如果安装以后工具数量一直为 0，请参考[常见问题](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/faq#mcp-%E6%98%BE%E7%A4%BA%E5%B7%A5%E5%85%B7%E6%95%B0%E9%87%8F%E4%B8%BA-0-%E6%80%8E%E4%B9%88%E5%8A%9E)
 
-**一键安装（推荐）：**
 
-[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=cloudbase&config=JTdCJTIyY29tbWFuZCUyMiUzQSUyMm5weCUyMG5wbS1nbG9iYWwtZXhlYyU0MGxhdGVzdCUyMCU0MGNsb3VkYmFzZSUyRmNsb3VkYmFzZS1tY3AlNDBsYXRlc3QlMjIlMkMlMjJlbnYlMjIlM0ElN0IlMjJJTlRFR1JBVElPTl9JREUlMjIlM0ElMjJDdXJzb3IlMjIlN0QlN0Q%3D)
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en-US/install-mcp?name=cloudbase&config=eyJlbnYiOnsiSU5URUdSQVRJT05fSURFIjoiQ3Vyc29yIn0sImNvbW1hbmQiOiJucHggbnBtLWdsb2JhbC1leGVjQGxhdGVzdCBAY2xvdWRiYXNlL2Nsb3VkYmFzZS1tY3BAbGF0ZXN0In0%3D)
 
 **手动配置：**
 

@@ -29,9 +29,9 @@
 
 <sup>从 AI 提示词到应用上线的最短路径</sup>
 
-[![][github-trending-shield]][github-trending-url]
+[![][github-trending-shield]](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
 
-![][image-overview]
+[<img width="791" height="592" alt="Clipboard_Screenshot_1763724670" src="https://github.com/user-attachments/assets/f769beb7-5710-4397-8854-af2b7e452f70" />](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials)
 
 </div>
 
