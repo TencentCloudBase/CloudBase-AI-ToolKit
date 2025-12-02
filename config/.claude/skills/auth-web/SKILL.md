@@ -66,7 +66,6 @@ Use it when you need to:
    - You may change variable names and UI, but **do not change API names or field names**.
 
 5. **If you’re unsure about an API**
-   - Look it up in the official docs mirror: `/source-of-truth/auth/web-sdk/authentication.md`.
    - If an API is not documented there, **do not use or invent it**. Instead:
      - Use a documented Web SDK API, or
      - Ask the user to use a Node/HTTP skill for server-side or HTTP flows.
@@ -95,35 +94,7 @@ const auth = app.auth();
 - Do **not** lazy-load the SDK with `import("@cloudbase/js-sdk")`
 - Do **not** wrap SDK initialization in async helpers such as `initCloudBase()` with internal `initPromise` caches
 - Keep a single shared `app`/`auth` instance in your frontend app; reuse it instead of re-initializing
-
-### Local development proxy for default login page
-
-When using `auth.toDefaultLoginPage()` during local development, you must ensure that the `/__auth` path is proxied to your CloudBase Web hosting domain. For example, in a Vite + React project:
-
-```ts
-// vite.config.ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react"; 
-
-export default defineConfig({
-  plugins: [react()],
-  base: "./", // Use relative paths to avoid asset issues on static hosting
-  server: {
-    host: "127.0.0.1",
-    proxy: {
-      "/__auth": {
-        target: "https://envId-appid.tcloudbaseapp.com/", // Replace with your CloudBase Web app domain
-        changeOrigin: true,
-      },
-    },
-    allowedHosts: true,
-  },
-});
-```
-
-The CloudBase Web hosting domain can be obtained via the CloudBase MCP `envQuery` tool (Static hosting config); in the response, use the value from the `StaticDomain` field.
-
-For other tooling (Webpack dev server, Next.js, custom Node dev servers, etc.), configure an **equivalent `/__auth` proxy rule** so that all `/__auth` requests are forwarded to the CloudBase domain during local development.
+  
 
 **⚠️ Important: Console Configuration Required**
 
@@ -174,15 +145,14 @@ For other tooling (Webpack dev server, Next.js, custom Node dev servers, etc.), 
 ### Scenario 1: SMS login (passwordless, recommended default)
 
 ```js
-const phoneNum = "13800000000";
+// Collect user's phone number into variable `phoneNum` by providing a input UI
 
 // Send SMS code
 const verificationInfo = await auth.getVerification({
   phone_number: `+86 ${phoneNum}`,
 });
 
-// User enters code
-const verificationCode = "000000";
+// Collect user's phone number into variable `verificationCode` by providing a input UI 
 
 // Sign in
 await auth.signInWithSms({

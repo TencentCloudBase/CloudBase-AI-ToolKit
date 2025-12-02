@@ -70,7 +70,7 @@ Use this skill for **CloudBase platform knowledge** when you need to:
 
 ### Web Authentication
 - **Must use SDK built-in authentication**: CloudBase Web SDK provides complete authentication features
-- **Recommended method**: `auth.toDefaultLoginPage()` redirect to default login page
+- **Recommended method**: SMS login with `auth.getVerification()`, for detailed, refer to web auth related docs
 - **Forbidden behavior**: Do not use cloud functions to implement login authentication logic
 - **User management**: After login, get user information via `auth.getCurrentUser()`
 
@@ -161,4 +161,3 @@ After creating/deploying resources, provide corresponding console management pag
 4. **Data Model**: https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/doc/model/${modelName}
 
 **Usage**: After creating corresponding resources, replace variables with actual values, provide to user for management operations.
-
