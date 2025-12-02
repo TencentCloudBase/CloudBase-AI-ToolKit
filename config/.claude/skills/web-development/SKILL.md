@@ -98,11 +98,22 @@ if (loginState && loginState.user) {
   console.log("Current user:", user);
 } else {
   // Not logged in - use SDK built-in authentication features
-  // Method 1: Redirect to default login page (recommended)
-  await auth.toDefaultLoginPage({});
+    
+  // Collect user's phone number into variable `phoneNum` by providing a input UI
 
-  // Method 2: Anonymous login
-  // await auth.signInAnonymously();
+  // Send SMS code
+  const verificationInfo = await auth.getVerification({
+    phone_number: `+86 ${phoneNum}`,
+  });
+  
+  // Collect user's phone number into variable `verificationCode` by providing a input UI 
+  
+  // Sign in
+  await auth.signInWithSms({
+    verificationInfo,
+    verificationCode,
+    phoneNum,
+  });
 }
 ```
 
@@ -118,39 +129,10 @@ if (loginState && loginState.user) {
 - Only use **documented** CloudBase Web SDK methods
 - Before calling any method on `app`, `auth`, `db`, or other SDK objects, **confirm it exists in the official CloudBase Web SDK documentation**
 - If a method or option is **not** mentioned in the official docs (for example some guessed method name), **do NOT invent or use it**
-
-
-### Local development proxy for default login page
-
-When using `auth.toDefaultLoginPage()` in local development, you must proxy the `/__auth` path to your CloudBase Web hosting domain. For example, in a Vite + React project:
-
-```ts
-// vite.config.ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-
-export default defineConfig({
-  plugins: [react()],
-  base: "./", // Use relative paths to avoid asset issues on static hosting
-  server: {
-    host: "127.0.0.1",
-    proxy: {
-      "/__auth": {
-        target: "https://envId-appid.tcloudbaseapp.com/", // Replace with your CloudBase Web app domain
-        changeOrigin: true,
-      },
-    },
-    allowedHosts: true,
-  },
-});
-```
-
-The CloudBase Web hosting domain can be obtained via the CloudBase MCP `envQuery` tool (Static hosting config); in the response, use the value from the `StaticDomain` field.
-
-In other dev servers/build tools (Webpack dev server, Next.js custom dev server, etc.), implement an **equivalent proxy rule** so that all `/__auth` requests are forwarded to the CloudBase domain during local development.
+ 
 ## Authentication Best Practices
 
-1. **Must use SDK built-in authentication**: CloudBase Web SDK provides complete authentication features, including default login page, anonymous login, custom login, etc.
+1. **Must use SDK built-in authentication**: CloudBase Web SDK provides complete authentication features, including login by SMS, anonymous login, custom login, etc.
 
 2. **Forbidden to implement login using cloud functions**: Do not create cloud functions to handle login logic, this is the wrong approach
 

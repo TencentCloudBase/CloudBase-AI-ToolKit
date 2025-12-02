@@ -239,8 +239,24 @@ const res = await wx.cloud.callContainer({
 ```js
 import cloudbase from "@cloudbase/js-sdk";
 
-const app = cloudbase.init({ env: "<envId>" });
-await app.auth().toDefaultLoginPage({});
+const app = cloudbase.init({ env: "<envId>" });  // Collect user's phone number into variable `phoneNum` by providing a input UI
+
+const auth = app.auth();
+
+// Send SMS code
+const verificationInfo = await auth.getVerification({
+  phone_number: `+86 ${phoneNum}`,
+});
+
+// Collect user's phone number into variable `verificationCode` by providing a input UI 
+
+// Sign in
+await auth.signInWithSms({
+  verificationInfo,
+  verificationCode,
+  phoneNum,
+});
+
 const res = await app.callContainer({
   name: "<serviceName>", method: "POST", path: "/api",
   header: { "Content-Type": "application/json" },
