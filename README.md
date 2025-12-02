@@ -29,6 +29,8 @@
 
 <sup>从 AI 提示词到应用上线的最短路径</sup>
 
+<img width="1148" height="389" alt="Clipboard_Screenshot_1764660604" src="https://github.com/user-attachments/assets/86294f88-632e-46b5-958f-94d8c8b85070" />
+
 [![][github-trending-shield]][github-trending-url]
 
 [<img width="791" height="592" alt="Clipboard_Screenshot_1763724670" src="https://github.com/user-attachments/assets/f769beb7-5710-4397-8854-af2b7e452f70" />](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials)
