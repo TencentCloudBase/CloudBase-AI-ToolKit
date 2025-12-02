@@ -145,7 +145,7 @@ AI 编程工具（如 Cursor、Copilot）解决了**代码生成**的难题。
 - 一键部署到云端
 ```
 
-<img width="1032" height="776" alt="f1" src="https://github.com/user-attachments/assets/62e6dd9d-9c53-4668-841d-0ac1985a75e0" />
+<img width="1200" alt="AI Native" src="scripts/assets/cloudbase-mcp-card-01.png" />
 
 ### 2. 一键部署（One-Click Deploy）
 
@@ -159,7 +159,7 @@ AI 自动化的 MCP 部署流，AI 帮你搞定从云函数、数据库到静态
 - 自动返回访问链接
 ```
 
-<img width="1032" height="776" alt="f2" src="https://github.com/user-attachments/assets/20e0493a-fa50-4c03-b4ac-3dc584eb4ccb" />
+<img width="1200" alt="One-Click Deploy" src="scripts/assets/cloudbase-mcp-card-02.png" />
 
 ### 3. 智能调试（Smart Debugging）
 
@@ -173,7 +173,7 @@ AI 自动化的 MCP 部署流，AI 帮你搞定从云函数、数据库到静态
 - 自动重新部署
 ```
 
-<img width="1032" height="776" alt="f5" src="https://github.com/user-attachments/assets/5a61714a-ddcf-448a-8740-983bbad9d2b9" />
+<img width="1200" alt="Smart Debugging" src="scripts/assets/cloudbase-mcp-card-03.png" />
 
 ### 4. 全栈支持（Full-Stack Ready）
 
@@ -185,7 +185,7 @@ AI 自动化的 MCP 部署流，AI 帮你搞定从云函数、数据库到静态
 | **微信小程序** | 原生/UniApp | 小程序发布 |
 | **后端服务** | Node.js/Python | 云函数/云托管 |
 
-<img width="1032" height="776" alt="f3" src="https://github.com/user-attachments/assets/1c50fed3-3223-4cd6-8534-885dc798c08e" />
+<img width="1200" alt="Full-Stack Ready" src="scripts/assets/cloudbase-mcp-card-04.png" />
 
 ### 5. 知识检索（Knowledge Search）
 
@@ -198,7 +198,7 @@ AI 自动化的 MCP 部署流，AI 帮你搞定从云函数、数据库到静态
 - 提供代码示例
 ```
 
-<img width="1032" height="776" alt="f6" src="https://github.com/user-attachments/assets/9ccb6b39-1f76-46b8-8b10-b076bfdcc37f" />
+<img width="1200" alt="Knowledge Search" src="scripts/assets/cloudbase-mcp-card-05.png" />
 
 ### 6. 灵活工作流（Flexible Workflow）
 
@@ -209,7 +209,7 @@ AI 自动化的 MCP 部署流，AI 帮你搞定从云函数、数据库到静态
 /no_spec - 快速迭代（直接实现）
 ```
 
-<img width="1032" height="776" alt="f7" src="https://github.com/user-attachments/assets/30a0632c-92e9-4f6d-8da9-10aef044d516" />
+<img width="1200" alt="Flexible Workflow" src="scripts/assets/cloudbase-mcp-card-06.png" />
 
 
 ## 📦 安装配置
