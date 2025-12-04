@@ -82,16 +82,19 @@ export async function getClaudePrompt(): Promise<string> {
     // Try to get from downloaded template
     const extractDir = await downloadWebTemplate();
     const claudePath = path.join(extractDir, "CLAUDE.md");
-    
+
     try {
       const content = await fs.readFile(claudePath, "utf8");
       return content;
     } catch (error) {
       // CLAUDE.md not found in template, use fallback
-      warn("[getClaudePrompt] CLAUDE.md not found in template, using fallback", {
-        error,
-        path: claudePath,
-      });
+      warn(
+        "[getClaudePrompt] CLAUDE.md not found in template, using fallback",
+        {
+          error,
+          path: claudePath,
+        },
+      );
       return FALLBACK_CLAUDE_PROMPT;
     }
   } catch (error) {
@@ -215,6 +218,7 @@ export async function registerRagTools(server: ExtendedMcpServer) {
   );
 
   let skills: SkillInfo[] = [];
+  let openapis: OpenAPIInfo[] = [];
 
   // 知识库检索
   try {
@@ -225,13 +229,22 @@ export async function registerRagTools(server: ExtendedMcpServer) {
     });
   }
 
+  // OpenAPI 文档准备
+  try {
+    openapis = await prepareOpenAPIDocs();
+  } catch (error) {
+    warn("[searchKnowledgeBase] Failed to prepare OpenAPI docs", {
+      error,
+    });
+  }
+
   server.registerTool?.(
     "searchKnowledgeBase",
     {
       title: "云开发知识库检索",
-      description: `云开发知识库智能检索工具，支持向量查询 (vector) 和固定文档 (doc) 查询。
+      description: `云开发知识库智能检索工具，支持向量查询 (vector)、固定文档 (doc) 和 OpenAPI 文档 (openapi) 查询。
 
-      强烈推荐始终优先使用固定文档 (doc) 模式进行检索，仅当固定文档无法覆盖你的问题时，再使用向量查询 (vector) 模式。
+      强烈推荐始终优先使用固定文档 (doc) 或 OpenAPI 文档 (openapi) 模式进行检索，仅当固定文档无法覆盖你的问题时，再使用向量查询 (vector) 模式。
 
       固定文档 (doc) 查询当前支持 ${skills.length} 个固定文档，分别是：
       ${skills
@@ -241,9 +254,14 @@ export async function registerRagTools(server: ExtendedMcpServer) {
               skill.description
             }`,
         )
+        .join("\n")}
+
+      OpenAPI 文档 (openapi) 查询当前支持 ${openapis.length} 个 API 文档，分别是：
+      ${openapis
+        .map((api) => `API名：${api.name} API介绍：${api.description}`)
         .join("\n")}`,
       inputSchema: {
-        mode: z.enum(["vector", "doc"]),
+        mode: z.enum(["vector", "doc", "openapi"]),
         docName: z
           .enum(
             skills.map((skill) =>
@@ -252,6 +270,12 @@ export async function registerRagTools(server: ExtendedMcpServer) {
           )
           .optional()
           .describe("mode=doc 时指定。文档名称。"),
+        apiName: z
+          .enum(
+            openapis.map((api) => api.name) as unknown as [string, ...string[]],
+          )
+          .optional()
+          .describe("mode=openapi 时指定。API 名称。"),
         threshold: z
           .number()
           .default(0.5)
@@ -294,6 +318,7 @@ export async function registerRagTools(server: ExtendedMcpServer) {
       threshold = 0.5,
       mode,
       docName,
+      apiName,
     }) => {
       if (mode === "doc") {
         const absolutePath = skills.find((skill) =>
@@ -305,6 +330,29 @@ export async function registerRagTools(server: ExtendedMcpServer) {
             {
               type: "text",
               text: `The doc's absolute path is: ${absolutePath}. ${(await fs.readFile(absolutePath)).toString()}`,
+            },
+          ],
+        };
+      }
+
+      if (mode === "openapi") {
+        const api = openapis.find((api) => api.name === apiName);
+        if (!api) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `OpenAPI document "${apiName}" not found. Available APIs: ${openapis.map((a) => a.name).join(", ")}`,
+              },
+            ],
+          };
+        }
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `OpenAPI document: ${api.name}\nDescription: ${api.description}\nPath: ${api.absolutePath}\n\n${(await fs.readFile(api.absolutePath)).toString()}`,
             },
           ],
         };
@@ -399,6 +447,78 @@ function extractDescriptionFromFrontMatter(content: string): string | null {
 }
 
 type SkillInfo = { description: string; absolutePath: string };
+
+// OpenAPI 文档信息
+type OpenAPIInfo = { name: string; description: string; absolutePath: string };
+
+// OpenAPI 文档 URL 列表
+const OPENAPI_SOURCES: Array<{
+  name: string;
+  description: string;
+  url: string;
+}> = [
+  {
+    name: "mysqldb",
+    description: "MySQL RESTful API - 云开发 MySQL 数据库 HTTP API",
+    url: "https://docs.cloudbase.net/openapi/mysqldb.v1.openapi.yaml",
+  },
+  {
+    name: "functions",
+    description: "Cloud Functions API - 云函数 HTTP API",
+    url: "https://docs.cloudbase.net/openapi/functions.v1.openapi.yaml",
+  },
+  {
+    name: "auth",
+    description: "Authentication API - 身份认证 HTTP API",
+    url: "https://docs.cloudbase.net/openapi/auth.v1.openapi.yaml",
+  },
+  {
+    name: "cloudrun",
+    description: "CloudRun API - 云托管服务 HTTP API",
+    url: "https://docs.cloudbase.net/openapi/cloudrun.v1.openapi.yaml",
+  },
+  {
+    name: "storage",
+    description: "Storage API - 云存储 HTTP API",
+    url: "https://docs.cloudbase.net/openapi/storage.v1.openapi.yaml",
+  },
+];
+
+// 下载并准备 OpenAPI 文档
+async function prepareOpenAPIDocs(): Promise<OpenAPIInfo[]> {
+  const baseDir = path.join(os.homedir(), ".cloudbase-mcp", "openapi");
+  await fs.mkdir(baseDir, { recursive: true });
+
+  const results: OpenAPIInfo[] = [];
+
+  await Promise.all(
+    OPENAPI_SOURCES.map(async (source) => {
+      try {
+        const response = await fetch(source.url);
+        if (!response.ok) {
+          warn(`[prepareOpenAPIDocs] Failed to download ${source.name}`, {
+            status: response.status,
+          });
+          return;
+        }
+        const content = await response.text();
+        const filePath = path.join(baseDir, `${source.name}.openapi.yaml`);
+        await fs.writeFile(filePath, content, "utf8");
+        results.push({
+          name: source.name,
+          description: source.description,
+          absolutePath: filePath,
+        });
+      } catch (error) {
+        warn(`[prepareOpenAPIDocs] Failed to download ${source.name}`, {
+          error,
+        });
+      }
+    }),
+  );
+
+  return results;
+}
 
 async function collectSkillDescriptions(rootDir: string): Promise<SkillInfo[]> {
   const result: SkillInfo[] = [];
