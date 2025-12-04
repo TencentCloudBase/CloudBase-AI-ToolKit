@@ -10,6 +10,7 @@ import { registerRagTools } from "./tools/rag.js";
 import { registerSetupTools } from "./tools/setup.js";
 import { registerStorageTools } from "./tools/storage.js";
 // import { registerMiniprogramTools } from "./tools/miniprogram.js";
+import { SetLevelRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { registerCloudRunTools } from "./tools/cloudrun.js";
 import { registerDataModelTools } from "./tools/dataModel.js";
 import { registerGatewayTools } from "./tools/gateway.js";
@@ -17,6 +18,7 @@ import { registerInviteCodeTools } from "./tools/invite-code.js";
 import { registerSecurityRuleTools } from "./tools/security-rule.js";
 import { CloudBaseOptions } from "./types.js";
 import { enableCloudMode } from "./utils/cloud-mode.js";
+import { info } from './utils/logger.js';
 import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
 
 // 插件定义
@@ -157,6 +159,14 @@ export async function createCloudBaseMcpServer(options?: {
     },
   ) as ExtendedMcpServer;
 
+  // Only set logging handler if logging capability is declared
+  if (ide === "CodeBuddy") {
+    server.server.setRequestHandler(SetLevelRequestSchema, (request, extra) => {
+      info(`--- Logging level: ${request.params.level}`);
+      return {};
+    });
+  }
+
   // Store cloudBaseOptions in server instance for tools to access
   if (cloudBaseOptions) {
     server.cloudBaseOptions = cloudBaseOptions;
@@ -199,5 +209,6 @@ export { error, info, warn } from "./utils/logger.js";
 export {
   reportToolCall,
   reportToolkitLifecycle,
-  telemetryReporter,
+  telemetryReporter
 } from "./utils/telemetry.js";
+

@@ -1,6 +1,9 @@
+import fs from 'fs';
+import path from 'path';
 import { z } from "zod";
-import { getCloudBaseManager } from '../cloudbase-manager.js';
+import { getCloudBaseManager, getEnvId } from '../cloudbase-manager.js';
 import { ExtendedMcpServer } from '../server.js';
+import { sendDeployNotification } from '../utils/notification.js';
 
 
 // 定义扩展的EnvInfo接口，包含StaticStorages属性
@@ -62,6 +65,44 @@ export function registerHostingTools(server: ExtendedMcpServer) {
       // 获取环境信息
       const envInfo = await cloudbase.env.getEnvInfo() as ExtendedEnvInfo;
       const staticDomain = envInfo.EnvInfo?.StaticStorages?.[0]?.StaticDomain;
+      const accessUrl = staticDomain ? `https://${staticDomain}/${cloudPath || ''}` : "";
+      
+      // Send deployment notification to CodeBuddy IDE
+      try {
+        const envId = await getEnvId(cloudBaseOptions);
+        
+        // Extract project name from localPath
+        let projectName = "unknown";
+        if (localPath) {
+          try {
+            // If localPath is a file, get parent directory name; if it's a directory, get directory name
+            const stats = fs.statSync(localPath);
+            if (stats.isFile()) {
+              projectName = path.basename(path.dirname(localPath));
+            } else {
+              projectName = path.basename(localPath);
+            }
+          } catch (statErr) {
+            // If stat fails, try to extract from path directly
+            projectName = path.basename(localPath);
+          }
+        }
+        
+        // Build console URL
+        const consoleUrl = `https://tcb.cloud.tencent.com/dev?envId=${envId}#/static-hosting`;
+        
+        // Send notification
+        await sendDeployNotification(server, {
+          deployType: 'hosting',
+          url: accessUrl,
+          projectId: envId,
+          projectName: projectName,
+          consoleUrl: consoleUrl
+        });
+      } catch (notifyErr) {
+        // Notification failure should not affect deployment flow
+        // Error is already logged in sendDeployNotification
+      }
       
       return {
         content: [
@@ -71,7 +112,7 @@ export function registerHostingTools(server: ExtendedMcpServer) {
               ...result,
               staticDomain,
               message: "文件上传成功",
-              accessUrl: staticDomain ? `https://${staticDomain}/${cloudPath || ''}` : "请检查静态托管配置"
+              accessUrl: accessUrl
             }, null, 2)
           }
         ]

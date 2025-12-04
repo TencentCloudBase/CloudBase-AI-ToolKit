@@ -4,6 +4,7 @@ import path from 'path';
 import { z } from "zod";
 import { getCloudBaseManager, getEnvId } from '../cloudbase-manager.js';
 import { ExtendedMcpServer } from '../server.js';
+import { sendDeployNotification } from '../utils/notification.js';
 
 // CloudRun service types
 export const CLOUDRUN_SERVICE_TYPES = ['function', 'container'] as const;
@@ -601,6 +602,55 @@ for await (let x of res.textStream) {
               fs.writeFileSync(cloudbasercPath, JSON.stringify(cloudbasercContent, null, 2));
             } catch (error) {
               // Ignore cloudbaserc.json creation errors
+            }
+            
+            // Send deployment notification to CodeBuddy IDE
+            try {
+              // Query service details to get access URL
+              let serviceUrl = "";
+              try {
+                const serviceDetails = await cloudrunService.detail({ serverName: input.serverName });
+                // Extract access URL from service details
+                // Priority: DefaultDomainName > CustomDomainName > PublicDomain > InternalDomain
+                const details = serviceDetails as any; // Use any to access dynamic properties
+                if (details?.BaseInfo?.DefaultDomainName) {
+                  // DefaultDomainName is already a complete URL (e.g., https://...)
+                  serviceUrl = details.BaseInfo.DefaultDomainName;
+                } else if (details?.BaseInfo?.CustomDomainName) {
+                  // CustomDomainName might be a domain without protocol
+                  const customDomain = details.BaseInfo.CustomDomainName;
+                  serviceUrl = customDomain.startsWith('http') ? customDomain : `https://${customDomain}`;
+                } else if (details?.BaseInfo?.PublicDomain) {
+                  serviceUrl = `https://${details.BaseInfo.PublicDomain}`;
+                } else if (details?.BaseInfo?.InternalDomain) {
+                  serviceUrl = `https://${details.BaseInfo.InternalDomain}`;
+                } else if (details?.AccessInfo?.PublicDomain) {
+                  serviceUrl = `https://${details.AccessInfo.PublicDomain}`;
+                } else {
+                  serviceUrl = ""; // URL not available
+                }
+              } catch (detailErr) {
+                // If query fails, continue with empty URL
+                serviceUrl = "";
+              }
+              
+              // Extract project name from targetPath
+              const projectName = path.basename(targetPath);
+              
+              // Build console URL
+              const consoleUrl = `https://tcb.cloud.tencent.com/dev?envId=${currentEnvId}#/platform-run/service/detail?serverName=${input.serverName}&tabId=overview&envId=${currentEnvId}`;
+              
+              // Send notification
+              await sendDeployNotification(server, {
+                deployType: 'cloudrun',
+                url: serviceUrl,
+                projectId: currentEnvId,
+                projectName: projectName,
+                consoleUrl: consoleUrl
+              });
+            } catch (notifyErr) {
+              // Notification failure should not affect deployment flow
+              // Error is already logged in sendDeployNotification
             }
             
             return {
