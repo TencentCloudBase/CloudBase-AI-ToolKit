@@ -112,18 +112,20 @@ const IDES: IDE[] = [
   },
   {
     id: 'github-copilot',
-    name: 'VSCode Copilot',
+    name: 'VSCode',
     platform: 'VS Code 插件',
     configPath: '.vscode/mcp.json',
     iconUrl: 'https://code.visualstudio.com/favicon.ico',
     docUrl: 'https://code.visualstudio.com/docs/copilot/chat/mcp-servers',
+    supportsProjectMCP: true,
+    verificationPrompt: '检查 CloudBase 工具是否可用, 下载 CloudBase AI 开发规则',
     configExample: `{
   "servers": {
     "cloudbase": {
       "command": "npx",
       "args": ["@cloudbase/cloudbase-mcp@latest"],
       "env": {
-        "INTEGRATION_IDE": "VSCode Copilot"
+        "INTEGRATION_IDE": "VSCode"
       }
     }
   }
@@ -386,7 +388,7 @@ const translations: Record<string, Record<string, string>> = {
   'zh-CN': {
     client: 'Client',
     configureDescription: '配置你的 MCP 客户端以连接 CloudBase 环境',
-    installation: '安装',
+    installation: '步骤 1：安装',
     useTemplate: '使用项目模板（推荐）',
     templateDescription: '模板已内置 MCP 配置和 AI 规则',
     viewTemplates: '查看模板',
@@ -409,7 +411,7 @@ const translations: Record<string, Record<string, string>> = {
   'en': {
     client: 'Client',
     configureDescription: 'Configure your MCP client to connect with your CloudBase environment',
-    installation: 'Installation',
+    installation: 'Step 1: Installation',
     useTemplate: 'Use project template (recommended)',
     templateDescription: 'Template includes MCP configuration and AI rules',
     viewTemplates: 'View templates',
@@ -506,9 +508,26 @@ export default function IDESelector({
     return `https://cursor.com/en-US/install-mcp?name=cloudbase&config=${encodeURIComponent(base64Config)}`;
   };
 
+  // Generate VSCode one-click install URL
+  const generateVSCodeInstallUrl = (ideConfig: IDE): string => {
+    const config = {
+      name: 'cloudbase',
+      command: 'npx',
+      args: ['@cloudbase/cloudbase-mcp@latest'],
+      env: {
+        INTEGRATION_IDE: ideConfig.name
+      }
+    };
+    const configJson = JSON.stringify(config);
+    return `vscode:mcp/install?${encodeURIComponent(configJson)}`;
+  };
+
   const getOneClickInstallUrl = (): string | null => {
     if (ide.id === 'cursor') {
       return generateCursorInstallUrl(ide);
+    }
+    if (ide.id === 'github-copilot') {
+      return generateVSCodeInstallUrl(ide);
     }
     return ide.oneClickInstallUrl || null;
   };
@@ -683,8 +702,8 @@ export default function IDESelector({
             <a
               href={getOneClickInstallUrl()!}
               className={styles.oneClickButton}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={ide.id === 'github-copilot' ? undefined : '_blank'}
+              rel={ide.id === 'github-copilot' ? undefined : 'noopener noreferrer'}
             >
               {ide.oneClickInstallImage ? (
                 <img 
