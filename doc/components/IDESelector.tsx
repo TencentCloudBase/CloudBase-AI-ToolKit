@@ -702,8 +702,8 @@ export default function IDESelector({
             <a
               href={getOneClickInstallUrl()!}
               className={styles.oneClickButton}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={ide.id === 'github-copilot' ? undefined : '_blank'}
+              rel={ide.id === 'github-copilot' ? undefined : 'noopener noreferrer'}
             >
               {ide.oneClickInstallImage ? (
                 <img 
