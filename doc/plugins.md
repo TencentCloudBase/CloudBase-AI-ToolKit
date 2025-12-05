@@ -2,7 +2,7 @@
 
 CloudBase MCP 采用插件化架构，支持按需启用工具模块，解决 MCP 客户端工具数量限制问题。
 
-## 📋 插件列表
+## 插件列表
 
 ### 默认插件 (开箱即用)
 
@@ -27,7 +27,7 @@ CloudBase MCP 采用插件化架构，支持按需启用工具模块，解决 MC
 | `miniprogram` | 小程序发布 (上传、预览、构建) |
 | `cloudrun` | 云托管服务 (容器部署、服务管理) |
 
-## ⚙️ 插件配置
+## 插件配置
 
 ### 指定启用插件
 
@@ -61,7 +61,7 @@ CloudBase MCP 采用插件化架构，支持按需启用工具模块，解决 MC
 }
 ```
 
-## 🎯 常用配置
+## 常用配置
 
 | 场景 | 推荐插件 |
 |------|----------|
@@ -71,7 +71,7 @@ CloudBase MCP 采用插件化架构，支持按需启用工具模块，解决 MC
 | **小程序** | `env,database,functions,storage,setup,miniprogram` |
 | **AI 应用** | `env,database,functions,hosting,rag,interactive` |
 
-## 📚 相关文档
+## 相关文档
 
 - [MCP 工具详细说明](mcp-tools.md) - 查看所有可用工具
 - [快速开始](getting-started.md) - 开始使用指南

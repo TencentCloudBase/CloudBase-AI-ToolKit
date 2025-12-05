@@ -1,6 +1,6 @@
-# MCP 工具
+# 工具参考
 
-当前包含 39 个工具。
+当前包含 37 个工具。
 
 源数据: [tools.json](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/blob/main/scripts/tools.json)
 
@@ -11,23 +11,21 @@
 <table>
 <thead><tr><th>名称</th><th>描述</th></tr></thead>
 <tbody>
-<tr><td><code>login</code></td><td>登录云开发环境并选择要使用的环境</td></tr>
+<tr><td><code>login</code></td><td>登录云开发环境，在生成包含云开发 CloudBase 相关功能前**必须**先调用此工具进行登录。登录云开发环境并选择要使用的环境。</td></tr>
 <tr><td><code>logout</code></td><td>退出云开发环境</td></tr>
 <tr><td><code>envQuery</code></td><td>查询云开发环境相关信息，支持查询环境列表、当前环境信息、安全域名和静态网站托管配置。（原工具名：listEnvs/getEnvInfo/getEnvAuthDomains/getWebsiteConfig，为兼容旧AI规则可继续使用这些名称）</td></tr>
 <tr><td><code>envDomainManagement</code></td><td>管理云开发环境的安全域名，支持添加和删除操作。（原工具名：createEnvDomain/deleteEnvDomain，为兼容旧AI规则可继续使用这些名称）</td></tr>
-<tr><td><code>createCollection</code></td><td>管理云开发数据库集合：默认创建。可通过 action 指定 update。</td></tr>
-<tr><td><code>collectionQuery</code></td><td>数据库集合的查询操作，支持检查存在性、查看详情、列表查询；并支持索引列表与检查。（兼容旧名称）</td></tr>
-<tr><td><code>updateCollection</code></td><td>更新云开发数据库集合配置（创建或删除索引）</td></tr>
-<tr><td><code>checkIndexExists</code></td><td>检查索引是否存在</td></tr>
-<tr><td><code>insertDocuments</code></td><td>向云开发数据库集合中插入一个或多个文档（支持对象数组）</td></tr>
-<tr><td><code>queryDocuments</code></td><td>查询云开发数据库集合中的文档（支持对象参数）</td></tr>
-<tr><td><code>updateDocuments</code></td><td>更新云开发数据库集合中的文档（支持对象参数）</td></tr>
-<tr><td><code>deleteDocuments</code></td><td>删除云开发数据库集合中的文档（支持对象参数）</td></tr>
+<tr><td><code>readNoSqlDatabaseStructure</code></td><td>读取 NoSQL 数据库结构</td></tr>
+<tr><td><code>writeNoSqlDatabaseStructure</code></td><td>修改 NoSQL 数据库结构</td></tr>
+<tr><td><code>readNoSqlDatabaseContent</code></td><td>查询并获取 NoSQL 数据库数据记录</td></tr>
+<tr><td><code>writeNoSqlDatabaseContent</code></td><td>修改 NoSQL 数据库数据记录</td></tr>
+<tr><td><code>executeReadOnlySQL</code></td><td>Execute a read-only SQL query on the SQL database. Note: For per-user ACL, each table should contain a fixed `_openid` column defined as `_openid VARCHAR(64) DEFAULT '' NOT NULL` that represents the user and is used for access control.</td></tr>
+<tr><td><code>executeWriteSQL</code></td><td>Execute a write SQL statement on the SQL database (INSERT, UPDATE, DELETE, etc.). Whenever you create a new table, you **must** include a fixed `_openid` column defined as `_openid VARCHAR(64) DEFAULT '' NOT NULL` that represents the user and is used for access control.</td></tr>
 <tr><td><code>manageDataModel</code></td><td>数据模型查询工具，支持查询和列表数据模型（只读操作）。list操作返回基础信息（不含Schema），get操作返回详细信息（含简化的Schema，包括字段列表、格式、关联关系等），docs操作生成SDK使用文档</td></tr>
 <tr><td><code>modifyDataModel</code></td><td>基于Mermaid classDiagram创建或更新数据模型。支持创建新模型和更新现有模型结构。内置异步任务监控，自动轮询直至完成或超时。</td></tr>
 <tr><td><code>getFunctionList</code></td><td>获取云函数列表或单个函数详情，通过 action 参数区分操作类型</td></tr>
 <tr><td><code>createFunction</code></td><td>创建云函数</td></tr>
-<tr><td><code>updateFunctionCode</code></td><td>更新函数代码</td></tr>
+<tr><td><code>updateFunctionCode</code></td><td>更新已存在函数的代码。注意：此工具仅用于更新代码，不支持修改函数配置（如 runtime）。如果需要修改 runtime，需要删除函数后使用 createFunction 重新创建。</td></tr>
 <tr><td><code>updateFunctionConfig</code></td><td>更新云函数配置</td></tr>
 <tr><td><code>invokeFunction</code></td><td>调用云函数</td></tr>
 <tr><td><code>getFunctionLogs</code></td><td>获取云函数日志基础信息（LogList），如需日志详情请用 RequestId 调用 getFunctionLogDetail 工具。此接口基于 manger-node 4.4.0+ 的 getFunctionLogsV2 实现，不返回具体日志内容。参数 offset+limit 不得大于 10000，startTime/endTime 间隔不得超过一天。</td></tr>
@@ -39,16 +37,16 @@
 <tr><td><code>domainManagement</code></td><td>统一的域名管理工具，支持绑定、解绑、查询和修改域名配置</td></tr>
 <tr><td><code>queryStorage</code></td><td>查询云存储信息，支持列出目录文件、获取文件信息、获取临时下载链接等只读操作。返回的文件信息包括文件名、大小、修改时间、下载链接等。</td></tr>
 <tr><td><code>manageStorage</code></td><td>管理云存储文件，支持上传文件/目录、下载文件/目录、删除文件/目录等操作。删除操作需要设置force=true进行确认，防止误删除重要文件。</td></tr>
-<tr><td><code>downloadTemplate</code></td><td>自动下载并部署CloudBase项目模板。&lt;br/&gt;支持的模板:&lt;br/&gt;- react: React + CloudBase 全栈应用模板&lt;br/&gt;- vue: Vue + CloudBase 全栈应用模板&lt;br/&gt;- miniprogram: 微信小程序 + 云开发模板  &lt;br/&gt;- uniapp: UniApp + CloudBase 跨端应用模板&lt;br/&gt;- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置&lt;br/&gt;支持的IDE类型:&lt;br/&gt;- all: 下载所有IDE配置（默认）&lt;br/&gt;- cursor: Cursor AI编辑器&lt;br/&gt;- windsurf: WindSurf AI编辑器&lt;br/&gt;- codebuddy: CodeBuddy AI编辑器&lt;br/&gt;- claude-code: Claude Code AI编辑器&lt;br/&gt;- cline: Cline AI编辑器&lt;br/&gt;- gemini-cli: Gemini CLI&lt;br/&gt;- opencode: OpenCode AI编辑器&lt;br/&gt;- qwen-code: 通义灵码&lt;br/&gt;- baidu-comate: 百度Comate&lt;br/&gt;- openai-codex-cli: OpenAI Codex CLI&lt;br/&gt;- augment-code: Augment Code&lt;br/&gt;- github-copilot: GitHub Copilot&lt;br/&gt;- roocode: RooCode AI编辑器&lt;br/&gt;- tongyi-lingma: 通义灵码&lt;br/&gt;- trae: Trae AI编辑器&lt;br/&gt;- vscode: Visual Studio Code&lt;br/&gt;特别说明：&lt;br/&gt;- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.8.41），便于后续维护和版本追踪&lt;br/&gt;- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）</td></tr>
+<tr><td><code>downloadTemplate</code></td><td>自动下载并部署CloudBase项目模板。⚠️ **MANDATORY FOR NEW PROJECTS** ⚠️&lt;br/&gt;**CRITICAL**: This tool MUST be called FIRST when starting a new project.&lt;br/&gt;支持的模板:&lt;br/&gt;- react: React + CloudBase 全栈应用模板&lt;br/&gt;- vue: Vue + CloudBase 全栈应用模板&lt;br/&gt;- miniprogram: 微信小程序 + 云开发模板  &lt;br/&gt;- uniapp: UniApp + CloudBase 跨端应用模板&lt;br/&gt;- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置&lt;br/&gt;支持的IDE类型:&lt;br/&gt;- all: 下载所有IDE配置（默认）&lt;br/&gt;- cursor: Cursor AI编辑器&lt;br/&gt;- windsurf: WindSurf AI编辑器&lt;br/&gt;- codebuddy: CodeBuddy AI编辑器&lt;br/&gt;- claude-code: Claude Code AI编辑器&lt;br/&gt;- cline: Cline AI编辑器&lt;br/&gt;- gemini-cli: Gemini CLI&lt;br/&gt;- opencode: OpenCode AI编辑器&lt;br/&gt;- qwen-code: 通义灵码&lt;br/&gt;- baidu-comate: 百度Comate&lt;br/&gt;- openai-codex-cli: OpenAI Codex CLI&lt;br/&gt;- augment-code: Augment Code&lt;br/&gt;- github-copilot: GitHub Copilot&lt;br/&gt;- roocode: RooCode AI编辑器&lt;br/&gt;- tongyi-lingma: 通义灵码&lt;br/&gt;- trae: Trae AI编辑器&lt;br/&gt;- vscode: Visual Studio Code&lt;br/&gt;特别说明：&lt;br/&gt;- rules 模板会自动包含当前 mcp 版本号信息（版本号：2.1.0），便于后续维护和版本追踪&lt;br/&gt;- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）</td></tr>
 <tr><td><code>interactiveDialog</code></td><td>统一的交互式对话工具，支持需求澄清和任务确认，当需要和用户确认下一步的操作的时候，可以调用这个工具的clarify，如果有敏感的操作，需要用户确认，可以调用这个工具的confirm</td></tr>
 <tr><td><code>searchWeb</code></td><td>使用联网来进行信息检索，如查询最新的新闻、文章、股价、天气等。支持自然语言查询，也可以直接输入网址获取网页内容</td></tr>
-<tr><td><code>searchKnowledgeBase</code></td><td>云开发知识库智能检索工具，支持云开发与云函数知识的向量查询</td></tr>
+<tr><td><code>searchKnowledgeBase</code></td><td>云开发知识库智能检索工具，支持向量查询 (vector)、固定文档 (doc) 和 OpenAPI 文档 (openapi) 查询。&lt;br/&gt;      强烈推荐始终优先使用固定文档 (doc) 或 OpenAPI 文档 (openapi) 模式进行检索，仅当固定文档无法覆盖你的问题时，再使用向量查询 (vector) 模式。&lt;br/&gt;      固定文档 (doc) 查询当前支持 16 个固定文档，分别是：&lt;br/&gt;      文档名：auth-http-api 文档介绍：Use when you need to implement CloudBase Auth v2 over raw HTTP endpoints (login/signup, tokens, user operations) from backends or scripts that are not using the Web or Node SDKs.&lt;br/&gt;文档名：auth-nodejs 文档介绍：Complete guide for CloudBase Auth using the CloudBase Node SDK – caller identity, user lookup, custom login tickets, and server-side best practices.&lt;br/&gt;文档名：auth-web 文档介绍：Complete guide for CloudBase Auth v2 using Web SDK (@cloudbase/js-sdk@2.x) - all login flows, user management, captcha handling, and best practices in one file.&lt;br/&gt;文档名：auth-wechat 文档介绍：Complete guide for WeChat Mini Program authentication with CloudBase - native login, user identity, and cloud function integration.&lt;br/&gt;文档名：cloudbase-platform 文档介绍：CloudBase platform knowledge and best practices. Use this skill for general CloudBase platform understanding, including storage, hosting, authentication, cloud functions, database permissions, and data models.&lt;br/&gt;文档名：cloudrun-development 文档介绍：CloudBase Run backend development rules (Function mode/Container mode). Use this skill when deploying backend services that require long connections, multi-language support, custom environments, or AI agent development.&lt;br/&gt;文档名：data-model-creation 文档介绍：Optional advanced tool for complex data modeling. For simple table creation, use relational-database-tool directly with SQL statements.&lt;br/&gt;文档名：http-api 文档介绍：Use CloudBase HTTP API to access CloudBase platform features (database, authentication, cloud functions, cloud hosting, cloud storage, AI) via HTTP protocol from backends or scripts that are not using SDKs.&lt;br/&gt;文档名：miniprogram-development 文档介绍：WeChat Mini Program development rules. Use this skill when developing WeChat mini programs, integrating CloudBase capabilities, and deploying mini program projects.&lt;br/&gt;文档名：no-sql-web-sdk 文档介绍：Use CloudBase document database Web SDK to query, create, update, and delete data. Supports complex queries, pagination, aggregation, and geolocation queries.&lt;br/&gt;文档名：no-sql-wx-mp-sdk 文档介绍：Use CloudBase document database WeChat MiniProgram SDK to query, create, update, and delete data. Supports complex queries, pagination, aggregation, and geolocation queries.&lt;br/&gt;文档名：relational-database-tool 文档介绍：This is the required documentation for agents operating on the CloudBase Relational Database. It lists the only four supported tools for running SQL and managing security rules. Read the full content to understand why you must NOT use standard Application SDKs and how to safely execute INSERT, UPDATE, or DELETE operations without corrupting production data.&lt;br/&gt;文档名：relational-database-web 文档介绍：Use when building frontend Web apps that talk to CloudBase Relational Database via @cloudbase/js-sdk – provides the canonical init pattern so you can then use Supabase-style queries from the browser.&lt;br/&gt;文档名：spec-workflow 文档介绍：Standard software engineering workflow for requirement analysis, technical design, and task planning. Use this skill when developing new features, complex architecture designs, multi-module integrations, or projects involving database/UI design.&lt;br/&gt;文档名：ui-design 文档介绍：Professional UI design and frontend interface guidelines. Use this skill when creating web pages, mini-program interfaces, prototypes, or any frontend UI components that require distinctive, production-grade design with exceptional aesthetic quality.&lt;br/&gt;文档名：web-development 文档介绍：Web frontend project development rules. Use this skill when developing web frontend pages, deploying static hosting, and integrating CloudBase Web SDK.&lt;br/&gt;      OpenAPI 文档 (openapi) 查询当前支持 5 个 API 文档，分别是：&lt;br/&gt;      API名：mysqldb API介绍：MySQL RESTful API - 云开发 MySQL 数据库 HTTP API&lt;br/&gt;API名：functions API介绍：Cloud Functions API - 云函数 HTTP API&lt;br/&gt;API名：storage API介绍：Storage API - 云存储 HTTP API&lt;br/&gt;API名：cloudrun API介绍：CloudRun API - 云托管服务 HTTP API&lt;br/&gt;API名：auth API介绍：Authentication API - 身份认证 HTTP API</td></tr>
 <tr><td><code>queryCloudRun</code></td><td>查询云托管服务信息，支持获取服务列表、查询服务详情和获取可用模板列表。返回的服务信息包括服务名称、状态、访问类型、配置详情等。</td></tr>
 <tr><td><code>manageCloudRun</code></td><td>管理云托管服务，按开发顺序支持：初始化项目（可从模板开始，模板列表可通过 queryCloudRun 查询）、下载服务代码、本地运行（仅函数型服务）、部署代码、删除服务。部署可配置CPU、内存、实例数、访问类型等参数。删除操作需要确认，建议设置force=true。</td></tr>
 <tr><td><code>createFunctionHTTPAccess</code></td><td>创建云函数的 HTTP 访问</td></tr>
 <tr><td><code>downloadRemoteFile</code></td><td>下载远程文件到项目根目录下的指定相对路径。例如：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择来下载。</td></tr>
-<tr><td><code>readSecurityRule</code></td><td>读取指定资源（数据库集合、云函数、存储桶）的安全规则和权限类别。&lt;br/&gt;参数说明：&lt;br/&gt;- resourceType: 资源类型（database/function/storage）&lt;br/&gt;- resourceId: 资源唯一标识（集合名/函数名/桶名）</td></tr>
-<tr><td><code>writeSecurityRule</code></td><td>设置指定资源（数据库集合、云函数、存储桶）的安全规则。&lt;br/&gt;参数说明：&lt;br/&gt;- resourceType: 资源类型（database/function/storage）&lt;br/&gt;- resourceId: 资源唯一标识（集合名/函数名/桶名）&lt;br/&gt;- aclTag: 权限类别（READONLY/PRIVATE/ADMINWRITE/ADMINONLY/CUSTOM）&lt;br/&gt;- rule: 自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填</td></tr>
+<tr><td><code>readSecurityRule</code></td><td>读取指定资源（noSQL 数据库、SQL 数据库、云函数、存储桶）的安全规则和权限类别。</td></tr>
+<tr><td><code>writeSecurityRule</code></td><td>设置指定资源（数据库集合、云函数、存储桶）的安全规则。</td></tr>
 <tr><td><code>activateInviteCode</code></td><td>云开发 AI编程激励计划，通过邀请码激活用户激励。</td></tr>
 </tbody>
 </table>
@@ -58,7 +56,7 @@
 ## 详细规格
 
 ### `login`
-登录云开发环境并选择要使用的环境
+登录云开发环境，在生成包含云开发 CloudBase 相关功能前**必须**先调用此工具进行登录。登录云开发环境并选择要使用的环境。
 
 #### 参数
 
@@ -114,115 +112,61 @@
 
 ---
 
-### `createCollection`
-管理云开发数据库集合：默认创建。可通过 action 指定 update。
+### `readNoSqlDatabaseStructure`
+读取 NoSQL 数据库结构
 
 #### 参数
 
 <table>
 <thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>action</code></td><td>string</td><td></td><td>操作类型：create=创建(默认)，update=更新集合配置 可填写的值: "create", "update"</td></tr>
-<tr><td><code>collectionName</code></td><td>string</td><td>是</td><td>云开发数据库集合名称</td></tr>
-<tr><td><code>options</code></td><td>object</td><td></td><td>更新选项（action=update 时使用）</td></tr>
-<tr><td><code>options.CreateIndexes</code></td><td>array of object</td><td></td><td></td></tr>
-<tr><td><code>options.CreateIndexes[].IndexName</code></td><td>string</td><td>是</td><td></td></tr>
-<tr><td><code>options.CreateIndexes[].MgoKeySchema</code></td><td>object</td><td>是</td><td></td></tr>
-<tr><td><code>options.CreateIndexes[].MgoKeySchema.MgoIsUnique</code></td><td>boolean</td><td>是</td><td></td></tr>
-<tr><td><code>options.CreateIndexes[].MgoKeySchema.MgoIndexKeys</code></td><td>array of object</td><td>是</td><td></td></tr>
-<tr><td><code>options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Name</code></td><td>string</td><td>是</td><td></td></tr>
-<tr><td><code>options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Direction</code></td><td>string</td><td>是</td><td></td></tr>
-<tr><td><code>options.DropIndexes</code></td><td>array of object</td><td></td><td></td></tr>
-<tr><td><code>options.DropIndexes[].IndexName</code></td><td>string</td><td>是</td><td></td></tr>
+<tr><td><code>action</code></td><td>string</td><td>是</td><td>listCollections: 列出集合列表&lt;br/&gt;describeCollection: 描述集合&lt;br/&gt;checkCollection: 检查集合是否存在&lt;br/&gt;listIndexes: 列出索引列表&lt;br/&gt;checkIndex: 检查索引是否存在 可填写的值: "listCollections", "describeCollection", "checkCollection", "listIndexes", "checkIndex"</td></tr>
+<tr><td><code>limit</code></td><td>number</td><td></td><td>返回数量限制(listCollections 操作时可选)</td></tr>
+<tr><td><code>offset</code></td><td>number</td><td></td><td>偏移量(listCollections 操作时可选)</td></tr>
+<tr><td><code>collectionName</code></td><td>string</td><td></td><td>集合名称(describeCollection、listIndexes、checkIndex 操作时必填)</td></tr>
+<tr><td><code>indexName</code></td><td>string</td><td></td><td>索引名称(checkIndex 操作时必填)</td></tr>
 </tbody>
 </table>
 
 ---
 
-### `collectionQuery`
-数据库集合的查询操作，支持检查存在性、查看详情、列表查询；并支持索引列表与检查。（兼容旧名称）
+### `writeNoSqlDatabaseStructure`
+修改 NoSQL 数据库结构
 
 #### 参数
 
 <table>
 <thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>action</code></td><td>string</td><td>是</td><td>操作类型：check=检查是否存在，describe=查看详情，list=列表查询，index_list=索引列表，index_check=检查索引是否存在 可填写的值: "check", "describe", "list", "index_list", "index_check"</td></tr>
-<tr><td><code>collectionName</code></td><td>string</td><td></td><td>集合名称（check、describe、index_list、index_check 操作时必填）</td></tr>
-<tr><td><code>indexName</code></td><td>string</td><td></td><td>索引名称（index_check 操作时必填）</td></tr>
-<tr><td><code>limit</code></td><td>number</td><td></td><td>返回数量限制（list操作时可选）</td></tr>
-<tr><td><code>offset</code></td><td>number</td><td></td><td>偏移量（list操作时可选）</td></tr>
+<tr><td><code>action</code></td><td>string</td><td>是</td><td>createCollection: 创建集合&lt;br/&gt;updateCollection: 更新集合 可填写的值: "createCollection", "updateCollection"</td></tr>
+<tr><td><code>collectionName</code></td><td>string</td><td>是</td><td>集合名称</td></tr>
+<tr><td><code>updateOptions</code></td><td>object</td><td></td><td>更新选项(updateCollection 时使用)</td></tr>
+<tr><td><code>updateOptions.CreateIndexes</code></td><td>array of object</td><td></td><td></td></tr>
+<tr><td><code>updateOptions.CreateIndexes[].IndexName</code></td><td>string</td><td>是</td><td></td></tr>
+<tr><td><code>updateOptions.CreateIndexes[].MgoKeySchema</code></td><td>object</td><td>是</td><td></td></tr>
+<tr><td><code>updateOptions.CreateIndexes[].MgoKeySchema.MgoIsUnique</code></td><td>boolean</td><td>是</td><td></td></tr>
+<tr><td><code>updateOptions.CreateIndexes[].MgoKeySchema.MgoIndexKeys</code></td><td>array of object</td><td>是</td><td></td></tr>
+<tr><td><code>updateOptions.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Name</code></td><td>string</td><td>是</td><td></td></tr>
+<tr><td><code>updateOptions.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Direction</code></td><td>string</td><td>是</td><td></td></tr>
+<tr><td><code>updateOptions.DropIndexes</code></td><td>array of object</td><td></td><td></td></tr>
+<tr><td><code>updateOptions.DropIndexes[].IndexName</code></td><td>string</td><td>是</td><td></td></tr>
 </tbody>
 </table>
 
 ---
 
-### `updateCollection`
-更新云开发数据库集合配置（创建或删除索引）
+### `readNoSqlDatabaseContent`
+查询并获取 NoSQL 数据库数据记录
 
 #### 参数
 
 <table>
 <thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>collectionName</code></td><td>string</td><td>是</td><td>云开发数据库集合名称</td></tr>
-<tr><td><code>options</code></td><td>object</td><td>是</td><td>更新选项，支持创建和删除索引</td></tr>
-<tr><td><code>options.CreateIndexes</code></td><td>array of object</td><td></td><td></td></tr>
-<tr><td><code>options.CreateIndexes[].IndexName</code></td><td>string</td><td>是</td><td></td></tr>
-<tr><td><code>options.CreateIndexes[].MgoKeySchema</code></td><td>object</td><td>是</td><td></td></tr>
-<tr><td><code>options.CreateIndexes[].MgoKeySchema.MgoIsUnique</code></td><td>boolean</td><td>是</td><td></td></tr>
-<tr><td><code>options.CreateIndexes[].MgoKeySchema.MgoIndexKeys</code></td><td>array of object</td><td>是</td><td></td></tr>
-<tr><td><code>options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Name</code></td><td>string</td><td>是</td><td></td></tr>
-<tr><td><code>options.CreateIndexes[].MgoKeySchema.MgoIndexKeys[].Direction</code></td><td>string</td><td>是</td><td></td></tr>
-<tr><td><code>options.DropIndexes</code></td><td>array of object</td><td></td><td></td></tr>
-<tr><td><code>options.DropIndexes[].IndexName</code></td><td>string</td><td>是</td><td></td></tr>
-</tbody>
-</table>
-
----
-
-### `checkIndexExists`
-检查索引是否存在
-
-#### 参数
-
-<table>
-<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
-<tbody>
-<tr><td><code>collectionName</code></td><td>string</td><td>是</td><td>云开发数据库集合名称</td></tr>
-<tr><td><code>indexName</code></td><td>string</td><td>是</td><td>索引名称</td></tr>
-</tbody>
-</table>
-
----
-
-### `insertDocuments`
-向云开发数据库集合中插入一个或多个文档（支持对象数组）
-
-#### 参数
-
-<table>
-<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
-<tbody>
-<tr><td><code>collectionName</code></td><td>string</td><td>是</td><td>云开发数据库集合名称</td></tr>
-<tr><td><code>documents</code></td><td>array of object</td><td>是</td><td>要插入的文档对象数组，每个文档都是对象</td></tr>
-</tbody>
-</table>
-
----
-
-### `queryDocuments`
-查询云开发数据库集合中的文档（支持对象参数）
-
-#### 参数
-
-<table>
-<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
-<tbody>
-<tr><td><code>collectionName</code></td><td>string</td><td>是</td><td>云开发数据库集合名称</td></tr>
-<tr><td><code>query</code></td><td>object \| string</td><td></td><td>查询条件（对象或字符串，推荐对象）</td></tr>
-<tr><td><code>projection</code></td><td>object \| string</td><td></td><td>返回字段投影（对象或字符串，推荐对象）</td></tr>
-<tr><td><code>sort</code></td><td>object \| string</td><td></td><td>排序条件（对象或字符串，推荐对象）</td></tr>
+<tr><td><code>collectionName</code></td><td>string</td><td>是</td><td>集合名称</td></tr>
+<tr><td><code>query</code></td><td>object \| string</td><td></td><td>查询条件(对象或字符串,推荐对象)</td></tr>
+<tr><td><code>projection</code></td><td>object \| string</td><td></td><td>返回字段投影(对象或字符串,推荐对象)</td></tr>
+<tr><td><code>sort</code></td><td>object \| string</td><td></td><td>排序条件(对象或字符串,推荐对象)</td></tr>
 <tr><td><code>limit</code></td><td>number</td><td></td><td>返回数量限制</td></tr>
 <tr><td><code>offset</code></td><td>number</td><td></td><td>跳过的记录数</td></tr>
 </tbody>
@@ -230,35 +174,49 @@
 
 ---
 
-### `updateDocuments`
-更新云开发数据库集合中的文档（支持对象参数）
+### `writeNoSqlDatabaseContent`
+修改 NoSQL 数据库数据记录
 
 #### 参数
 
 <table>
 <thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>collectionName</code></td><td>string</td><td>是</td><td>云开发数据库集合名称</td></tr>
-<tr><td><code>query</code></td><td>object \| string</td><td>是</td><td>查询条件（对象或字符串，推荐对象）</td></tr>
-<tr><td><code>update</code></td><td>object \| string</td><td>是</td><td>更新内容（对象或字符串，推荐对象）</td></tr>
-<tr><td><code>isMulti</code></td><td>boolean</td><td></td><td>是否更新多条记录</td></tr>
-<tr><td><code>upsert</code></td><td>boolean</td><td></td><td>是否在不存在时插入</td></tr>
+<tr><td><code>action</code></td><td>string</td><td>是</td><td>createCollection: 创建数据&lt;br/&gt;updateCollection: 更新数据&lt;br/&gt;deleteCollection: 删除数据 可填写的值: "insert", "update", "delete"</td></tr>
+<tr><td><code>collectionName</code></td><td>string</td><td>是</td><td>集合名称</td></tr>
+<tr><td><code>documents</code></td><td>array of object</td><td></td><td>要插入的文档对象数组,每个文档都是对象(insert 操作必填)</td></tr>
+<tr><td><code>query</code></td><td>object \| string</td><td></td><td>查询条件(对象或字符串,推荐对象)(update/delete 操作必填)</td></tr>
+<tr><td><code>update</code></td><td>object \| string</td><td></td><td>更新内容(对象或字符串,推荐对象)(update 操作必填)</td></tr>
+<tr><td><code>isMulti</code></td><td>boolean</td><td></td><td>是否更新多条记录(update/delete 操作可选)</td></tr>
+<tr><td><code>upsert</code></td><td>boolean</td><td></td><td>是否在不存在时插入(update 操作可选)</td></tr>
 </tbody>
 </table>
 
 ---
 
-### `deleteDocuments`
-删除云开发数据库集合中的文档（支持对象参数）
+### `executeReadOnlySQL`
+Execute a read-only SQL query on the SQL database. Note: For per-user ACL, each table should contain a fixed `_openid` column defined as `_openid VARCHAR(64) DEFAULT '' NOT NULL` that represents the user and is used for access control.
 
 #### 参数
 
 <table>
 <thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>collectionName</code></td><td>string</td><td>是</td><td>云开发数据库集合名称</td></tr>
-<tr><td><code>query</code></td><td>object \| string</td><td>是</td><td>查询条件（对象或字符串，推荐对象）</td></tr>
-<tr><td><code>isMulti</code></td><td>boolean</td><td></td><td>是否删除多条记录</td></tr>
+<tr><td><code>sql</code></td><td>string</td><td>是</td><td>SQL query statement (SELECT queries only)</td></tr>
+</tbody>
+</table>
+
+---
+
+### `executeWriteSQL`
+Execute a write SQL statement on the SQL database (INSERT, UPDATE, DELETE, etc.). Whenever you create a new table, you **must** include a fixed `_openid` column defined as `_openid VARCHAR(64) DEFAULT '' NOT NULL` that represents the user and is used for access control.
+
+#### 参数
+
+<table>
+<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td><code>sql</code></td><td>string</td><td>是</td><td>SQL statement (INSERT, UPDATE, DELETE, CREATE, ALTER, etc.)</td></tr>
 </tbody>
 </table>
 
@@ -392,9 +350,7 @@ classDiagram
 ---
 
 ### `updateFunctionCode`
-更新函数代码
-
-**注意**：此工具仅用于更新已存在函数的代码，不支持修改函数配置（如 runtime）。如果需要修改 runtime，需要删除函数后使用 `createFunction` 重新创建。
+更新已存在函数的代码。注意：此工具仅用于更新代码，不支持修改函数配置（如 runtime）。如果需要修改 runtime，需要删除函数后使用 createFunction 重新创建。
 
 #### 参数
 
@@ -620,7 +576,9 @@ classDiagram
 ---
 
 ### `downloadTemplate`
-自动下载并部署CloudBase项目模板。
+自动下载并部署CloudBase项目模板。⚠️ **MANDATORY FOR NEW PROJECTS** ⚠️
+
+**CRITICAL**: This tool MUST be called FIRST when starting a new project.
 
 支持的模板:
 - react: React + CloudBase 全栈应用模板
@@ -649,7 +607,7 @@ classDiagram
 - vscode: Visual Studio Code
 
 特别说明：
-- rules 模板会自动包含当前 mcp 版本号信息（版本号：1.8.41），便于后续维护和版本追踪
+- rules 模板会自动包含当前 mcp 版本号信息（版本号：2.1.0），便于后续维护和版本追踪
 - 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）
 
 #### 参数
@@ -698,19 +656,49 @@ classDiagram
 ---
 
 ### `searchKnowledgeBase`
-云开发知识库智能检索工具，支持云开发与云函数知识的向量查询
+云开发知识库智能检索工具，支持向量查询 (vector)、固定文档 (doc) 和 OpenAPI 文档 (openapi) 查询。
+
+      强烈推荐始终优先使用固定文档 (doc) 或 OpenAPI 文档 (openapi) 模式进行检索，仅当固定文档无法覆盖你的问题时，再使用向量查询 (vector) 模式。
+
+      固定文档 (doc) 查询当前支持 16 个固定文档，分别是：
+      文档名：auth-http-api 文档介绍：Use when you need to implement CloudBase Auth v2 over raw HTTP endpoints (login/signup, tokens, user operations) from backends or scripts that are not using the Web or Node SDKs.
+文档名：auth-nodejs 文档介绍：Complete guide for CloudBase Auth using the CloudBase Node SDK – caller identity, user lookup, custom login tickets, and server-side best practices.
+文档名：auth-web 文档介绍：Complete guide for CloudBase Auth v2 using Web SDK (@cloudbase/js-sdk@2.x) - all login flows, user management, captcha handling, and best practices in one file.
+文档名：auth-wechat 文档介绍：Complete guide for WeChat Mini Program authentication with CloudBase - native login, user identity, and cloud function integration.
+文档名：cloudbase-platform 文档介绍：CloudBase platform knowledge and best practices. Use this skill for general CloudBase platform understanding, including storage, hosting, authentication, cloud functions, database permissions, and data models.
+文档名：cloudrun-development 文档介绍：CloudBase Run backend development rules (Function mode/Container mode). Use this skill when deploying backend services that require long connections, multi-language support, custom environments, or AI agent development.
+文档名：data-model-creation 文档介绍：Optional advanced tool for complex data modeling. For simple table creation, use relational-database-tool directly with SQL statements.
+文档名：http-api 文档介绍：Use CloudBase HTTP API to access CloudBase platform features (database, authentication, cloud functions, cloud hosting, cloud storage, AI) via HTTP protocol from backends or scripts that are not using SDKs.
+文档名：miniprogram-development 文档介绍：WeChat Mini Program development rules. Use this skill when developing WeChat mini programs, integrating CloudBase capabilities, and deploying mini program projects.
+文档名：no-sql-web-sdk 文档介绍：Use CloudBase document database Web SDK to query, create, update, and delete data. Supports complex queries, pagination, aggregation, and geolocation queries.
+文档名：no-sql-wx-mp-sdk 文档介绍：Use CloudBase document database WeChat MiniProgram SDK to query, create, update, and delete data. Supports complex queries, pagination, aggregation, and geolocation queries.
+文档名：relational-database-tool 文档介绍：This is the required documentation for agents operating on the CloudBase Relational Database. It lists the only four supported tools for running SQL and managing security rules. Read the full content to understand why you must NOT use standard Application SDKs and how to safely execute INSERT, UPDATE, or DELETE operations without corrupting production data.
+文档名：relational-database-web 文档介绍：Use when building frontend Web apps that talk to CloudBase Relational Database via @cloudbase/js-sdk – provides the canonical init pattern so you can then use Supabase-style queries from the browser.
+文档名：spec-workflow 文档介绍：Standard software engineering workflow for requirement analysis, technical design, and task planning. Use this skill when developing new features, complex architecture designs, multi-module integrations, or projects involving database/UI design.
+文档名：ui-design 文档介绍：Professional UI design and frontend interface guidelines. Use this skill when creating web pages, mini-program interfaces, prototypes, or any frontend UI components that require distinctive, production-grade design with exceptional aesthetic quality.
+文档名：web-development 文档介绍：Web frontend project development rules. Use this skill when developing web frontend pages, deploying static hosting, and integrating CloudBase Web SDK.
+
+      OpenAPI 文档 (openapi) 查询当前支持 5 个 API 文档，分别是：
+      API名：mysqldb API介绍：MySQL RESTful API - 云开发 MySQL 数据库 HTTP API
+API名：functions API介绍：Cloud Functions API - 云函数 HTTP API
+API名：storage API介绍：Storage API - 云存储 HTTP API
+API名：cloudrun API介绍：CloudRun API - 云托管服务 HTTP API
+API名：auth API介绍：Authentication API - 身份认证 HTTP API
 
 #### 参数
 
 <table>
 <thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>threshold</code></td><td>number</td><td></td><td>相似性检索阈值 默认值: 0.5</td></tr>
-<tr><td><code>id</code></td><td>string</td><td>是</td><td>知识库范围，cloudbase=云开发全量知识，scf=云开发的云函数知识, miniprogram=小程序知识（不包含云开发与云函数知识） 可填写的值: "cloudbase", "scf", "miniprogram"</td></tr>
-<tr><td><code>content</code></td><td>string</td><td>是</td><td>检索内容</td></tr>
-<tr><td><code>options</code></td><td>object</td><td></td><td>其他选项</td></tr>
+<tr><td><code>mode</code></td><td>string</td><td>是</td><td>可填写的值: "vector", "doc", "openapi"</td></tr>
+<tr><td><code>docName</code></td><td>string</td><td></td><td>mode=doc 时指定。文档名称。 可填写的值: "auth-http-api", "auth-nodejs", "auth-web", "auth-wechat", "cloudbase-platform", "cloudrun-development", "data-model-creation", "http-api", "miniprogram-development", "no-sql-web-sdk", "no-sql-wx-mp-sdk", "relational-database-tool", "relational-database-web", "spec-workflow", "ui-design", "web-development"</td></tr>
+<tr><td><code>apiName</code></td><td>string</td><td></td><td>mode=openapi 时指定。API 名称。 可填写的值: "mysqldb", "functions", "storage", "cloudrun", "auth"</td></tr>
+<tr><td><code>threshold</code></td><td>number</td><td></td><td>mode=vector 时指定。相似性检索阈值 默认值: 0.5</td></tr>
+<tr><td><code>id</code></td><td>string</td><td></td><td>mode=vector 时指定。知识库范围，cloudbase=云开发全量知识，scf=云开发的云函数知识, miniprogram=小程序知识（不包含云开发与云函数知识） 可填写的值: "cloudbase", "scf", "miniprogram"</td></tr>
+<tr><td><code>content</code></td><td>string</td><td></td><td>mode=vector 时指定。检索内容</td></tr>
+<tr><td><code>options</code></td><td>object</td><td></td><td>mode=vector 时指定。其他选项</td></tr>
 <tr><td><code>options.chunkExpand</code></td><td>array of number</td><td></td><td>指定返回的文档内容的展开长度,例如 [3,3]代表前后展开长度 默认值: [3,3]</td></tr>
-<tr><td><code>limit</code></td><td>number</td><td></td><td>指定返回最相似的 Top K 的 K 的值 默认值: 5</td></tr>
+<tr><td><code>limit</code></td><td>number</td><td></td><td>mode=vector 时指定。指定返回最相似的 Top K 的 K 的值 默认值: 5</td></tr>
 </tbody>
 </table>
 
@@ -728,7 +716,7 @@ classDiagram
 <tr><td><code>pageSize</code></td><td>number</td><td></td><td>分页大小，控制每页返回的服务数量。取值范围：1-100，默认值：10。建议根据网络性能和显示需求调整 默认值: 10</td></tr>
 <tr><td><code>pageNum</code></td><td>number</td><td></td><td>页码，用于分页查询。从1开始，默认值：1。配合pageSize使用可实现分页浏览 默认值: 1</td></tr>
 <tr><td><code>serverName</code></td><td>string</td><td></td><td>服务名称筛选条件，支持模糊匹配。例如：输入"test"可匹配"test-service"、"my-test-app"等服务名称。留空则查询所有服务</td></tr>
-<tr><td><code>serverType</code></td><td>string</td><td></td><td>服务类型筛选条件：function=函数型云托管（简化开发模式，支持WebSocket/SSE/文件上传等特性，适合快速开发），container=容器型服务（传统容器部署模式，支持任意语言和框架，适合复杂应用） 可填写的值: "function", "container"</td></tr>
+<tr><td><code>serverType</code></td><td>string</td><td></td><td>服务类型筛选条件：function=函数型云托管（仅支持Node.js，有特殊的开发要求和限制，适合简单的API服务），container=容器型服务（推荐使用，支持任意语言和框架如Java/Go/Python/PHP/.NET等，适合大多数应用场景） 可填写的值: "function", "container"</td></tr>
 <tr><td><code>detailServerName</code></td><td>string</td><td></td><td>要查询详细信息的服务名称。当action为detail时必需提供，必须是已存在的服务名称。可通过list操作获取可用的服务名称列表</td></tr>
 </tbody>
 </table>
@@ -747,18 +735,23 @@ classDiagram
 <tr><td><code>serverName</code></td><td>string</td><td>是</td><td>云托管服务名称，用于标识和管理服务。命名规则：支持大小写字母、数字、连字符和下划线，必须以字母开头，长度3-45个字符。在init操作中会作为在targetPath下创建的子目录名，在其他操作中作为目标服务名</td></tr>
 <tr><td><code>targetPath</code></td><td>string</td><td></td><td>本地代码路径，必须是绝对路径。在deploy操作中指定要部署的代码目录，在download操作中指定下载目标目录，在init操作中指定云托管服务的上级目录（会在该目录下创建以serverName命名的子目录）。建议约定：项目根目录下的cloudrun/目录，例如：/Users/username/projects/my-project/cloudrun</td></tr>
 <tr><td><code>serverConfig</code></td><td>object</td><td></td><td>服务配置项，用于部署时设置服务的运行参数。包括资源规格、访问权限、环境变量等配置。不提供时使用默认配置</td></tr>
-<tr><td><code>serverConfig.OpenAccessTypes</code></td><td>array of string</td><td></td><td>公网访问类型配置，控制服务的访问权限：WEB=公网访问（默认，可通过HTTPS域名访问），VPC=私有网络访问（仅同VPC内可访问），PRIVATE=内网访问（仅云开发环境内可访问）。可配置多个类型</td></tr>
+<tr><td><code>serverConfig.OpenAccessTypes</code></td><td>array of string</td><td></td><td>公网访问类型配置，控制服务的访问权限：OA=办公网访问，PUBLIC=公网访问（默认，可通过HTTPS域名访问），MINIAPP=小程序访问，VPC=VPC访问（仅同VPC内可访问）。可配置多个类型</td></tr>
 <tr><td><code>serverConfig.Cpu</code></td><td>number</td><td></td><td>CPU规格配置，单位为核。可选值：0.25、0.5、1、2、4、8等。注意：内存规格必须是CPU规格的2倍（如CPU=0.25时内存=0.5，CPU=1时内存=2）。影响服务性能和计费</td></tr>
 <tr><td><code>serverConfig.Mem</code></td><td>number</td><td></td><td>内存规格配置，单位为GB。可选值：0.5、1、2、4、8、16等。注意：必须是CPU规格的2倍。影响服务性能和计费</td></tr>
-<tr><td><code>serverConfig.MinNum</code></td><td>number</td><td></td><td>最小实例数配置，控制服务的最小运行实例数量。设置为0时支持缩容到0（无请求时不产生费用），设置为大于0时始终保持指定数量的实例运行（确保快速响应但会增加成本）</td></tr>
+<tr><td><code>serverConfig.MinNum</code></td><td>number</td><td></td><td>最小实例数配置，控制服务的最小运行实例数量。设置为0时支持缩容到0（无请求时不产生费用），设置为大于0时始终保持指定数量的实例运行（确保快速响应但会增加成本）。建议设置为1以降低冷启动延迟，提升用户体验</td></tr>
 <tr><td><code>serverConfig.MaxNum</code></td><td>number</td><td></td><td>最大实例数配置，控制服务的最大运行实例数量。当请求量增加时，服务最多可以扩展到指定数量的实例，超过此数量后将拒绝新的请求。建议根据业务峰值设置</td></tr>
+<tr><td><code>serverConfig.PolicyDetails</code></td><td>array of object</td><td></td><td>扩缩容配置数组，用于配置服务的自动扩缩容策略。可配置多个扩缩容策略</td></tr>
+<tr><td><code>serverConfig.PolicyDetails[].PolicyType</code></td><td>string</td><td>是</td><td>扩缩容类型：cpu=基于CPU使用率扩缩容，mem=基于内存使用率扩缩容，cpu/mem=基于CPU和内存使用率扩缩容 可填写的值: "cpu", "mem", "cpu/mem"</td></tr>
+<tr><td><code>serverConfig.PolicyDetails[].PolicyThreshold</code></td><td>number</td><td>是</td><td>扩缩容阈值，单位为百分比。如60表示当资源使用率达到60%时触发扩缩容</td></tr>
+<tr><td><code>serverConfig.CustomLogs</code></td><td>string</td><td></td><td>自定义日志配置，用于配置服务的日志收集和存储策略</td></tr>
 <tr><td><code>serverConfig.Port</code></td><td>number</td><td></td><td>服务监听端口配置。函数型服务固定为3000，容器型服务可自定义。服务代码必须监听此端口才能正常接收请求</td></tr>
-<tr><td><code>serverConfig.EnvParams</code></td><td>object</td><td></td><td>环境变量配置，用于传递配置信息给服务代码。格式为键值对，如&#123;"DATABASE_URL":"mysql://..."&#125;。敏感信息建议使用环境变量而非硬编码</td></tr>
+<tr><td><code>serverConfig.EnvParams</code></td><td>string</td><td></td><td>环境变量配置，JSON字符串格式。用于传递配置信息给服务代码，如'&#123;"DATABASE_URL":"mysql://...","NODE_ENV":"production"&#125;'。敏感信息建议使用环境变量而非硬编码</td></tr>
 <tr><td><code>serverConfig.Dockerfile</code></td><td>string</td><td></td><td>Dockerfile文件名配置，仅容器型服务需要。指定用于构建容器镜像的Dockerfile文件路径，默认为项目根目录下的Dockerfile</td></tr>
 <tr><td><code>serverConfig.BuildDir</code></td><td>string</td><td></td><td>构建目录配置，指定代码构建的目录路径。当代码结构与标准不同时使用，默认为项目根目录</td></tr>
-<tr><td><code>serverConfig.InternalAccess</code></td><td>boolean</td><td></td><td>内网访问开关配置，控制是否启用内网访问。true=启用内网访问（可通过云开发SDK直接调用），false=关闭内网访问（仅公网访问）</td></tr>
-<tr><td><code>serverConfig.EntryPoint</code></td><td>string</td><td></td><td>Dockerfile EntryPoint参数配置，仅容器型服务需要。指定容器启动时的入口程序，如["node","app.js"]</td></tr>
-<tr><td><code>serverConfig.Cmd</code></td><td>string</td><td></td><td>Dockerfile Cmd参数配置，仅容器型服务需要。指定容器启动时的默认命令，如["npm","start"]</td></tr>
+<tr><td><code>serverConfig.InternalAccess</code></td><td>string</td><td></td><td>内网访问开关配置，控制是否启用内网访问。true=启用内网访问（可通过云开发SDK直接调用），false=关闭内网访问（仅公网访问）</td></tr>
+<tr><td><code>serverConfig.InternalDomain</code></td><td>string</td><td></td><td>内网域名配置，用于配置服务的内网访问域名。仅在启用内网访问时有效</td></tr>
+<tr><td><code>serverConfig.EntryPoint</code></td><td>array of string</td><td></td><td>Dockerfile EntryPoint参数配置，仅容器型服务需要。指定容器启动时的入口程序数组，如["node","app.js"]</td></tr>
+<tr><td><code>serverConfig.Cmd</code></td><td>array of string</td><td></td><td>Dockerfile Cmd参数配置，仅容器型服务需要。指定容器启动时的默认命令数组，如["npm","start"]</td></tr>
 <tr><td><code>template</code></td><td>string</td><td></td><td>项目模板标识符，用于指定初始化项目时使用的模板。可通过queryCloudRun的templates操作获取可用模板列表。常用模板：helloworld=Hello World示例，nodejs=Node.js项目模板，python=Python项目模板等 默认值: "helloworld"</td></tr>
 <tr><td><code>runOptions</code></td><td>object</td><td></td><td>本地运行参数配置，仅函数型云托管服务支持。用于配置本地开发环境的运行参数，不影响云端部署</td></tr>
 <tr><td><code>runOptions.port</code></td><td>number</td><td></td><td>本地运行端口配置，仅函数型服务有效。指定服务在本地运行时监听的端口号，默认3000。确保端口未被其他程序占用 默认值: 3000</td></tr>
@@ -771,6 +764,7 @@ classDiagram
 <tr><td><code>agentConfig.description</code></td><td>string</td><td></td><td>Agent描述信息</td></tr>
 <tr><td><code>agentConfig.template</code></td><td>string</td><td></td><td>Agent模板类型，默认为blank（空白模板） 默认值: "blank"</td></tr>
 <tr><td><code>force</code></td><td>boolean</td><td></td><td>强制操作开关，用于跳过确认提示。默认false（需要确认），设置为true时跳过所有确认步骤。删除操作时强烈建议设置为true以避免误操作 默认值: false</td></tr>
+<tr><td><code>serverType</code></td><td>string</td><td></td><td>服务类型配置：function=函数型云托管（仅支持Node.js，有特殊的开发要求和限制，适合简单的API服务），container=容器型服务（推荐使用，支持任意语言和框架如Java/Go/Python/PHP/.NET等，适合大多数应用场景）。不提供时自动检测：1)现有服务类型 2)有Dockerfile→container 3)有@cloudbase/aiagent-framework依赖→function 4)其他情况→container 可填写的值: "function", "container"</td></tr>
 </tbody>
 </table>
 
@@ -807,19 +801,15 @@ classDiagram
 ---
 
 ### `readSecurityRule`
-读取指定资源（数据库集合、云函数、存储桶）的安全规则和权限类别。
-
-参数说明：
-- resourceType: 资源类型（database/function/storage）
-- resourceId: 资源唯一标识（集合名/函数名/桶名）
+读取指定资源（noSQL 数据库、SQL 数据库、云函数、存储桶）的安全规则和权限类别。
 
 #### 参数
 
 <table>
 <thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>resourceType</code></td><td>string</td><td>是</td><td>资源类型：database=数据库集合，function=云函数，storage=存储桶 可填写的值: "database", "function", "storage"</td></tr>
-<tr><td><code>resourceId</code></td><td>string</td><td>是</td><td>资源唯一标识。数据库为集合名，云函数为函数名，存储为桶名。</td></tr>
+<tr><td><code>resourceType</code></td><td>string</td><td>是</td><td>资源类型：noSqlDatabase=noSQL 数据库，sqlDatabase=SQL 数据库，function=云函数，storage=存储桶 可填写的值: "noSqlDatabase", "sqlDatabase", "function", "storage"</td></tr>
+<tr><td><code>resourceId</code></td><td>string</td><td>是</td><td>资源唯一标识。noSQL 数据库为集合名，SQL 数据库为表名，云函数为函数名，存储为桶名。</td></tr>
 </tbody>
 </table>
 
@@ -828,19 +818,13 @@ classDiagram
 ### `writeSecurityRule`
 设置指定资源（数据库集合、云函数、存储桶）的安全规则。
 
-参数说明：
-- resourceType: 资源类型（database/function/storage）
-- resourceId: 资源唯一标识（集合名/函数名/桶名）
-- aclTag: 权限类别（READONLY/PRIVATE/ADMINWRITE/ADMINONLY/CUSTOM）
-- rule: 自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填
-
 #### 参数
 
 <table>
 <thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>resourceType</code></td><td>string</td><td>是</td><td>资源类型：database=数据库集合，function=云函数，storage=存储桶 可填写的值: "database", "function", "storage"</td></tr>
-<tr><td><code>resourceId</code></td><td>string</td><td>是</td><td>资源唯一标识。数据库为集合名，云函数为函数名，存储为桶名。</td></tr>
+<tr><td><code>resourceType</code></td><td>string</td><td>是</td><td>资源类型：sqlDatabase=SQL 数据库，noSqlDatabase=noSQL 数据库，function=云函数，storage=存储桶 可填写的值: "sqlDatabase", "noSqlDatabase", "function", "storage"</td></tr>
+<tr><td><code>resourceId</code></td><td>string</td><td>是</td><td>资源唯一标识。sqlDatabase=表名，noSqlDatabase=集合名，云函数为函数名，存储为桶名。</td></tr>
 <tr><td><code>aclTag</code></td><td>string</td><td>是</td><td>权限类别 可填写的值: "READONLY", "PRIVATE", "ADMINWRITE", "ADMINONLY", "CUSTOM"</td></tr>
 <tr><td><code>rule</code></td><td>string</td><td></td><td>自定义安全规则内容，仅当 aclTag 为 CUSTOM 时必填</td></tr>
 </tbody>
