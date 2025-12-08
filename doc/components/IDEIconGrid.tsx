@@ -34,6 +34,13 @@ const IDES: IDE[] = [
     docUrl: '/ai/cloudbase-ai-toolkit/ide-setup/github-copilot',
   },
   {
+    id: 'qoder',
+    name: 'Qoder',
+    platform: '独立 IDE',
+    iconUrl: 'https://g.alicdn.com/qbase/qoder/0.0.183/favIcon.svg',
+    docUrl: '/ai/cloudbase-ai-toolkit/ide-setup/qoder',
+  },
+  {
     id: 'windsurf',
     name: 'WindSurf',
     platform: '独立 IDE',

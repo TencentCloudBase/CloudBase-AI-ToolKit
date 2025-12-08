@@ -309,6 +309,27 @@ const IDES: IDE[] = [
 }`,
   },
   {
+    id: 'qoder',
+    name: 'Qoder',
+    platform: '独立 IDE',
+    configPath: 'Qoder 设置 > MCP',
+    iconUrl: 'https://g.alicdn.com/qbase/qoder/0.0.183/favIcon.svg',
+    docUrl: 'https://docs.qoder.com/zh/user-guide/chat/model-context-protocol',
+    supportsProjectMCP: false,
+    verificationPrompt: '检查 CloudBase 工具是否可用, 下载 CloudBase AI 开发规则',
+    configExample: `{
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "INTEGRATION_IDE": "Qoder"
+      }
+    }
+  }
+}`,
+  },
+  {
     id: 'windsurf',
     name: 'WindSurf',
     platform: '独立 IDE',
@@ -433,7 +454,7 @@ const translations: Record<string, Record<string, string>> = {
     viewTemplates: '查看模板',
     oneClickInstall: '一键安装',
     orManualConfig: '或手动配置',
-    orAddConfig: '或者将以下配置添加到',
+    orAddConfig: '将以下配置添加到',
     step2Verify: '步骤 2：验证连接',
     verifyDescription: '配置完成后，在 AI 对话中输入以下内容验证',
     defaultVerifyPrompt: '检查 CloudBase 工具是否可用, 下载 CloudBase AI 开发规则',

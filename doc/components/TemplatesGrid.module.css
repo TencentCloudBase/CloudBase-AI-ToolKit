@@ -85,14 +85,14 @@
 
 .downloadButton {
   background: var(--ifm-color-primary);
-  color: var(--ifm-color-primary-contrast-foreground);
+  color: #fff;
   border: 1px solid var(--ifm-color-primary);
 }
 
 .downloadButton:hover {
   background: var(--ifm-color-primary-dark);
   border-color: var(--ifm-color-primary-dark);
-  color: var(--ifm-color-primary-contrast-foreground);
+  color: #fff;
   text-decoration: none;
 }
 
