@@ -79,13 +79,13 @@ class EnvironmentManager {
     private _setCachedEnvId(envId: string) {
         this.cachedEnvId = envId;
         process.env.CLOUDBASE_ENV_ID = envId;
-        debug('已更新环境ID缓存:', {envId});
+        debug('已更新环境ID缓存:', { envId });
     }
 
     // 手动设置环境ID（用于外部调用）
     async setEnvId(envId: string) {
         this._setCachedEnvId(envId);
-        debug('手动设置环境ID并更新缓存:', {envId});
+        debug('手动设置环境ID并更新缓存:', { envId });
     }
 
     // Get cached envId without triggering fetch (for optimization)
@@ -167,7 +167,7 @@ export async function getCloudBaseManager(options: GetManagerOptions = {}): Prom
             secretKey,
             envId: finalEnvId || loginEnvId,
             token,
-            proxy: process.env.http_proxy
+            proxy: process.env.http_proxy,
         });
         return manager;
     } catch (err) {
@@ -185,13 +185,8 @@ export function createCloudBaseManagerWithOptions(cloudBaseOptions: CloudBaseOpt
     debug('使用传入的 CloudBase 配置创建 manager:', cloudBaseOptions);
 
     const manager = new CloudBase({
-        secretId: cloudBaseOptions.secretId,
-        secretKey: cloudBaseOptions.secretKey,
-        envId: cloudBaseOptions.envId,
-        token: cloudBaseOptions.token,
+        ...cloudBaseOptions,
         proxy: cloudBaseOptions.proxy || process.env.http_proxy,
-        region: cloudBaseOptions.region,
-        envType: cloudBaseOptions.envType
     });
 
     return manager;

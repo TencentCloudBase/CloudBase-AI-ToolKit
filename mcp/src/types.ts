@@ -1,3 +1,5 @@
+import CloudBase from "@cloudbase/manager-node";
+
 export interface UploadFileParams {
   cloudPath: string;
   fileContent: string;
@@ -60,12 +62,4 @@ export interface DataModel {
 }
 
 // CloudBase 配置选项
-export interface CloudBaseOptions {
-  secretId?: string;
-  secretKey?: string;
-  token?: string;
-  envId?: string;
-  proxy?: string;
-  region?: string;
-  envType?: string;
-}
+export type CloudBaseOptions = NonNullable<ConstructorParameters<typeof CloudBase>[0]>
