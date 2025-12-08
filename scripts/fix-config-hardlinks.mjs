@@ -617,6 +617,10 @@ async function syncRulesToIDEDirectories() {
   const ideRulesConfigs = [
     { dir: "config/.qoder/rules", convertMdToMdc: false },
     { dir: "config/.cursor/rules", convertMdToMdc: true },
+    { dir: "config/.agent/rules", convertMdToMdc: false },
+    { dir: "config/.trae/rules", convertMdToMdc: false },
+    { dir: "config/.windsurf/rules", convertMdToMdc: false },
+    { dir: "config/.clinerules", convertMdToMdc: false },
   ];
 
   console.log(
