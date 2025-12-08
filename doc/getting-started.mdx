@@ -1,17 +1,18 @@
 import IDESelector from './components/IDESelector';
+import PromptScenarios from './components/PromptScenarios';
 
 # 连接 CloudBase MCP
 
-使用 Model Context Protocol (MCP) 将 CloudBase MCP 连接到你的 AI 开发工具。连接后，AI 助手可以代表你与 CloudBase 环境交互和查询。
+通过 Model Context Protocol (MCP) 连接后，你可以在 AI 对话中直接操作 CloudBase 服务，无需在 IDE 和控制台之间切换。
 
 ## 前置条件
 
 在开始配置之前，请确保满足以下条件：
 
 <details>
-<summary><strong>Node.js 环境</strong></summary>
+<summary><strong>已准备好Node.js 环境和云开发环境</strong></summary>
 
-确保已安装 Node.js v18.15.0 或更高版本：
+**Node.js 环境：** 确保已安装 Node.js v18.15.0 或更高版本：
 
 ```bash
 node --version
@@ -19,12 +20,7 @@ node --version
 
 如果未安装，请从 [Node.js 官网](https://nodejs.org/en/download) 下载安装。
 
-</details>
-
-<details>
-<summary><strong>云开发环境</strong></summary>
-
-请参考文档 [开通云开发环境](https://docs.cloudbase.net/quick-start/create-env)。新用户可以免费开通体验。
+**云开发环境：** 请参考文档 [开通云开发环境](https://docs.cloudbase.net/quick-start/create-env)。新用户可以免费开通体验。
 
 </details>
 
@@ -48,7 +44,23 @@ node --version
 
 AI 会自动引导你完成登录和环境选择。然后你可以开始使用自然语言描述需求，让 AI 帮你开发应用。
 
-## 示例
+## 使用示例
+
+**完整流程示例：**
+
+```
+帮我创建一个待办应用并部署
+```
+
+AI 会自动完成：生成代码、创建数据库、部署云函数、配置静态托管，并返回访问链接。
+
+**分步操作示例：**
+
+- "创建用户表" - AI 自动创建数据库集合
+- "部署这个函数" - AI 自动上传并配置云函数  
+- "部署前端到 CDN" - AI 自动上传文件并配置托管
+
+**详细需求示例：**
 
 ```
 帮我创建一个待办事项应用，包含：
@@ -58,9 +70,6 @@ AI 会自动引导你完成登录和环境选择。然后你可以开始使用�
 - 部署到云端
 ```
 
-## 相关资源
+## AI 提示词场景
 
-- [CloudBase MCP 工具参考](./mcp-tools) - 了解所有可用工具
-- [项目模板](./templates) - 选择合适的项目模板
-- [常见问题](./faq) - 解决开发中的问题
-- [技术交流群](../#技术交流群)
+<PromptScenarios />

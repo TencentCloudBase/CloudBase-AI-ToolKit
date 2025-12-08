@@ -1,0 +1,38 @@
+import IDESelector from '../components/IDESelector';
+import PromptScenarios from '../components/PromptScenarios';
+
+# 如何使用提示词
+
+本文档介绍如何在项目中使用 CloudBase AI 提示词。
+
+## 方式 1：连接 MCP（推荐）
+
+推荐连接 CloudBase MCP 并获取 AI 开发规则。连接后，AI 助手可以自动使用 CloudBase 工具和提示词规则，无需手动复制文件。
+
+选择你的 AI 开发工具，然后按照安装说明操作：
+
+<IDESelector showInstallButton={false} />
+
+连接完成后，在 AI 对话中输入：`检查 CloudBase 工具是否可用，下载 CloudBase AI 开发规则` 来验证连接并获取规则。
+
+然后输入你的需求来驱动 AI 开发。
+
+查看[连接指南](/ai/cloudbase-ai-toolkit/getting-started)了解更多详情。
+
+
+
+
+## 方式 2：复制提示词到项目
+
+将提示词内容复制到项目中的文件（例如 `prompts/[prompt-name].md`），然后使用 AI 工具的"包含文件"功能在对话中引用该提示词。
+
+不同 AI 工具的使用方式：
+
+- **GitHub Copilot**: 使用 `#<filename>`，例如 `#prompts/auth-web.md`
+- **Cursor**: 使用 `@Files`，然后选择文件
+- **Zed**: 使用 `/file`，然后选择文件
+- **其他工具**: 参考工具的文档了解如何包含文件
+
+## 可用的提示词场景
+
+<PromptScenarios />

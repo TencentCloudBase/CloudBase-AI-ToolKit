@@ -1,0 +1,166 @@
+categories:
+  - id: auth
+    label: 身份认证
+    order: 1
+  - id: database
+    label: 数据库
+    order: 2
+  - id: backend
+    label: 后端开发
+    order: 3
+  - id: frontend
+    label: 应用集成
+    order: 4
+  - id: tools
+    label: 开发工具
+    order: 5
+
+rules:
+  
+  - id: auth-web
+    title: 身份认证：Web SDK
+    description: 使用 CloudBase Web SDK 进行前端身份认证
+    category: auth
+    order: 2
+    prompts:
+      - "帮我实现一个 Web 登录页面，使用 CloudBase Auth"
+      - "创建一个用户注册和登录功能"
+  
+  - id: auth-wechat
+    title: 身份认证：微信小程序
+    description: 微信小程序中使用 CloudBase Auth 进行身份认证
+    category: auth
+    order: 3
+    prompts:
+      - "帮我实现微信小程序的用户登录功能"
+      - "创建一个支持微信登录的小程序应用"
+  
+  - id: auth-http-api
+    title: 身份认证：App 集成
+    description: 使用 CloudBase HTTP API 进行身份认证，适用于 Android、iOS 等原生应用
+    category: auth
+    order: 4
+    ruleDir: http-api
+    prompts:
+      - "在 Android 应用中实现用户登录功能"
+      - "在 iOS 应用中实现用户注册和登录"
+  
+  - id: no-sql-web-sdk
+    title: 文档数据库：Web SDK
+    description: 使用 CloudBase 文档数据库 Web SDK 进行数据操作
+    category: database
+    order: 1
+    prompts:
+      - "帮我创建一个待办事项应用，使用文档数据库存储数据"
+      - "实现分页查询和复杂查询功能"
+  
+  - id: no-sql-wx-mp-sdk
+    title: 文档数据库：小程序 SDK
+    description: 微信小程序中使用 CloudBase 文档数据库 SDK
+    category: database
+    order: 2
+    prompts:
+      - "帮我在小程序中实现数据查询和更新"
+      - "创建一个使用文档数据库的小程序应用"
+  
+  - id: relational-database-tool
+    title: 关系型数据库：工具与规则
+    description: 操作 CloudBase 关系型数据库的工具和规则
+    category: database
+    order: 3
+    prompts:
+      - "帮我创建一个用户表并设置权限"
+      - "执行 SQL 查询和更新操作"
+  
+  - id: relational-database-web
+    title: 关系型数据库：Web SDK
+    description: 在 Web 应用中使用 CloudBase 关系型数据库
+    category: database
+    order: 4
+    prompts:
+      - "帮我创建一个使用关系型数据库的 Web 应用"
+      - "实现 Supabase 风格的数据库查询"
+  
+  - id: data-model-creation
+    title: 数据库：数据模型创建
+    description: 使用 AI 创建复杂数据模型
+    category: database
+    order: 5
+    prompts:
+      - "帮我创建一个用户和订单的数据模型"
+      - "设计一个博客系统的数据模型"
+  
+  - id: database-http-api
+    title: 数据库：App 集成
+    description: 使用 CloudBase HTTP API 进行数据库操作，适用于 Android、iOS 等原生应用
+    category: database
+    order: 6
+    ruleDir: http-api
+    prompts:
+      - "在 Android 应用中实现数据查询和更新"
+      - "在 iOS 应用中实现数据库操作"
+  
+  - id: cloudrun-development
+    title: 后端开发：CloudBase Run
+    description: CloudBase Run 后端开发规则（函数模式/容器模式）
+    category: backend
+    order: 1
+    prompts:
+      - "帮我部署一个 Node.js 后端服务到 CloudBase Run"
+      - "创建一个支持多语言的云托管服务"
+  
+  - id: web-development
+    title: 应用集成：Web 应用
+    description: Web 前端项目开发规则和静态托管部署
+    category: frontend
+    order: 1
+    prompts:
+      - "帮我创建一个 React Web 应用"
+      - "部署前端应用到 CloudBase 静态托管"
+  
+  - id: miniprogram-development
+    title: 应用集成：微信小程序
+    description: 微信小程序开发规则和 CloudBase 集成
+    category: frontend
+    order: 2
+    prompts:
+      - "帮我创建一个微信小程序项目"
+      - "实现小程序与 CloudBase 的集成"
+  
+  - id: ui-design
+    title: 应用集成：UI 设计
+    description: 专业的 UI 设计和前端界面指南
+    category: frontend
+    order: 3
+    prompts:
+      - "帮我设计一个现代化的用户界面"
+      - "创建一个美观的登录页面"
+  
+  - id: http-api
+    title: 应用集成：App 集成
+    description: 使用 CloudBase HTTP API 访问平台功能，适用于 Android、iOS 等任意原生语言开发
+    category: frontend
+    order: 4
+    prompts:
+      - "帮我通过 HTTP API 调用 CloudBase 服务"
+      - "在 Android 应用中集成 CloudBase HTTP API"
+      - "在 iOS 应用中集成 CloudBase HTTP API"
+  
+  - id: spec-workflow
+    title: 开发工具：Spec 工作流
+    description: 标准软件工程工作流（需求分析、技术设计、任务规划）
+    category: tools
+    order: 1
+    prompts:
+      - "帮我按照 Spec 工作流开发一个新功能"
+      - "创建一个完整的需求文档和技术方案"
+  
+  - id: cloudbase-platform
+    title: 开发工具：CloudBase 平台
+    description: CloudBase 平台知识库和最佳实践
+    category: tools
+    order: 2
+    prompts:
+      - "帮我了解 CloudBase 平台的功能和特性"
+      - "创建一个完整的 CloudBase 应用架构"
+

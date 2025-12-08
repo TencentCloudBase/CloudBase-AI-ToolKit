@@ -32,7 +32,6 @@ const IDES: IDE[] = [
     iconSlug: 'cursor',
     docUrl: 'https://docs.cursor.com/context/model-context-protocol#configuration-locations',
     supportsProjectMCP: true,
-    oneClickInstallImage: 'https://cursor.com/deeplink/mcp-install-dark.svg',
     verificationPrompt: '检查 CloudBase 工具是否可用, 下载 CloudBase AI 开发规则',
     configExample: `{
   "mcpServers": {
@@ -54,7 +53,7 @@ const IDES: IDE[] = [
     iconSlug: 'claude',
     docUrl: 'https://docs.anthropic.com/en/docs/claude-code/mcp#project-scope',
     supportsProjectMCP: true,
-    cliCommand: 'claude mcp add --scope project --transport http cloudbase "npx @cloudbase/cloudbase-mcp@latest"',
+    cliCommand: 'claude mcp add --transport stdio cloudbase --env INTEGRATION_IDE=ClaudeCode -- npx @cloudbase/cloudbase-mcp@latest',
     alternativeConfig: 'Alternatively, add this configuration to .mcp.json:',
     verificationPrompt: '检查 CloudBase 工具是否可用, 下载 CloudBase AI 开发规则',
     configExample: `{
@@ -70,33 +69,14 @@ const IDES: IDE[] = [
 }`,
   },
   {
-    id: 'windsurf',
-    name: 'WindSurf',
-    platform: '独立 IDE',
-    configPath: '.windsurf/mcp.json',
-    iconSlug: 'windsurf',
-    docUrl: 'https://docs.windsurf.com/windsurf/cascade/memories',
-    supportsProjectMCP: true,
-    verificationPrompt: '检查 CloudBase 工具是否可用, 下载 CloudBase AI 开发规则',
-    configExample: `{
-  "mcpServers": {
-    "cloudbase": {
-      "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "INTEGRATION_IDE": "WindSurf"
-      }
-    }
-  }
-}`,
-  },
-  {
     id: 'codebuddy',
     name: 'CodeBuddy',
     platform: 'VS Code、JetBrains、微信开发者工具',
     configPath: '.codebuddy/mcp.json',
     iconUrl: 'https://codebuddy-1328495429.cos.accelerate.myqcloud.com/web/ide/logo.svg',
+    docUrl: 'https://www.codebuddy.ai/docs/zh/ide/Config%20MCP',
     supportsProjectMCP: true,
+    alternativeConfig: 'Alternatively, add this configuration to',
     verificationPrompt: '检查 CloudBase 工具是否可用, 下载 CloudBase AI 开发规则',
     configExample: `{
   "mcpServers": {
@@ -105,6 +85,30 @@ const IDES: IDE[] = [
       "args": ["@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "INTEGRATION_IDE": "CodeBuddyManual"
+      }
+    }
+  }
+}`,
+  },
+  {
+    id: 'codebuddy-code',
+    name: 'CodeBuddy Code',
+    platform: '命令行工具',
+    configPath: '.mcp.json',
+    iconUrl: 'https://codebuddy-1328495429.cos.accelerate.myqcloud.com/web/ide/logo.svg',
+    docUrl: 'https://cnb.cool/codebuddy/codebuddy-code/-/blob/main/docs/mcp.md',
+    supportsProjectMCP: true,
+    cliCommand: 'codebuddy mcp add --scope project cloudbase --env INTEGRATION_IDE=CodeBuddyCode -- npx @cloudbase/cloudbase-mcp@latest',
+    alternativeConfig: 'Alternatively, add this configuration to .mcp.json:',
+    verificationPrompt: '检查 CloudBase 工具是否可用, 下载 CloudBase AI 开发规则',
+    configExample: `{
+  "mcpServers": {
+    "cloudbase": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "INTEGRATION_IDE": "CodeBuddyCode"
       }
     }
   }
@@ -127,29 +131,6 @@ const IDES: IDE[] = [
       "env": {
         "INTEGRATION_IDE": "VSCode"
       }
-    }
-  }
-}`,
-  },
-  {
-    id: 'cline',
-    name: 'Cline',
-    platform: 'VS Code 插件',
-    configPath: '.cline/mcp.json',
-    iconSlug: 'cline',
-    docUrl: 'https://docs.cline.bot/mcp/configuring-mcp-servers',
-    configExample: `{
-  "mcpServers": {
-    "cloudbase": {
-      "autoApprove": [],
-      "timeout": 60,
-      "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "INTEGRATION_IDE": "Cline"
-      },
-      "transportType": "stdio",
-      "disabled": false
     }
   }
 }`,
@@ -179,6 +160,7 @@ const IDES: IDE[] = [
     configPath: '.tongyi-lingma/mcp.json',
     iconUrl: 'https://img.alicdn.com/imgextra/i1/O1CN01BN6Jtc1lCfJNviV7H_!!6000000004783-2-tps-134-133.png',
     docUrl: 'https://help.aliyun.com/zh/lingma/user-guide/guide-for-using-mcp',
+    alternativeConfig: '注意：通义灵码应该没有配置文件，请在通义灵码的 MCP 配置中添加以下配置：',
     configExample: `{
   "mcpServers": {
     "cloudbase": {
@@ -237,7 +219,7 @@ const IDES: IDE[] = [
     iconSlug: 'openai',
     useCommandInsteadOfConfig: true,
     installCommand: 'codex mcp add cloudbase --env INTEGRATION_IDE=CodeX -- cloudbase-mcp',
-    installCommandDocs: '根据运行系统在终端中运行指令：\n\n**MacOS, Linux, WSL:**\n```bash\ncodex mcp add cloudbase --env INTEGRATION_IDE=CodeX -- cloudbase-mcp\n```\n\n**Windows Powershell:**\n```bash\ncodex mcp add cloudbase --env INTEGRATION_IDE=CodeX -- cmd /c cloudbase-mcp\n```',
+    installCommandDocs: '**前置步骤：** 请先全局安装 CloudBase MCP 工具：\n```bash\nnpm i @cloudbase/cloudbase-mcp -g\n```\n\n根据运行系统在终端中运行指令：\n\n**MacOS, Linux, WSL:**\n```bash\ncodex mcp add cloudbase --env INTEGRATION_IDE=CodeX -- cloudbase-mcp\n```\n\n**Windows Powershell:**\n```bash\ncodex mcp add cloudbase --env INTEGRATION_IDE=CodeX -- cmd /c cloudbase-mcp\n```',
     verificationPrompt: '检查 CloudBase 工具是否可用, 下载 CloudBase AI 开发规则',
     configExample: `{
   "mcpServers": {
@@ -325,6 +307,63 @@ const IDES: IDE[] = [
     }
   }
 }`,
+  },
+  {
+    id: 'windsurf',
+    name: 'WindSurf',
+    platform: '独立 IDE',
+    configPath: '.windsurf/mcp.json',
+    iconSlug: 'windsurf',
+    docUrl: 'https://docs.windsurf.com/windsurf/cascade/memories',
+    supportsProjectMCP: true,
+    verificationPrompt: '检查 CloudBase 工具是否可用, 下载 CloudBase AI 开发规则',
+    configExample: `{
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "INTEGRATION_IDE": "WindSurf"
+      }
+    }
+  }
+}`,
+  },
+  {
+    id: 'cline',
+    name: 'Cline',
+    platform: 'VS Code 插件',
+    configPath: '.cline/mcp.json',
+    iconSlug: 'cline',
+    docUrl: 'https://docs.cline.bot/mcp/configuring-mcp-servers',
+    configExample: `{
+  "mcpServers": {
+    "cloudbase": {
+      "autoApprove": [],
+      "timeout": 60,
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "INTEGRATION_IDE": "Cline"
+      },
+      "transportType": "stdio",
+      "disabled": false
+    }
+  }
+}`,
+  },
+  {
+    id: 'cloudbase-cli',
+    name: 'CloudBase CLI',
+    platform: '命令行工具',
+    configPath: '项目级配置',
+    iconUrl: 'https://docs.cloudbase.net/img/favicon.png',
+    docUrl: 'https://docs.cloudbase.net/cli-v1/ai/introduce',
+    supportsProjectMCP: true,
+    useCommandInsteadOfConfig: true,
+    installCommand: 'npm i -g @cloudbase/cli',
+    installCommandDocs: '**安装 CloudBase CLI：**\n\n```bash\nnpm i -g @cloudbase/cli\n```\n\n**初始化配置：**\n\n```bash\ntcb ai\n```\n\n配置向导会引导你完成 AI 工具的配置。CloudBase CLI 内置了 MCP 和 AI 开发规则，无需手动配置。\n\n**开始使用：**\n\n```bash\ntcb ai\n```',
+    verificationPrompt: '检查 CloudBase 工具是否可用, 下载 CloudBase AI 开发规则',
   },
 ];
 
@@ -695,6 +734,22 @@ export default function IDESelector({
           </div>
         )}
 
+        {/* CodeBuddy built-in integration recommendation */}
+        {ide.id === 'codebuddy' && (
+          <div className={styles.templateHint}>
+            <strong>推荐：</strong>CodeBuddy IDE 已内置集成 CloudBase MCP，建议优先使用配置集成方式。
+            <a 
+              href="https://www.codebuddy.ai/docs/zh/ide/BaaS#tcb" 
+              className={styles.templateLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              查看 BaaS 集成文档
+            </a>
+            <span>。如需手动配置 MCP，请参考下方配置。</span>
+          </div>
+        )}
+
         {/* One-click install button */}
         {getOneClickInstallUrl() && (
           <div className={styles.oneClickInstall}>
@@ -711,6 +766,17 @@ export default function IDESelector({
                   alt={`Add to ${ide.name}`}
                   className={styles.oneClickImage}
                 />
+              ) : (ide.id === 'cursor' || ide.id === 'github-copilot') ? (
+                <div className={styles.customOneClickButton}>
+                  {getIconUrl(ide) && (
+                    <img 
+                      src={getIconUrl(ide)!} 
+                      alt=""
+                      className={`${styles.customButtonIcon} ${ide.id === 'cursor' ? styles.cursorIcon : ''}`}
+                    />
+                  )}
+                  <span className={styles.customButtonText}>Add to {ide.name}</span>
+                </div>
               ) : (
                 <span>Add to {ide.name}</span>
               )}
@@ -815,7 +881,13 @@ export default function IDESelector({
         {!ide.useCommandInsteadOfConfig && (
           <>
             <p className={styles.configHint}>
-              {t.orAddConfig} <code className={styles.inlineCode}>{ide.configPath}</code>:
+              {ide.alternativeConfig ? (
+                ide.alternativeConfig
+              ) : (
+                <>
+                  {t.orAddConfig} <code className={styles.inlineCode}>{ide.configPath}</code>:
+                </>
+              )}
             </p>
 
             {/* Code block with syntax highlighting */}
