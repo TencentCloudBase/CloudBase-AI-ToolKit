@@ -5,50 +5,50 @@
  * 用于确保所有 AI 编辑器的配置文件都指向同一个源文件
  */
 
-import fs from 'fs';
-import path from 'path';
-import readline from 'readline';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import readline from "readline";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, '..');
+const projectRoot = path.resolve(__dirname, "..");
 
 // Color definitions
 const colors = {
-  RED: '\x1b[0;31m',
-  GREEN: '\x1b[0;32m',
-  YELLOW: '\x1b[1;33m',
-  BLUE: '\x1b[0;34m',
-  NC: '\x1b[0m', // No Color
+  RED: "\x1b[0;31m",
+  GREEN: "\x1b[0;32m",
+  YELLOW: "\x1b[1;33m",
+  BLUE: "\x1b[0;34m",
+  NC: "\x1b[0m", // No Color
 };
 
 // Configuration
-const RULES_SOURCE = 'config/.cursor/rules/cloudbase-rules.mdc';
+const RULES_SOURCE = "config/.cursor/rules/cloudbase-rules.mdc";
 const RULES_TARGETS = [
-  'config/.trae/rules/cloudbase-rules.md',
-  'config/.windsurf/rules/cloudbase-rules.md',
-  'config/.roo/rules/cloudbaase-rules.md',
-  'config/.lingma/rules/cloudbaase-rules.md',
-  'config/.rules/cloudbase-rules.md',
-  'config/.rules/cloudbase-rules.mdc',
-  'config/.clinerules/cloudbase-rules.mdc',
-  'config/.github/copilot-instructions.md',
-  'config/.comate/rules/cloudbase-rules.mdr',
-  'config/.augment-guidelines',
-  'config/CLAUDE.md',
-  'config/.gemini/GEMINI.md',
-  'config/AGENTS.md',
-  'config/.qwen/QWEN.md',
-  'config/CODEBUDDY.md',
+  "config/.trae/rules/cloudbase-rules.md",
+  "config/.windsurf/rules/cloudbase-rules.md",
+  "config/.roo/rules/cloudbaase-rules.md",
+  "config/.lingma/rules/cloudbaase-rules.md",
+  "config/.rules/cloudbase-rules.md",
+  "config/.rules/cloudbase-rules.mdc",
+  "config/.clinerules/cloudbase-rules.mdc",
+  "config/.github/copilot-instructions.md",
+  "config/.comate/rules/cloudbase-rules.mdr",
+  "config/.augment-guidelines",
+  "config/CLAUDE.md",
+  "config/.gemini/GEMINI.md",
+  "config/AGENTS.md",
+  "config/.qwen/QWEN.md",
+  "config/CODEBUDDY.md",
 ];
 
-const MCP_SOURCE = 'config/.mcp.json';
-const MCP_TARGETS = ['.mcp.json'];
+const MCP_SOURCE = "config/.mcp.json";
+const MCP_TARGETS = [".mcp.json"];
 
-const SKILLS_SOURCE_DIR = 'config/.claude/skills';
-const SKILLS_TARGET_DIR = 'config/.codebuddy/skills';
-const RULES_DIR = 'config/rules';
+const SKILLS_SOURCE_DIR = "config/.claude/skills";
+const SKILLS_TARGET_DIR = "config/.codebuddy/skills";
+const RULES_DIR = "config/rules";
 
 /**
  * Get file inode number
@@ -191,11 +191,15 @@ function getHardLinkCount(filePath) {
  * Process Rules configuration files hard links
  */
 async function processRulesLinks() {
-  console.log(`\n${colors.BLUE}📁 处理 Rules 配置文件: ${RULES_SOURCE}${colors.NC}`);
+  console.log(
+    `\n${colors.BLUE}📁 处理 Rules 配置文件: ${RULES_SOURCE}${colors.NC}`,
+  );
 
   const sourcePath = path.join(projectRoot, RULES_SOURCE);
   if (!fs.existsSync(sourcePath)) {
-    console.log(`${colors.RED}❌ 错误: 源文件 ${RULES_SOURCE} 不存在${colors.NC}`);
+    console.log(
+      `${colors.RED}❌ 错误: 源文件 ${RULES_SOURCE} 不存在${colors.NC}`,
+    );
     process.exit(1);
   }
 
@@ -217,7 +221,9 @@ async function processRulesLinks() {
         console.log(`${colors.GREEN}✅ ${target} (正确链接)${colors.NC}`);
         correctLinks.push(target);
       } else {
-        console.log(`${colors.RED}❌ ${target} (独立文件, inode: ${targetInode})${colors.NC}`);
+        console.log(
+          `${colors.RED}❌ ${target} (独立文件, inode: ${targetInode})${colors.NC}`,
+        );
         brokenLinks.push(target);
       }
     } else {
@@ -227,18 +233,24 @@ async function processRulesLinks() {
   }
 
   if (brokenLinks.length === 0) {
-    console.log(`\n${colors.GREEN}🎉 所有 Rules 配置文件都已正确硬链接！${colors.NC}`);
-    console.log(`${colors.BLUE}📊 总共 ${correctLinks.length + 1} 个硬链接${colors.NC}`);
+    console.log(
+      `\n${colors.GREEN}🎉 所有 Rules 配置文件都已正确硬链接！${colors.NC}`,
+    );
+    console.log(
+      `${colors.BLUE}📊 总共 ${correctLinks.length + 1} 个硬链接${colors.NC}`,
+    );
     return;
   }
 
-  console.log(`\n${colors.YELLOW}🔧 需要修复的文件 (${brokenLinks.length} 个):${colors.NC}`);
+  console.log(
+    `\n${colors.YELLOW}🔧 需要修复的文件 (${brokenLinks.length} 个):${colors.NC}`,
+  );
   for (const broken of brokenLinks) {
     console.log(`   - ${broken}`);
   }
 
   const shouldContinue = await promptUser(
-    `\n${colors.YELLOW}❓ 是否继续修复这些 Rules 文件？这将删除独立副本并创建硬链接。 [y/N]${colors.NC} `
+    `\n${colors.YELLOW}❓ 是否继续修复这些 Rules 文件？这将删除独立副本并创建硬链接。 [y/N]${colors.NC} `,
   );
 
   if (!shouldContinue) {
@@ -292,18 +304,24 @@ async function processRulesLinks() {
     console.log(file);
   }
 
-  console.log(`\n${colors.GREEN}✨ Rules 硬链接修复完成！现在修改任何一个文件都会同步到所有其他文件。${colors.NC}`);
+  console.log(
+    `\n${colors.GREEN}✨ Rules 硬链接修复完成！现在修改任何一个文件都会同步到所有其他文件。${colors.NC}`,
+  );
 }
 
 /**
  * Process MCP configuration files hard links
  */
 async function processMcpLinks() {
-  console.log(`\n${colors.BLUE}📁 处理 MCP 配置文件: ${MCP_SOURCE}${colors.NC}`);
+  console.log(
+    `\n${colors.BLUE}📁 处理 MCP 配置文件: ${MCP_SOURCE}${colors.NC}`,
+  );
 
   const sourcePath = path.join(projectRoot, MCP_SOURCE);
   if (!fs.existsSync(sourcePath)) {
-    console.log(`${colors.RED}❌ 错误: 源文件 ${MCP_SOURCE} 不存在${colors.NC}`);
+    console.log(
+      `${colors.RED}❌ 错误: 源文件 ${MCP_SOURCE} 不存在${colors.NC}`,
+    );
     process.exit(1);
   }
 
@@ -325,7 +343,9 @@ async function processMcpLinks() {
         console.log(`${colors.GREEN}✅ ${target} (正确链接)${colors.NC}`);
         correctLinks.push(target);
       } else {
-        console.log(`${colors.RED}❌ ${target} (独立文件, inode: ${targetInode})${colors.NC}`);
+        console.log(
+          `${colors.RED}❌ ${target} (独立文件, inode: ${targetInode})${colors.NC}`,
+        );
         brokenLinks.push(target);
       }
     } else {
@@ -335,18 +355,24 @@ async function processMcpLinks() {
   }
 
   if (brokenLinks.length === 0) {
-    console.log(`\n${colors.GREEN}🎉 所有 MCP 配置文件都已正确硬链接！${colors.NC}`);
-    console.log(`${colors.BLUE}📊 总共 ${correctLinks.length + 1} 个硬链接${colors.NC}`);
+    console.log(
+      `\n${colors.GREEN}🎉 所有 MCP 配置文件都已正确硬链接！${colors.NC}`,
+    );
+    console.log(
+      `${colors.BLUE}📊 总共 ${correctLinks.length + 1} 个硬链接${colors.NC}`,
+    );
     return;
   }
 
-  console.log(`\n${colors.YELLOW}🔧 需要修复的文件 (${brokenLinks.length} 个):${colors.NC}`);
+  console.log(
+    `\n${colors.YELLOW}🔧 需要修复的文件 (${brokenLinks.length} 个):${colors.NC}`,
+  );
   for (const broken of brokenLinks) {
     console.log(`   - ${broken}`);
   }
 
   const shouldContinue = await promptUser(
-    `\n${colors.YELLOW}❓ 是否继续修复这些文件？这将删除独立副本并创建硬链接。 [y/N]${colors.NC} `
+    `\n${colors.YELLOW}❓ 是否继续修复这些文件？这将删除独立副本并创建硬链接。 [y/N]${colors.NC} `,
   );
 
   if (!shouldContinue) {
@@ -400,7 +426,9 @@ async function processMcpLinks() {
     console.log(file);
   }
 
-  console.log(`\n${colors.GREEN}✨ MCP 硬链接修复完成！现在修改任何一个文件都会同步到所有其他文件。${colors.NC}`);
+  console.log(
+    `\n${colors.GREEN}✨ MCP 硬链接修复完成！现在修改任何一个文件都会同步到所有其他文件。${colors.NC}`,
+  );
 }
 
 /**
@@ -434,7 +462,9 @@ function syncSkillsDirectoryRecursive(srcDir, destDir) {
         }
         fs.linkSync(srcPath, destPath);
       } catch (error) {
-        console.log(`   ${colors.RED}❌ 无法创建硬链接: ${entry.name}${colors.NC}`);
+        console.log(
+          `   ${colors.RED}❌ 无法创建硬链接: ${entry.name}${colors.NC}`,
+        );
       }
     }
   }
@@ -444,11 +474,15 @@ function syncSkillsDirectoryRecursive(srcDir, destDir) {
  * Sync skills directory from .claude/skills to .codebuddy/skills
  */
 async function syncSkillsDirectory() {
-  console.log(`\n${colors.BLUE}📁 处理 Skills 目录同步: ${SKILLS_SOURCE_DIR} -> ${SKILLS_TARGET_DIR}${colors.NC}`);
+  console.log(
+    `\n${colors.BLUE}📁 处理 Skills 目录同步: ${SKILLS_SOURCE_DIR} -> ${SKILLS_TARGET_DIR}${colors.NC}`,
+  );
 
   const sourcePath = path.join(projectRoot, SKILLS_SOURCE_DIR);
   if (!fs.existsSync(sourcePath)) {
-    console.log(`${colors.YELLOW}⚠️  源目录 ${SKILLS_SOURCE_DIR} 不存在，跳过${colors.NC}`);
+    console.log(
+      `${colors.YELLOW}⚠️  源目录 ${SKILLS_SOURCE_DIR} 不存在，跳过${colors.NC}`,
+    );
     return;
   }
 
@@ -488,7 +522,7 @@ function copyDirectoryRecursive(srcDir, destDir) {
     for (const entry of entries) {
       const srcPath = path.join(src, entry.name);
       // Rename SKILL.md to rule.md when copying
-      const destFileName = entry.name === 'SKILL.md' ? 'rule.md' : entry.name;
+      const destFileName = entry.name === "SKILL.md" ? "rule.md" : entry.name;
       const destPath = path.join(dest, destFileName);
 
       if (entry.isDirectory()) {
@@ -503,7 +537,9 @@ function copyDirectoryRecursive(srcDir, destDir) {
           fs.copyFileSync(srcPath, destPath);
           filesCount++;
         } catch (error) {
-          console.log(`   ${colors.RED}❌ 无法复制文件: ${entry.name} - ${error.message}${colors.NC}`);
+          console.log(
+            `   ${colors.RED}❌ 无法复制文件: ${entry.name} - ${error.message}${colors.NC}`,
+          );
           errorsCount++;
         }
       }
@@ -519,11 +555,15 @@ function copyDirectoryRecursive(srcDir, destDir) {
  * Sync skills directory to rules directory, maintaining original structure
  */
 async function syncSkillFiles() {
-  console.log(`\n${colors.BLUE}📁 处理 Skills 目录同步到 rules 目录${colors.NC}`);
+  console.log(
+    `\n${colors.BLUE}📁 处理 Skills 目录同步到 rules 目录${colors.NC}`,
+  );
 
   const skillsSourcePath = path.join(projectRoot, SKILLS_SOURCE_DIR);
   if (!fs.existsSync(skillsSourcePath)) {
-    console.log(`${colors.YELLOW}⚠️  源目录 ${SKILLS_SOURCE_DIR} 不存在，跳过${colors.NC}`);
+    console.log(
+      `${colors.YELLOW}⚠️  源目录 ${SKILLS_SOURCE_DIR} 不存在，跳过${colors.NC}`,
+    );
     return;
   }
 
@@ -534,7 +574,9 @@ async function syncSkillFiles() {
     fs.mkdirSync(rulesDirPath, { recursive: true });
   }
 
-  console.log(`${colors.YELLOW}🔍 开始复制 Skills 目录到 rules 目录...${colors.NC}`);
+  console.log(
+    `${colors.YELLOW}🔍 开始复制 Skills 目录到 rules 目录...${colors.NC}`,
+  );
   console.log(`   ${colors.BLUE}源: ${SKILLS_SOURCE_DIR}${colors.NC}`);
   console.log(`   ${colors.BLUE}目标: ${RULES_DIR}${colors.NC}`);
 
@@ -546,15 +588,19 @@ async function syncSkillFiles() {
     console.log(`${colors.RED}❌ 复制失败: ${stats.errors} 个文件${colors.NC}`);
   }
 
-  console.log(`\n${colors.GREEN}✨ Skills 目录同步完成！已保持原有目录结构和文件名。${colors.NC}`);
+  console.log(
+    `\n${colors.GREEN}✨ Skills 目录同步完成！已保持原有目录结构和文件名。${colors.NC}`,
+  );
 }
 
 /**
  * Main function
  */
 async function main() {
-  console.log(`${colors.BLUE}🔧 CloudBase AI 配置文件硬链接修复工具${colors.NC}`);
-  console.log('==================================================');
+  console.log(
+    `${colors.BLUE}🔧 CloudBase AI 配置文件硬链接修复工具${colors.NC}`,
+  );
+  console.log("==================================================");
 
   try {
     await processRulesLinks();
@@ -564,11 +610,12 @@ async function main() {
 
     console.log(`\n${colors.GREEN}🎉 所有操作完成！${colors.NC}`);
   } catch (error) {
-    console.error(`\n${colors.RED}❌ 脚本执行失败: ${error.message}${colors.NC}`);
+    console.error(
+      `\n${colors.RED}❌ 脚本执行失败: ${error.message}${colors.NC}`,
+    );
     process.exit(1);
   }
 }
 
 // Run main function
 main().catch(console.error);
-
