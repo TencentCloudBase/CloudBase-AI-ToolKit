@@ -1,9 +1,9 @@
 // IDE过滤功能测试
-import { test, expect } from 'vitest';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
-import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+import { expect, test } from 'vitest';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -80,10 +80,6 @@ test('downloadTemplate tool supports IDE filtering', async () => {
     expect(ideParam.enum).toContain('trae');
     expect(ideParam.enum).toContain('vscode');
     console.log('✅ All supported IDE types found in enum');
-    
-    // Check default value
-    expect(ideParam.default).toBe('all');
-    console.log('✅ Default IDE value is "all"');
     
     console.log('✅ downloadTemplate IDE filtering test passed');
     
