@@ -55,6 +55,7 @@ const IDE_TYPES = [
   "tongyi-lingma", // 通义灵码
   "trae", // Trae AI编辑器
   "qoder", // Qoder AI编辑器
+  "antigravity", // Google Antigravity AI编辑器
   "vscode", // Visual Studio Code
 ] as const;
 
@@ -70,7 +71,7 @@ interface IDEMapping {
 // 注意：以 "/" 结尾的路径表示目录，会包含该目录下的所有文件
 const IDE_FILE_MAPPINGS: Record<string, string[]> = {
   cursor: [".cursor/rules/", ".cursor/mcp.json"],
-  windsurf: [".windsurf/rules/cloudbase-rules.md"],
+  windsurf: [".windsurf/rules/"],
   codebuddy: [".rules/cloudbase-rules.md", "CODEBUDDY.md", ".mcp.json"],
   "claude-code": [
     "CLAUDE.md",
@@ -80,7 +81,7 @@ const IDE_FILE_MAPPINGS: Record<string, string[]> = {
     ".claude/commands/spec.md",
     ".claude/commands/no_spec.md",
   ],
-  cline: [".clinerules/cloudbase-rules.mdc"],
+  cline: [".clinerules/"],
   "gemini-cli": [".gemini/GEMINI.md", ".gemini/settings.json"],
   opencode: [".opencode.json"],
   "qwen-code": [".qwen/QWEN.md", ".qwen/settings.json"],
@@ -94,8 +95,9 @@ const IDE_FILE_MAPPINGS: Record<string, string[]> = {
   "github-copilot": [".github/copilot-instructions.md"],
   roocode: [".roo/rules/cloudbaase-rules.md", ".roo/mcp.json"],
   "tongyi-lingma": [".lingma/rules/cloudbaase-rules.md"],
-  trae: [".trae/rules/cloudbase-rules.md"],
+  trae: [".trae/rules/"],
   qoder: [".qoder/rules/"],
+  antigravity: [".agent/rules/"],
   vscode: [".vscode/mcp.json", ".vscode/settings.json"],
 };
 
@@ -126,6 +128,7 @@ const IDE_DESCRIPTIONS: Record<string, string> = {
   "tongyi-lingma": "通义灵码",
   trae: "Trae AI编辑器",
   qoder: "Qoder AI编辑器",
+  antigravity: "Google Antigravity AI编辑器",
   vscode: "Visual Studio Code",
 };
 
@@ -149,6 +152,7 @@ const INTEGRATION_IDE_MAPPING: Record<string, string> = {
   "Tongyi Lingma": "tongyi-lingma",
   Trae: "trae",
   Qoder: "qoder",
+  Antigravity: "antigravity",
   VSCode: "vscode",
 };
 
@@ -427,7 +431,7 @@ export function registerSetupTools(server: ExtendedMcpServer) {
       title: "下载项目模板",
       description: `自动下载并部署CloudBase项目模板。⚠️ **MANDATORY FOR NEW PROJECTS** ⚠️
 
-**CRITICAL**: This tool MUST be called FIRST when starting a new project.\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n支持的IDE类型:\n- all: 下载所有IDE配置（默认）\n- cursor: Cursor AI编辑器\n- windsurf: WindSurf AI编辑器\n- codebuddy: CodeBuddy AI编辑器\n- claude-code: Claude Code AI编辑器\n- cline: Cline AI编辑器\n- gemini-cli: Gemini CLI\n- opencode: OpenCode AI编辑器\n- qwen-code: 通义灵码\n- baidu-comate: 百度Comate\n- openai-codex-cli: OpenAI Codex CLI\n- augment-code: Augment Code\n- github-copilot: GitHub Copilot\n- roocode: RooCode AI编辑器\n- tongyi-lingma: 通义灵码\n- trae: Trae AI编辑器\n- qoder: Qoder AI编辑器\n- vscode: Visual Studio Code\n\n特别说明：\n- rules 模板会自动包含当前 mcp 版本号信息（版本号：${typeof __MCP_VERSION__ !== "undefined" ? __MCP_VERSION__ : "unknown"}），便于后续维护和版本追踪\n- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）`,
+**CRITICAL**: This tool MUST be called FIRST when starting a new project.\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n支持的IDE类型:\n- all: 下载所有IDE配置（默认）\n- cursor: Cursor AI编辑器\n- windsurf: WindSurf AI编辑器\n- codebuddy: CodeBuddy AI编辑器\n- claude-code: Claude Code AI编辑器\n- cline: Cline AI编辑器\n- gemini-cli: Gemini CLI\n- opencode: OpenCode AI编辑器\n- qwen-code: 通义灵码\n- baidu-comate: 百度Comate\n- openai-codex-cli: OpenAI Codex CLI\n- augment-code: Augment Code\n- github-copilot: GitHub Copilot\n- roocode: RooCode AI编辑器\n- tongyi-lingma: 通义灵码\n- trae: Trae AI编辑器\n- qoder: Qoder AI编辑器\n- antigravity: Google Antigravity AI编辑器\n- vscode: Visual Studio Code\n\n特别说明：\n- rules 模板会自动包含当前 mcp 版本号信息（版本号：${typeof __MCP_VERSION__ !== "undefined" ? __MCP_VERSION__ : "unknown"}），便于后续维护和版本追踪\n- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）`,
       inputSchema: {
         template: z
           .enum(["react", "vue", "miniprogram", "uniapp", "rules"])

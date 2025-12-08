@@ -330,6 +330,27 @@ const IDES: IDE[] = [
 }`,
   },
   {
+    id: 'antigravity',
+    name: 'Google Antigravity',
+    platform: '独立 IDE',
+    configPath: '.agent/rules/',
+    iconUrl: 'https://antigravity.google/assets/image/antigravity-logo.png',
+    docUrl: 'https://antigravity.google/docs',
+    supportsProjectMCP: true,
+    verificationPrompt: '检查 CloudBase 工具是否可用, 下载 CloudBase AI 开发规则',
+    configExample: `{
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "INTEGRATION_IDE": "Antigravity"
+      }
+    }
+  }
+}`,
+  },
+  {
     id: 'windsurf',
     name: 'WindSurf',
     platform: '独立 IDE',
@@ -385,6 +406,7 @@ const IDES: IDE[] = [
     installCommand: 'npm i -g @cloudbase/cli',
     installCommandDocs: '**安装 CloudBase CLI：**\n\n```bash\nnpm i -g @cloudbase/cli\n```\n\n**初始化配置：**\n\n```bash\ntcb ai\n```\n\n配置向导会引导你完成 AI 工具的配置。CloudBase CLI 内置了 MCP 和 AI 开发规则，无需手动配置。\n\n**开始使用：**\n\n```bash\ntcb ai\n```',
     verificationPrompt: '检查 CloudBase 工具是否可用, 下载 CloudBase AI 开发规则',
+    configExample: '',
   },
 ];
 

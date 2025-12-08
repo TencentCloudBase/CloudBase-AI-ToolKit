@@ -41,6 +41,13 @@ const IDES: IDE[] = [
     docUrl: '/ai/cloudbase-ai-toolkit/ide-setup/qoder',
   },
   {
+    id: 'antigravity',
+    name: 'Google Antigravity',
+    platform: '独立 IDE',
+    iconUrl: 'https://antigravity.google/assets/image/antigravity-logo.png',
+    docUrl: '/ai/cloudbase-ai-toolkit/ide-setup/antigravity',
+  },
+  {
     id: 'windsurf',
     name: 'WindSurf',
     platform: '独立 IDE',
