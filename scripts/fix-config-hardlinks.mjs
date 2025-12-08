@@ -30,6 +30,7 @@ const RULES_TARGETS = [
   "config/.windsurf/rules/cloudbase-rules.md",
   "config/.roo/rules/cloudbaase-rules.md",
   "config/.lingma/rules/cloudbaase-rules.md",
+  "config/.qoder/rules/cloudbase-rules.md",
   "config/.rules/cloudbase-rules.md",
   "config/.rules/cloudbase-rules.mdc",
   "config/.clinerules/cloudbase-rules.mdc",
@@ -594,6 +595,132 @@ async function syncSkillFiles() {
 }
 
 /**
+ * Sync rules directory to IDE-specific rules directories using hard links
+ */
+async function syncRulesToIDEDirectories() {
+  console.log(
+    `\n${colors.BLUE}📁 处理 Rules 目录同步到 IDE 特定目录${colors.NC}`,
+  );
+
+  const rulesSourcePath = path.join(projectRoot, RULES_DIR);
+  if (!fs.existsSync(rulesSourcePath)) {
+    console.log(
+      `${colors.YELLOW}⚠️  源目录 ${RULES_DIR} 不存在，跳过${colors.NC}`,
+    );
+    return;
+  }
+
+  console.log(`${colors.GREEN}✅ 源目录存在: ${RULES_DIR}${colors.NC}`);
+
+  // IDE-specific rules directories configuration
+  // Each entry: { dir: string, convertMdToMdc: boolean }
+  const ideRulesConfigs = [
+    { dir: "config/.qoder/rules", convertMdToMdc: false },
+    { dir: "config/.cursor/rules", convertMdToMdc: true },
+  ];
+
+  console.log(
+    `${colors.YELLOW}🔍 开始同步 Rules 目录到 IDE 特定目录...${colors.NC}`,
+  );
+
+  let totalFiles = 0;
+  let totalErrors = 0;
+
+  for (const config of ideRulesConfigs) {
+    const ideRulesDir = config.dir;
+    const convertMdToMdc = config.convertMdToMdc;
+    const ideRulesPath = path.join(projectRoot, ideRulesDir);
+    
+    console.log(`\n${colors.BLUE}📂 处理: ${ideRulesDir}${colors.NC}`);
+    if (convertMdToMdc) {
+      console.log(`   ${colors.YELLOW}📝 将 .md 文件转换为 .mdc 格式${colors.NC}`);
+    }
+
+    // Ensure target directory exists
+    if (!fs.existsSync(ideRulesPath)) {
+      fs.mkdirSync(ideRulesPath, { recursive: true });
+      console.log(`   📁 创建目录: ${ideRulesDir}`);
+    }
+
+    // Recursively sync files
+    function syncRulesRecursive(srcDir, destDir) {
+      if (!fs.existsSync(srcDir)) {
+        return;
+      }
+
+      const entries = fs.readdirSync(srcDir, { withFileTypes: true });
+
+      for (const entry of entries) {
+        const srcPath = path.join(srcDir, entry.name);
+        let destFileName = entry.name;
+        
+        // Convert .md to .mdc for Cursor
+        if (convertMdToMdc && entry.isFile() && entry.name.endsWith('.md')) {
+          destFileName = entry.name.replace(/\.md$/, '.mdc');
+        }
+        
+        const destPath = path.join(destDir, destFileName);
+
+        if (entry.isDirectory()) {
+          // Create subdirectory if it doesn't exist
+          if (!fs.existsSync(destPath)) {
+            fs.mkdirSync(destPath, { recursive: true });
+          }
+          syncRulesRecursive(srcPath, destPath);
+        } else if (entry.isFile()) {
+          try {
+            if (convertMdToMdc && entry.name.endsWith('.md')) {
+              // For Cursor, copy file content and rename extension
+              if (fs.existsSync(destPath)) {
+                fs.unlinkSync(destPath);
+              }
+              fs.copyFileSync(srcPath, destPath);
+              totalFiles++;
+            } else {
+              // For other IDEs, create hard link
+              if (fs.existsSync(destPath)) {
+                // Check if it's already a hard link
+                const srcStats = fs.statSync(srcPath);
+                const destStats = fs.statSync(destPath);
+                
+                if (srcStats.ino === destStats.ino) {
+                  // Already hard linked, skip
+                  continue;
+                } else {
+                  // Remove existing file and create hard link
+                  fs.unlinkSync(destPath);
+                }
+              }
+              
+              fs.linkSync(srcPath, destPath);
+              totalFiles++;
+            }
+          } catch (error) {
+            console.log(
+              `   ${colors.RED}❌ 无法同步文件: ${entry.name} - ${error.message}${colors.NC}`,
+            );
+            totalErrors++;
+          }
+        }
+      }
+    }
+
+    syncRulesRecursive(rulesSourcePath, ideRulesPath);
+    console.log(`   ${colors.GREEN}✅ ${ideRulesDir} 同步完成${colors.NC}`);
+  }
+
+  console.log(`\n${colors.BLUE}📊 Rules 目录同步完成统计:${colors.NC}`);
+  console.log(`${colors.GREEN}✅ 成功创建硬链接: ${totalFiles} 个文件${colors.NC}`);
+  if (totalErrors > 0) {
+    console.log(`${colors.RED}❌ 创建失败: ${totalErrors} 个文件${colors.NC}`);
+  }
+
+  console.log(
+    `\n${colors.GREEN}✨ Rules 目录同步完成！所有文件已通过硬链接同步。${colors.NC}`,
+  );
+}
+
+/**
  * Main function
  */
 async function main() {
@@ -607,6 +734,7 @@ async function main() {
     await processMcpLinks();
     await syncSkillsDirectory();
     await syncSkillFiles();
+    await syncRulesToIDEDirectories();
 
     console.log(`\n${colors.GREEN}🎉 所有操作完成！${colors.NC}`);
   } catch (error) {

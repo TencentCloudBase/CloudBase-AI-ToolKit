@@ -44,6 +44,7 @@
               "ai/cloudbase-ai-toolkit/ide-setup/openai-codex-cli",
               "ai/cloudbase-ai-toolkit/ide-setup/opencode",
               "ai/cloudbase-ai-toolkit/ide-setup/qwen-code",
+              "ai/cloudbase-ai-toolkit/ide-setup/qoder",
               "ai/cloudbase-ai-toolkit/ide-setup/cloudbase-cli"
             ]
           }
