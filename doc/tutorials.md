@@ -1,6 +1,6 @@
 import TutorialsGrid from './components/TutorialsGrid';
 
-# 教程
+# 视频及教程
 
 <TutorialsGrid />
 

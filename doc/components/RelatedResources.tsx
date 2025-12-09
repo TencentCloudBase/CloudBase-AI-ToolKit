@@ -1,5 +1,5 @@
-import React from 'react';
 import Link from '@docusaurus/Link';
+import React from 'react';
 import styles from './RelatedResources.module.css';
 
 interface RelatedResourcesProps {
@@ -12,6 +12,10 @@ export default function RelatedResources({ ideName, ideDocUrl }: RelatedResource
     <div className={styles.container}>
       <h2 className={styles.title}>相关资源</h2>
       <ul className={styles.list}>
+        <li>
+          <Link to="/ai/cloudbase-ai-toolkit/tutorials">视频教程</Link>
+          <span className={styles.description}> - 观看视频教程和实战案例</span>
+        </li>
         <li>
           <Link to="/ai/cloudbase-ai-toolkit/development">开发指南</Link>
           <span className={styles.description}> - 深入了解开发最佳实践</span>
