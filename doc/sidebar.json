@@ -118,12 +118,12 @@
       },
       {
         "type": "category",
-        "label": "教程",
+        "label": "入门教程",
         "collapsible": true,
         "collapsed": true,
         "items": [
-          "ai/cloudbase-ai-toolkit/templates",
           "ai/cloudbase-ai-toolkit/tutorials",
+          "ai/cloudbase-ai-toolkit/templates",
           "ai/cloudbase-ai-toolkit/examples"
         ]
       },

@@ -25,6 +25,102 @@
   gap: 1.25rem;
 }
 
+.videoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.videoCard {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  background: var(--ifm-background-surface-color);
+  overflow: hidden;
+}
+
+.videoCard:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.thumbnailWrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  background: var(--ifm-color-emphasis-100);
+  overflow: hidden;
+}
+
+.thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.videoCard:hover .thumbnail {
+  transform: scale(1.05);
+}
+
+.playIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding-left: 3px; /* Adjust play icon position */
+}
+
+.videoCard:hover .playIcon {
+  background: rgba(0, 0, 0, 0.85);
+  transform: translate(-50%, -50%) scale(1.15);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.videoContent {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.videoTitle {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ifm-font-color-base);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.videoDescription {
+  font-size: 0.8125rem;
+  color: var(--ifm-color-emphasis-600);
+  line-height: 1.4;
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -82,16 +178,32 @@
   .grid {
     grid-template-columns: 1fr;
   }
+
+  .videoGrid {
+    grid-template-columns: 1fr;
+  }
   
   .card {
+    padding: 0.875rem;
+  }
+
+  .videoContent {
     padding: 0.875rem;
   }
   
   .title {
     font-size: 0.875rem;
   }
+
+  .videoTitle {
+    font-size: 0.875rem;
+  }
   
   .description {
+    font-size: 0.75rem;
+  }
+
+  .videoDescription {
     font-size: 0.75rem;
   }
 }

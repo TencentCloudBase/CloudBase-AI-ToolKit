@@ -334,7 +334,7 @@ CodeBuddy 已内置 CloudBase MCP，无需配置即可使用。
 
 ## 🧩 MCP 工具
 
-**39 个工具**覆盖环境管理、数据库、云函数、静态托管、小程序发布等核心功能。
+覆盖环境管理、数据库、云函数、静态托管等核心功能。
 
 | 分类 | 工具 | 核心功能 |
 |------|------|----------|
@@ -342,7 +342,6 @@ CodeBuddy 已内置 CloudBase MCP，无需配置即可使用。
 | **数据库** | 11 个 | 集合管理、文档 CRUD、索引、数据模型 |
 | **云函数** | 9 个 | 创建、更新、调用、日志、触发器 |
 | **静态托管** | 5 个 | 文件上传、域名配置、网站部署 |
-| **小程序** | 7 个 | 上传、预览、构建、配置、调试 |
 | **工具支持** | 4 个 | 模板、知识库搜索、联网搜索、交互对话 |
 
 [查看完整工具文档](doc/mcp-tools.md) | [工具规格 JSON](scripts/tools.json)
@@ -352,7 +351,7 @@ CodeBuddy 已内置 CloudBase MCP，无需配置即可使用。
 ### 文档
 
 - [快速开始](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/getting-started)
-- [IDE 配置指南](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/)
+- [IDE 配置指南](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/ide-setup/cursor)
 - [项目模板](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/templates)
 - [开发指南](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/development)
 - [插件系统](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/plugins)
@@ -360,23 +359,11 @@ CodeBuddy 已内置 CloudBase MCP，无需配置即可使用。
 
 ### 教程
 
-#### 文章
-- [用 CloudBase AI CLI 开发邻里闲置物品循环利用小程序](https://docs.cloudbase.net/practices/ai-cli-mini-program)
-- [使用 CodeBuddy IDE + CloudBase 一站式开发卡片翻翻翻游戏](https://mp.weixin.qq.com/s/2EM3RBzdQUCdfld2CglWgg)
-- [1小时开发微信小游戏《我的早餐店》](https://cloud.tencent.com/developer/article/2532595)
-- [更多教程...](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials)
-
-#### 视频
-- [云开发CloudBase：用AI开发一款分手厨房小游戏](https://www.bilibili.com/video/BV1v5KAzwEf9/)
-- [软件3.0：AI 编程新时代的最佳拍档](https://www.bilibili.com/video/BV15gKdz1E5N/)
-- [更多视频...](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials)
+- [查看所有教程和视频...](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials)
 
 ### 项目案例
 
-- [五子棋联机游戏](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/gomoku-game)
-- [分手厨房联机游戏](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/overcooked-game)
-- [电商管理后台](https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/ecommerce-management-backend)
-- [更多案例...](https://github.com/TencentCloudBase/awesome-cloudbase-examples)
+- [查看所有项目案例...](https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/examples)
 
 ## 💬 社区
 
