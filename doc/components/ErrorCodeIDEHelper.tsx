@@ -1,8 +1,9 @@
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { useLocation } from '@docusaurus/router';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import React, { useEffect, useState } from 'react';
-import IDESelector from './IDESelector';
 import styles from './ErrorCodeIDEHelper.module.css';
+import IDESelector from './IDESelector';
+import { reportEvent } from './analytics';
 
 interface ErrorCodeIDEHelperProps {
   isOpen: boolean;
@@ -86,12 +87,26 @@ export default function ErrorCodeIDEHelper({
   // Generate prompt
   const prompt = React.useMemo(() => generatePrompt(fullPageUrl), [fullPageUrl]);
 
+  // Report modal open event
+  useEffect(() => {
+    if (isOpen) {
+      reportEvent({
+        name: 'Error Helper - Modal Open',
+        eventType: 'modal_open',
+      });
+    }
+  }, [isOpen]);
+
   // Handle ESC key to close modal
   useEffect(() => {
     if (!isOpen) return;
 
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        reportEvent({
+          name: 'Error Helper - Modal Close',
+          eventType: 'modal_close',
+        });
         onClose();
       }
     };
@@ -110,18 +125,30 @@ export default function ErrorCodeIDEHelper({
     await navigator.clipboard.writeText(prompt);
     setCopiedPrompt(true);
     setTimeout(() => setCopiedPrompt(false), 2000);
+    reportEvent({
+      name: 'Error Helper - Copy Prompt',
+      eventType: 'copy_prompt',
+    });
+  };
+
+  const handleClose = () => {
+    reportEvent({
+      name: 'Error Helper - Modal Close',
+      eventType: 'modal_close',
+    });
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className={styles.modalOverlay} onClick={onClose}>
+    <div className={styles.modalOverlay} onClick={handleClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
           <h2 className={styles.modalTitle}>{t.title}</h2>
           <button
             className={styles.closeButton}
-            onClick={onClose}
+            onClick={handleClose}
             aria-label={t.close}
           >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">

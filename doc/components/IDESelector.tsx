@@ -1,6 +1,7 @@
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './IDESelector.module.css';
+import { reportEvent } from './analytics';
 
 interface IDE {
   id: string;
@@ -555,6 +556,15 @@ export default function IDESelector({
     );
   }, [searchQuery]);
 
+  // Report view event on mount
+  useEffect(() => {
+    reportEvent({
+      name: 'IDE Selector - View',
+      ideId: ide.id,
+      eventType: 'view',
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -632,6 +642,11 @@ export default function IDESelector({
     await navigator.clipboard.writeText(ide.configExample);
     setCopiedCode(true);
     setTimeout(() => setCopiedCode(false), 2000);
+    reportEvent({
+      name: 'IDE Selector - Copy Config',
+      ideId: ide.id,
+      eventType: 'copy_config',
+    });
   };
 
   const [copiedPrompt, setCopiedPrompt] = useState(false);
@@ -642,6 +657,11 @@ export default function IDESelector({
     await navigator.clipboard.writeText(prompt);
     setCopiedPrompt(true);
     setTimeout(() => setCopiedPrompt(false), 2000);
+    reportEvent({
+      name: 'IDE Selector - Copy Prompt',
+      ideId: ide.id,
+      eventType: 'copy_prompt',
+    });
   };
 
   // Generate IDE deep link URL (only Cursor is supported currently)
@@ -667,6 +687,11 @@ export default function IDESelector({
         // For protocol handlers, try to open directly
         window.location.href = deepLink;
       }
+      reportEvent({
+        name: 'IDE Selector - Open IDE',
+        ideId: ide.id,
+        eventType: 'open_ide',
+      });
     }
   };
 
@@ -682,6 +707,11 @@ export default function IDESelector({
     setSelectedIDE(ideId);
     setIsOpen(false);
     setSearchQuery('');
+    reportEvent({
+      name: 'IDE Selector - Switch',
+      ideId: ideId,
+      eventType: 'switch',
+    });
   };
 
   // Keyboard navigation
@@ -694,13 +724,25 @@ export default function IDESelector({
       case 'ArrowDown':
         e.preventDefault();
         if (currentIndex < filteredIDES.length - 1) {
-          setSelectedIDE(filteredIDES[currentIndex + 1].id);
+          const newIdeId = filteredIDES[currentIndex + 1].id;
+          setSelectedIDE(newIdeId);
+          reportEvent({
+            name: 'IDE Selector - Switch',
+            ideId: newIdeId,
+            eventType: 'switch',
+          });
         }
         break;
       case 'ArrowUp':
         e.preventDefault();
         if (currentIndex > 0) {
-          setSelectedIDE(filteredIDES[currentIndex - 1].id);
+          const newIdeId = filteredIDES[currentIndex - 1].id;
+          setSelectedIDE(newIdeId);
+          reportEvent({
+            name: 'IDE Selector - Switch',
+            ideId: newIdeId,
+            eventType: 'switch',
+          });
         }
         break;
       case 'Enter':
@@ -863,6 +905,13 @@ export default function IDESelector({
                   className={styles.oneClickButton}
                   target={ide.id === 'github-copilot' ? undefined : '_blank'}
                   rel={ide.id === 'github-copilot' ? undefined : 'noopener noreferrer'}
+                  onClick={() => {
+                    reportEvent({
+                      name: 'IDE Selector - One Click Install',
+                      ideId: ide.id,
+                      eventType: 'one_click_install',
+                    });
+                  }}
                 >
                   {ide.oneClickInstallImage ? (
                     <img
