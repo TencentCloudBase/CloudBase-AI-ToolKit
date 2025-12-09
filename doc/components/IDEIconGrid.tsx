@@ -1,5 +1,5 @@
-import React from 'react';
 import Link from '@docusaurus/Link';
+import React from 'react';
 import styles from './IDEIconGrid.module.css';
 
 interface IDE {
@@ -137,6 +137,13 @@ const IDES: IDE[] = [
     platform: '命令行工具',
     iconUrl: 'https://avatars.githubusercontent.com/u/66570915?s=200&v=4',
     docUrl: '/ai/cloudbase-ai-toolkit/ide-setup/opencode',
+  },
+  {
+    id: 'kiro',
+    name: 'Kiro',
+    platform: '独立 IDE',
+    iconUrl: 'https://kiro.dev/favicon.ico',
+    docUrl: '/ai/cloudbase-ai-toolkit/ide-setup/kiro',
   },
   {
     id: 'cloudbase-cli',

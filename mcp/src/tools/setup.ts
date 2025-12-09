@@ -57,6 +57,7 @@ const IDE_TYPES = [
   "qoder", // Qoder AI编辑器
   "antigravity", // Google Antigravity AI编辑器
   "vscode", // Visual Studio Code
+  "kiro", // Kiro AI编辑器
 ] as const;
 
 // IDE映射关系表
@@ -99,6 +100,7 @@ const IDE_FILE_MAPPINGS: Record<string, string[]> = {
   qoder: [".qoder/rules/"],
   antigravity: [".agent/rules/"],
   vscode: [".vscode/mcp.json", ".vscode/settings.json"],
+  kiro: [".kiro/settings/mcp.json", ".kiro/steering/"],
 };
 
 // 所有IDE配置文件的完整列表 - 通过IDE_FILE_MAPPINGS计算得出
@@ -130,6 +132,7 @@ const IDE_DESCRIPTIONS: Record<string, string> = {
   qoder: "Qoder AI编辑器",
   antigravity: "Google Antigravity AI编辑器",
   vscode: "Visual Studio Code",
+  kiro: "Kiro AI编辑器",
 };
 
 // INTEGRATION_IDE 环境变量值到 IDE 类型的映射
@@ -154,6 +157,7 @@ const INTEGRATION_IDE_MAPPING: Record<string, string> = {
   Qoder: "qoder",
   Antigravity: "antigravity",
   VSCode: "vscode",
+  Kiro: "kiro",
 };
 
 // 根据 INTEGRATION_IDE 环境变量获取默认 IDE 类型
