@@ -1,0 +1,198 @@
+/* Wrapper */
+.wrapper {
+  margin: 1.5rem 0;
+}
+
+/* Container */
+.container {
+  position: relative;
+  padding: 1rem;
+  background: var(--ifm-color-emphasis-100);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Bottom gradient overlay (like Vercel) - shown when collapsed */
+.containerCollapsed::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--ifm-color-emphasis-100)
+  );
+  pointer-events: none;
+}
+
+/* Content */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Header Content */
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* IDE Icons */
+.ideIcons {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+}
+
+.ideIcon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50% !important;
+  border: 2px solid var(--ifm-background-color);
+  background: rgba(255, 255, 255, 0.5) !important;
+  object-fit: cover;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Description */
+.description {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.6;
+}
+
+/* Button */
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem;
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  color: var(--ifm-font-color-base);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.buttonLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.button:hover {
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button:active,
+.button:focus {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-emphasis-300);
+  color: var(--ifm-font-color-base);
+  outline: none;
+}
+
+
+.buttonText {
+  line-height: 1.5;
+}
+
+.buttonArrow {
+  flex-shrink: 0;
+  color: var(--ifm-color-emphasis-600);
+  transition: transform 0.2s ease;
+}
+
+.buttonArrowExpanded {
+  transform: rotate(180deg);
+}
+
+.button:hover .buttonArrow {
+  color: var(--ifm-color-primary);
+}
+
+.buttonExpanded {
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-primary);
+}
+
+/* Expanded Content */
+.expandedContent {
+  margin-top: 1rem;
+  padding: 0 1.5rem;
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* IDE Selector Section */
+.ideSelectorSection {
+  /* No additional styling needed, IDESelector has its own styles */
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .container {
+    padding: 0.875rem;
+  }
+
+  .description {
+    font-size: 0.8125rem;
+  }
+
+  .button {
+    font-size: 0.8125rem;
+    padding: 0.5rem 0.875rem;
+  }
+
+  .headerContent {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .button {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .ideIcon {
+    width: 20px;
+    height: 20px;
+  }
+}
+

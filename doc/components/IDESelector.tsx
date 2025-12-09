@@ -46,6 +46,28 @@ const IDES: IDE[] = [
 }`,
   },
   {
+    id: 'codebuddy',
+    name: 'CodeBuddy',
+    platform: 'VS Code、JetBrains、微信开发者工具',
+    configPath: '.codebuddy/mcp.json',
+    iconUrl: 'https://codebuddy-1328495429.cos.accelerate.myqcloud.com/web/ide/logo.svg',
+    docUrl: 'https://www.codebuddy.ai/docs/zh/ide/Config%20MCP',
+    supportsProjectMCP: true,
+    alternativeConfig: 'Alternatively, add this configuration to',
+    verificationPrompt: '检查 CloudBase MCP 工具是否可用, 下载 CloudBase AI 开发规则到当前项目',
+    configExample: `{
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "INTEGRATION_IDE": "CodeBuddyManual"
+      }
+    }
+  }
+}`,
+  },
+  {
     id: 'claude-code',
     name: 'Claude Code',
     platform: '命令行工具',
@@ -63,28 +85,6 @@ const IDES: IDE[] = [
       "args": ["@cloudbase/cloudbase-mcp@latest"],
       "env": {
         "INTEGRATION_IDE": "ClaudeCode"
-      }
-    }
-  }
-}`,
-  },
-  {
-    id: 'codebuddy',
-    name: 'CodeBuddy',
-    platform: 'VS Code、JetBrains、微信开发者工具',
-    configPath: '.codebuddy/mcp.json',
-    iconUrl: 'https://codebuddy-1328495429.cos.accelerate.myqcloud.com/web/ide/logo.svg',
-    docUrl: 'https://www.codebuddy.ai/docs/zh/ide/Config%20MCP',
-    supportsProjectMCP: true,
-    alternativeConfig: 'Alternatively, add this configuration to',
-    verificationPrompt: '检查 CloudBase MCP 工具是否可用, 下载 CloudBase AI 开发规则到当前项目',
-    configExample: `{
-  "mcpServers": {
-    "cloudbase": {
-      "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "INTEGRATION_IDE": "CodeBuddyManual"
       }
     }
   }
@@ -408,27 +408,6 @@ const IDES: IDE[] = [
     verificationPrompt: '检查 CloudBase MCP 工具是否可用, 下载 CloudBase AI 开发规则到当前项目',
     configExample: '',
   },
-  {
-    id: 'kiro',
-    name: 'Kiro',
-    platform: '独立 IDE',
-    configPath: '.kiro/settings/mcp.json',
-    iconUrl: 'https://kiro.dev/favicon.ico',
-    docUrl: 'https://kiro.dev/docs/mcp/configuration/',
-    supportsProjectMCP: true,
-    verificationPrompt: '检查 CloudBase MCP 工具是否可用, 下载 CloudBase AI 开发规则到当前项目',
-    configExample: `{
-  "mcpServers": {
-    "cloudbase": {
-      "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"],
-      "env": {
-        "INTEGRATION_IDE": "Kiro"
-      }
-    }
-  }
-}`,
-  },
 ];
 
 // JSON syntax highlighter
@@ -484,6 +463,9 @@ function highlightJSON(json: string): React.ReactNode[] {
 interface IDESelectorProps {
   defaultIDE?: string;
   showInstallButton?: boolean;
+  customPrompt?: string;
+  collapsibleInstallSteps?: boolean;
+  collapseStep1?: boolean;
 }
 
 // i18n translations
@@ -491,15 +473,17 @@ const translations: Record<string, Record<string, string>> = {
   'zh-CN': {
     client: 'Client',
     configureDescription: '配置你的 MCP 客户端以连接 CloudBase 环境',
-    installation: '步骤 1：安装',
+    installation: '步骤 1：配置 CloudBase MCP',
     useTemplate: '使用项目模板（推荐）',
     templateDescription: '模板已内置 MCP 配置和 AI 规则',
     viewTemplates: '查看模板',
     oneClickInstall: '一键安装',
     orManualConfig: '或手动配置',
-    orAddConfig: '将以下配置添加到项目目录的',
-    step2Verify: '步骤 2：验证连接',
-    verifyDescription: '配置完成后，在 AI 对话中输入以下内容验证',
+    orAddConfig: '将以下配置添加到',
+    step2Verify: '步骤 2：和 AI 对话',
+    showMore: '显示配置选项',
+    showLess: '收起',
+    verifyDescription: '配置完成后，在 AI 对话中输入以下内容:',
     defaultVerifyPrompt: '检查 CloudBase MCP 工具是否可用, 下载 CloudBase AI 开发规则到当前项目',
     cliCommand: 'CLI 命令',
     alternativeConfig: '替代配置',
@@ -510,19 +494,22 @@ const translations: Record<string, Record<string, string>> = {
     noResults: '未找到匹配的 IDE',
     copyCode: '复制代码',
     copyPrompt: '复制提示词',
+    openInIDE: '用 {name} 打开',
   },
   'en': {
     client: 'Client',
     configureDescription: 'Configure your MCP client to connect with your CloudBase environment',
-    installation: 'Step 1: Installation',
+    installation: 'Step 1: Configure CloudBase MCP',
     useTemplate: 'Use project template (recommended)',
     templateDescription: 'Template includes MCP configuration and AI rules',
     viewTemplates: 'View templates',
     oneClickInstall: 'Install in one click',
     orManualConfig: 'Or manual configuration',
     orAddConfig: 'Or add this configuration to',
-    step2Verify: 'Step 2: Verify connection',
-    verifyDescription: 'After configuration, enter the following in your AI chat to verify',
+    step2Verify: 'Step 2: Chat with AI',
+    showMore: 'Show configuration options',
+    showLess: 'Show less',
+    verifyDescription: 'After configuration, enter the following in your AI chat:',
     defaultVerifyPrompt: 'Check if CloudBase tools are available, download CloudBase AI development rules',
     cliCommand: 'CLI command',
     alternativeConfig: 'Alternative configuration',
@@ -533,12 +520,16 @@ const translations: Record<string, Record<string, string>> = {
     noResults: 'No matching IDE found',
     copyCode: 'Copy code',
     copyPrompt: 'Copy prompt',
+    openInIDE: 'Open with {name}',
   },
 };
 
-export default function IDESelector({ 
+export default function IDESelector({
   defaultIDE,
-  showInstallButton = true 
+  showInstallButton = true,
+  customPrompt,
+  collapsibleInstallSteps = false,
+  collapseStep1 = false
 }: IDESelectorProps) {
   const { i18n } = useDocusaurusContext();
   const locale = i18n.currentLocale || i18n.defaultLocale || 'zh-CN';
@@ -548,6 +539,8 @@ export default function IDESelector({
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedCode, setCopiedCode] = useState(false);
+  const [showAllInstallSteps, setShowAllInstallSteps] = useState(!collapsibleInstallSteps);
+  const [isStep1Expanded, setIsStep1Expanded] = useState(!collapseStep1);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -556,8 +549,8 @@ export default function IDESelector({
   const filteredIDES = useMemo(() => {
     if (!searchQuery) return IDES;
     const query = searchQuery.toLowerCase();
-    return IDES.filter(ide => 
-      ide.name.toLowerCase().includes(query) || 
+    return IDES.filter(ide =>
+      ide.name.toLowerCase().includes(query) ||
       ide.platform.toLowerCase().includes(query)
     );
   }, [searchQuery]);
@@ -585,7 +578,7 @@ export default function IDESelector({
 
   // Icons that have -color version
   const iconsWithColor = new Set(['claude', 'gemini', 'baidu', 'alibaba', 'qwen', 'bytedance', 'tencent']);
-  
+
   const getIconUrl = (ide: IDE) => {
     if (ide.iconUrl) return ide.iconUrl;
     if (ide.iconSlug) {
@@ -645,10 +638,36 @@ export default function IDESelector({
   const [copiedCli, setCopiedCli] = useState(false);
 
   const handleCopyPrompt = async () => {
-    const prompt = ide.verificationPrompt || t.defaultVerifyPrompt;
+    const prompt = customPrompt || ide.verificationPrompt || t.defaultVerifyPrompt;
     await navigator.clipboard.writeText(prompt);
     setCopiedPrompt(true);
     setTimeout(() => setCopiedPrompt(false), 2000);
+  };
+
+  // Generate IDE deep link URL (only Cursor is supported currently)
+  const getIDEDeepLink = (): string | null => {
+    // Only Cursor supports deep link currently
+    if (ide.id !== 'cursor') {
+      return null;
+    }
+
+    const prompt = customPrompt || ide.verificationPrompt || t.defaultVerifyPrompt;
+    const encodedPrompt = encodeURIComponent(prompt);
+    return `https://cursor.com/link/prompt?text=${encodedPrompt}`;
+  };
+
+  const handleOpenIDE = () => {
+    const deepLink = getIDEDeepLink();
+    if (deepLink) {
+      // Try protocol handler first (for desktop apps)
+      if (deepLink.startsWith('http')) {
+        // For HTTPS links, open in new tab as fallback
+        window.open(deepLink, '_blank');
+      } else {
+        // For protocol handlers, try to open directly
+        window.location.href = deepLink;
+      }
+    }
   };
 
   const handleCopyCli = async () => {
@@ -668,9 +687,9 @@ export default function IDESelector({
   // Keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!isOpen) return;
-    
+
     const currentIndex = filteredIDES.findIndex(i => i.id === selectedIDE);
-    
+
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
@@ -716,14 +735,14 @@ export default function IDESelector({
               />
             )}
             <span className={styles.triggerText}>{ide.name}</span>
-            <svg 
+            <svg
               className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`}
-              width="12" 
-              height="12" 
+              width="12"
+              height="12"
               viewBox="0 0 12 12"
               fill="none"
             >
-              <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
 
@@ -731,8 +750,8 @@ export default function IDESelector({
             <div className={styles.dropdown} role="listbox">
               <div className={styles.searchWrapper}>
                 <svg className={styles.searchIcon} width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M6.5 11C9.26142 11 11.5 8.76142 11.5 6C11.5 3.23858 9.26142 1 6.5 1C3.73858 1 1.5 3.23858 1.5 6C1.5 8.76142 3.73858 11 6.5 11Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M12.5 12L10 9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M6.5 11C9.26142 11 11.5 8.76142 11.5 6C11.5 3.23858 9.26142 1 6.5 1C3.73858 1 1.5 3.23858 1.5 6C1.5 8.76142 3.73858 11 6.5 11Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M12.5 12L10 9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
                 <input
                   ref={searchInputRef}
@@ -763,7 +782,7 @@ export default function IDESelector({
                     <span className={styles.itemName}>{item.name}</span>
                     {item.id === selectedIDE && (
                       <svg className={styles.checkIcon} width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M11.5 3.5L5.5 10L2.5 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M11.5 3.5L5.5 10L2.5 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     )}
                   </button>
@@ -783,204 +802,391 @@ export default function IDESelector({
 
       {/* Installation Card */}
       <div className={styles.card}>
-        <h3 className={styles.cardTitle}>{t.installation}</h3>
-
-        {/* Template hint for project-level MCP support */}
-        {ide.supportsProjectMCP && (
-          <div className={styles.templateHint}>
-            <strong>{t.useTemplate}</strong> - {t.templateDescription}
-            <a 
-              href="/ai/cloudbase-ai-toolkit/templates" 
-              className={styles.templateLink}
+        <div className={styles.cardHeader}>
+          <h3 className={styles.cardTitle}>{t.installation}</h3>
+          {collapseStep1 && (
+            <button
+              className={styles.cardToggle}
+              onClick={() => setIsStep1Expanded(!isStep1Expanded)}
             >
-              {t.viewTemplates}
-            </a>
-          </div>
-        )}
+              <span>{isStep1Expanded ? t.showLess : t.showMore}</span>
+              <svg
+                className={`${styles.cardChevron} ${isStep1Expanded ? styles.cardChevronOpen : ''}`}
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+              >
+                <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          )}
+        </div>
+        {isStep1Expanded && (
+          <div className={styles.cardContent}>
 
-        {/* CodeBuddy built-in integration recommendation */}
-        {ide.id === 'codebuddy' && (
-          <div className={styles.templateHint}>
-            <strong>推荐：</strong>CodeBuddy IDE 已内置集成 CloudBase MCP，建议优先使用配置集成方式。
-            <a 
-              href="https://www.codebuddy.ai/docs/zh/ide/BaaS#tcb" 
-              className={styles.templateLink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              查看 BaaS 集成文档
-            </a>
-            <span>。如需手动配置 MCP，请参考下方配置。</span>
-          </div>
-        )}
+            {/* Template hint for project-level MCP support */}
+            {ide.supportsProjectMCP && (
+              <div className={styles.templateHint}>
+                <strong>{t.useTemplate}</strong> - {t.templateDescription}
+                <a
+                  href="/ai/cloudbase-ai-toolkit/templates"
+                  className={styles.templateLink}
+                >
+                  {t.viewTemplates}
+                </a>
+              </div>
+            )}
 
-        {/* One-click install button */}
-        {getOneClickInstallUrl() && (
-          <div className={styles.oneClickInstall}>
-            <p className={styles.oneClickLabel}>{t.oneClickInstall}:</p>
-            <a
-              href={getOneClickInstallUrl()!}
-              className={styles.oneClickButton}
-              target={ide.id === 'github-copilot' ? undefined : '_blank'}
-              rel={ide.id === 'github-copilot' ? undefined : 'noopener noreferrer'}
-            >
-              {ide.oneClickInstallImage ? (
-                <img 
-                  src={ide.oneClickInstallImage} 
-                  alt={`Add to ${ide.name}`}
-                  className={styles.oneClickImage}
-                />
-              ) : (ide.id === 'cursor' || ide.id === 'github-copilot') ? (
-                <div className={styles.customOneClickButton}>
-                  {getIconUrl(ide) && (
-                    <img 
-                      src={getIconUrl(ide)!} 
-                      alt=""
-                      className={`${styles.customButtonIcon} ${ide.id === 'cursor' ? styles.cursorIcon : ''}`}
+            {/* CodeBuddy built-in integration recommendation */}
+            {ide.id === 'codebuddy' && (
+              <div className={styles.templateHint}>
+                <strong>推荐：</strong>CodeBuddy IDE 已内置集成 CloudBase MCP，建议优先使用配置集成方式。
+                <a
+                  href="https://www.codebuddy.ai/docs/zh/ide/BaaS#tcb"
+                  className={styles.templateLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  查看 BaaS 集成文档
+                </a>
+                <span>。如需手动配置 MCP，请参考下方配置。</span>
+              </div>
+            )}
+
+            {/* One-click install button */}
+            {getOneClickInstallUrl() && (
+              <div className={styles.oneClickInstall}>
+                <p className={styles.oneClickLabel}>{t.oneClickInstall}:</p>
+                <a
+                  href={getOneClickInstallUrl()!}
+                  className={styles.oneClickButton}
+                  target={ide.id === 'github-copilot' ? undefined : '_blank'}
+                  rel={ide.id === 'github-copilot' ? undefined : 'noopener noreferrer'}
+                >
+                  {ide.oneClickInstallImage ? (
+                    <img
+                      src={ide.oneClickInstallImage}
+                      alt={`Add to ${ide.name}`}
+                      className={styles.oneClickImage}
                     />
+                  ) : (ide.id === 'cursor' || ide.id === 'github-copilot') ? (
+                    <div className={styles.customOneClickButton}>
+                      {getIconUrl(ide) && (
+                        <img
+                          src={getIconUrl(ide)!}
+                          alt=""
+                          className={`${styles.customButtonIcon} ${ide.id === 'cursor' ? styles.cursorIcon : ''}`}
+                        />
+                      )}
+                      <span className={styles.customButtonText}>Add to {ide.name}</span>
+                    </div>
+                  ) : (
+                    <span>Add to {ide.name}</span>
                   )}
-                  <span className={styles.customButtonText}>Add to {ide.name}</span>
-                </div>
-              ) : (
-                <span>Add to {ide.name}</span>
-              )}
-            </a>
-          </div>
-        )}
+                </a>
+              </div>
+            )}
 
-        {/* Install command (for command-based installation) */}
-        {ide.useCommandInsteadOfConfig && ide.installCommandDocs && (
-          <div className={styles.installCommandSection}>
-            {ide.installCommandDocs.split(/\n\n/).map((section, idx) => {
-              const codeMatch = section.match(/```bash\n([^`]+)```/);
-              if (codeMatch) {
-                const textBefore = section.split('```bash')[0].trim();
-                const platformMatch = textBefore.match(/\*\*([^*]+)\*\*/);
-                return (
-                  <div key={idx} className={styles.installCommandBlock}>
-                    {textBefore && (
-                      <p className={styles.installCommandLabel}>
-                        {platformMatch ? <strong>{platformMatch[1]}</strong> : textBefore}
-                      </p>
+            {/* Additional install steps - collapsible if enabled */}
+            {collapsibleInstallSteps &&
+              ((ide.useCommandInsteadOfConfig && ide.installCommandDocs) ||
+                (ide.cliCommand && !ide.useCommandInsteadOfConfig) ||
+                (!ide.useCommandInsteadOfConfig)) && (
+                <div className={styles.collapsibleSection}>
+                  <button
+                    className={styles.collapsibleToggle}
+                    onClick={() => setShowAllInstallSteps(!showAllInstallSteps)}
+                  >
+                    <span>{showAllInstallSteps ? t.showLess : t.showMore}</span>
+                    <svg
+                      className={`${styles.collapsibleChevron} ${showAllInstallSteps ? styles.collapsibleChevronOpen : ''}`}
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                    >
+                      <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                  {showAllInstallSteps && (
+                    <div className={styles.collapsibleContent}>
+                      {/* Install command (for command-based installation) */}
+                      {ide.useCommandInsteadOfConfig && ide.installCommandDocs && (
+                        <div className={styles.installCommandSection}>
+                          {ide.installCommandDocs.split(/\n\n/).map((section, idx) => {
+                            const codeMatch = section.match(/```bash\n([^`]+)```/);
+                            if (codeMatch) {
+                              const textBefore = section.split('```bash')[0].trim();
+                              const platformMatch = textBefore.match(/\*\*([^*]+)\*\*/);
+                              return (
+                                <div key={idx} className={styles.installCommandBlock}>
+                                  {textBefore && (
+                                    <p className={styles.installCommandLabel}>
+                                      {platformMatch ? <strong>{platformMatch[1]}</strong> : textBefore}
+                                    </p>
+                                  )}
+                                  <div className={styles.codeBlock}>
+                                    <div className={styles.codeHeader}>
+                                      <span className={styles.codeLanguage}>bash</span>
+                                      <button
+                                        className={styles.copyCodeButton}
+                                        onClick={async () => {
+                                          await navigator.clipboard.writeText(codeMatch[1].trim());
+                                          setCopiedCode(true);
+                                          setTimeout(() => setCopiedCode(false), 2000);
+                                        }}
+                                        title={t.copyCode}
+                                      >
+                                        {copiedCode ? (
+                                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                          </svg>
+                                        ) : (
+                                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1.5" />
+                                            <path d="M3 11V3C3 2.44772 3.44772 2 4 2H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                                          </svg>
+                                        )}
+                                      </button>
+                                    </div>
+                                    <pre className={styles.codeContent}>
+                                      <code>{codeMatch[1].trim()}</code>
+                                    </pre>
+                                  </div>
+                                </div>
+                              );
+                            }
+                            if (section.trim()) {
+                              return (
+                                <p key={idx} className={styles.installCommandText}>
+                                  {section.split(/\*\*([^*]+)\*\*/).map((part, i) =>
+                                    i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+                                  )}
+                                </p>
+                              );
+                            }
+                            return null;
+                          })}
+                        </div>
+                      )}
+
+                      {/* CLI command */}
+                      {ide.cliCommand && !ide.useCommandInsteadOfConfig && (
+                        <div className={styles.cliSection}>
+                          <p className={styles.cliLabel}>{t.cliCommand}:</p>
+                          <div className={styles.cliCommandBlock}>
+                            <code className={styles.cliCommandText}>{ide.cliCommand}</code>
+                            <button
+                              className={styles.copyCliButton}
+                              onClick={handleCopyCli}
+                              title={t.copyCode}
+                            >
+                              {copiedCli ? (
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                  <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                              ) : (
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                  <rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1.5" />
+                                  <path d="M3 11V3C3 2.44772 3.44772 2 4 2H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                                </svg>
+                              )}
+                            </button>
+                          </div>
+                          {ide.alternativeConfig && (
+                            <p className={styles.alternativeConfig}>{ide.alternativeConfig}</p>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Manual configuration */}
+                      {!ide.useCommandInsteadOfConfig && (getOneClickInstallUrl() || ide.cliCommand) && (
+                        <p className={styles.orManualConfig}>{t.orManualConfig}:</p>
+                      )}
+
+                      {!ide.useCommandInsteadOfConfig && (
+                        <>
+                          <p className={styles.configHint}>
+                            {ide.alternativeConfig ? (
+                              ide.alternativeConfig
+                            ) : (
+                              <>
+                                {t.orAddConfig} <code className={styles.inlineCode}>{ide.configPath}</code>:
+                              </>
+                            )}
+                          </p>
+
+                          {/* Code block with syntax highlighting */}
+                          <div className={styles.codeBlock}>
+                            <div className={styles.codeHeader}>
+                              <span className={styles.codeLanguage}>json</span>
+                              <button
+                                className={styles.copyCodeButton}
+                                onClick={handleCopyCode}
+                                title={t.copyCode}
+                              >
+                                {copiedCode ? (
+                                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                  </svg>
+                                ) : (
+                                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1.5" />
+                                    <path d="M3 11V3C3 2.44772 3.44772 2 4 2H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                                  </svg>
+                                )}
+                              </button>
+                            </div>
+                            <pre className={styles.codeContent}>
+                              <code>{highlightJSON(ide.configExample)}</code>
+                            </pre>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+            {/* Additional install steps - always show if not collapsible */}
+            {!collapsibleInstallSteps && (
+              <>
+                {/* Install command (for command-based installation) */}
+                {ide.useCommandInsteadOfConfig && ide.installCommandDocs && (
+                  <div className={styles.installCommandSection}>
+                    {ide.installCommandDocs.split(/\n\n/).map((section, idx) => {
+                      const codeMatch = section.match(/```bash\n([^`]+)```/);
+                      if (codeMatch) {
+                        const textBefore = section.split('```bash')[0].trim();
+                        const platformMatch = textBefore.match(/\*\*([^*]+)\*\*/);
+                        return (
+                          <div key={idx} className={styles.installCommandBlock}>
+                            {textBefore && (
+                              <p className={styles.installCommandLabel}>
+                                {platformMatch ? <strong>{platformMatch[1]}</strong> : textBefore}
+                              </p>
+                            )}
+                            <div className={styles.codeBlock}>
+                              <div className={styles.codeHeader}>
+                                <span className={styles.codeLanguage}>bash</span>
+                                <button
+                                  className={styles.copyCodeButton}
+                                  onClick={async () => {
+                                    await navigator.clipboard.writeText(codeMatch[1].trim());
+                                    setCopiedCode(true);
+                                    setTimeout(() => setCopiedCode(false), 2000);
+                                  }}
+                                  title={t.copyCode}
+                                >
+                                  {copiedCode ? (
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                      <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                  ) : (
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                      <rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1.5" />
+                                      <path d="M3 11V3C3 2.44772 3.44772 2 4 2H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                                    </svg>
+                                  )}
+                                </button>
+                              </div>
+                              <pre className={styles.codeContent}>
+                                <code>{codeMatch[1].trim()}</code>
+                              </pre>
+                            </div>
+                          </div>
+                        );
+                      }
+                      if (section.trim()) {
+                        return (
+                          <p key={idx} className={styles.installCommandText}>
+                            {section.split(/\*\*([^*]+)\*\*/).map((part, i) =>
+                              i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+                            )}
+                          </p>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
+                )}
+
+                {/* CLI command */}
+                {ide.cliCommand && !ide.useCommandInsteadOfConfig && (
+                  <div className={styles.cliSection}>
+                    <p className={styles.cliLabel}>{t.cliCommand}:</p>
+                    <div className={styles.cliCommandBlock}>
+                      <code className={styles.cliCommandText}>{ide.cliCommand}</code>
+                      <button
+                        className={styles.copyCliButton}
+                        onClick={handleCopyCli}
+                        title={t.copyCode}
+                      >
+                        {copiedCli ? (
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        ) : (
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1.5" />
+                            <path d="M3 11V3C3 2.44772 3.44772 2 4 2H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
+                    {ide.alternativeConfig && (
+                      <p className={styles.alternativeConfig}>{ide.alternativeConfig}</p>
                     )}
+                  </div>
+                )}
+
+                {/* Manual configuration */}
+                {!ide.useCommandInsteadOfConfig && (getOneClickInstallUrl() || ide.cliCommand) && (
+                  <p className={styles.orManualConfig}>{t.orManualConfig}:</p>
+                )}
+
+                {!ide.useCommandInsteadOfConfig && (
+                  <>
+                    <p className={styles.configHint}>
+                      {ide.alternativeConfig ? (
+                        ide.alternativeConfig
+                      ) : (
+                        <>
+                          {t.orAddConfig} <code className={styles.inlineCode}>{ide.configPath}</code>:
+                        </>
+                      )}
+                    </p>
+
+                    {/* Code block with syntax highlighting */}
                     <div className={styles.codeBlock}>
                       <div className={styles.codeHeader}>
-                        <span className={styles.codeLanguage}>bash</span>
-                        <button 
+                        <span className={styles.codeLanguage}>json</span>
+                        <button
                           className={styles.copyCodeButton}
-                          onClick={async () => {
-                            await navigator.clipboard.writeText(codeMatch[1].trim());
-                            setCopiedCode(true);
-                            setTimeout(() => setCopiedCode(false), 2000);
-                          }}
+                          onClick={handleCopyCode}
                           title={t.copyCode}
                         >
                           {copiedCode ? (
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                              <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                           ) : (
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                              <rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1.5"/>
-                              <path d="M3 11V3C3 2.44772 3.44772 2 4 2H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                              <rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1.5" />
+                              <path d="M3 11V3C3 2.44772 3.44772 2 4 2H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                             </svg>
                           )}
                         </button>
                       </div>
                       <pre className={styles.codeContent}>
-                        <code>{codeMatch[1].trim()}</code>
+                        <code>{highlightJSON(ide.configExample)}</code>
                       </pre>
                     </div>
-                  </div>
-                );
-              }
-              if (section.trim()) {
-                return (
-                  <p key={idx} className={styles.installCommandText}>
-                    {section.split(/\*\*([^*]+)\*\*/).map((part, i) => 
-                      i % 2 === 1 ? <strong key={i}>{part}</strong> : part
-                    )}
-                  </p>
-                );
-              }
-              return null;
-            })}
-          </div>
-        )}
-
-        {/* CLI command */}
-        {ide.cliCommand && !ide.useCommandInsteadOfConfig && (
-          <div className={styles.cliSection}>
-            <p className={styles.cliLabel}>{t.cliCommand}:</p>
-            <div className={styles.cliCommandBlock}>
-              <code className={styles.cliCommandText}>{ide.cliCommand}</code>
-              <button
-                className={styles.copyCliButton}
-                onClick={handleCopyCli}
-                title={t.copyCode}
-              >
-                {copiedCli ? (
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                ) : (
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1.5"/>
-                    <path d="M3 11V3C3 2.44772 3.44772 2 4 2H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
+                  </>
                 )}
-              </button>
-            </div>
-            {ide.alternativeConfig && (
-              <p className={styles.alternativeConfig}>{ide.alternativeConfig}</p>
+              </>
             )}
-          </div>
-        )}
-
-        {/* Manual configuration */}
-        {!ide.useCommandInsteadOfConfig && (getOneClickInstallUrl() || ide.cliCommand) && (
-          <p className={styles.orManualConfig}>{t.orManualConfig}:</p>
-        )}
-        
-        {!ide.useCommandInsteadOfConfig && (
-          <>
-            <p className={styles.configHint}>
-              {ide.alternativeConfig ? (
-                ide.alternativeConfig
-              ) : (
-                <>
-                  {t.orAddConfig} <code className={styles.inlineCode}>{ide.configPath}</code>:
-                </>
-              )}
-            </p>
-
-            {/* Code block with syntax highlighting */}
-            <div className={styles.codeBlock}>
-              <div className={styles.codeHeader}>
-                <span className={styles.codeLanguage}>json</span>
-                <button 
-                  className={styles.copyCodeButton}
-                  onClick={handleCopyCode}
-                  title={t.copyCode}
-                >
-                  {copiedCode ? (
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  ) : (
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1.5"/>
-                      <path d="M3 11V3C3 2.44772 3.44772 2 4 2H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                    </svg>
-                  )}
-                </button>
-              </div>
-              <pre className={styles.codeContent}>
-                <code>{highlightJSON(ide.configExample)}</code>
-              </pre>
-            </div>
-          </>
-        )}
 
             {/* Help link */}
             {ide.docUrl && (
@@ -994,39 +1200,59 @@ export default function IDESelector({
                 >
                   {t.viewDocs} {ide.name} {t.docs}
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path d="M3.5 8.5L8.5 3.5M8.5 3.5H4.5M8.5 3.5V7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M3.5 8.5L8.5 3.5M8.5 3.5H4.5M8.5 3.5V7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </a>
               </div>
             )}
+          </div>
+        )}
       </div>
 
       {/* Step 2: Verify connection */}
       <div className={styles.verifyCard}>
         <h3 className={styles.verifyTitle}>{t.step2Verify}</h3>
-        <p className={styles.verifyDescription}>{t.verifyDescription}:</p>
+        <p className={styles.verifyDescription}>{t.verifyDescription}</p>
         <div className={styles.promptWrapper}>
           <div className={styles.promptLabel}>prompt</div>
           <div className={styles.promptContent}>
             <code className={styles.promptText}>
-              {ide.verificationPrompt || t.defaultVerifyPrompt}
+              {customPrompt || ide.verificationPrompt || t.defaultVerifyPrompt}
             </code>
-            <button
-              onClick={handleCopyPrompt}
-              className={styles.copyPromptButton}
-              title={t.copyPrompt}
-            >
-              {copiedPrompt ? (
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              ) : (
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1.5"/>
-                  <path d="M3 11V3C3 2.44772 3.44772 2 4 2H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
+            <div className={styles.promptActions}>
+              {getIDEDeepLink() && (
+                <button
+                  onClick={handleOpenIDE}
+                  className={styles.openIDEButton}
+                  title={t.openInIDE.replace('{name}', ide.name) || `用 ${ide.name} 打开`}
+                >
+                  {getIconUrl(ide) && (
+                    <img
+                      src={getIconUrl(ide)!}
+                      alt=""
+                      className={styles.openIDEIcon}
+                    />
+                  )}
+                  <span>{t.openInIDE.replace('{name}', ide.name) || `用 ${ide.name} 打开`}</span>
+                </button>
               )}
-            </button>
+              <button
+                onClick={handleCopyPrompt}
+                className={styles.copyPromptButton}
+                title={t.copyPrompt}
+              >
+                {copiedPrompt ? (
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                ) : (
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1.5" />
+                    <path d="M3 11V3C3 2.44772 3.44772 2 4 2H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>

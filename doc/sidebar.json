@@ -14,7 +14,7 @@
         "type": "category",
         "label": "MCP",
         "collapsible": true,
-        "collapsed": true,
+        "collapsed": false,
         "items": [
           "ai/cloudbase-ai-toolkit/getting-started",
           {
