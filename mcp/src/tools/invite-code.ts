@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getCloudBaseManager, getEnvId } from '../cloudbase-manager.js';
+import { getCloudBaseManager, getEnvId, logCloudBaseResult } from '../cloudbase-manager.js';
 import { ExtendedMcpServer } from '../server.js';
 
 export function registerInviteCodeTools(server: ExtendedMcpServer) {
@@ -44,6 +44,7 @@ export function registerInviteCodeTools(server: ExtendedMcpServer) {
           Action: 'ActivateInviteCode',
           Param: { InviteCode, EnvId }
         });
+        logCloudBaseResult(server.logger, result);
         return {
           content: [
             {

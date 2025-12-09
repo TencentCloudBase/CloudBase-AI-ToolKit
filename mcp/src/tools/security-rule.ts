@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getCloudBaseManager, getEnvId } from "../cloudbase-manager.js";
+import { getCloudBaseManager, getEnvId, logCloudBaseResult } from "../cloudbase-manager.js";
 import { ExtendedMcpServer } from "../server.js";
 
 /**
@@ -92,6 +92,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
               EnvId: envId,
             },
           });
+          logCloudBaseResult(server.logger, result);
         } else if (resourceType === "function") {
           // 查询云函数安全规则
           result = await cloudbase.commonService().call({
@@ -101,6 +102,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
               EnvId: envId,
             },
           });
+          logCloudBaseResult(server.logger, result);
         } else if (resourceType === "storage") {
           // 查询存储安全规则
           result = await cloudbase.commonService().call({
@@ -110,6 +112,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
               EnvId: envId,
             },
           });
+          logCloudBaseResult(server.logger, result);
         } else if (resourceType === "sqlDatabase") {
           // TODO: 考虑是否有支持指定其他 instance、schema 的需求
           const instanceId = "default";
@@ -125,6 +128,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
               RoleIdentityList: ["allUser"],
             },
           });
+          logCloudBaseResult(server.logger, result);
         } else {
           throw new Error(`不支持的资源类型: ${resourceType}`);
         }
@@ -218,6 +222,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
                 Rule: rule,
               },
             });
+            logCloudBaseResult(server.logger, result);
           } else {
             result = await cloudbase.commonService().call({
               Action: "ModifyDatabaseACL",
@@ -227,6 +232,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
                 AclTag: aclTag,
               },
             });
+            logCloudBaseResult(server.logger, result);
           }
         } else if (resourceType === "function") {
           if (aclTag !== "CUSTOM")
@@ -242,6 +248,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
               Rule: rule,
             },
           });
+          logCloudBaseResult(server.logger, result);
         } else if (resourceType === "storage") {
           if (aclTag === "CUSTOM") {
             if (!rule)
@@ -255,6 +262,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
                 Rule: rule,
               },
             });
+            logCloudBaseResult(server.logger, result);
           } else {
             result = await cloudbase.commonService().call({
               Action: "ModifyStorageSafeRule",
@@ -264,6 +272,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
                 AclTag: aclTag,
               },
             });
+            logCloudBaseResult(server.logger, result);
           }
         } else if (resourceType === "sqlDatabase") {
           if (aclTag === "CUSTOM") {
@@ -299,6 +308,7 @@ export function registerSecurityRuleTools(server: ExtendedMcpServer) {
               PolicyList: policyList,
             },
           });
+          logCloudBaseResult(server.logger, result);
 
           function getRowPermission(
             policy: "READONLY" | "PRIVATE" | "ADMINWRITE" | "ADMINONLY",

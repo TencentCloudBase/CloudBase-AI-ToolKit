@@ -38,7 +38,7 @@ export function registerStorageTools(server: ExtendedMcpServer) {
 
   // 创建闭包函数来获取 CloudBase Manager
   const getManager = () => getCloudBaseManager({ cloudBaseOptions });
-  
+
   // Tool 1: queryStorage - 查询存储信息（只读操作）
   server.registerTool(
     "queryStorage",
@@ -56,17 +56,17 @@ export function registerStorageTools(server: ExtendedMcpServer) {
       try {
         const input = args;
         const manager = await getManager();
-        
+
         if (!manager) {
           throw new Error("Failed to initialize CloudBase manager. Please check your credentials and environment configuration.");
         }
 
         const storageService = manager.storage;
-        
+
         switch (input.action) {
           case 'list': {
             const result = await storageService.listDirectoryFiles(input.cloudPath);
-            
+
             return {
               content: [
                 {
@@ -85,10 +85,10 @@ export function registerStorageTools(server: ExtendedMcpServer) {
               ]
             };
           }
-          
+
           case 'info': {
             const result = await storageService.getFileInfo(input.cloudPath);
-            
+
             return {
               content: [
                 {
@@ -106,13 +106,13 @@ export function registerStorageTools(server: ExtendedMcpServer) {
               ]
             };
           }
-          
+
           case 'url': {
             const result = await storageService.getTemporaryUrl([{
               cloudPath: input.cloudPath,
               maxAge: input.maxAge || 3600
             }]);
-            
+
             return {
               content: [
                 {
@@ -132,11 +132,11 @@ export function registerStorageTools(server: ExtendedMcpServer) {
               ]
             };
           }
-          
+
           default:
             throw new Error(`Unsupported action: ${input.action}`);
         }
-        
+
       } catch (error: any) {
         return {
           content: [
@@ -173,13 +173,13 @@ export function registerStorageTools(server: ExtendedMcpServer) {
       try {
         const input = args;
         const manager = await getManager();
-        
+
         if (!manager) {
           throw new Error("Failed to initialize CloudBase manager. Please check your credentials and environment configuration.");
         }
 
         const storageService = manager.storage;
-        
+
         switch (input.action) {
           case 'upload': {
             if (input.isDirectory) {
@@ -228,7 +228,7 @@ export function registerStorageTools(server: ExtendedMcpServer) {
               ]
             };
           }
-          
+
           case 'download': {
             if (input.isDirectory) {
               // 下载目录
@@ -262,7 +262,7 @@ export function registerStorageTools(server: ExtendedMcpServer) {
               ]
             };
           }
-          
+
           case 'delete': {
             if (!input.force) {
               return {
@@ -305,11 +305,11 @@ export function registerStorageTools(server: ExtendedMcpServer) {
               ]
             };
           }
-          
+
           default:
             throw new Error(`Unsupported action: ${input.action}`);
         }
-        
+
       } catch (error: any) {
         return {
           content: [

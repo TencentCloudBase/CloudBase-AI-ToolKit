@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { getLoginState } from '../auth.js';
-import { envManager, getCloudBaseManager } from '../cloudbase-manager.js';
+import { envManager, getCloudBaseManager, logCloudBaseResult } from '../cloudbase-manager.js';
 import { getInteractiveServer } from "../interactive-server.js";
 import { ExtendedMcpServer } from '../server.js';
 import { debug } from '../utils/logger.js';
@@ -14,7 +14,7 @@ export function registerInteractiveTools(server: ExtendedMcpServer) {
       title: "交互式对话",
       description: "统一的交互式对话工具，支持需求澄清和任务确认，当需要和用户确认下一步的操作的时候，可以调用这个工具的clarify，如果有敏感的操作，需要用户确认，可以调用这个工具的confirm",
       inputSchema: {
-        type: z.enum(['clarify', 'confirm']).describe("交互类型: clarify=需求澄清, confirm=任务确认"),  
+        type: z.enum(['clarify', 'confirm']).describe("交互类型: clarify=需求澄清, confirm=任务确认"),
         message: z.string().optional().describe("对话消息内容"),
         options: z.array(z.string()).optional().describe("可选的预设选项"),
         forceUpdate: z.boolean().optional().describe("是否强制更新环境ID配置"),
@@ -63,15 +63,15 @@ export function registerInteractiveTools(server: ExtendedMcpServer) {
             }
 
             let dialogMessage = `🎯 即将执行任务:\n${message}`;
-            
+
             if (risks && risks.length > 0) {
               dialogMessage += `\n\n⚠️ 风险提示:\n${risks.map(risk => `• ${risk}`).join('\n')}`;
             }
-            
+
             dialogMessage += `\n\n是否继续执行此任务？`;
-            
+
             const dialogOptions = options || ["确认执行", "取消操作", "需要修改任务"];
-            
+
             const interactiveServer = getInteractiveServer(server);
             const result = await interactiveServer.clarifyRequest(dialogMessage, dialogOptions);
 
@@ -106,7 +106,7 @@ export function registerInteractiveTools(server: ExtendedMcpServer) {
 export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean, server?: any): Promise<{ selectedEnvId: string | null; cancelled: boolean; error?: string; noEnvs?: boolean }> {
   // 1. 确保用户已登录
   const loginState = await getLoginState();
-  debug('loginState',loginState)
+  debug('loginState', loginState)
   if (!loginState) {
     debug('请先登录云开发账户')
     return { selectedEnvId: null, cancelled: false, error: "请先登录云开发账户" };
@@ -115,9 +115,9 @@ export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean, serv
   // 2. 获取可用环境列表（使用过滤参数）
   // Fix: Pass cloudBaseOptions to ensure correct environment context
   const serverCloudBaseOptions = server?.cloudBaseOptions;
-  const cloudbase = await getCloudBaseManager({ 
-    requireEnvId: false, 
-    cloudBaseOptions: serverCloudBaseOptions 
+  const cloudbase = await getCloudBaseManager({
+    requireEnvId: false,
+    cloudBaseOptions: serverCloudBaseOptions
   });
   let envResult;
   try {
@@ -131,6 +131,7 @@ export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean, serv
         Channels: ['dcloud', 'iotenable', 'tem', 'scene_module']  // Filter special channels
       }
     });
+    logCloudBaseResult(server?.logger, envResult);
     // Transform response format to match original listEnvs() format
     if (envResult && envResult.EnvList) {
       envResult = { EnvList: envResult.EnvList };
@@ -140,17 +141,19 @@ export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean, serv
       // Fallback to original method if format is unexpected
       debug('Unexpected response format, falling back to listEnvs()');
       envResult = await cloudbase.env.listEnvs();
+      logCloudBaseResult(server?.logger, envResult);
     }
   } catch (error) {
     debug('获取环境ID时出错，尝试降级到 listEnvs():', error);
     // Fallback to original method on error
     try {
       envResult = await cloudbase.env.listEnvs();
+      logCloudBaseResult(server?.logger, envResult);
     } catch (fallbackError) {
       debug('降级到 listEnvs() 也失败:', fallbackError);
     }
   }
-  
+
   debug('envResult', envResult);
 
   const { EnvList } = envResult || {};
@@ -177,7 +180,7 @@ export async function _promptAndSetEnvironmentId(autoSelectSingle: boolean, serv
   }
 
   return { selectedEnvId, cancelled: false };
-  
+
 }
 
 // 自动设置环境ID（无需MCP工具调用）
@@ -189,7 +192,7 @@ export async function autoSetupEnvironmentId(): Promise<string | null> {
       debug('Auto setup environment ID interrupted or failed silently.', { error, noEnvs, cancelled });
       return null;
     }
-    
+
     debug('Auto setup environment ID successful.', { selectedEnvId });
     return selectedEnvId;
 

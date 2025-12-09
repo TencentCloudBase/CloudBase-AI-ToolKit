@@ -16,7 +16,7 @@ import { registerDataModelTools } from "./tools/dataModel.js";
 import { registerGatewayTools } from "./tools/gateway.js";
 import { registerInviteCodeTools } from "./tools/invite-code.js";
 import { registerSecurityRuleTools } from "./tools/security-rule.js";
-import { CloudBaseOptions } from "./types.js";
+import { CloudBaseOptions, Logger } from "./types.js";
 import { enableCloudMode } from "./utils/cloud-mode.js";
 import { info } from './utils/logger.js';
 import { wrapServerWithTelemetry } from "./utils/tool-wrapper.js";
@@ -101,6 +101,7 @@ function parseEnabledPlugins(): string[] {
 export interface ExtendedMcpServer extends McpServer {
   cloudBaseOptions?: CloudBaseOptions;
   ide?: string;
+  logger?: Logger;
 }
 
 /**
@@ -130,6 +131,7 @@ export async function createCloudBaseMcpServer(options?: {
   cloudBaseOptions?: CloudBaseOptions;
   cloudMode?: boolean;
   ide?: string;
+  logger?: Logger;
 }): Promise<ExtendedMcpServer> {
   const {
     name = "cloudbase-mcp",
@@ -138,6 +140,7 @@ export async function createCloudBaseMcpServer(options?: {
     cloudBaseOptions,
     cloudMode = false,
     ide,
+    logger,
   } = options ?? {};
 
   // Enable cloud mode if specified
@@ -175,6 +178,11 @@ export async function createCloudBaseMcpServer(options?: {
   // Store ide in server instance for telemetry
   if (ide) {
     server.ide = ide;
+  }
+
+  // Store logger in server instance for tools to access
+  if (logger) {
+    server.logger = logger;
   }
 
   // Enable telemetry if requested

@@ -63,3 +63,14 @@ export interface DataModel {
 
 // CloudBase 配置选项
 export type CloudBaseOptions = NonNullable<ConstructorParameters<typeof CloudBase>[0]>
+
+export type Logger = (data: {
+  type: string;
+  requestId?: string;
+  result?: any;
+  toolName?: string;
+  args?: any;
+  message?: string;
+  duration?: number;
+  [key: string]: any;
+}) => void;
