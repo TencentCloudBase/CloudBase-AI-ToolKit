@@ -1,8 +1,9 @@
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { useLocation } from '@docusaurus/router';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import IDESelector from './IDESelector';
 import styles from './ErrorCodeIDEButton.module.css';
+import { reportEvent } from './analytics';
 
 // IDE list for icons (from IDESelector)
 const POPULAR_IDES = [
@@ -119,6 +120,14 @@ export default function ErrorCodeIDEButton({
 
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Report view event on mount
+  useEffect(() => {
+    reportEvent({
+      name: 'Error Button - View',
+      eventType: 'view',
+    });
+  }, []);
+
   // Generate full page URL
   const fullPageUrl = useMemo(() => {
     if (pageUrl) return pageUrl;
@@ -146,7 +155,12 @@ export default function ErrorCodeIDEButton({
               className={`${styles.button} ${isExpanded ? styles.buttonExpanded : ''}`}
               onClick={(e) => {
                 e.preventDefault();
-                setIsExpanded(!isExpanded);
+                const newExpandedState = !isExpanded;
+                setIsExpanded(newExpandedState);
+                reportEvent({
+                  name: newExpandedState ? 'Error Button - Expand' : 'Error Button - Collapse',
+                  eventType: newExpandedState ? 'expand' : 'collapse',
+                });
               }}
             >
               <div className={styles.buttonLeft}>
