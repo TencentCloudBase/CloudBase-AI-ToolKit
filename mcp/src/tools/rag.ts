@@ -5,7 +5,7 @@ import * as path from "path";
 import { z } from "zod";
 import { FALLBACK_CLAUDE_PROMPT } from "../config/claude-prompt.js";
 import { ExtendedMcpServer } from "../server.js";
-import { warn } from "../utils/logger.js";
+import { debug, warn } from "../utils/logger.js";
 
 // 1. 枚举定义
 const KnowledgeBaseEnum = z.enum(["cloudbase", "scf", "miniprogram"]);
@@ -15,6 +15,83 @@ const KnowledgeBaseIdMap: Record<z.infer<typeof KnowledgeBaseEnum>, string> = {
   scf: "scfsczskzyws_4bdc",
   miniprogram: "xcxzskws_25d8",
 };
+
+// ============ 缓存配置 ============
+const CACHE_BASE_DIR = path.join(os.homedir(), ".cloudbase-mcp");
+const CACHE_META_FILE = path.join(CACHE_BASE_DIR, "cache-meta.json");
+const DEFAULT_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 默认 24 小时
+// 支持环境变量 CLOUDBASE_MCP_CACHE_TTL_MS 控制缓存过期时间（毫秒）
+const parsedCacheTTL = process.env.CLOUDBASE_MCP_CACHE_TTL_MS
+  ? parseInt(process.env.CLOUDBASE_MCP_CACHE_TTL_MS, 10)
+  : NaN;
+const CACHE_TTL_MS =
+  Number.isNaN(parsedCacheTTL) || parsedCacheTTL < 0
+    ? DEFAULT_CACHE_TTL_MS
+    : parsedCacheTTL;
+
+if (!Number.isNaN(parsedCacheTTL) && parsedCacheTTL >= 0) {
+  debug("[cache] Using TTL from CLOUDBASE_MCP_CACHE_TTL_MS", {
+    ttlMs: CACHE_TTL_MS,
+  });
+} else {
+  debug("[cache] Using default TTL", { ttlMs: CACHE_TTL_MS });
+}
+
+// 缓存元数据类型
+interface CacheMeta {
+  timestamp?: number;
+}
+
+// OpenAPI 文档信息类型
+type OpenAPIInfo = { name: string; description: string; absolutePath: string };
+
+// 资源下载结果类型
+interface DownloadResult {
+  webTemplateDir: string;
+  openAPIDocs: OpenAPIInfo[];
+}
+
+// 共享的下载 Promise，防止并发重复下载
+let resourceDownloadPromise: Promise<DownloadResult> | null = null;
+
+// 检查缓存是否可用（未过期）
+async function canUseCache(): Promise<boolean> {
+  try {
+    const content = await fs.readFile(CACHE_META_FILE, "utf8");
+    const meta: CacheMeta = JSON.parse(content);
+    if (!meta.timestamp) {
+      debug("[cache] cache-meta missing timestamp, treating as invalid", {
+        ttlMs: CACHE_TTL_MS,
+      });
+      return false;
+    }
+
+    const ageMs = Date.now() - meta.timestamp;
+    const isValid = ageMs <= CACHE_TTL_MS;
+
+    debug("[cache] evaluated cache meta", {
+      timestamp: meta.timestamp,
+      ageMs,
+      ttlMs: CACHE_TTL_MS,
+      valid: isValid,
+    });
+
+    return isValid;
+  } catch (error) {
+    debug("[cache] failed to read cache meta, treating as miss", { error });
+    return false;
+  }
+}
+
+// 更新缓存时间戳
+async function updateCache(): Promise<void> {
+  await fs.mkdir(CACHE_BASE_DIR, { recursive: true });
+  await fs.writeFile(
+    CACHE_META_FILE,
+    JSON.stringify({ timestamp: Date.now() }, null, 2),
+    "utf8",
+  );
+}
 
 // 安全 JSON.parse
 function safeParse(str: string) {
@@ -41,18 +118,45 @@ function safeStringify(obj: any) {
   }
 }
 
-// Download and extract web template, return extract directory path
-// Always downloads and overwrites existing template
-export async function downloadWebTemplate(): Promise<string> {
-  const baseDir = path.join(os.homedir(), ".cloudbase-mcp");
-  const zipPath = path.join(baseDir, "web-cloudbase-project.zip");
-  const extractDir = path.join(baseDir, "web-template");
+// OpenAPI 文档 URL 列表
+const OPENAPI_SOURCES: Array<{
+  name: string;
+  description: string;
+  url: string;
+}> = [
+  {
+    name: "mysqldb",
+    description: "MySQL RESTful API - 云开发 MySQL 数据库 HTTP API",
+    url: "https://docs.cloudbase.net/openapi/mysqldb.v1.openapi.yaml",
+  },
+  {
+    name: "functions",
+    description: "Cloud Functions API - 云函数 HTTP API",
+    url: "https://docs.cloudbase.net/openapi/functions.v1.openapi.yaml",
+  },
+  {
+    name: "auth",
+    description: "Authentication API - 身份认证 HTTP API",
+    url: "https://docs.cloudbase.net/openapi/auth.v1.openapi.yaml",
+  },
+  {
+    name: "cloudrun",
+    description: "CloudRun API - 云托管服务 HTTP API",
+    url: "https://docs.cloudbase.net/openapi/cloudrun.v1.openapi.yaml",
+  },
+  {
+    name: "storage",
+    description: "Storage API - 云存储 HTTP API",
+    url: "https://docs.cloudbase.net/openapi/storage.v1.openapi.yaml",
+  },
+];
+
+async function downloadWebTemplate() {
+  const zipPath = path.join(CACHE_BASE_DIR, "web-cloudbase-project.zip");
+  const extractDir = path.join(CACHE_BASE_DIR, "web-template");
   const url =
     "https://static.cloudbase.net/cloudbase-examples/web-cloudbase-project.zip";
 
-  await fs.mkdir(baseDir, { recursive: true });
-
-  // Download zip to specified path (overwrite)
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`下载模板失败，状态码: ${response.status}`);
@@ -60,19 +164,116 @@ export async function downloadWebTemplate(): Promise<string> {
   const buffer = Buffer.from(await response.arrayBuffer());
   await fs.writeFile(zipPath, buffer);
 
-  // Clean and recreate extract directory
   await fs.rm(extractDir, { recursive: true, force: true });
   await fs.mkdir(extractDir, { recursive: true });
 
   const zip = new AdmZip(zipPath);
   zip.extractAllTo(extractDir, true);
 
+  debug("[downloadResources] webTemplate 下载完成");
   return extractDir;
 }
 
-async function prepareKnowledgeBaseWebTemplate() {
-  const extractDir = await downloadWebTemplate();
-  return collectSkillDescriptions(path.join(extractDir, ".claude", "skills"));
+async function downloadOpenAPI() {
+  const baseDir = path.join(CACHE_BASE_DIR, "openapi");
+  await fs.mkdir(baseDir, { recursive: true });
+
+  const results: OpenAPIInfo[] = [];
+  await Promise.all(
+    OPENAPI_SOURCES.map(async (source) => {
+      try {
+        const response = await fetch(source.url);
+        if (!response.ok) {
+          warn(`[downloadOpenAPI] Failed to download ${source.name}`, {
+            status: response.status,
+          });
+          return;
+        }
+        const content = await response.text();
+        const filePath = path.join(baseDir, `${source.name}.openapi.yaml`);
+        await fs.writeFile(filePath, content, "utf8");
+        results.push({
+          name: source.name,
+          description: source.description,
+          absolutePath: filePath,
+        });
+      } catch (error) {
+        warn(`[downloadOpenAPI] Failed to download ${source.name}`, {
+          error,
+        });
+      }
+    }),
+  );
+
+  debug("[downloadOpenAPI] openAPIDocs 下载完成", {
+    successCount: results.length,
+    total: OPENAPI_SOURCES.length,
+  });
+  return results;
+}
+
+// 实际执行下载所有资源的函数（webTemplate 和 openAPI 并发下载）
+async function _doDownloadResources(): Promise<DownloadResult> {
+  // 并发下载 webTemplate 和 openAPIDocs
+  const [webTemplateDir, openAPIDocs] = await Promise.all([
+    // 下载 web 模板
+    downloadWebTemplate(),
+
+    // 并发下载所有 OpenAPI 文档
+    downloadOpenAPI(),
+  ]);
+
+  debug("[downloadResources] 所有资源下载完成");
+  return { webTemplateDir, openAPIDocs };
+}
+
+// 下载所有资源（带缓存和共享 Promise 机制）
+async function downloadResources(): Promise<DownloadResult> {
+  const webTemplateDir = path.join(CACHE_BASE_DIR, "web-template");
+  const openAPIDir = path.join(CACHE_BASE_DIR, "openapi");
+
+  // 检查缓存是否有效
+  if (await canUseCache()) {
+    try {
+      // 检查两个目录都存在
+      await Promise.all([fs.access(webTemplateDir), fs.access(openAPIDir)]);
+      const files = await fs.readdir(openAPIDir);
+      if (files.length > 0) {
+        debug("[downloadResources] 使用缓存");
+        return {
+          webTemplateDir,
+          openAPIDocs: OPENAPI_SOURCES.map((source) => ({
+            name: source.name,
+            description: source.description,
+            absolutePath: path.join(openAPIDir, `${source.name}.openapi.yaml`),
+          })).filter((item) => files.includes(`${item.name}.openapi.yaml`)),
+        };
+      }
+    } catch {
+      // 缓存无效，需要重新下载
+    }
+  }
+
+  // 如果已有下载任务在进行中，共享该 Promise
+  if (resourceDownloadPromise) {
+    debug("[downloadResources] 共享已有下载任务");
+    return resourceDownloadPromise;
+  }
+
+  // 创建新的下载任务
+  debug("[downloadResources] 开始新下载任务");
+  await fs.mkdir(CACHE_BASE_DIR, { recursive: true });
+  resourceDownloadPromise = _doDownloadResources()
+    .then(async (result) => {
+      await updateCache();
+      debug("[downloadResources] 缓存已更新");
+      return result;
+    })
+    .finally(() => {
+      resourceDownloadPromise = null;
+    });
+
+  return resourceDownloadPromise;
 }
 
 // Get CLAUDE.md prompt content
@@ -217,23 +418,17 @@ export async function registerRagTools(server: ExtendedMcpServer) {
     },
   );
 
-  let skills: SkillInfo[] = [];
   let openapis: OpenAPIInfo[] = [];
+  let skills: SkillInfo[] = [];
 
-  // 知识库检索
   try {
-    skills = await prepareKnowledgeBaseWebTemplate();
+    const { webTemplateDir, openAPIDocs } = await downloadResources();
+    openapis = openAPIDocs;
+    skills = await collectSkillDescriptions(
+      path.join(webTemplateDir, ".claude", "skills"),
+    );
   } catch (error) {
-    warn("[searchKnowledgeBase] Failed to prepare web template", {
-      error,
-    });
-  }
-
-  // OpenAPI 文档准备
-  try {
-    openapis = await prepareOpenAPIDocs();
-  } catch (error) {
-    warn("[searchKnowledgeBase] Failed to prepare OpenAPI docs", {
+    warn("[downloadResources] Failed to download resources", {
       error,
     });
   }
@@ -447,78 +642,6 @@ function extractDescriptionFromFrontMatter(content: string): string | null {
 }
 
 type SkillInfo = { description: string; absolutePath: string };
-
-// OpenAPI 文档信息
-type OpenAPIInfo = { name: string; description: string; absolutePath: string };
-
-// OpenAPI 文档 URL 列表
-const OPENAPI_SOURCES: Array<{
-  name: string;
-  description: string;
-  url: string;
-}> = [
-  {
-    name: "mysqldb",
-    description: "MySQL RESTful API - 云开发 MySQL 数据库 HTTP API",
-    url: "https://docs.cloudbase.net/openapi/mysqldb.v1.openapi.yaml",
-  },
-  {
-    name: "functions",
-    description: "Cloud Functions API - 云函数 HTTP API",
-    url: "https://docs.cloudbase.net/openapi/functions.v1.openapi.yaml",
-  },
-  {
-    name: "auth",
-    description: "Authentication API - 身份认证 HTTP API",
-    url: "https://docs.cloudbase.net/openapi/auth.v1.openapi.yaml",
-  },
-  {
-    name: "cloudrun",
-    description: "CloudRun API - 云托管服务 HTTP API",
-    url: "https://docs.cloudbase.net/openapi/cloudrun.v1.openapi.yaml",
-  },
-  {
-    name: "storage",
-    description: "Storage API - 云存储 HTTP API",
-    url: "https://docs.cloudbase.net/openapi/storage.v1.openapi.yaml",
-  },
-];
-
-// 下载并准备 OpenAPI 文档
-async function prepareOpenAPIDocs(): Promise<OpenAPIInfo[]> {
-  const baseDir = path.join(os.homedir(), ".cloudbase-mcp", "openapi");
-  await fs.mkdir(baseDir, { recursive: true });
-
-  const results: OpenAPIInfo[] = [];
-
-  await Promise.all(
-    OPENAPI_SOURCES.map(async (source) => {
-      try {
-        const response = await fetch(source.url);
-        if (!response.ok) {
-          warn(`[prepareOpenAPIDocs] Failed to download ${source.name}`, {
-            status: response.status,
-          });
-          return;
-        }
-        const content = await response.text();
-        const filePath = path.join(baseDir, `${source.name}.openapi.yaml`);
-        await fs.writeFile(filePath, content, "utf8");
-        results.push({
-          name: source.name,
-          description: source.description,
-          absolutePath: filePath,
-        });
-      } catch (error) {
-        warn(`[prepareOpenAPIDocs] Failed to download ${source.name}`, {
-          error,
-        });
-      }
-    }),
-  );
-
-  return results;
-}
 
 async function collectSkillDescriptions(rootDir: string): Promise<SkillInfo[]> {
   const result: SkillInfo[] = [];
