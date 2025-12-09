@@ -120,7 +120,7 @@
         "type": "category",
         "label": "入门教程",
         "collapsible": true,
-        "collapsed": true,
+        "collapsed": false,
         "items": [
           "ai/cloudbase-ai-toolkit/tutorials",
           "ai/cloudbase-ai-toolkit/templates",
