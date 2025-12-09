@@ -122,7 +122,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-ai-try-on',
     title: 'AI编程：从0到1开发一个AI试衣小程序！免费分享 | 含源码',
-    description: 'Bilibili 视频教程',
+    description: '熠辉IndieDev',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1NEsWzRE6U/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -131,7 +131,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-cursor-cloudbase',
     title: 'Cursor教学视频08：Cursor+Cloudbase MCP，10分钟完成带后端的全栈应用开发',
-    description: 'Bilibili 视频教程',
+    description: 'AI进化论-花生',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1TXuVzoE9p/?vd_source=c8763f6ab9c7c6f7f760ad7ea9157011',
     type: 'video',
@@ -140,7 +140,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-english-learning',
     title: '【新手向】 从 0 到 1构建一个可视化的 AI 英语学习应用',
-    description: 'Bilibili 视频教程',
+    description: '吕立青_JimmyLv',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1SK2xBTE2M/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -149,7 +149,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-ecommerce',
     title: '单挑整个电商项目？AI 能代替程序员了吗',
-    description: 'Bilibili 视频教程',
+    description: '吴悠讲编程',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1QzSYBBEBe/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -158,7 +158,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-miniprogram-basics',
     title: '零基础入门AI小程序开发教程',
-    description: 'Bilibili 视频教程',
+    description: '野码AI',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV123SyB4Ekt/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -167,7 +167,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-software30',
     title: '软件3.0：AI 编程新时代的最佳拍档 CloudBase AI ToolKit，以开发微信小程序为例',
-    description: 'Bilibili 视频教程',
+    description: '吕立青_JimmyLv',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV15gKdz1E5N/?share_source=copy_web',
     type: 'video',
@@ -176,7 +176,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-overcooked',
     title: '云开发CloudBase：用AI开发一款分手厨房小游戏',
-    description: 'Bilibili 视频教程',
+    description: '腾讯云云开发',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1v5KAzwEf9/',
     type: 'video',
@@ -185,7 +185,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-resume',
     title: '用AiCoding 一人挑战全栈研发简历制作小程序',
-    description: 'Bilibili 视频教程',
+    description: '全栈若城',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1D23Nz1Ec3/',
     type: 'video',
@@ -194,7 +194,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-business-card',
     title: '5分钟在本地创造一个程序员专属名片网站',
-    description: 'Bilibili 视频教程',
+    description: 'LucianaiB',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV19y3EzsEHQ/?vd_source=c8763f6ab9c7c6f7f760ad7ea9157011',
     type: 'video',
@@ -203,7 +203,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-codebuddy-miniprogram',
     title: '实战教程：通过codeBuddy +cloudBase 开发上线一款微信小程序！你也可以！',
-    description: 'Bilibili 视频教程',
+    description: '空菜',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1NEbjzjEeZ/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -212,7 +212,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-codebuddy-backend',
     title: 'CodeBuddyIDE 搭配 CloudBase完成小程序后台管理系统快速搭建',
-    description: 'Bilibili 视频教程',
+    description: '全栈若城',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV13C8nzzEoq/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -221,7 +221,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-cloudbase-deploy',
     title: '女大学生教你不买服务器，一秒把网站弄上线！0-1开发｜小白教程｜腾讯云CloudBase',
-    description: 'Bilibili 视频教程',
+    description: '冰激凌奶茶雪糕子',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1LQpBzrEb2/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -230,7 +230,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-xiaohe-architecture',
     title: '腾讯 CodeBuddy IDE × CloudBase 云开发实战：从零上线「小禾建筑AI智能平台」',
-    description: 'Bilibili 视频教程',
+    description: 'AI创业进行时',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1DWbwz1EBU/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -239,7 +239,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-cursor-miniprogram',
     title: '【小白教程】手把手教你用Cursor+微信云开发做个小程序 | 小白 AI 编程 | 零基础',
-    description: 'Bilibili 视频教程',
+    description: '熠辉IndieDev',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1jx5kziEqz/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -248,7 +248,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-podcast-tool',
     title: '零基础用codebuddy+CloudBase AI做播客推荐工具，我悟了："不必要的功能不加"',
-    description: 'Bilibili 视频教程',
+    description: '马腾漫步',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1fb8XzMEDk/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -257,7 +257,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-breakfast-shop',
     title: '沉浸式体验，从零用AI开发微信小游戏《我的早餐店》：CloudBase AI Toolkit教程',
-    description: 'Bilibili 视频教程',
+    description: 'Lion_Long',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV12J3XzzE67/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -266,7 +266,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-jixian-huiche',
     title: '极限惠车 - 停车充电优惠平台-基于CodeBuddy+云开发 + CloudBase AI ToolKit 构建的项目',
-    description: 'Bilibili 视频教程',
+    description: 'vellzhao',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1TCYyzBEAC/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -275,7 +275,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-boss-miniprogram',
     title: '老板让我1小时建好公司小程序…',
-    description: 'Bilibili 视频教程',
+    description: '三太子敖丙',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1hX3DzuExZ/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -284,7 +284,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-codebuddy-game',
     title: '用 CodeBuddy+CloudBase，轻松开发个性化游戏',
-    description: 'Bilibili 视频教程',
+    description: '全栈若城',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1hpbsz1E7m/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -293,7 +293,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-codebuddy-zero-coding',
     title: '使用CodeBuddy从0-1零编程打造一款微信小程序（附体验二维码）',
-    description: 'Bilibili 视频教程',
+    description: '蓝镜空间',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1mNY2z3ESU/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -302,7 +302,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-hospital-scheduling-saas',
     title: 'AI做的医院实习生排班SAAS系统',
-    description: 'Bilibili 视频教程',
+    description: '采云小程序',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1SYYkziEy9/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -311,7 +311,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-big-eye-notes',
     title: 'Codebuddy*Cloudbase AI大眼萌笔记工具及开发过程介绍',
-    description: 'Bilibili 视频教程',
+    description: 'AI大眼萌',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1B6b8zBEWT/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -320,7 +320,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-cursor-gomoku',
     title: '【直播回放】Cursor+云开发，开发双人五子棋对战小游戏',
-    description: 'Bilibili 视频教程',
+    description: '腾讯云云开发',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1uE3uzHEou/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -329,7 +329,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-one-person-company',
     title: '一人公司不是梦！1小时开发全栈应用【含完整前后端】',
-    description: 'Bilibili 视频教程',
+    description: 'AI进化论-花生',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1Rp37zDESt/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -338,7 +338,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-wechat-sport',
     title: '云开发Cloudbase AI Toolkit + Cursor开发演示：用AI开发一个支持微信运动的小程序',
-    description: 'Bilibili 视频教程',
+    description: '腾讯云云开发',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1hpjvzGESg/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -347,7 +347,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-finance-assistant',
     title: '腾讯云CodeBuddy IDE+CloudBase AI ToolKit打造理财小助手网页',
-    description: 'Bilibili 视频教程',
+    description: 'irpickstars',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1o1bXzYEm9/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
@@ -356,7 +356,7 @@ const tutorials: Tutorial[] = [
   {
     id: 'video-codebuddy-international',
     title: 'CodeBuddy IDE国际版试用体验，让开发小程序的门槛再次降低！',
-    description: 'Bilibili 视频教程',
+    description: '嘉锅实验室',
     category: '视频教程',
     url: 'https://www.bilibili.com/video/BV1YReMz7EKn/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',

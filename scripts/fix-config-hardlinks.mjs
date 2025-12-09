@@ -621,6 +621,7 @@ async function syncRulesToIDEDirectories() {
     { dir: "config/.trae/rules", convertMdToMdc: false },
     { dir: "config/.windsurf/rules", convertMdToMdc: false },
     { dir: "config/.clinerules", convertMdToMdc: false },
+    { dir: "config/.kiro/steering", convertMdToMdc: false },
   ];
 
   console.log(
