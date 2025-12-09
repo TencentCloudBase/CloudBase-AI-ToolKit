@@ -1,7 +1,8 @@
 import CloudBase from "@cloudbase/manager-node";
 import { z } from "zod";
-import { getCloudBaseManager } from "../cloudbase-manager.js";
+import { getCloudBaseManager, logCloudBaseResult } from "../cloudbase-manager.js";
 import { ExtendedMcpServer } from "../server.js";
+import { Logger } from "../types.js";
 
 const CATEGORY = "NoSQL database";
 
@@ -18,6 +19,7 @@ async function getDatabaseInstanceId(getManager: () => Promise<any>) {
 export function registerDatabaseTools(server: ExtendedMcpServer) {
   // 获取 cloudBaseOptions,如果没有则为 undefined
   const cloudBaseOptions = server.cloudBaseOptions;
+  const logger = server.logger;
 
   // 创建闭包函数来获取 CloudBase Manager
   const getManager = () => getCloudBaseManager({ cloudBaseOptions });
@@ -73,6 +75,7 @@ checkIndex: 检查索引是否存在`),
           MgoOffset: offset,
           MgoLimit: limit,
         });
+        logCloudBaseResult(server.logger, result);
         return {
           content: [
             {
@@ -99,6 +102,7 @@ checkIndex: 检查索引是否存在`),
         }
         const result =
           await cloudbase.database.checkCollectionExists(collectionName);
+        logCloudBaseResult(server.logger, result);
         return {
           content: [
             {
@@ -126,6 +130,7 @@ checkIndex: 检查索引是否存在`),
         }
         const result =
           await cloudbase.database.describeCollection(collectionName);
+        logCloudBaseResult(server.logger, result);
         return {
           content: [
             {
@@ -152,6 +157,7 @@ checkIndex: 检查索引是否存在`),
         }
         const result =
           await cloudbase.database.describeCollection(collectionName);
+        logCloudBaseResult(server.logger, result);
         return {
           content: [
             {
@@ -180,6 +186,7 @@ checkIndex: 检查索引是否存在`),
           collectionName,
           indexName,
         );
+        logCloudBaseResult(server.logger, result);
         return {
           content: [
             {
@@ -257,6 +264,7 @@ updateCollection: 更新集合`),
         if (action === "createCollection") {
           const result =
             await cloudbase.database.createCollection(collectionName);
+          logCloudBaseResult(server.logger, result);
           return {
             content: [
               {
@@ -284,6 +292,7 @@ updateCollection: 更新集合`),
             collectionName,
             updateOptions,
           );
+          logCloudBaseResult(server.logger, result);
           return {
             content: [
               {
@@ -374,6 +383,7 @@ updateCollection: 更新集合`),
             Tag: instanceId,
           },
         });
+        logCloudBaseResult(server.logger, result);
         return {
           content: [
             {
@@ -471,6 +481,7 @@ deleteCollection: 删除数据`),
           collectionName,
           documents,
           getManager,
+          logger,
         });
         return {
           content: [
@@ -495,6 +506,7 @@ deleteCollection: 删除数据`),
           isMulti,
           upsert,
           getManager,
+          logger,
         });
         return {
           content: [
@@ -514,6 +526,7 @@ deleteCollection: 删除数据`),
           query,
           isMulti,
           getManager,
+          logger,
         });
         return {
           content: [
@@ -534,10 +547,12 @@ async function insertDocuments({
   collectionName,
   documents,
   getManager,
+  logger,
 }: {
   collectionName: string;
   documents: object[];
   getManager: () => Promise<CloudBase>;
+  logger?: Logger;
 }) {
   try {
     const cloudbase = await getManager();
@@ -552,6 +567,7 @@ async function insertDocuments({
         Tag: instanceId,
       },
     });
+    logCloudBaseResult(logger, result);
     return JSON.stringify(
       {
         success: true,
@@ -582,6 +598,7 @@ async function updateDocuments({
   isMulti,
   upsert,
   getManager,
+  logger,
 }: {
   collectionName: string;
   query: object | string;
@@ -589,6 +606,7 @@ async function updateDocuments({
   isMulti?: boolean;
   upsert?: boolean;
   getManager: () => Promise<CloudBase>;
+  logger?: Logger;
 }) {
   try {
     const cloudbase = await getManager();
@@ -606,6 +624,7 @@ async function updateDocuments({
         Tag: instanceId,
       },
     });
+    logCloudBaseResult(logger, result);
     return JSON.stringify(
       {
         success: true,
@@ -636,11 +655,13 @@ async function deleteDocuments({
   query,
   isMulti,
   getManager,
+  logger,
 }: {
   collectionName: string;
   query: object | string;
   isMulti?: boolean;
   getManager: () => Promise<CloudBase>;
+  logger?: Logger;
 }) {
   try {
     const cloudbase = await getManager();
@@ -656,6 +677,7 @@ async function deleteDocuments({
         Tag: instanceId,
       },
     });
+    logCloudBaseResult(logger, result);
     return JSON.stringify(
       {
         success: true,

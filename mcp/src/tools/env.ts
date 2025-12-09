@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { logout } from '../auth.js';
-import { getCloudBaseManager, resetCloudBaseManagerCache } from '../cloudbase-manager.js';
+import { getCloudBaseManager, logCloudBaseResult, resetCloudBaseManagerCache } from '../cloudbase-manager.js';
 import { ExtendedMcpServer } from '../server.js';
 import { debug } from '../utils/logger.js';
 import { _promptAndSetEnvironmentId } from './interactive.js';
@@ -155,6 +155,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
                   Channels: ['dcloud', 'iotenable', 'tem', 'scene_module']  // Filter special channels
                 }
               });
+              logCloudBaseResult(server.logger, result);
               // Transform response format to match original listEnvs() format
               if (result && result.EnvList) {
                 result = { EnvList: result.EnvList };
@@ -164,6 +165,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
                 // Fallback to original method if format is unexpected
                 debug('Unexpected response format, falling back to listEnvs()');
                 result = await cloudbaseList.env.listEnvs();
+                logCloudBaseResult(server.logger, result);
               }
             } catch (error) {
               debug('获取环境列表时出错，尝试降级到 listEnvs():', error);
@@ -171,10 +173,12 @@ export function registerEnvTools(server: ExtendedMcpServer) {
               try {
                 const cloudbaseList = await getCloudBaseManager({ cloudBaseOptions, requireEnvId: true });
                 result = await cloudbaseList.env.listEnvs();
+                logCloudBaseResult(server.logger, result);
               } catch (fallbackError) {
                 debug('降级到 listEnvs() 也失败:', fallbackError);
-                return { content: 
-                  [{ type: "text", text: "获取环境列表时出错: " + (fallbackError instanceof Error ? fallbackError.message : String(fallbackError)) }] 
+                return {
+                  content:
+                    [{ type: "text", text: "获取环境列表时出错: " + (fallbackError instanceof Error ? fallbackError.message : String(fallbackError)) }]
                 };
               }
             }
@@ -183,16 +187,19 @@ export function registerEnvTools(server: ExtendedMcpServer) {
           case "info":
             const cloudbaseInfo = await getManager();
             result = await cloudbaseInfo.env.getEnvInfo();
+            logCloudBaseResult(server.logger, result);
             break;
 
           case "domains":
             const cloudbaseDomains = await getManager();
             result = await cloudbaseDomains.env.getEnvAuthDomains();
+            logCloudBaseResult(server.logger, result);
             break;
 
           case "hosting":
             const cloudbaseHosting = await getManager();
             result = await cloudbaseHosting.hosting.getWebsiteConfig();
+            logCloudBaseResult(server.logger, result);
             break;
 
           default:
@@ -258,10 +265,12 @@ export function registerEnvTools(server: ExtendedMcpServer) {
         switch (action) {
           case "create":
             result = await cloudbase.env.createEnvDomain(domains);
+            logCloudBaseResult(server.logger, result);
             break;
 
           case "delete":
             result = await cloudbase.env.deleteEnvDomain(domains);
+            logCloudBaseResult(server.logger, result);
             break;
 
           default:

@@ -1,17 +1,12 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { ToolAnnotations, Tool } from "@modelcontextprotocol/sdk/types.js";
-import { reportToolCall } from './telemetry.js';
-import { debug } from './logger.js';
-import { CloudBaseOptions } from '../types.js';
-import { getEnvId } from '../cloudbase-manager.js';
-import { shouldRegisterTool } from './cloud-mode.js';
 import os from 'os';
+import { getEnvId } from '../cloudbase-manager.js';
+import { ExtendedMcpServer } from "../server.js";
+import { CloudBaseOptions } from '../types.js';
+import { shouldRegisterTool } from './cloud-mode.js';
+import { debug } from './logger.js';
+import { reportToolCall } from './telemetry.js';
 
-// 扩展 McpServer 类型以包含 ide
-interface ExtendedMcpServer extends McpServer {
-  cloudBaseOptions?: CloudBaseOptions;
-  ide?: string;
-}
 
 /**
  * 工具包装器，为 MCP 工具添加数据上报功能
@@ -19,7 +14,7 @@ interface ExtendedMcpServer extends McpServer {
  */
 
 // 重新导出 MCP SDK 的类型，方便其他模块使用
-export type { ToolAnnotations, Tool } from "@modelcontextprotocol/sdk/types.js";
+export type { Tool, ToolAnnotations } from "@modelcontextprotocol/sdk/types.js";
 
 // 构建时注入的版本号
 declare const __MCP_VERSION__: string;
@@ -35,10 +30,10 @@ declare const __MCP_VERSION__: string;
 async function generateGitHubIssueLink(toolName: string, errorMessage: string, args: any, cloudBaseOptions?: CloudBaseOptions, payload?: {
     requestId: string;
     ide: string;
-}): Promise<string> { 
+}): Promise<string> {
     const { requestId, ide } = payload || {};
     const baseUrl = 'https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/issues/new';
-    
+
     // 尝试获取环境ID
     let envIdSection = '';
     try {
@@ -53,10 +48,10 @@ ${envId}
         // 如果获取 envId 失败，不添加环境ID部分
         debug('无法获取环境ID:', error);
     }
-    
+
     // 构建标题
     const title = `MCP工具错误: ${toolName}`;
-    
+
     // 构建问题描述
     const body = `## 错误描述
 工具 \`${toolName}\` 执行时发生错误
@@ -95,7 +90,7 @@ ${JSON.stringify(sanitizeArgs(args), null, 2)}
     // URL 编码
     const encodedTitle = encodeURIComponent(title);
     const encodedBody = encodeURIComponent(body);
-    
+
     return `${baseUrl}?title=${encodedTitle}&body=${encodedBody}`;
 }
 
@@ -111,13 +106,15 @@ function createWrappedHandler(name: string, handler: any, server: ExtendedMcpSer
 
         try {
             debug(`开始执行工具: ${name}`, { args: sanitizeArgs(args) });
+            server.logger?.({ type: 'beforeToolCall', toolName: name, args: sanitizeArgs(args) });
 
             // 执行原始处理函数
             const result = await handler(args);
 
             success = true;
-            debug(`工具执行成功: ${name}`, { duration: Date.now() - startTime });
-
+            const duration = Date.now() - startTime;
+            debug(`工具执行成功: ${name}`, { duration });
+            server.logger?.({ type: 'afterToolCall', toolName: name, args: sanitizeArgs(args), result: result, duration });
             return result;
         } catch (error) {
             success = false;
@@ -127,19 +124,19 @@ function createWrappedHandler(name: string, handler: any, server: ExtendedMcpSer
                 error: errorMessage,
                 duration: Date.now() - startTime
             });
-
+            server.logger?.({ type: 'errorToolCall', toolName: name, args: sanitizeArgs(args), message: errorMessage, duration: Date.now() - startTime });
             // 生成 GitHub Issue 创建链接
             const issueLink = await generateGitHubIssueLink(name, errorMessage, args, server.cloudBaseOptions, {
                 requestId: (typeof error === 'object' && error && 'requestId' in error) ? (error as any).requestId : '',
                 ide: server.ide || process.env.INTEGRATION_IDE || ''
             });
             const enhancedErrorMessage = `${errorMessage}\n\n🔗 遇到问题？请复制以下链接到浏览器打开\n即可自动携带错误详情快速创建 GitHub Issue：\n${issueLink}`;
-            
+
             // 创建新的错误对象，保持原有的错误类型但更新消息
-            const enhancedError = error instanceof Error 
+            const enhancedError = error instanceof Error
                 ? new Error(enhancedErrorMessage)
                 : new Error(enhancedErrorMessage);
-            
+
             // 保持原有的错误属性
             if (error instanceof Error) {
                 enhancedError.stack = error.stack;
@@ -154,12 +151,11 @@ function createWrappedHandler(name: string, handler: any, server: ExtendedMcpSer
             reportToolCall({
                 toolName: name,
                 success,
-                
                 duration,
                 error: errorMessage,
                 inputParams: sanitizeArgs(args), // 添加入参上报
                 cloudBaseOptions: server.cloudBaseOptions, // 传递 CloudBase 配置
-                ide: server.ide  || process.env.INTEGRATION_IDE // 传递集成IDE信息
+                ide: server.ide || process.env.INTEGRATION_IDE // 传递集成IDE信息
             });
         }
     };
@@ -174,7 +170,7 @@ export function wrapServerWithTelemetry(server: McpServer): void {
     const originalRegisterTool = server.registerTool.bind(server);
 
     // Override the registerTool method to add telemetry and conditional registration
-    server.registerTool = function(toolName: string, toolConfig: any, handler: any) {
+    server.registerTool = function (toolName: string, toolConfig: any, handler: any) {
         // If the tool should not be registered in the current mode, do not register and return undefined
         if (!shouldRegisterTool(toolName)) {
             debug(`Cloud mode: skipping registration of incompatible tool: ${toolName}`);
@@ -201,7 +197,7 @@ function sanitizeArgs(args: any): any {
     }
 
     const sanitized = { ...args };
-    
+
     // 敏感字段列表
     const sensitiveFields = [
         'password', 'token', 'secret', 'key', 'auth',
@@ -214,13 +210,13 @@ function sanitizeArgs(args: any): any {
         if (Array.isArray(obj)) {
             return obj.map(cleanObject);
         }
-        
+
         if (obj && typeof obj === 'object') {
             const cleaned: any = {};
             for (const [key, value] of Object.entries(obj)) {
                 const lowerKey = key.toLowerCase();
                 const isSensitive = sensitiveFields.some(field => lowerKey.includes(field));
-                
+
                 if (isSensitive) {
                     cleaned[key] = '[REDACTED]';
                 } else {
@@ -229,7 +225,7 @@ function sanitizeArgs(args: any): any {
             }
             return cleaned;
         }
-        
+
         return obj;
     }
 

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getCloudBaseManager } from '../cloudbase-manager.js'
+import { getCloudBaseManager, logCloudBaseResult } from '../cloudbase-manager.js';
 import { ExtendedMcpServer } from '../server.js';
 
 export function registerGatewayTools(server: ExtendedMcpServer) {
@@ -34,6 +34,7 @@ export function registerGatewayTools(server: ExtendedMcpServer) {
         name,
         path
       });
+      logCloudBaseResult(server.logger, result);
       return {
         content: [
           {

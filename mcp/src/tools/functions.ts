@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getCloudBaseManager } from '../cloudbase-manager.js'
+import { getCloudBaseManager, logCloudBaseResult } from '../cloudbase-manager.js';
 import { ExtendedMcpServer } from '../server.js';
 
 import path from 'path';
@@ -43,17 +43,17 @@ export const TRIGGER_CONFIG_EXAMPLES = {
  */
 function processFunctionRootPath(functionRootPath: string | undefined, functionName: string): string | undefined {
   if (!functionRootPath) return functionRootPath;
-  
+
   const normalizedPath = path.normalize(functionRootPath);
   const lastDir = path.basename(normalizedPath);
-  
+
   // 如果路径的最后一级目录名与函数名相同，说明用户可能传入了包含函数名的路径
   if (lastDir === functionName) {
     const parentPath = path.dirname(normalizedPath);
     console.warn(`检测到 functionRootPath 包含函数名 "${functionName}"，已自动调整为父目录: ${parentPath}`);
     return parentPath;
   }
-  
+
   return functionRootPath;
 }
 
@@ -83,24 +83,25 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         category: "functions"
       }
     },
-    async ({ 
-      action = "list", 
-      limit, 
-      offset, 
-      name, 
-      codeSecret 
-    }: { 
-      action?: "list" | "detail"; 
-      limit?: number; 
-      offset?: number; 
-      name?: string; 
-      codeSecret?: string; 
+    async ({
+      action = "list",
+      limit,
+      offset,
+      name,
+      codeSecret
+    }: {
+      action?: "list" | "detail";
+      limit?: number;
+      offset?: number;
+      name?: string;
+      codeSecret?: string;
     }) => {
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
-      
+
       if (action === "list") {
         const result = await cloudbase.functions.getFunctionList(limit, offset);
+        logCloudBaseResult(server.logger, result);
         return {
           content: [
             {
@@ -114,6 +115,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
           throw new Error("获取函数详情时，name 参数是必需的");
         }
         const result = await cloudbase.functions.getFunctionDetail(name, codeSecret);
+        logCloudBaseResult(server.logger, result);
         return {
           content: [
             {
@@ -186,12 +188,12 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
           func.runtime = normalizedRuntime;
         }
       }
-      
+
       // 验证 runtime 是否有效
       if (!SUPPORTED_NODEJS_RUNTIMES.includes(func.runtime)) {
         throw new Error(`不支持的运行时环境: "${func.runtime}"。支持的值：${SUPPORTED_NODEJS_RUNTIMES.join(', ')}`);
       }
-      
+
       // 强制设置 installDependency 为 true（不暴露给AI）
       func.installDependency = true;
 
@@ -205,6 +207,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         functionRootPath: processedRootPath,
         force
       });
+      logCloudBaseResult(server.logger, result);
       return {
         content: [
           {
@@ -256,7 +259,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         },
         functionRootPath: processedRootPath
       };
-      
+
       // 如果提供了zipFile，则添加到参数中
       if (zipFile) {
         updateParams.zipFile = zipFile;
@@ -265,6 +268,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
       const result = await cloudbase.functions.updateFunctionCode(updateParams);
+      logCloudBaseResult(server.logger, result);
       return {
         content: [
           {
@@ -310,6 +314,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
       const result = await cloudbase.functions.updateFunctionConfig(funcParam);
+      logCloudBaseResult(server.logger, result);
       return {
         content: [
           {
@@ -345,6 +350,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
       const result = await cloudbase.functions.invokeFunction(name, params);
+      logCloudBaseResult(server.logger, result);
       return {
         content: [
           {
@@ -390,6 +396,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
       }
       const cloudbase = await getManager();
       const result = await cloudbase.functions.getFunctionLogsV2({ name, offset, limit, startTime, endTime, requestId, qualifier });
+      logCloudBaseResult(server.logger, result);
       return {
         content: [
           {
@@ -432,6 +439,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         endTime,
         logRequestId: requestId
       });
+      logCloudBaseResult(server.logger, result);
       return {
         content: [
           {
@@ -467,20 +475,21 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
         category: "functions"
       }
     },
-    async ({ action, name, triggers, triggerName }: { 
-      action: "create" | "delete"; 
-      name: string; 
-      triggers?: any[]; 
-      triggerName?: string; 
+    async ({ action, name, triggers, triggerName }: {
+      action: "create" | "delete";
+      name: string;
+      triggers?: any[];
+      triggerName?: string;
     }) => {
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
-      
+
       if (action === "create") {
         if (!triggers || triggers.length === 0) {
           throw new Error("创建触发器时，triggers 参数是必需的");
         }
         const result = await cloudbase.functions.createFunctionTriggers(name, triggers);
+        logCloudBaseResult(server.logger, result);
         return {
           content: [
             {
@@ -494,6 +503,7 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
           throw new Error("删除触发器时，triggerName 参数是必需的");
         }
         const result = await cloudbase.functions.deleteFunctionTrigger(name, triggerName);
+        logCloudBaseResult(server.logger, result);
         return {
           content: [
             {

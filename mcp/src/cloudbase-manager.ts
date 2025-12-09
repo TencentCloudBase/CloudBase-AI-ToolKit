@@ -1,7 +1,7 @@
 import CloudBase from "@cloudbase/manager-node";
 import { getLoginState } from './auth.js';
 import { autoSetupEnvironmentId } from './tools/interactive.js';
-import { CloudBaseOptions } from './types.js';
+import { CloudBaseOptions, Logger } from './types.js';
 import { debug, error } from './utils/logger.js';
 const ENV_ID_TIMEOUT = 600000; // 10 minutes (600 seconds) - matches InteractiveServer timeout
 
@@ -190,6 +190,44 @@ export function createCloudBaseManagerWithOptions(cloudBaseOptions: CloudBaseOpt
     });
 
     return manager;
+}
+
+/**
+ * Extract RequestId from result object
+ */
+export function extractRequestId(result: any): string | undefined {
+    if (!result || typeof result !== 'object') {
+        return undefined;
+    }
+
+    // Try common RequestId field names
+    if ('RequestId' in result && result.RequestId) {
+        return String(result.RequestId);
+    }
+    if ('requestId' in result && result.requestId) {
+        return String(result.requestId);
+    }
+    if ('request_id' in result && result.request_id) {
+        return String(result.request_id);
+    }
+
+    return undefined;
+}
+
+/**
+ * Log CloudBase manager call result with RequestId
+ */
+export function logCloudBaseResult(logger: Logger | undefined, result: any): void {
+    if (!logger) {
+        return;
+    }
+
+    const requestId = extractRequestId(result);
+    logger({
+        type: 'capiResult',
+        requestId,
+        result,
+    });
 }
 
 // 导出环境管理器实例供其他地方使用

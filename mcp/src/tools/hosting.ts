@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { z } from "zod";
-import { getCloudBaseManager, getEnvId } from '../cloudbase-manager.js';
+import { getCloudBaseManager, getEnvId, logCloudBaseResult } from '../cloudbase-manager.js';
 import { ExtendedMcpServer } from '../server.js';
 import { sendDeployNotification } from '../utils/notification.js';
 
@@ -48,11 +48,11 @@ export function registerHostingTools(server: ExtendedMcpServer) {
         category: "hosting"
       }
     },
-    async ({ localPath, cloudPath, files = [], ignore }: { 
-      localPath?: string; 
-      cloudPath?: string; 
-      files?: Array<{localPath: string; cloudPath: string}>; 
-      ignore?: string | string[] 
+    async ({ localPath, cloudPath, files = [], ignore }: {
+      localPath?: string;
+      cloudPath?: string;
+      files?: Array<{ localPath: string; cloudPath: string }>;
+      ignore?: string | string[]
     }) => {
       const cloudbase = await getManager()
       const result = await cloudbase.hosting.uploadFiles({
@@ -61,16 +61,18 @@ export function registerHostingTools(server: ExtendedMcpServer) {
         files,
         ignore
       });
-      
+      logCloudBaseResult(server.logger, result);
+
       // 获取环境信息
       const envInfo = await cloudbase.env.getEnvInfo() as ExtendedEnvInfo;
+      logCloudBaseResult(server.logger, envInfo);
       const staticDomain = envInfo.EnvInfo?.StaticStorages?.[0]?.StaticDomain;
       const accessUrl = staticDomain ? `https://${staticDomain}/${cloudPath || ''}` : "";
-      
+
       // Send deployment notification to CodeBuddy IDE
       try {
         const envId = await getEnvId(cloudBaseOptions);
-        
+
         // Extract project name from localPath
         let projectName = "unknown";
         if (localPath) {
@@ -87,10 +89,10 @@ export function registerHostingTools(server: ExtendedMcpServer) {
             projectName = path.basename(localPath);
           }
         }
-        
+
         // Build console URL
         const consoleUrl = `https://tcb.cloud.tencent.com/dev?envId=${envId}#/static-hosting`;
-        
+
         // Send notification
         await sendDeployNotification(server, {
           deployType: 'hosting',
@@ -103,7 +105,7 @@ export function registerHostingTools(server: ExtendedMcpServer) {
         // Notification failure should not affect deployment flow
         // Error is already logged in sendDeployNotification
       }
-      
+
       return {
         content: [
           {
@@ -146,6 +148,7 @@ export function registerHostingTools(server: ExtendedMcpServer) {
         cloudPath,
         isDir
       });
+      logCloudBaseResult(server.logger, result);
       return {
         content: [
           {
@@ -181,6 +184,7 @@ export function registerHostingTools(server: ExtendedMcpServer) {
         marker,
         maxKeys
       });
+      logCloudBaseResult(server.logger, result);
       return {
         content: [
           {
@@ -203,7 +207,7 @@ export function registerHostingTools(server: ExtendedMcpServer) {
         // 绑定域名参数
         domain: z.string().optional().describe("域名"),
         certId: z.string().optional().describe("证书ID（绑定域名时必需）"),
-        
+
         domains: z.array(z.string()).optional().describe("域名列表（查询配置时使用）"),
         // 修改域名参数
         domainId: z.number().optional().describe("域名ID（修改配置时必需）"),
@@ -260,6 +264,7 @@ export function registerHostingTools(server: ExtendedMcpServer) {
             domain,
             certId
           });
+          logCloudBaseResult(server.logger, result);
           break;
 
         case "delete":
@@ -269,6 +274,7 @@ export function registerHostingTools(server: ExtendedMcpServer) {
           result = await cloudbase.hosting.deleteHostingDomain({
             domain
           });
+          logCloudBaseResult(server.logger, result);
           break;
 
         case "check":
@@ -278,6 +284,7 @@ export function registerHostingTools(server: ExtendedMcpServer) {
           result = await cloudbase.hosting.tcbCheckResource({
             domains
           });
+          logCloudBaseResult(server.logger, result);
           break;
 
         case "modify":
@@ -289,6 +296,7 @@ export function registerHostingTools(server: ExtendedMcpServer) {
             domainId,
             domainConfig
           });
+          logCloudBaseResult(server.logger, result);
           break;
 
         default:

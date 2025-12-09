@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getCloudBaseManager, getEnvId } from "../cloudbase-manager.js";
+import { getCloudBaseManager, getEnvId, logCloudBaseResult } from "../cloudbase-manager.js";
 import { ExtendedMcpServer } from "../server.js";
 
 // 导入Mermaid转换功能
@@ -175,8 +175,8 @@ function generateSDKDocs(
         return field.format === "email"
           ? '"user@example.com"'
           : field.format === "url"
-          ? '"https://example.com"'
-          : `"示例${field.title || field.name}"`;
+            ? '"https://example.com"'
+            : `"示例${field.title || field.name}"`;
       case "number":
         return field.format === "currency" ? "99.99" : "1";
       case "boolean":
@@ -207,8 +207,7 @@ function generateSDKDocs(
   const createDataExample = mainFields
     .map(
       (field) =>
-        `    ${field.name}: ${generateFieldValue(field)}, // ${
-          field.description || field.title || field.name
+        `    ${field.name}: ${generateFieldValue(field)}, // ${field.description || field.title || field.name
         }`
     )
     .join("\n");
@@ -218,8 +217,7 @@ function generateSDKDocs(
     .slice(0, 2)
     .map(
       (field) =>
-        `    ${field.name}: ${generateFieldValue(field)}, // ${
-          field.description || field.title || field.name
+        `    ${field.name}: ${generateFieldValue(field)}, // ${field.description || field.title || field.name
         }`
     )
     .join("\n");
@@ -228,10 +226,9 @@ function generateSDKDocs(
   const queryField = stringFields[0] || mainFields[0];
   const queryExample = queryField
     ? `      ${queryField.name}: {\n        $eq: ${generateFieldValue(
-        queryField
-      )}, // 根据${
-        queryField.description || queryField.title || queryField.name
-      }查询\n      },`
+      queryField
+    )}, // 根据${queryField.description || queryField.title || queryField.name
+    }查询\n      },`
     : '      _id: {\n        $eq: "记录ID", // 根据ID查询\n      },';
 
   return `# 数据模型 ${modelTitle} (${modelName}) SDK 使用文档
@@ -239,51 +236,50 @@ function generateSDKDocs(
 ## 数据模型字段说明
 
 ${userFields
-  .map((field) => {
-    let fieldDoc = `- **${field.name}** (${field.type})`;
-    if (field.required) fieldDoc += " *必填*";
-    if (field.description) fieldDoc += `: ${field.description}`;
-    if (field.format) fieldDoc += ` [格式: ${field.format}]`;
-    if (field.enum) fieldDoc += ` [可选值: ${field.enum.join(", ")}]`;
-    if (field.default !== undefined) fieldDoc += ` [默认值: ${field.default}]`;
+      .map((field) => {
+        let fieldDoc = `- **${field.name}** (${field.type})`;
+        if (field.required) fieldDoc += " *必填*";
+        if (field.description) fieldDoc += `: ${field.description}`;
+        if (field.format) fieldDoc += ` [格式: ${field.format}]`;
+        if (field.enum) fieldDoc += ` [可选值: ${field.enum.join(", ")}]`;
+        if (field.default !== undefined) fieldDoc += ` [默认值: ${field.default}]`;
 
-    // 添加复杂字段结构的说明
-    if (field.type === "array" && field.items) {
-      fieldDoc += `\n  - 数组元素: ${field.items.type}`;
-      if (field.items.description) fieldDoc += ` (${field.items.description})`;
-    }
-    if (
-      field.type === "object" &&
-      field.properties &&
-      field.properties.length > 0
-    ) {
-      fieldDoc += `\n  - 对象属性:`;
-      field.properties.slice(0, 3).forEach((prop: any) => {
-        fieldDoc += `\n    - ${prop.name} (${prop.type})`;
-      });
-      if (field.properties.length > 3) {
-        fieldDoc += `\n    - ... 还有 ${field.properties.length - 3} 个属性`;
-      }
-    }
+        // 添加复杂字段结构的说明
+        if (field.type === "array" && field.items) {
+          fieldDoc += `\n  - 数组元素: ${field.items.type}`;
+          if (field.items.description) fieldDoc += ` (${field.items.description})`;
+        }
+        if (
+          field.type === "object" &&
+          field.properties &&
+          field.properties.length > 0
+        ) {
+          fieldDoc += `\n  - 对象属性:`;
+          field.properties.slice(0, 3).forEach((prop: any) => {
+            fieldDoc += `\n    - ${prop.name} (${prop.type})`;
+          });
+          if (field.properties.length > 3) {
+            fieldDoc += `\n    - ... 还有 ${field.properties.length - 3} 个属性`;
+          }
+        }
 
-    return fieldDoc;
-  })
-  .join("\n")}
+        return fieldDoc;
+      })
+      .join("\n")}
 
-${
-  relations.length > 0
-    ? `
+${relations.length > 0
+      ? `
 ## 关联关系
 
 ${relations
-  .map(
-    (rel) =>
-      `- **${rel.field}**: 关联到 ${rel.targetModel} 模型的 ${rel.foreignKey} 字段`
-  )
-  .join("\n")}
+        .map(
+          (rel) =>
+            `- **${rel.field}**: 关联到 ${rel.targetModel} 模型的 ${rel.foreignKey} 字段`
+        )
+        .join("\n")}
 `
-    : ""
-}
+      : ""
+    }
 
 ## 增删改查操作
 
@@ -450,14 +446,13 @@ console.log(data);
 // {
 //   "_id": "记录ID",
 ${userFields
-  .slice(0, 5)
-  .map(
-    (field) =>
-      `//   "${field.name}": ${generateFieldValue(field)}, // ${
-        field.description || field.title || field.name
-      }`
-  )
-  .join("\n")}
+      .slice(0, 5)
+      .map(
+        (field) =>
+          `//   "${field.name}": ${generateFieldValue(field)}, // ${field.description || field.title || field.name
+          }`
+      )
+      .join("\n")}
 //   "createdAt": 1717488585078,
 //   "updatedAt": 1717490751944
 // }
@@ -482,14 +477,13 @@ console.log(data);
 //     {
 //       "_id": "记录ID1",
 ${userFields
-  .slice(0, 3)
-  .map(
-    (field) =>
-      `//       "${field.name}": ${generateFieldValue(field)}, // ${
-        field.description || field.title || field.name
-      }`
-  )
-  .join("\n")}
+      .slice(0, 3)
+      .map(
+        (field) =>
+          `//       "${field.name}": ${generateFieldValue(field)}, // ${field.description || field.title || field.name
+          }`
+      )
+      .join("\n")}
 //       "createdAt": 1717488585078,
 //       "updatedAt": 1717490751944
 //     },
@@ -508,61 +502,54 @@ ${userFields
 const { data } = await models.${modelName}.list({
   filter: {
     where: {
-${
-  queryField
-    ? `      ${queryField.name}: {
-        $eq: ${generateFieldValue(queryField)}, // ${
-        queryField.description || queryField.title || queryField.name
+${queryField
+      ? `      ${queryField.name}: {
+        $eq: ${generateFieldValue(queryField)}, // ${queryField.description || queryField.title || queryField.name
       }等于指定值
       },`
-    : '      _id: { $eq: "记录ID" },'
-}
+      : '      _id: { $eq: "记录ID" },'
+    }
     },
   },
 });
 
-${
-  stringFields.length > 0
-    ? `// 模糊查询
+${stringFields.length > 0
+      ? `// 模糊查询
 const { data: searchData } = await models.${modelName}.list({
   filter: {
     where: {
       ${stringFields[0].name}: {
-        $regex: "关键词", // ${
-          stringFields[0].description ||
-          stringFields[0].title ||
-          stringFields[0].name
-        }包含关键词
+        $regex: "关键词", // ${stringFields[0].description ||
+      stringFields[0].title ||
+      stringFields[0].name
+      }包含关键词
       },
     },
   },
 });`
-    : ""
-}
+      : ""
+    }
 
-${
-  numberFields.length > 0
-    ? `// 范围查询
+${numberFields.length > 0
+      ? `// 范围查询
 const { data: rangeData } = await models.${modelName}.list({
   filter: {
     where: {
       ${numberFields[0].name}: {
-        $gte: 10, // ${
-          numberFields[0].description ||
-          numberFields[0].title ||
-          numberFields[0].name
-        }大于等于10
-        $lte: 100, // ${
-          numberFields[0].description ||
-          numberFields[0].title ||
-          numberFields[0].name
-        }小于等于100
+        $gte: 10, // ${numberFields[0].description ||
+      numberFields[0].title ||
+      numberFields[0].name
+      }大于等于10
+        $lte: 100, // ${numberFields[0].description ||
+      numberFields[0].title ||
+      numberFields[0].name
+      }小于等于100
       },
     },
   },
 });`
-    : ""
-}
+      : ""
+    }
 \`\`\`
 
 ### 排序
@@ -573,29 +560,26 @@ const { data } = await models.${modelName}.list({
     where: {},
     orderBy: [
       {
-        ${
-          mainFields[0]
-            ? `${mainFields[0].name}: "asc", // 按${
-                mainFields[0].description ||
-                mainFields[0].title ||
-                mainFields[0].name
-              }升序`
-            : '_id: "desc", // 按ID降序'
-        }
+        ${mainFields[0]
+      ? `${mainFields[0].name}: "asc", // 按${mainFields[0].description ||
+      mainFields[0].title ||
+      mainFields[0].name
+      }升序`
+      : '_id: "desc", // 按ID降序'
+    }
       },
     ],
   },
 });
 \`\`\`
 
-${
-  relations.length > 0
-    ? `
+${relations.length > 0
+      ? `
 ## 关联查询
 
 ${relations
-  .map(
-    (rel) => `
+        .map(
+          (rel) => `
 ### 查询关联的 ${rel.targetModel} 数据
 
 \`\`\`javascript
@@ -612,22 +596,21 @@ const { data } = await models.${modelName}.list({
 console.log(data.records[0].${rel.field});
 \`\`\`
 `
-  )
-  .join("")}
+        )
+        .join("")}
 `
-    : ""
-}
+      : ""
+    }
 
 ## 更多操作
 
 更多高级查询、分页、聚合等操作，请参考：
 - [查询和筛选](https://docs.cloudbase.net/model/select)
 - [过滤和排序](https://docs.cloudbase.net/model/filter-and-sort)
-${
-  relations.length > 0
-    ? "- [关联关系](https://docs.cloudbase.net/model/relation)"
-    : ""
-}
+${relations.length > 0
+      ? "- [关联关系](https://docs.cloudbase.net/model/relation)"
+      : ""
+    }
 `;
 }
 
@@ -692,6 +675,7 @@ export function registerDataModelTools(server: ExtendedMcpServer) {
                   Name: name,
                 },
               });
+              logCloudBaseResult(server.logger, result);
 
               // 只保留基础字段，过滤掉冗余信息，并简化Schema
               let simplifiedSchema = null;
@@ -862,6 +846,7 @@ export function registerDataModelTools(server: ExtendedMcpServer) {
               Action: "DescribeDataSourceList",
               Param: listParams,
             });
+            logCloudBaseResult(server.logger, result);
 
             const models = result.Data?.Rows || [];
 
@@ -907,6 +892,7 @@ export function registerDataModelTools(server: ExtendedMcpServer) {
                   Name: name,
                 },
               });
+              logCloudBaseResult(server.logger, result);
 
               if (!result.Data) {
                 throw new Error(`数据模型 ${name} 不存在`);
@@ -1160,6 +1146,7 @@ classDiagram
             EnvId: currentEnvId,
           },
         });
+        logCloudBaseResult(server.logger, result);
 
         const taskId = result.Data?.TaskId;
         if (!taskId) {
@@ -1198,6 +1185,7 @@ classDiagram
               TaskId: taskId,
             },
           });
+          logCloudBaseResult(server.logger, statusResult);
 
           status = statusResult.Data?.Status || "init";
         }
@@ -1225,12 +1213,11 @@ classDiagram
                   action: action,
                   message:
                     status === "success"
-                      ? `数据模型${
-                          action === "create" ? "创建" : "更新"
-                        }成功，共处理${models.length}个模型`
+                      ? `数据模型${action === "create" ? "创建" : "更新"
+                      }成功，共处理${models.length}个模型`
                       : status === "init"
-                      ? `任务超时，任务ID: ${taskId}，请稍后手动查询状态`
-                      : `数据模型${action === "create" ? "创建" : "更新"}失败`,
+                        ? `任务超时，任务ID: ${taskId}，请稍后手动查询状态`
+                        : `数据模型${action === "create" ? "创建" : "更新"}失败`,
                   taskResult: statusResult?.Data,
                 },
                 null,

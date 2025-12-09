@@ -2,6 +2,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import winston from 'winston';
+import { isCloudMode } from './cloud-mode.js';
 // Use require for winston-daily-rotate-file to avoid webpack bundling issues
 // Handle both CommonJS and ES module exports
 const DailyRotateFileModule = require('winston-daily-rotate-file');
@@ -41,7 +42,7 @@ const shouldUseConsole = (): boolean => {
 // Custom format for log messages
 const logFormat = winston.format.printf(({ timestamp, level, message, ...metadata }) => {
   let logMessage = `[${timestamp}] [${level.toUpperCase()}] ${message}`;
-  
+
   // Append metadata if present
   if (Object.keys(metadata).length > 0) {
     // Remove winston internal fields
@@ -50,7 +51,7 @@ const logFormat = winston.format.printf(({ timestamp, level, message, ...metadat
       logMessage += ` ${JSON.stringify(data, null, 2)}`;
     }
   }
-  
+
   return logMessage;
 });
 
@@ -70,21 +71,24 @@ if (shouldUseConsole()) {
   );
 }
 
-// File transport with daily rotation
-transports.push(
-  new DailyRotateFile({
-    dirname: logDir,
-    filename: 'cloudbase-mcp-%DATE%.log',
-    datePattern: 'YYYY-MM-DD',
-    format: winston.format.combine(
-      winston.format.timestamp({ format: 'YYYY-MM-DDTHH:mm:ss.SSSZ' }),
-      logFormat
-    ),
-    maxFiles: '30d', // Keep logs for 30 days
-    maxSize: '20m', // Max file size before rotation
-    zippedArchive: false, // Don't compress old logs
-  })
-);
+if (!isCloudMode()) {
+  // File transport with daily rotation
+  transports.push(
+    new DailyRotateFile({
+      dirname: logDir,
+      filename: 'cloudbase-mcp-%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
+      format: winston.format.combine(
+        winston.format.timestamp({ format: 'YYYY-MM-DDTHH:mm:ss.SSSZ' }),
+        logFormat
+      ),
+      maxFiles: '30d', // Keep logs for 30 days
+      maxSize: '20m', // Max file size before rotation
+      zippedArchive: false, // Don't compress old logs
+    })
+  );
+
+}
 
 // Create winston logger instance
 const logger = winston.createLogger({

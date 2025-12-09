@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getCloudBaseManager, getEnvId } from "../cloudbase-manager.js";
+import { getCloudBaseManager, getEnvId, logCloudBaseResult } from "../cloudbase-manager.js";
 import { ExtendedMcpServer } from "../server.js";
 import { READ_SECURITY_RULE, WRITE_SECURITY_RULE } from "./security-rule.js";
 
@@ -49,6 +49,7 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
             },
           },
         });
+        logCloudBaseResult(server.logger, result);
         return {
           content: [
             {
@@ -129,6 +130,7 @@ export function registerSQLDatabaseTools(server: ExtendedMcpServer) {
             },
           },
         });
+        logCloudBaseResult(server.logger, result);
 
         return {
           content: [
