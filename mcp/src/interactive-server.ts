@@ -109,7 +109,7 @@ export class InteractiveServer {
         return;
       }
 
-      res.send(this.getEnvSetupHTML(sessionData.envs));
+      res.send(this.getEnvSetupHTML(sessionData.envs, sessionData.accountInfo));
     });
 
     this.app.get("/clarification/:sessionId", (req, res) => {
@@ -334,15 +334,19 @@ export class InteractiveServer {
     });
   }
 
-  async collectEnvId(availableEnvs: any[]): Promise<InteractiveResult> {
+  async collectEnvId(
+    availableEnvs: any[],
+    accountInfo?: { uin?: string },
+  ): Promise<InteractiveResult> {
     try {
       info("Starting environment ID collection...");
       debug(`Available environments: ${availableEnvs.length}`);
+      debug(`Account info:`, accountInfo);
 
       const port = await this.start();
 
       const sessionId = Math.random().toString(36).substring(2, 15);
-      this.sessionData.set(sessionId, { envs: availableEnvs });
+      this.sessionData.set(sessionId, { envs: availableEnvs, accountInfo });
       debug(`Created session: ${sessionId}`);
 
       setTimeout(
@@ -431,7 +435,12 @@ export class InteractiveServer {
     });
   }
 
-  private getEnvSetupHTML(envs?: any[]): string {
+  private getEnvSetupHTML(
+    envs?: any[],
+    accountInfo?: { uin?: string },
+  ): string {
+    const accountDisplay = accountInfo?.uin ? `UIN: ${accountInfo.uin}` : "";
+
     return `
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -642,9 +651,62 @@ export class InteractiveServer {
 
         .content-subtitle {
             color: var(--text-secondary);
-            margin-bottom: 24px;
+            margin-bottom: 16px;
             line-height: 1.5;
             animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .account-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: rgba(103, 233, 233, 0.06);
+            border: 1px solid rgba(103, 233, 233, 0.15);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease-out 0.5s both;
+        }
+
+        .account-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--accent-color);
+        }
+
+        .account-info svg {
+            flex-shrink: 0;
+            opacity: 0.8;
+        }
+
+        .account-info span {
+            font-family: var(--font-mono);
+        }
+
+        .btn-switch {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            background: transparent;
+            border: 1px solid rgba(103, 233, 233, 0.3);
+            border-radius: 6px;
+            color: var(--accent-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-mono);
+        }
+
+        .btn-switch:hover {
+            background: rgba(103, 233, 233, 0.1);
+            border-color: var(--accent-color);
+        }
+
+        .btn-switch svg {
+            flex-shrink: 0;
         }
 
         @keyframes fadeInUp {
@@ -965,6 +1027,24 @@ export class InteractiveServer {
             <h1 class="content-title">选择 CloudBase 环境</h1>
             <p class="content-subtitle">请选择您要使用的 CloudBase 环境</p>
 
+            <div class="account-bar">
+                <div class="account-info">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span>${accountDisplay ? `当前账号: ${accountDisplay}` : '未登录'}</span>
+                </div>
+                <button class="btn btn-switch" onclick="switchAccount()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="8.5" cy="7" r="4"/>
+                        <path d="M20 8v6M23 11h-6"/>
+                    </svg>
+                    切换账号
+                </button>
+            </div>
+
             <div class="env-list" id="envList">
                 ${
                   (envs || []).length > 0
@@ -999,14 +1079,6 @@ export class InteractiveServer {
             </div>
 
             <div class="actions">
-                <button class="btn btn-secondary" onclick="switchAccount()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="8.5" cy="7" r="4"/>
-                        <path d="M20 8v6M23 11h-6"/>
-                    </svg>
-                    切换账号
-                </button>
                 <button class="btn btn-secondary" onclick="cancel()">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M18 6L6 18M6 6l12 12"/>

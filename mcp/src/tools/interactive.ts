@@ -214,7 +214,15 @@ export async function _promptAndSetEnvironmentId(
     selectedEnvId = EnvList[0].EnvId;
   } else {
     const interactiveServer = getInteractiveServer(server);
-    const result = await interactiveServer.collectEnvId(EnvList || []);
+    // 提取账号 UIN 用于显示
+    const accountInfo: { uin?: string } = {};
+    if (loginState && typeof loginState === "object" && "uin" in loginState) {
+      accountInfo.uin = String(loginState.uin);
+    }
+    const result = await interactiveServer.collectEnvId(
+      EnvList || [],
+      accountInfo,
+    );
 
     if (result.cancelled) {
       return { selectedEnvId: null, cancelled: true };
