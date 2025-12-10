@@ -120,6 +120,24 @@ const tutorials: Tutorial[] = [
   },
   // 视频
   {
+    id: 'video-ai-programming-deploy',
+    title: 'AI编程，一键部署',
+    description: '腾讯云云开发',
+    category: '视频教程',
+    url: 'https://www.bilibili.com/video/BV1Honwz1E64/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
+    type: 'video',
+    thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1Honwz1E64.jpg',
+  },
+  {
+    id: 'video-mbti-dating',
+    title: '我用AI做了个MBTI交友网站：从写代码到部署上线，AI+MCP 全部自己搞定！简直离谱！',
+    description: '御风大世界',
+    category: '视频教程',
+    url: 'https://www.bilibili.com/video/BV1QG3EzjEFZ/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
+    type: 'video',
+    thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1QG3EzjEFZ.jpg',
+  },
+  {
     id: 'video-ai-try-on',
     title: 'AI编程：从0到1开发一个AI试衣小程序！免费分享 | 含源码',
     description: '熠辉IndieDev',

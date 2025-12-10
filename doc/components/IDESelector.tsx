@@ -533,8 +533,38 @@ export default function IDESelector({
   collapseStep1 = false
 }: IDESelectorProps) {
   const { i18n } = useDocusaurusContext();
-  const locale = i18n.currentLocale || i18n.defaultLocale || 'zh-CN';
-  const t = translations[locale] || translations['zh-CN'];
+  // Normalize locale: zh-Hans -> zh-CN, en -> en
+  const rawLocale = i18n?.currentLocale || i18n?.defaultLocale || 'zh-CN';
+  const locale = rawLocale === 'zh-Hans' ? 'zh-CN' : (rawLocale === 'en' ? 'en' : 'zh-CN');
+  const isEnglish = locale === 'en';
+
+  // Get translations with fallback chain
+  const t = translations[locale] || translations['zh-CN'] || translations['en'] || {};
+
+  // Safe helper function to replace {name} placeholder
+  const getOpenInIDEText = (ideName?: string): string => {
+    const name = ideName || 'IDE';
+    // Try to get template from translations
+    let template = t?.openInIDE;
+
+    // Fallback to default based on locale
+    if (!template || typeof template !== 'string') {
+      template = isEnglish ? 'Open with {name}' : '用 {name} 打开';
+    }
+
+    // Final safety check
+    if (typeof template !== 'string') {
+      return isEnglish ? `Open with ${name}` : `用 ${name} 打开`;
+    }
+
+    // Perform replacement
+    try {
+      return template.replace('{name}', name);
+    } catch (error) {
+      // Ultimate fallback if replace fails
+      return isEnglish ? `Open with ${name}` : `用 ${name} 打开`;
+    }
+  };
 
   const [selectedIDE, setSelectedIDE] = useState<string>(defaultIDE || 'cursor');
   const [isOpen, setIsOpen] = useState(false);
@@ -1273,7 +1303,7 @@ export default function IDESelector({
                 <button
                   onClick={handleOpenIDE}
                   className={styles.openIDEButton}
-                  title={t.openInIDE.replace('{name}', ide.name) || `用 ${ide.name} 打开`}
+                  title={getOpenInIDEText(ide?.name)}
                 >
                   {getIconUrl(ide) && (
                     <img
@@ -1282,7 +1312,7 @@ export default function IDESelector({
                       className={styles.openIDEIcon}
                     />
                   )}
-                  <span>{t.openInIDE.replace('{name}', ide.name) || `用 ${ide.name} 打开`}</span>
+                  <span>{getOpenInIDEText(ide?.name)}</span>
                 </button>
               )}
               <button
