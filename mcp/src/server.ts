@@ -102,6 +102,8 @@ export interface ExtendedMcpServer extends McpServer {
   cloudBaseOptions?: CloudBaseOptions;
   ide?: string;
   logger?: Logger;
+
+  setLogger(logger: Logger): void;
 }
 
 /**
@@ -182,6 +184,10 @@ export async function createCloudBaseMcpServer(options?: {
 
   // Store logger in server instance for tools to access
   if (logger) {
+    server.logger = logger;
+  }
+
+  server.setLogger = (logger: Logger) => {
     server.logger = logger;
   }
 
