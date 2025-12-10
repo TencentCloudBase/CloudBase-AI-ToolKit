@@ -1,6 +1,6 @@
 {
   "name": "@cloudbase/cloudbase-mcp",
-  "version": "2.3.1",
+  "version": "2.4.0-alpha.0",
   "description": "腾讯云开发 MCP Server，通过AI提示词和MCP协议+云开发，让开发更智能、更高效,当你在Cursor/ VSCode GitHub Copilot/WinSurf/CodeBuddy/Augment Code/Claude Code等AI编程工具里写代码时，它能自动帮你生成可直接部署的前后端应用+小程序，并一键发布到腾讯云开发 CloudBase。",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -66,6 +66,7 @@
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "fd-slicer": "^1.1.0",
+    "lockfile": "^1.0.4",
     "miniprogram-ci": "^2.1.14",
     "open": "^10.1.2",
     "punycode": "^2.3.1",
@@ -86,6 +87,7 @@
     "@rollup/plugin-typescript": "^12.1.2",
     "@types/express": "^5.0.3",
     "@types/jest": "^30.0.0",
+    "@types/lockfile": "^1.0.4",
     "@types/node": "^22.10.2",
     "@types/ws": "^8.5.12",
     "buffer": "^6.0.3",
