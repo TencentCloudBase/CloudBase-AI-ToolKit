@@ -36,48 +36,77 @@ export function registerEnvTools(server: ExtendedMcpServer) {
     },
     async ({ forceUpdate = false }: { forceUpdate?: boolean }) => {
       try {
-        const { selectedEnvId, cancelled, error, noEnvs } =
-          await _promptAndSetEnvironmentId(forceUpdate, server);
+        // 使用 while 循环处理用户切换账号的情况
+        while (true) {
+          const {
+            selectedEnvId,
+            cancelled,
+            error,
+            noEnvs,
+            switch: switchAccount,
+          } = await _promptAndSetEnvironmentId(forceUpdate, server);
 
-        debug("login", { selectedEnvId, cancelled, error, noEnvs });
+          debug("login", {
+            selectedEnvId,
+            cancelled,
+            error,
+            noEnvs,
+            switchAccount,
+          });
 
-        if (error) {
-          return { content: [{ type: "text", text: error }] };
-        }
+          if (error) {
+            return { content: [{ type: "text", text: error }] };
+          }
 
-        if (cancelled) {
-          return { content: [{ type: "text", text: "用户取消了登录" }] };
-        }
+          if (cancelled) {
+            return { content: [{ type: "text", text: "用户取消了登录" }] };
+          }
 
-        if (selectedEnvId) {
-          // Get CLAUDE.md prompt content (skip for CodeBuddy IDE)
-          let promptContent = "";
-          const currentIde = server.ide || process.env.INTEGRATION_IDE;
-          if (currentIde !== "CodeBuddy") {
+          // 用户选择切换账号，先 logout 再重新登录
+          if (switchAccount) {
+            debug("User requested switch account, logging out...");
             try {
-              promptContent = await getClaudePrompt();
-            } catch (promptError) {
-              debug("Failed to get CLAUDE prompt", { error: promptError });
-              // Continue with login success even if prompt fetch fails
+              await logout();
+              resetCloudBaseManagerCache();
+              debug("Logged out successfully, restarting login flow...");
+              // 继续循环，重新显示登录界面
+              continue;
+            } catch (logoutError) {
+              debug("Logout failed during switch", { error: logoutError });
+              continue;
             }
           }
 
-          const successMessage = `✅ 登录成功，当前环境: ${selectedEnvId}`;
-          const promptMessage = promptContent
-            ? `\n\n⚠️ 重要提示：后续所有云开发相关的开发工作必须严格遵循以下开发规范和最佳实践：\n\n${promptContent}`
-            : "";
+          if (selectedEnvId) {
+            // Get CLAUDE.md prompt content (skip for CodeBuddy IDE)
+            let promptContent = "";
+            const currentIde = server.ide || process.env.INTEGRATION_IDE;
+            if (currentIde !== "CodeBuddy") {
+              try {
+                promptContent = await getClaudePrompt();
+              } catch (promptError) {
+                debug("Failed to get CLAUDE prompt", { error: promptError });
+                // Continue with login success even if prompt fetch fails
+              }
+            }
 
-          return {
-            content: [
-              {
-                type: "text",
-                text: successMessage + promptMessage,
-              },
-            ],
-          };
+            const successMessage = `✅ 登录成功，当前环境: ${selectedEnvId}`;
+            const promptMessage = promptContent
+              ? `\n\n⚠️ 重要提示：后续所有云开发相关的开发工作必须严格遵循以下开发规范和最佳实践：\n\n${promptContent}`
+              : "";
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: successMessage + promptMessage,
+                },
+              ],
+            };
+          }
+
+          throw new Error("登录失败");
         }
-
-        throw new Error("登录失败");
       } catch (error) {
         return {
           content: [

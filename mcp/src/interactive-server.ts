@@ -46,6 +46,7 @@ export interface InteractiveResult {
   type: "envId" | "clarification" | "confirmation";
   data: any;
   cancelled?: boolean;
+  switch?: boolean;
 }
 
 export class InteractiveServer {
@@ -153,6 +154,24 @@ export class InteractiveServer {
         this.currentResolver = null;
       } else {
         warn("No resolver waiting for cancellation");
+      }
+
+      res.json({ success: true });
+    });
+
+    this.app.post("/api/switch", (req, res) => {
+      info("Received switch account request");
+
+      if (this.currentResolver) {
+        info("Resolving with switch status");
+        this.currentResolver({
+          type: "envId",
+          data: null,
+          switch: true,
+        });
+        this.currentResolver = null;
+      } else {
+        warn("No resolver waiting for switch");
       }
 
       res.json({ success: true });
@@ -980,6 +999,14 @@ export class InteractiveServer {
             </div>
 
             <div class="actions">
+                <button class="btn btn-secondary" onclick="switchAccount()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="8.5" cy="7" r="4"/>
+                        <path d="M20 8v6M23 11h-6"/>
+                    </svg>
+                    切换账号
+                </button>
                 <button class="btn btn-secondary" onclick="cancel()">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M18 6L6 18M6 6l12 12"/>
@@ -1119,6 +1146,16 @@ export class InteractiveServer {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
             }).then(() => {
+                window.close();
+            });
+        }
+
+        function switchAccount() {
+            fetch('/api/switch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            }).then(() => {
+                // 页面会由服务端重新打开新的登录页面
                 window.close();
             });
         }

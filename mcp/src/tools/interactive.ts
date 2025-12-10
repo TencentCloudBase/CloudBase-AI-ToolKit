@@ -148,6 +148,7 @@ export async function _promptAndSetEnvironmentId(
   cancelled: boolean;
   error?: string;
   noEnvs?: boolean;
+  switch?: boolean;
 }> {
   // 1. 确保用户已登录
   const loginState = await getLoginState();
@@ -217,6 +218,9 @@ export async function _promptAndSetEnvironmentId(
 
     if (result.cancelled) {
       return { selectedEnvId: null, cancelled: true };
+    }
+    if (result.switch) {
+      return { selectedEnvId: null, cancelled: false, switch: true };
     }
     selectedEnvId = result.data;
   }
