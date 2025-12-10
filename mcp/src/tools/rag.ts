@@ -1,5 +1,6 @@
 import AdmZip from "adm-zip";
 import * as fs from "fs/promises";
+import lockfile, { Options as LockfileOptions } from "lockfile";
 import * as os from "os";
 import * as path from "path";
 import { z } from "zod";
@@ -19,7 +20,37 @@ const KnowledgeBaseIdMap: Record<z.infer<typeof KnowledgeBaseEnum>, string> = {
 // ============ 缓存配置 ============
 const CACHE_BASE_DIR = path.join(os.homedir(), ".cloudbase-mcp");
 const CACHE_META_FILE = path.join(CACHE_BASE_DIR, "cache-meta.json");
+const LOCK_FILE = path.join(CACHE_BASE_DIR, ".download.lock");
 const DEFAULT_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 默认 24 小时
+
+// Promise wrapper for lockfile methods
+function acquireLock(
+  lockPath: string,
+  options?: LockfileOptions,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (options) {
+      lockfile.lock(lockPath, options, (err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+    } else {
+      lockfile.lock(lockPath, (err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+    }
+  });
+}
+
+function releaseLock(lockPath: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    lockfile.unlock(lockPath, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+}
 // 支持环境变量 CLOUDBASE_MCP_CACHE_TTL_MS 控制缓存过期时间（毫秒）
 const parsedCacheTTL = process.env.CLOUDBASE_MCP_CACHE_TTL_MS
   ? parseInt(process.env.CLOUDBASE_MCP_CACHE_TTL_MS, 10)
@@ -124,32 +155,32 @@ const OPENAPI_SOURCES: Array<{
   description: string;
   url: string;
 }> = [
-  {
-    name: "mysqldb",
-    description: "MySQL RESTful API - 云开发 MySQL 数据库 HTTP API",
-    url: "https://docs.cloudbase.net/openapi/mysqldb.v1.openapi.yaml",
-  },
-  {
-    name: "functions",
-    description: "Cloud Functions API - 云函数 HTTP API",
-    url: "https://docs.cloudbase.net/openapi/functions.v1.openapi.yaml",
-  },
-  {
-    name: "auth",
-    description: "Authentication API - 身份认证 HTTP API",
-    url: "https://docs.cloudbase.net/openapi/auth.v1.openapi.yaml",
-  },
-  {
-    name: "cloudrun",
-    description: "CloudRun API - 云托管服务 HTTP API",
-    url: "https://docs.cloudbase.net/openapi/cloudrun.v1.openapi.yaml",
-  },
-  {
-    name: "storage",
-    description: "Storage API - 云存储 HTTP API",
-    url: "https://docs.cloudbase.net/openapi/storage.v1.openapi.yaml",
-  },
-];
+    {
+      name: "mysqldb",
+      description: "MySQL RESTful API - 云开发 MySQL 数据库 HTTP API",
+      url: "https://docs.cloudbase.net/openapi/mysqldb.v1.openapi.yaml",
+    },
+    {
+      name: "functions",
+      description: "Cloud Functions API - 云函数 HTTP API",
+      url: "https://docs.cloudbase.net/openapi/functions.v1.openapi.yaml",
+    },
+    {
+      name: "auth",
+      description: "Authentication API - 身份认证 HTTP API",
+      url: "https://docs.cloudbase.net/openapi/auth.v1.openapi.yaml",
+    },
+    {
+      name: "cloudrun",
+      description: "CloudRun API - 云托管服务 HTTP API",
+      url: "https://docs.cloudbase.net/openapi/cloudrun.v1.openapi.yaml",
+    },
+    {
+      name: "storage",
+      description: "Storage API - 云存储 HTTP API",
+      url: "https://docs.cloudbase.net/openapi/storage.v1.openapi.yaml",
+    },
+  ];
 
 async function downloadWebTemplate() {
   const zipPath = path.join(CACHE_BASE_DIR, "web-cloudbase-project.zip");
@@ -232,21 +263,32 @@ async function downloadResources(): Promise<DownloadResult> {
   const webTemplateDir = path.join(CACHE_BASE_DIR, "web-template");
   const openAPIDir = path.join(CACHE_BASE_DIR, "openapi");
 
-  // 检查缓存是否有效
+  // 如果已有下载任务在进行中，共享该 Promise
+  if (resourceDownloadPromise) {
+    debug("[downloadResources] 共享已有下载任务");
+    return resourceDownloadPromise;
+  }
+
+  // 先快速检查缓存（不需要锁，因为只是读取）
   if (await canUseCache()) {
     try {
       // 检查两个目录都存在
       await Promise.all([fs.access(webTemplateDir), fs.access(openAPIDir)]);
       const files = await fs.readdir(openAPIDir);
       if (files.length > 0) {
-        debug("[downloadResources] 使用缓存");
+        debug("[downloadResources] 使用缓存（快速路径）");
         return {
           webTemplateDir,
           openAPIDocs: OPENAPI_SOURCES.map((source) => ({
             name: source.name,
             description: source.description,
-            absolutePath: path.join(openAPIDir, `${source.name}.openapi.yaml`),
-          })).filter((item) => files.includes(`${item.name}.openapi.yaml`)),
+            absolutePath: path.join(
+              openAPIDir,
+              `${source.name}.openapi.yaml`,
+            ),
+          })).filter((item) =>
+            files.includes(`${item.name}.openapi.yaml`),
+          ),
         };
       }
     } catch {
@@ -254,24 +296,68 @@ async function downloadResources(): Promise<DownloadResult> {
     }
   }
 
-  // 如果已有下载任务在进行中，共享该 Promise
-  if (resourceDownloadPromise) {
-    debug("[downloadResources] 共享已有下载任务");
-    return resourceDownloadPromise;
-  }
-
-  // 创建新的下载任务
+  // 创建新的下载任务，使用文件锁保护
   debug("[downloadResources] 开始新下载任务");
   await fs.mkdir(CACHE_BASE_DIR, { recursive: true });
-  resourceDownloadPromise = _doDownloadResources()
-    .then(async (result) => {
+
+  resourceDownloadPromise = (async () => {
+    // 尝试获取文件锁，最多等待 6 秒（30 次 × 200ms），每 200ms 轮询一次
+    let lockAcquired = false;
+    try {
+      await acquireLock(LOCK_FILE, {
+        wait: 30 * 200, // 总等待时间：6000ms (6 秒)
+        pollPeriod: 200, // 轮询间隔：200ms
+        stale: 5 * 60 * 1000, // 5 分钟，如果锁文件超过这个时间认为是过期的
+      });
+      lockAcquired = true;
+      debug("[downloadResources] 文件锁已获取");
+
+      // 在持有锁的情况下再次检查缓存（可能其他进程已经下载完成）
+      if (await canUseCache()) {
+        try {
+          // 检查两个目录都存在
+          await Promise.all([fs.access(webTemplateDir), fs.access(openAPIDir)]);
+          const files = await fs.readdir(openAPIDir);
+          if (files.length > 0) {
+            debug("[downloadResources] 使用缓存（在锁保护下检查）");
+            return {
+              webTemplateDir,
+              openAPIDocs: OPENAPI_SOURCES.map((source) => ({
+                name: source.name,
+                description: source.description,
+                absolutePath: path.join(
+                  openAPIDir,
+                  `${source.name}.openapi.yaml`,
+                ),
+              })).filter((item) =>
+                files.includes(`${item.name}.openapi.yaml`),
+              ),
+            };
+          }
+        } catch {
+          // 缓存无效，需要重新下载
+        }
+      }
+
+      // 执行下载
+      const result = await _doDownloadResources();
       await updateCache();
       debug("[downloadResources] 缓存已更新");
       return result;
-    })
-    .finally(() => {
-      resourceDownloadPromise = null;
-    });
+    } finally {
+      // 释放文件锁
+      if (lockAcquired) {
+        try {
+          await releaseLock(LOCK_FILE);
+          debug("[downloadResources] 文件锁已释放");
+        } catch (error) {
+          warn("[downloadResources] 释放文件锁失败", { error });
+        }
+      }
+    }
+  })().finally(() => {
+    resourceDownloadPromise = null;
+  });
 
   return resourceDownloadPromise;
 }
@@ -443,18 +529,17 @@ export async function registerRagTools(server: ExtendedMcpServer) {
 
       固定文档 (doc) 查询当前支持 ${skills.length} 个固定文档，分别是：
       ${skills
-        .map(
-          (skill) =>
-            `文档名：${path.basename(path.dirname(skill.absolutePath))} 文档介绍：${
-              skill.description
-            }`,
-        )
-        .join("\n")}
+          .map(
+            (skill) =>
+              `文档名：${path.basename(path.dirname(skill.absolutePath))} 文档介绍：${skill.description
+              }`,
+          )
+          .join("\n")}
 
       OpenAPI 文档 (openapi) 查询当前支持 ${openapis.length} 个 API 文档，分别是：
       ${openapis
-        .map((api) => `API名：${api.name} API介绍：${api.description}`)
-        .join("\n")}`,
+          .map((api) => `API名：${api.name} API介绍：${api.description}`)
+          .join("\n")}`,
       inputSchema: {
         mode: z.enum(["vector", "doc", "openapi"]),
         docName: z
