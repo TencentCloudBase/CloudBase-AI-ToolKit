@@ -1,43 +1,49 @@
-import express from 'express';
-import http from 'http';
-import open from 'open';
-import { WebSocket, WebSocketServer } from 'ws';
-import { debug, error, info, warn } from './utils/logger.js';
+import express from "express";
+import http from "http";
+import open from "open";
+import { WebSocket, WebSocketServer } from "ws";
+import { debug, error, info, warn } from "./utils/logger.js";
 
 // 动态导入 open 模块，兼容 ESM/CJS 环境
 async function openUrl(url: string, options?: any, server?: any) {
   // 检查是否为 CodeBuddy IDE (优先使用 server.ide，回退到环境变量)
   const currentIde = server?.ide || process.env.INTEGRATION_IDE;
-  if (currentIde === 'CodeBuddy' && server) {
+  if (currentIde === "CodeBuddy" && server) {
     try {
       // 发送通知而不是直接打开网页
-      server.server.sendLoggingMessage({ 
-        level: "notice", 
+      server.server.sendLoggingMessage({
+        level: "notice",
         data: {
-          "type": "tcb",
-          "url": url
-        }
+          type: "tcb",
+          url: url,
+        },
       });
       info(`CodeBuddy IDE: 已发送网页打开通知 - ${url}`);
       return;
     } catch (err) {
-      error(`Failed to send logging message for ${url}: ${err instanceof Error ? err.message : err}`, err);
+      error(
+        `Failed to send logging message for ${url}: ${err instanceof Error ? err.message : err}`,
+        err,
+      );
       // 如果发送通知失败，回退到直接打开
       warn(`回退到直接打开网页: ${url}`);
     }
   }
-  
+
   // 默认行为：直接打开网页
-  try { 
+  try {
     return await open(url, options);
   } catch (err) {
-    error(`Failed to open ${url} ${options} ${err instanceof Error ? err.message : err} `, err);
+    error(
+      `Failed to open ${url} ${options} ${err instanceof Error ? err.message : err} `,
+      err,
+    );
     warn(`Please manually open: ${url}`);
   }
 }
 
 export interface InteractiveResult {
-  type: 'envId' | 'clarification' | 'confirmation';
+  type: "envId" | "clarification" | "confirmation";
   data: any;
   cancelled?: boolean;
 }
@@ -51,36 +57,39 @@ export class InteractiveServer {
   private currentResolver: ((result: InteractiveResult) => void) | null = null;
   private sessionData: Map<string, any> = new Map();
   private _mcpServer: any = null; // 保存 MCP server 实例引用
-  
+
   // 公共 getter 和 setter
   get mcpServer(): any {
     return this._mcpServer;
   }
-  
+
   set mcpServer(server: any) {
     this._mcpServer = server;
   }
-  
+
   private readonly DEFAULT_PORT = 3721;
-  private readonly FALLBACK_PORTS = [3722, 3723, 3724, 3725, 3726, 3727, 3728, 3729, 3730, 3731, 3732, 3733, 3734, 3735];
+  private readonly FALLBACK_PORTS = [
+    3722, 3723, 3724, 3725, 3726, 3727, 3728, 3729, 3730, 3731, 3732, 3733,
+    3734, 3735,
+  ];
 
   constructor(mcpServer?: any) {
     this._mcpServer = mcpServer;
     this.app = express();
     this.server = http.createServer(this.app);
     this.wss = new WebSocketServer({ server: this.server });
-    
+
     this.setupExpress();
     this.setupWebSocket();
-    
-    process.on('exit', () => this.cleanup());
-    process.on('SIGINT', () => this.cleanup());
-    process.on('SIGTERM', () => this.cleanup());
+
+    process.on("exit", () => this.cleanup());
+    process.on("SIGINT", () => this.cleanup());
+    process.on("SIGTERM", () => this.cleanup());
   }
 
   private cleanup() {
     if (this.isRunning) {
-      debug('Cleaning up interactive server resources...');
+      debug("Cleaning up interactive server resources...");
       this.server.close();
       this.wss.close();
       this.isRunning = false;
@@ -89,82 +98,87 @@ export class InteractiveServer {
 
   private setupExpress() {
     this.app.use(express.json());
-    
-    this.app.get('/env-setup/:sessionId', (req, res) => {
+
+    this.app.get("/env-setup/:sessionId", (req, res) => {
       const { sessionId } = req.params;
       const sessionData = this.sessionData.get(sessionId);
-      
+
       if (!sessionData) {
-        res.status(404).send('会话不存在或已过期');
+        res.status(404).send("会话不存在或已过期");
         return;
       }
-      
+
       res.send(this.getEnvSetupHTML(sessionData.envs));
     });
 
-    this.app.get('/clarification/:sessionId', (req, res) => {
+    this.app.get("/clarification/:sessionId", (req, res) => {
       const { sessionId } = req.params;
       const sessionData = this.sessionData.get(sessionId);
-      
+
       if (!sessionData) {
-        res.status(404).send('会话不存在或已过期');
+        res.status(404).send("会话不存在或已过期");
         return;
       }
-      
-      res.send(this.getClarificationHTML(sessionData.message, sessionData.options));
+
+      res.send(
+        this.getClarificationHTML(sessionData.message, sessionData.options),
+      );
     });
 
-
-    this.app.post('/api/submit', (req, res) => {
+    this.app.post("/api/submit", (req, res) => {
       const { type, data } = req.body;
-      debug('Received submit request', { type, data });
-      
+      debug("Received submit request", { type, data });
+
       if (this.currentResolver) {
-        info('Resolving with user data');
+        info("Resolving with user data");
         this.currentResolver({ type, data });
         this.currentResolver = null;
       } else {
-        warn('No resolver waiting for response');
+        warn("No resolver waiting for response");
       }
-      
+
       res.json({ success: true });
     });
 
-    this.app.post('/api/cancel', (req, res) => {
-      info('Received cancel request');
-      
+    this.app.post("/api/cancel", (req, res) => {
+      info("Received cancel request");
+
       if (this.currentResolver) {
-        info('Resolving with cancelled status');
-        this.currentResolver({ type: 'clarification', data: null, cancelled: true });
+        info("Resolving with cancelled status");
+        this.currentResolver({
+          type: "clarification",
+          data: null,
+          cancelled: true,
+        });
         this.currentResolver = null;
       } else {
-        warn('No resolver waiting for cancellation');
+        warn("No resolver waiting for cancellation");
       }
-      
+
       res.json({ success: true });
     });
   }
 
   private setupWebSocket() {
-    this.wss.on('connection', (ws: WebSocket) => {
-      debug('WebSocket client connected');
-      
-      ws.on('message', (message: string) => {
+    this.wss.on("connection", (ws: WebSocket) => {
+      debug("WebSocket client connected");
+
+      ws.on("message", (message: string) => {
         try {
           const data = JSON.parse(message.toString());
-          debug('WebSocket message received', data);
-          
+          debug("WebSocket message received", data);
+
           if (this.currentResolver) {
             this.currentResolver(data);
             this.currentResolver = null;
           }
         } catch (err) {
-          error('WebSocket message parsing error', err);
+          error("WebSocket message parsing error", err);
         }
       });
 
-      ws.on('close', () => {
-        debug('WebSocket client disconnected');
+      ws.on("close", () => {
+        debug("WebSocket client disconnected");
       });
     });
   }
@@ -176,110 +190,116 @@ export class InteractiveServer {
     }
 
     return new Promise((resolve, reject) => {
-      info('Starting interactive server...');
-      
+      info("Starting interactive server...");
+
       const tryPorts = [this.DEFAULT_PORT, ...this.FALLBACK_PORTS];
       let currentIndex = 0;
-      
+
       const tryNextPort = () => {
         if (currentIndex >= tryPorts.length) {
-          const err = new Error(`All ${tryPorts.length} ports are in use (${tryPorts.join(', ')}), failed to start server`);
-          error('Server start failed', err);
+          const err = new Error(
+            `All ${tryPorts.length} ports are in use (${tryPorts.join(", ")}), failed to start server`,
+          );
+          error("Server start failed", err);
           reject(err);
           return;
         }
-        
+
         const portToTry = tryPorts[currentIndex];
         currentIndex++;
-        
-        debug(`Trying to start server on port ${portToTry} (attempt ${currentIndex}/${tryPorts.length})`);
-        
+
+        debug(
+          `Trying to start server on port ${portToTry} (attempt ${currentIndex}/${tryPorts.length})`,
+        );
+
         tryPort(portToTry);
       };
-      
+
       const tryPort = (portToTry: number) => {
         // 清除之前的所有监听器
-        this.server.removeAllListeners('error');
-        this.server.removeAllListeners('listening');
-        
+        this.server.removeAllListeners("error");
+        this.server.removeAllListeners("listening");
+
         // 设置错误处理
         const errorHandler = (err: any) => {
-          if (err.code === 'EADDRINUSE') {
+          if (err.code === "EADDRINUSE") {
             warn(`Port ${portToTry} is in use, trying next port...`);
             // 清理当前尝试
-            this.server.removeAllListeners('error');
-            this.server.removeAllListeners('listening');
+            this.server.removeAllListeners("error");
+            this.server.removeAllListeners("listening");
             tryNextPort();
           } else {
-            error('Server error', err);
+            error("Server error", err);
             reject(err);
           }
         };
-        
+
         // 设置成功监听处理
         const listeningHandler = () => {
           const address = this.server.address();
-          if (address && typeof address === 'object') {
+          if (address && typeof address === "object") {
             this.port = address.port;
             this.isRunning = true;
-            info(`Interactive server started successfully on http://localhost:${this.port}`);
+            info(
+              `Interactive server started successfully on http://localhost:${this.port}`,
+            );
             // 移除临时监听器
-            this.server.removeListener('error', errorHandler);
-            this.server.removeListener('listening', listeningHandler);
+            this.server.removeListener("error", errorHandler);
+            this.server.removeListener("listening", listeningHandler);
             resolve(this.port);
           } else {
-            const err = new Error('Failed to get server address');
-            error('Server start error', err);
+            const err = new Error("Failed to get server address");
+            error("Server start error", err);
             reject(err);
           }
         };
-        
-        this.server.once('error', errorHandler);
-        this.server.once('listening', listeningHandler);
+
+        this.server.once("error", errorHandler);
+        this.server.once("listening", listeningHandler);
 
         try {
-          this.server.listen(portToTry, '127.0.0.1');
+          this.server.listen(portToTry, "127.0.0.1");
         } catch (err) {
           error(`Failed to bind to port ${portToTry}:`, err);
           tryNextPort();
         }
       };
-      
+
       tryNextPort();
     });
   }
 
   async stop() {
     if (!this.isRunning) {
-      debug('Interactive server is not running, nothing to stop');
+      debug("Interactive server is not running, nothing to stop");
       return;
     }
 
-    info('Stopping interactive server...');
-    
+    info("Stopping interactive server...");
+
     return new Promise<void>((resolve, reject) => {
       // 设置超时，防止无限等待
       const timeout = setTimeout(() => {
-        warn('Server close timeout, forcing cleanup');
+        warn("Server close timeout, forcing cleanup");
         this.isRunning = false;
         this.port = 0;
         resolve();
       }, 30000);
-      
+
       try {
         // 首先关闭WebSocket服务器
         this.wss.close(() => {
-          debug('WebSocket server closed');
+          debug("WebSocket server closed");
         });
-        
+
         // 然后关闭HTTP服务器
         this.server.close((err) => {
           clearTimeout(timeout);
           if (err) {
-            error('Error closing server:', err);
+            error("Error closing server:", err);
             reject(err);
           } else {
-            info('Interactive server stopped successfully');
+            info("Interactive server stopped successfully");
             this.isRunning = false;
             this.port = 0;
             resolve();
@@ -287,7 +307,7 @@ export class InteractiveServer {
         });
       } catch (err) {
         clearTimeout(timeout);
-        error('Error stopping server:', err);
+        error("Error stopping server:", err);
         this.isRunning = false;
         this.port = 0;
         reject(err);
@@ -297,83 +317,95 @@ export class InteractiveServer {
 
   async collectEnvId(availableEnvs: any[]): Promise<InteractiveResult> {
     try {
-      info('Starting environment ID collection...');
+      info("Starting environment ID collection...");
       debug(`Available environments: ${availableEnvs.length}`);
-      
+
       const port = await this.start();
-      
+
       const sessionId = Math.random().toString(36).substring(2, 15);
       this.sessionData.set(sessionId, { envs: availableEnvs });
       debug(`Created session: ${sessionId}`);
-      
-      setTimeout(() => {
-        this.sessionData.delete(sessionId);
-        debug(`Session ${sessionId} expired`);
-      }, 5 * 60 * 1000);
-      
+
+      setTimeout(
+        () => {
+          this.sessionData.delete(sessionId);
+          debug(`Session ${sessionId} expired`);
+        },
+        5 * 60 * 1000,
+      );
+
       const url = `http://localhost:${port}/env-setup/${sessionId}`;
       info(`Opening browser: ${url}`);
-      
+
       try {
         // 使用默认浏览器打开一个新窗口
         await openUrl(url, { wait: false }, this._mcpServer);
-        info('Browser opened successfully');
+        info("Browser opened successfully");
       } catch (browserError) {
-        error('Failed to open browser', browserError);
+        error("Failed to open browser", browserError);
         warn(`Please manually open: ${url}`);
       }
 
-      info('Waiting for user selection...');
-      
+      info("Waiting for user selection...");
+
       return new Promise((resolve) => {
         this.currentResolver = (result) => {
           // 用户选择完成后，关闭服务器
-          this.stop().catch(err => {
-            debug('Error stopping server after user selection:', err);
+          this.stop().catch((err) => {
+            debug("Error stopping server after user selection:", err);
           });
           resolve(result);
         };
-        
-        setTimeout(() => {
-          if (this.currentResolver) {
-            warn('Request timeout, resolving with cancelled');
-            this.currentResolver = null;
-            // 超时后也关闭服务器
-            this.stop().catch(err => {
-              debug('Error stopping server after timeout:', err);
-            });
-            resolve({ type: 'envId', data: null, cancelled: true });
-          }
-        }, 10 * 60 * 1000);
+
+        setTimeout(
+          () => {
+            if (this.currentResolver) {
+              warn("Request timeout, resolving with cancelled");
+              this.currentResolver = null;
+              // 超时后也关闭服务器
+              this.stop().catch((err) => {
+                debug("Error stopping server after timeout:", err);
+              });
+              resolve({ type: "envId", data: null, cancelled: true });
+            }
+          },
+          10 * 60 * 1000,
+        );
       });
     } catch (err) {
-      error('Error in collectEnvId', err);
+      error("Error in collectEnvId", err);
       throw err;
     }
   }
 
-  async clarifyRequest(message: string, options?: string[]): Promise<InteractiveResult> {
+  async clarifyRequest(
+    message: string,
+    options?: string[],
+  ): Promise<InteractiveResult> {
     const port = await this.start();
-    
+
     // 生成会话ID并存储数据
     const sessionId = Math.random().toString(36).substring(2, 15);
     this.sessionData.set(sessionId, { message, options });
-    
+
     // 设置会话过期时间（5分钟）
-    setTimeout(() => {
-      this.sessionData.delete(sessionId);
-    }, 5 * 60 * 1000);
-    
+    setTimeout(
+      () => {
+        this.sessionData.delete(sessionId);
+      },
+      5 * 60 * 1000,
+    );
+
     const url = `http://localhost:${port}/clarification/${sessionId}`;
-    
+
     // 打开浏览器
     await openUrl(url, undefined, this._mcpServer);
 
     return new Promise((resolve) => {
       this.currentResolver = (result) => {
         // 用户选择完成后，关闭服务器
-        this.stop().catch(err => {
-          debug('Error stopping server after user selection:', err);
+        this.stop().catch((err) => {
+          debug("Error stopping server after user selection:", err);
         });
         resolve(result);
       };
@@ -390,7 +422,7 @@ export class InteractiveServer {
     <title>CloudBase AI Toolkit - 环境配置</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
-        
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary-color: #1a1a1a;
@@ -406,7 +438,7 @@ export class InteractiveServer {
             --font-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', monospace;
             --header-bg: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0d1117 100%);
         }
-        
+
         body {
             font-family: var(--font-mono);
             background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
@@ -419,26 +451,26 @@ export class InteractiveServer {
             overflow-x: hidden;
             overflow-y: auto;
         }
-        
+
         /* Custom scrollbar styles */
         ::-webkit-scrollbar {
             width: 8px;
         }
-        
+
         ::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 4px;
         }
-        
+
         ::-webkit-scrollbar-thumb {
             background: var(--accent-color);
             border-radius: 4px;
         }
-        
+
         ::-webkit-scrollbar-thumb:hover {
             background: var(--accent-hover);
         }
-        
+
         body::before {
             content: '';
             position: fixed;
@@ -447,7 +479,7 @@ export class InteractiveServer {
             pointer-events: none;
             z-index: -1;
         }
-        
+
         body::after {
             content: '';
             position: fixed;
@@ -459,12 +491,12 @@ export class InteractiveServer {
             z-index: -1;
             animation: pulse 8s ease-in-out infinite;
         }
-        
+
         @keyframes pulse {
             0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
             50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
         }
-        
+
         .modal {
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
@@ -477,7 +509,7 @@ export class InteractiveServer {
             animation: modalIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
         }
-        
+
         .modal::before {
             content: '';
             position: absolute;
@@ -486,12 +518,12 @@ export class InteractiveServer {
             animation: shimmer 3s infinite;
             pointer-events: none;
         }
-        
+
         @keyframes shimmer {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-        
+
         @keyframes modalIn {
             from {
                 opacity: 0;
@@ -502,7 +534,7 @@ export class InteractiveServer {
                 transform: scale(1) translateY(0);
             }
         }
-        
+
         .header {
             background: var(--header-bg);
             color: var(--text-primary);
@@ -513,7 +545,7 @@ export class InteractiveServer {
             position: relative;
             overflow: hidden;
         }
-        
+
         .header::before {
             content: '';
             position: absolute;
@@ -522,37 +554,37 @@ export class InteractiveServer {
             animation: headerShimmer 4s infinite;
             pointer-events: none;
         }
-        
+
         @keyframes headerShimmer {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-        
+
         .header-left {
             display: flex;
             align-items: center;
             gap: 16px;
             z-index: 1;
         }
-        
+
         .logo {
             width: 32px;
             height: 32px;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
             animation: logoFloat 3s ease-in-out infinite;
         }
-        
+
         @keyframes logoFloat {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-3px); }
         }
-        
+
         .title {
             font-size: 20px;
             font-weight: 700;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
+
         .github-link {
             color: var(--text-primary);
             text-decoration: none;
@@ -569,18 +601,18 @@ export class InteractiveServer {
             z-index: 1;
             transition: all 0.3s ease;
         }
-        
+
         .github-link:hover {
             background: rgba(255,255,255,0.15);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
-        
+
         .content {
             padding: 32px 24px;
             position: relative;
         }
-        
+
         .content-title {
             font-size: 24px;
             font-weight: 700;
@@ -588,14 +620,14 @@ export class InteractiveServer {
             margin-bottom: 8px;
             animation: fadeInUp 0.8s ease-out 0.2s both;
         }
-        
+
         .content-subtitle {
             color: var(--text-secondary);
             margin-bottom: 24px;
             line-height: 1.5;
             animation: fadeInUp 0.8s ease-out 0.4s both;
         }
-        
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -606,7 +638,7 @@ export class InteractiveServer {
                 transform: translateY(0);
             }
         }
-        
+
         .env-list {
             border: 1px solid var(--border-color);
             border-radius: 12px;
@@ -617,7 +649,7 @@ export class InteractiveServer {
             background: rgba(255, 255, 255, 0.03);
             animation: fadeInUp 0.8s ease-out 0.6s both;
         }
-        
+
         .env-item {
             padding: 16px 20px;
             border-bottom: 1px solid var(--border-color);
@@ -630,7 +662,7 @@ export class InteractiveServer {
             overflow: hidden;
             color: var(--text-primary);
         }
-        
+
         .env-item::before {
             content: '';
             position: absolute;
@@ -639,26 +671,26 @@ export class InteractiveServer {
             background: var(--accent-color);
             transition: width 0.3s ease;
         }
-        
+
         .env-item:last-child {
             border-bottom: none;
         }
-        
+
         .env-item:hover {
             background: var(--bg-secondary);
             transform: translateX(5px);
         }
-        
+
         .env-item:hover::before {
             width: 4px;
         }
-        
+
         .env-item.selected {
             background: rgba(103, 233, 233, 0.1);
             border-left: 4px solid var(--accent-color);
             transform: translateX(5px);
         }
-        
+
         .env-icon {
             width: 20px;
             height: 20px;
@@ -666,27 +698,27 @@ export class InteractiveServer {
             flex-shrink: 0;
             animation: iconGlow 2s ease-in-out infinite;
         }
-        
+
         @keyframes iconGlow {
             0%, 100% { filter: drop-shadow(0 0 2px rgba(103, 233, 233, 0.3)); }
             50% { filter: drop-shadow(0 0 8px rgba(103, 233, 233, 0.6)); }
         }
-        
+
         .env-info {
             flex: 1;
         }
-        
+
         .env-name {
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 4px;
         }
-        
+
         .env-alias {
             color: var(--text-secondary);
             font-size: 14px;
         }
-        
+
         .empty-state {
             display: flex;
             flex-direction: column;
@@ -696,20 +728,20 @@ export class InteractiveServer {
             text-align: center;
             animation: fadeIn 0.8s ease-out;
         }
-        
+
         .empty-icon {
             margin-bottom: 24px;
             color: var(--text-secondary);
             opacity: 0.6;
         }
-        
+
         .empty-title {
             font-size: 20px;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 12px;
         }
-        
+
         .empty-message {
             font-size: 14px;
             color: var(--text-secondary);
@@ -717,7 +749,7 @@ export class InteractiveServer {
             margin-bottom: 32px;
             max-width: 400px;
         }
-        
+
         .create-env-btn {
             padding: 14px 24px;
             font-size: 15px;
@@ -732,20 +764,20 @@ export class InteractiveServer {
             gap: 8px;
             font-weight: 600;
         }
-        
+
         .create-env-btn:hover {
             background: var(--primary-hover);
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
-        
+
         .actions {
             display: flex;
             gap: 12px;
             justify-content: flex-end;
             animation: fadeInUp 0.8s ease-out 0.8s both;
         }
-        
+
         .btn {
             padding: 12px 20px;
             border: none;
@@ -761,7 +793,7 @@ export class InteractiveServer {
             position: relative;
             overflow: hidden;
         }
-        
+
         .btn::before {
             content: '';
             position: absolute;
@@ -772,39 +804,39 @@ export class InteractiveServer {
             transition: all 0.3s ease;
             transform: translate(-50%, -50%);
         }
-        
+
         .btn:hover::before {
             width: 100px; height: 100px;
         }
-        
+
         .btn-primary {
             background: var(--primary-color);
             color: var(--text-primary);
             border: 1px solid var(--border-color);
         }
-        
+
         .btn-primary:hover:not(:disabled) {
             background: var(--primary-hover);
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
-        
+
         .btn-secondary {
             background: var(--bg-secondary);
             color: var(--text-secondary);
             border: 1px solid var(--border-color);
         }
-        
+
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.15);
             color: var(--text-primary);
         }
-        
+
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-        
+
         .loading {
             display: none;
             align-items: center;
@@ -814,7 +846,7 @@ export class InteractiveServer {
             color: var(--text-secondary);
             font-size: 14px;
         }
-        
+
         .spinner {
             width: 16px;
             height: 16px;
@@ -823,53 +855,53 @@ export class InteractiveServer {
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
+
         .success-state {
             text-align: center;
             padding: 40px 20px;
             animation: fadeInUp 0.8s ease-out both;
         }
-        
+
         .success-icon {
             margin-bottom: 20px;
             color: var(--accent-color);
             animation: successPulse 2s ease-in-out infinite;
         }
-        
+
         @keyframes successPulse {
-            0%, 100% { 
+            0%, 100% {
                 transform: scale(1);
                 filter: drop-shadow(0 0 8px rgba(103, 233, 233, 0.3));
             }
-            50% { 
+            50% {
                 transform: scale(1.1);
                 filter: drop-shadow(0 0 16px rgba(103, 233, 233, 0.6));
             }
         }
-        
+
         .success-title {
             font-size: 24px;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 12px;
         }
-        
+
         .success-message {
             color: var(--text-secondary);
             font-size: 16px;
             line-height: 1.5;
         }
-        
+
         .selected-env-info {
             margin-top: 20px;
             padding: 16px;
@@ -880,13 +912,13 @@ export class InteractiveServer {
             align-items: center;
             gap: 12px;
         }
-        
+
         .env-label {
             color: var(--text-secondary);
             font-size: 14px;
             font-weight: 500;
         }
-        
+
         .env-value {
             color: var(--accent-color);
             font-size: 16px;
@@ -913,21 +945,26 @@ export class InteractiveServer {
         <div class="content">
             <h1 class="content-title">选择 CloudBase 环境</h1>
             <p class="content-subtitle">请选择您要使用的 CloudBase 环境</p>
-            
+
             <div class="env-list" id="envList">
-                ${(envs || []).length > 0 ? 
-                    (envs || []).map((env, index) => `
+                ${
+                  (envs || []).length > 0
+                    ? (envs || [])
+                        .map(
+                          (env, index) => `
                         <div class="env-item" onclick="selectEnv('${env.EnvId}', this)" style="animation-delay: ${index * 0.1}s;">
                             <svg class="env-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                             </svg>
                             <div class="env-info">
                                 <div class="env-name">${env.EnvId}</div>
-                                <div class="env-alias">${env.Alias || '无别名'}</div>
+                                <div class="env-alias">${env.Alias || "无别名"}</div>
                             </div>
                         </div>
-                    `).join('') :
-                    `
+                    `,
+                        )
+                        .join("")
+                    : `
                     <div class="empty-state">
                         <h3 class="empty-title">暂无 CloudBase 环境</h3>
                         <p class="empty-message">当前没有可用的 CloudBase 环境，请新建后重新在 AI 对话中重试</p>
@@ -941,7 +978,7 @@ export class InteractiveServer {
                     `
                 }
             </div>
-            
+
             <div class="actions">
                 <button class="btn btn-secondary" onclick="cancel()">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -956,12 +993,12 @@ export class InteractiveServer {
                     确认选择
                 </button>
             </div>
-            
+
             <div class="loading" id="loading">
                 <div class="spinner"></div>
                 <span>正在配置环境...</span>
             </div>
-            
+
             <div class="success-state" id="successState" style="display: none;">
                 <div class="success-icon">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -980,23 +1017,23 @@ export class InteractiveServer {
 
     <script>
         let selectedEnvId = null;
-        
+
         function selectEnv(envId, element) {
             console.log('=== 环境选择事件触发 ===');
             console.log('传入的envId:', envId);
             console.log('传入的element:', element);
             console.log('element类名:', element ? element.className : 'null');
-            
+
             selectedEnvId = envId;
             console.log('设置selectedEnvId为:', selectedEnvId);
-            
+
             // Remove selected class from all items
             const allItems = document.querySelectorAll('.env-item');
             console.log('找到的所有环境项数量:', allItems.length);
             allItems.forEach(item => {
                 item.classList.remove('selected');
             });
-            
+
             // Add selected class to current item
             if (element) {
                 element.classList.add('selected');
@@ -1005,7 +1042,7 @@ export class InteractiveServer {
             } else {
                 console.error('❌ element为空，无法添加选中样式');
             }
-            
+
             // Enable confirm button
             const confirmBtn = document.getElementById('confirmBtn');
             if (confirmBtn) {
@@ -1015,28 +1052,28 @@ export class InteractiveServer {
                 console.error('❌ 找不到确认按钮');
             }
         }
-        
+
         function confirm() {
             console.log('=== CONFIRM BUTTON CLICKED ===');
             console.log('selectedEnvId:', selectedEnvId);
-            
+
             if (!selectedEnvId) {
                 console.error('❌ 没有选择环境ID！');
                 alert('请先选择一个环境');
                 return;
             }
-            
+
             console.log('✅ 环境ID验证通过，开始发送请求...');
             document.getElementById('loading').style.display = 'flex';
             document.getElementById('confirmBtn').disabled = true;
-            
+
             const requestBody = {
                 type: 'envId',
                 data: selectedEnvId
             };
-            
+
             console.log('📤 发送请求体:', JSON.stringify(requestBody, null, 2));
-            
+
             fetch('/api/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1070,13 +1107,13 @@ export class InteractiveServer {
                 document.getElementById('confirmBtn').disabled = false;
               });
         }
-        
+
         function createNewEnv() {
             const integrationIde = '${process.env.INTEGRATION_IDE || "AI Toolkit"}';
             const url = \`http://tcb.cloud.tencent.com/dev?from=\${encodeURIComponent(integrationIde)}\`;
             location.href = url;
         }
-        
+
         function cancel() {
             fetch('/api/cancel', {
                 method: 'POST',
@@ -1092,7 +1129,7 @@ export class InteractiveServer {
 
   private getClarificationHTML(message: string, options?: string[]): string {
     const optionsArray = options || null;
-    
+
     return `
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -1102,7 +1139,7 @@ export class InteractiveServer {
     <title>CloudBase AI Toolkit - 需求澄清</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
-        
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary-color: #1a1a1a;
@@ -1118,7 +1155,7 @@ export class InteractiveServer {
             --font-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', monospace;
             --header-bg: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0d1117 100%);
         }
-        
+
         body {
             font-family: var(--font-mono);
             background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
@@ -1131,26 +1168,26 @@ export class InteractiveServer {
             overflow-x: hidden;
             overflow-y: auto;
         }
-        
+
         /* Custom scrollbar styles */
         ::-webkit-scrollbar {
             width: 8px;
         }
-        
+
         ::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 4px;
         }
-        
+
         ::-webkit-scrollbar-thumb {
             background: var(--accent-color);
             border-radius: 4px;
         }
-        
+
         ::-webkit-scrollbar-thumb:hover {
             background: var(--accent-hover);
         }
-        
+
         body::before {
             content: '';
             position: fixed;
@@ -1159,7 +1196,7 @@ export class InteractiveServer {
             pointer-events: none;
             z-index: -1;
         }
-        
+
         body::after {
             content: '';
             position: fixed;
@@ -1171,12 +1208,12 @@ export class InteractiveServer {
             z-index: -1;
             animation: pulse 8s ease-in-out infinite;
         }
-        
+
         @keyframes pulse {
             0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
             50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
         }
-        
+
         .modal {
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
@@ -1189,7 +1226,7 @@ export class InteractiveServer {
             animation: modalIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
         }
-        
+
         .modal::before {
             content: '';
             position: absolute;
@@ -1198,12 +1235,12 @@ export class InteractiveServer {
             animation: shimmer 3s infinite;
             pointer-events: none;
         }
-        
+
         @keyframes shimmer {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-        
+
         @keyframes modalIn {
             from {
                 opacity: 0;
@@ -1214,7 +1251,7 @@ export class InteractiveServer {
                 transform: scale(1) translateY(0);
             }
         }
-        
+
         .header {
             background: var(--header-bg);
             color: var(--text-primary);
@@ -1225,7 +1262,7 @@ export class InteractiveServer {
             position: relative;
             overflow: hidden;
         }
-        
+
         .header::before {
             content: '';
             position: absolute;
@@ -1234,37 +1271,37 @@ export class InteractiveServer {
             animation: headerShimmer 4s infinite;
             pointer-events: none;
         }
-        
+
         @keyframes headerShimmer {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-        
+
         .header-left {
             display: flex;
             align-items: center;
             gap: 16px;
             z-index: 1;
         }
-        
+
         .logo {
             width: 32px;
             height: 32px;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
             animation: logoFloat 3s ease-in-out infinite;
         }
-        
+
         @keyframes logoFloat {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-3px); }
         }
-        
+
         .title {
             font-size: 20px;
             font-weight: 700;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
+
         .github-link {
             color: var(--text-primary);
             text-decoration: none;
@@ -1281,18 +1318,18 @@ export class InteractiveServer {
             z-index: 1;
             transition: all 0.3s ease;
         }
-        
+
         .github-link:hover {
             background: rgba(255,255,255,0.15);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
-        
+
         .content {
             padding: 32px 24px;
             position: relative;
         }
-        
+
         .content-title {
             font-size: 24px;
             font-weight: 700;
@@ -1300,7 +1337,7 @@ export class InteractiveServer {
             margin-bottom: 8px;
             animation: fadeInUp 0.8s ease-out 0.2s both;
         }
-        
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -1311,7 +1348,7 @@ export class InteractiveServer {
                 transform: translateY(0);
             }
         }
-        
+
         .message {
             background: rgba(103, 233, 233, 0.1);
             border: 1px solid var(--accent-color);
@@ -1327,7 +1364,7 @@ export class InteractiveServer {
             position: relative;
             overflow: hidden;
         }
-        
+
         .message::before {
             content: '';
             position: absolute;
@@ -1336,17 +1373,17 @@ export class InteractiveServer {
             background: linear-gradient(90deg, var(--accent-color), transparent);
             animation: progress 2s ease-out;
         }
-        
+
         @keyframes progress {
             from { width: 0%; }
             to { width: 100%; }
         }
-        
+
         .options {
             margin-bottom: 24px;
             animation: fadeInUp 0.8s ease-out 0.6s both;
         }
-        
+
         .option-item {
             padding: 16px 20px;
             border: 1px solid var(--border-color);
@@ -1362,7 +1399,7 @@ export class InteractiveServer {
             overflow: hidden;
             color: var(--text-primary);
         }
-        
+
         .option-item::before {
             content: '';
             position: absolute;
@@ -1371,27 +1408,27 @@ export class InteractiveServer {
             background: var(--accent-color);
             transition: width 0.3s ease;
         }
-        
+
         .option-item:hover {
             background: var(--bg-secondary);
             border-color: var(--accent-color);
             transform: translateX(5px);
         }
-        
+
         .option-item:hover::before {
             width: 4px;
         }
-        
+
         .option-item.selected {
             background: rgba(103, 233, 233, 0.1);
             border-color: var(--accent-color);
             transform: translateX(5px);
         }
-        
+
         .option-item.selected::before {
             width: 4px;
         }
-        
+
         .option-icon {
             width: 20px;
             height: 20px;
@@ -1399,17 +1436,17 @@ export class InteractiveServer {
             flex-shrink: 0;
             animation: iconGlow 2s ease-in-out infinite;
         }
-        
+
         @keyframes iconGlow {
             0%, 100% { filter: drop-shadow(0 0 2px rgba(103, 233, 233, 0.3)); }
             50% { filter: drop-shadow(0 0 8px rgba(103, 233, 233, 0.6)); }
         }
-        
+
         .custom-input {
             margin-bottom: 24px;
             animation: fadeInUp 0.8s ease-out 0.8s both;
         }
-        
+
         .custom-input textarea {
             width: 100%;
             min-height: 120px;
@@ -1424,25 +1461,25 @@ export class InteractiveServer {
             background: rgba(255, 255, 255, 0.03);
             color: var(--text-primary);
         }
-        
+
         .custom-input textarea::placeholder {
             color: var(--text-secondary);
         }
-        
+
         .custom-input textarea:focus {
             outline: none;
             border-color: var(--accent-color);
             box-shadow: 0 0 0 3px rgba(103, 233, 233, 0.1);
             background: rgba(255, 255, 255, 0.05);
         }
-        
+
         .actions {
             display: flex;
             gap: 12px;
             justify-content: flex-end;
             animation: fadeInUp 0.8s ease-out 1s both;
         }
-        
+
         .btn {
             padding: 12px 20px;
             border: none;
@@ -1458,7 +1495,7 @@ export class InteractiveServer {
             position: relative;
             overflow: hidden;
         }
-        
+
         .btn::before {
             content: '';
             position: absolute;
@@ -1469,39 +1506,39 @@ export class InteractiveServer {
             transition: all 0.3s ease;
             transform: translate(-50%, -50%);
         }
-        
+
         .btn:hover::before {
             width: 100px; height: 100px;
         }
-        
+
         .btn-primary {
             background: var(--primary-color);
             color: var(--text-primary);
             border: 1px solid var(--border-color);
         }
-        
+
         .btn-primary:hover:not(:disabled) {
             background: var(--primary-hover);
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
-        
+
         .btn-secondary {
             background: var(--bg-secondary);
             color: var(--text-secondary);
             border: 1px solid var(--border-color);
         }
-        
+
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.15);
             color: var(--text-primary);
         }
-        
+
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-        
+
         .loading {
             display: none;
             align-items: center;
@@ -1511,7 +1548,7 @@ export class InteractiveServer {
             color: var(--text-secondary);
             font-size: 14px;
         }
-        
+
         .spinner {
             width: 16px;
             height: 16px;
@@ -1520,53 +1557,53 @@ export class InteractiveServer {
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
+
         .success-state {
             text-align: center;
             padding: 40px 20px;
             animation: fadeInUp 0.8s ease-out both;
         }
-        
+
         .success-icon {
             margin-bottom: 20px;
             color: var(--accent-color);
             animation: successPulse 2s ease-in-out infinite;
         }
-        
+
         @keyframes successPulse {
-            0%, 100% { 
+            0%, 100% {
                 transform: scale(1);
                 filter: drop-shadow(0 0 8px rgba(103, 233, 233, 0.3));
             }
-            50% { 
+            50% {
                 transform: scale(1.1);
                 filter: drop-shadow(0 0 16px rgba(103, 233, 233, 0.6));
             }
         }
-        
+
         .success-title {
             font-size: 24px;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 12px;
         }
-        
+
         .success-message {
             color: var(--text-secondary);
             font-size: 16px;
             line-height: 1.5;
         }
-        
+
         .selected-env-info {
             margin-top: 20px;
             padding: 16px;
@@ -1577,13 +1614,13 @@ export class InteractiveServer {
             align-items: center;
             gap: 12px;
         }
-        
+
         .env-label {
             color: var(--text-secondary);
             font-size: 14px;
             font-weight: 500;
         }
-        
+
         .env-value {
             color: var(--accent-color);
             font-size: 16px;
@@ -1610,24 +1647,32 @@ export class InteractiveServer {
         <div class="content">
             <h1 class="content-title">AI 需要您确认</h1>
             <div class="message">${message}</div>
-            
-            ${optionsArray ? `
+
+            ${
+              optionsArray
+                ? `
             <div class="options" id="options">
-                ${optionsArray.map((option: string, index: number) => `
+                ${optionsArray
+                  .map(
+                    (option: string, index: number) => `
                     <div class="option-item" onclick="selectOption('${option}')" style="animation-delay: ${index * 0.1}s;">
                         <svg class="option-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
                         </svg>
                         <span>${option}</span>
                     </div>
-                `).join('')}
+                `,
+                  )
+                  .join("")}
             </div>
-            ` : ''}
-            
+            `
+                : ""
+            }
+
             <div class="custom-input">
                 <textarea id="customInput" placeholder="请输入您的具体需求或建议..." onkeyup="updateSubmitButton()"></textarea>
             </div>
-            
+
             <div class="actions">
                 <button class="btn btn-secondary" onclick="cancel()">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1642,7 +1687,7 @@ export class InteractiveServer {
                     确认执行
                 </button>
             </div>
-            
+
             <div class="loading" id="loading">
                 <div class="spinner"></div>
                 <span>正在提交...</span>
@@ -1652,22 +1697,22 @@ export class InteractiveServer {
 
     <script>
         let selectedOption = null;
-        
+
         function selectOption(option) {
             selectedOption = option;
-            
+
             document.querySelectorAll('.option-item').forEach(item => {
                 item.classList.remove('selected');
             });
             event.currentTarget.classList.add('selected');
-            
+
             updateSubmitButton();
         }
-        
+
         function updateSubmitButton() {
             const customInput = document.getElementById('customInput').value.trim();
             const submitBtn = document.getElementById('submitBtn');
-            
+
             if (selectedOption || customInput) {
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
@@ -1676,16 +1721,16 @@ export class InteractiveServer {
                 submitBtn.style.opacity = '0.5';
             }
         }
-        
+
         function submit() {
             const customInput = document.getElementById('customInput').value.trim();
             const data = selectedOption || customInput;
-            
+
             if (!data) return;
-            
+
             document.getElementById('loading').style.display = 'flex';
             document.getElementById('submitBtn').disabled = true;
-            
+
             fetch('/api/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1704,7 +1749,7 @@ export class InteractiveServer {
                 document.getElementById('submitBtn').disabled = false;
               });
         }
-        
+
         function cancel() {
             fetch('/api/cancel', {
                 method: 'POST',
@@ -1713,7 +1758,7 @@ export class InteractiveServer {
                 window.close();
             });
         }
-        
+
         // Initialize
         updateSubmitButton();
     </script>
@@ -1721,9 +1766,13 @@ export class InteractiveServer {
 </html>`;
   }
 
-  private getConfirmationHTML(message: string, risks?: string[], options?: string[]): string {
-    const availableOptions = options || ['确认执行', '取消操作'];
-    
+  private getConfirmationHTML(
+    message: string,
+    risks?: string[],
+    options?: string[],
+  ): string {
+    const availableOptions = options || ["确认执行", "取消操作"];
+
     return `
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -1733,7 +1782,7 @@ export class InteractiveServer {
     <title>CloudBase AI Toolkit - 操作确认</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
-        
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary-color: #1a1a1a;
@@ -1752,7 +1801,7 @@ export class InteractiveServer {
             --font-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', monospace;
             --header-bg: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0d1117 100%);
         }
-        
+
         body {
             font-family: var(--font-mono);
             background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
@@ -1765,26 +1814,26 @@ export class InteractiveServer {
             overflow-x: hidden;
             overflow-y: auto;
         }
-        
+
         /* Custom scrollbar styles */
         ::-webkit-scrollbar {
             width: 8px;
         }
-        
+
         ::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 4px;
         }
-        
+
         ::-webkit-scrollbar-thumb {
             background: var(--accent-color);
             border-radius: 4px;
         }
-        
+
         ::-webkit-scrollbar-thumb:hover {
             background: var(--accent-hover);
         }
-        
+
         body::before {
             content: '';
             position: fixed;
@@ -1793,7 +1842,7 @@ export class InteractiveServer {
             pointer-events: none;
             z-index: -1;
         }
-        
+
         body::after {
             content: '';
             position: fixed;
@@ -1805,12 +1854,12 @@ export class InteractiveServer {
             z-index: -1;
             animation: pulse 8s ease-in-out infinite;
         }
-        
+
         @keyframes pulse {
             0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
             50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
         }
-        
+
         .modal {
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
@@ -1823,7 +1872,7 @@ export class InteractiveServer {
             animation: modalIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
         }
-        
+
         .modal::before {
             content: '';
             position: absolute;
@@ -1832,12 +1881,12 @@ export class InteractiveServer {
             animation: shimmer 3s infinite;
             pointer-events: none;
         }
-        
+
         @keyframes shimmer {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-        
+
         @keyframes modalIn {
             from {
                 opacity: 0;
@@ -1848,7 +1897,7 @@ export class InteractiveServer {
                 transform: scale(1) translateY(0);
             }
         }
-        
+
         .header {
             background: var(--header-bg);
             color: var(--text-primary);
@@ -1859,7 +1908,7 @@ export class InteractiveServer {
             position: relative;
             overflow: hidden;
         }
-        
+
         .header::before {
             content: '';
             position: absolute;
@@ -1868,37 +1917,37 @@ export class InteractiveServer {
             animation: headerShimmer 4s infinite;
             pointer-events: none;
         }
-        
+
         @keyframes headerShimmer {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-        
+
         .header-left {
             display: flex;
             align-items: center;
             gap: 16px;
             z-index: 1;
         }
-        
+
         .logo {
             width: 32px;
             height: 32px;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
             animation: logoFloat 3s ease-in-out infinite;
         }
-        
+
         @keyframes logoFloat {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-3px); }
         }
-        
+
         .title {
             font-size: 20px;
             font-weight: 700;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
+
         .github-link {
             color: var(--text-primary);
             text-decoration: none;
@@ -1915,18 +1964,18 @@ export class InteractiveServer {
             z-index: 1;
             transition: all 0.3s ease;
         }
-        
+
         .github-link:hover {
             background: rgba(255,255,255,0.15);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
-        
+
         .content {
             padding: 32px 24px;
             position: relative;
         }
-        
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -1937,7 +1986,7 @@ export class InteractiveServer {
                 transform: translateY(0);
             }
         }
-        
+
         .content-title {
             font-size: 24px;
             margin-bottom: 8px;
@@ -1948,7 +1997,7 @@ export class InteractiveServer {
             position: relative;
             animation: fadeInUp 0.8s ease-out 0.2s both;
         }
-        
+
         .message {
             background: rgba(103, 233, 233, 0.1);
             border: 1px solid var(--accent-color);
@@ -1965,7 +2014,7 @@ export class InteractiveServer {
             white-space: pre-wrap;
             max-height: 300px;
         }
-        
+
         .message::before {
             content: '';
             position: absolute;
@@ -1974,12 +2023,12 @@ export class InteractiveServer {
             background: linear-gradient(90deg, var(--accent-color), transparent);
             animation: progress 2s ease-out;
         }
-        
+
         @keyframes progress {
             from { width: 0%; }
             to { width: 100%; }
         }
-        
+
         .risks {
             background: var(--warning-bg);
             border: 1px solid var(--warning-border);
@@ -1988,7 +2037,7 @@ export class InteractiveServer {
             margin-bottom: 24px;
             animation: fadeInUp 0.8s ease-out 0.6s both;
         }
-        
+
         .risks-title {
             color: var(--warning-color);
             font-weight: 600;
@@ -1998,31 +2047,31 @@ export class InteractiveServer {
             gap: 8px;
             animation: warningGlow 2s ease-in-out infinite;
         }
-        
+
         @keyframes warningGlow {
             0%, 100% { filter: drop-shadow(0 0 2px rgba(255, 107, 107, 0.3)); }
             50% { filter: drop-shadow(0 0 8px rgba(255, 107, 107, 0.6)); }
         }
-        
+
         .risk-item {
             color: var(--text-primary);
             margin-bottom: 8px;
             padding-left: 24px;
             position: relative;
         }
-        
+
         .risk-item:before {
             content: "⚠️";
             position: absolute;
             left: 0;
             color: var(--warning-color);
         }
-        
+
         .options {
             margin-bottom: 24px;
             animation: fadeInUp 0.8s ease-out 0.8s both;
         }
-        
+
         .option-item {
             padding: 16px 20px;
             border: 1px solid var(--border-color);
@@ -2038,7 +2087,7 @@ export class InteractiveServer {
             overflow: hidden;
             color: var(--text-primary);
         }
-        
+
         .option-item::before {
             content: '';
             position: absolute;
@@ -2047,50 +2096,50 @@ export class InteractiveServer {
             background: var(--accent-color);
             transition: width 0.3s ease;
         }
-        
+
         .option-item.confirm::before {
             background: var(--accent-color);
         }
-        
+
         .option-item.cancel::before {
             background: var(--warning-color);
         }
-        
+
         .option-item:hover {
             background: var(--bg-secondary);
             transform: translateX(5px);
         }
-        
+
         .option-item:hover::before {
             width: 4px;
         }
-        
+
         .option-item.selected {
             background: rgba(103, 233, 233, 0.1);
             border-color: var(--accent-color);
             transform: translateX(5px);
         }
-        
+
         .option-item.selected.cancel {
             background: rgba(255, 107, 107, 0.1);
             border-color: var(--warning-color);
         }
-        
+
         .option-item.selected::before {
             width: 4px;
         }
-        
+
         .option-icon {
             width: 20px;
             height: 20px;
             color: var(--accent-color);
             flex-shrink: 0;
         }
-        
+
         .option-item.cancel .option-icon {
             color: var(--warning-color);
         }
-        
+
         .loading {
             display: none;
             align-items: center;
@@ -2101,7 +2150,7 @@ export class InteractiveServer {
             font-size: 14px;
             animation: fadeInUp 0.8s ease-out 1s both;
         }
-        
+
         .spinner {
             width: 16px;
             height: 16px;
@@ -2110,7 +2159,7 @@ export class InteractiveServer {
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -2142,8 +2191,10 @@ export class InteractiveServer {
                 操作确认
             </h1>
             <div class="message">${message}</div>
-            
-            ${risks && risks.length > 0 ? `
+
+            ${
+              risks && risks.length > 0
+                ? `
             <div class="risks">
                 <div class="risks-title">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2153,18 +2204,23 @@ export class InteractiveServer {
                     </svg>
                     风险提示
                 </div>
-                ${risks.map(risk => `<div class="risk-item">${risk}</div>`).join('')}
+                ${risks.map((risk) => `<div class="risk-item">${risk}</div>`).join("")}
             </div>
-            ` : ''}
-            
+            `
+                : ""
+            }
+
             <div class="options">
-                ${availableOptions.map((option: string, index: number) => {
-                    const isCancel = option.includes('取消') || option.toLowerCase().includes('cancel');
-                    const className = isCancel ? 'cancel' : 'confirm';
-                    const iconPath = isCancel 
-                        ? '<path d="M18 6L6 18M6 6l12 12"/>'
-                        : '<path d="M20 6L9 17l-5-5"/>';
-                        
+                ${availableOptions
+                  .map((option: string, index: number) => {
+                    const isCancel =
+                      option.includes("取消") ||
+                      option.toLowerCase().includes("cancel");
+                    const className = isCancel ? "cancel" : "confirm";
+                    const iconPath = isCancel
+                      ? '<path d="M18 6L6 18M6 6l12 12"/>'
+                      : '<path d="M20 6L9 17l-5-5"/>';
+
                     return `
                         <div class="option-item ${className}" onclick="selectOption('${option}')" style="animation-delay: ${index * 0.1}s;">
                             <svg class="option-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2173,9 +2229,10 @@ export class InteractiveServer {
                             <span>${option}</span>
                         </div>
                     `;
-                }).join('')}
+                  })
+                  .join("")}
             </div>
-            
+
             <div class="loading" id="loading">
                 <div class="spinner"></div>
                 <span>正在处理...</span>
@@ -2185,28 +2242,28 @@ export class InteractiveServer {
 
     <script>
         let selectedOption = null;
-        
+
         function selectOption(option) {
             selectedOption = option;
-            
+
             document.querySelectorAll('.option-item').forEach(item => {
                 item.classList.remove('selected');
             });
             event.currentTarget.classList.add('selected');
-            
+
             // Auto submit after selection
             setTimeout(() => {
                 submit();
             }, 500);
         }
-        
+
         function submit() {
             if (!selectedOption) return;
-            
+
             document.getElementById('loading').style.display = 'flex';
-            
+
             const isConfirmed = !selectedOption.includes('取消') && !selectedOption.toLowerCase().includes('cancel');
-            
+
             fetch('/api/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -2227,7 +2284,7 @@ export class InteractiveServer {
                 document.getElementById('loading').style.display = 'none';
               });
         }
-        
+
         function cancel() {
             fetch('/api/cancel', {
                 method: 'POST',
@@ -2270,23 +2327,24 @@ export async function resetInteractiveServer(): Promise<void> {
     try {
       await interactiveServerInstance.stop();
     } catch (err) {
-      error('Error stopping existing server instance:', err);
+      error("Error stopping existing server instance:", err);
     }
     interactiveServerInstance = null;
   }
 }
 
-export async function getInteractiveServerSafe(mcpServer?: any): Promise<InteractiveServer> {
+export async function getInteractiveServerSafe(
+  mcpServer?: any,
+): Promise<InteractiveServer> {
   // 如果当前实例存在但不在运行状态，先清理
   if (interactiveServerInstance && !interactiveServerInstance.running) {
     try {
       await interactiveServerInstance.stop();
     } catch (err) {
-      debug('Error stopping non-running server:', err);
+      debug("Error stopping non-running server:", err);
     }
     interactiveServerInstance = null;
   }
-  
+
   return getInteractiveServer(mcpServer);
 }
-
