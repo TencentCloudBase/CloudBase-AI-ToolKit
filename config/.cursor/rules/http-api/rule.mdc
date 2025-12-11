@@ -244,6 +244,8 @@ curl -X GET 'https://your-env.api.tcloudbasegateway.com/v1/rdb/rest/course?selec
 
 **Request Body**: JSON object or array of objects
 
+> 💡 **Note about `_openid`**: When a user is logged in (using AccessToken authentication), the `_openid` field is **automatically populated by the server** with the current user's identity. You do NOT need to manually set this field in INSERT operations - the server will fill it automatically based on the authenticated user's session.
+
 **Example**:
 
 ```bash
