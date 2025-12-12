@@ -35,6 +35,8 @@ export function registerEnvTools(server: ExtendedMcpServer) {
       },
     },
     async ({ forceUpdate = false }: { forceUpdate?: boolean }) => {
+      let isSwitching = false;
+
       try {
         // 使用 while 循环处理用户切换账号的情况
         while (true) {
@@ -44,7 +46,12 @@ export function registerEnvTools(server: ExtendedMcpServer) {
             error,
             noEnvs,
             switch: switchAccount,
-          } = await _promptAndSetEnvironmentId(forceUpdate, server);
+          } = await _promptAndSetEnvironmentId(forceUpdate, {
+            server,
+            loginFromCloudBaseLoginPage: isSwitching,
+          });
+
+          isSwitching = Boolean(switchAccount);
 
           debug("login", {
             selectedEnvId,

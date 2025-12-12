@@ -3,7 +3,9 @@ import { debug } from "./utils/logger.js";
 
 const auth = AuthSupevisor.getInstance({});
 
-export async function getLoginState() {
+export async function getLoginState(options?: {
+  fromCloudBaseLoginPage?: boolean;
+}) {
   const {
     TENCENTCLOUD_SECRETID,
     TENCENTCLOUD_SECRETKEY,
@@ -22,7 +24,14 @@ export async function getLoginState() {
 
   const loginState = await auth.getLoginState();
   if (!loginState) {
-    await auth.loginByWebAuth({});
+    await auth.loginByWebAuth(
+      options?.fromCloudBaseLoginPage
+        ? {
+            getAuthUrl: (url) =>
+              `https://tcb.cloud.tencent.com/login?_redirect_uri=${encodeURIComponent(url)}`,
+          }
+        : {},
+    );
     const loginState = await auth.getLoginState();
     debug("loginByWebAuth", loginState);
     return loginState;
