@@ -195,7 +195,7 @@ export function registerInteractiveTools(server: ExtendedMcpServer) {
 // 封装了获取环境、提示选择、保存配置的核心逻辑
 export async function _promptAndSetEnvironmentId(
   autoSelectSingle: boolean,
-  server?: any,
+  options?: { server?: any; loginFromCloudBaseLoginPage?: boolean },
 ): Promise<{
   selectedEnvId: string | null;
   cancelled: boolean;
@@ -203,22 +203,27 @@ export async function _promptAndSetEnvironmentId(
   noEnvs?: boolean;
   switch?: boolean;
 }> {
+  const server = options?.server;
+
   // Initialize setup context for auto-provisioning flow
   let setupContext: EnvSetupContext = {};
 
   debug("[interactive] Starting _promptAndSetEnvironmentId", {
     autoSelectSingle,
-    hasServer: !!server
+    hasServer: !!server,
   });
 
   // 1. 确保用户已登录
   debug("[interactive] Step 1: Checking login state...");
-  const loginState = await getLoginState();
-  debug("[interactive] Login state:", { 
-    hasLoginState: !!loginState,
-    hasUin: !!(loginState && typeof loginState === "object" && "uin" in loginState)
+  const loginState = await getLoginState({
+    fromCloudBaseLoginPage: options?.loginFromCloudBaseLoginPage,
   });
-  
+  debug("[interactive] Login state:", {
+    hasLoginState: !!loginState,
+    hasUin: !!(
+      loginState && typeof loginState === "object" && "uin" in loginState
+    ),
+  });
   if (!loginState) {
     debug("[interactive] User not logged in");
     return {
