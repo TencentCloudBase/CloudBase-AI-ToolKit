@@ -195,7 +195,6 @@ function renderDoc(toolsJson) {
   lines.push('');
   lines.push('## 云端 MCP 配置说明');
   lines.push('');
-  lines.push('CloudBase MCP 支持通过远程 SSE 方式访问，无需在本地运行 MCP Server。');
   lines.push('');
   lines.push('### 环境变量配置');
   lines.push('');
@@ -205,19 +204,8 @@ function renderDoc(toolsJson) {
   lines.push('|---------|------|---------|');
   lines.push('| `TENCENTCLOUD_SECRETID` | 腾讯云 SecretId | [获取腾讯云 API 密钥](https://console.cloud.tencent.com/cam/capi) |');
   lines.push('| `TENCENTCLOUD_SECRETKEY` | 腾讯云 SecretKey | [获取腾讯云 API 密钥](https://console.cloud.tencent.com/cam/capi) |');
-  lines.push('| `TENCENTCLOUD_SESSIONTOKEN` | 腾讯云临时密钥 Token（可选） | 仅在使用临时密钥时需要，可通过 [STS 服务](https://console.cloud.tencent.com/cam/capi) 获取 |');
+  lines.push('| `TENCENTCLOUD_SESSIONTOKEN` | 非必填，腾讯云临时密钥 Token（可选） | 仅在使用临时密钥时需要，可通过 [STS 服务](https://console.cloud.tencent.com/cam/capi) 获取 |');
   lines.push('| `CLOUDBASE_ENV_ID` | 云开发环境 ID | [获取云开发环境 ID](https://tcb.cloud.tencent.com/dev) |');
-  lines.push('');
-  lines.push('### 部署云端 MCP Server');
-  lines.push('');
-  lines.push('1. [一键部署到云开发平台](https://tcb.cloud.tencent.com/dev#/ai?tab=mcp&p&mcp-template=mcp-tcb)');
-  lines.push('2. 部署完成后，参考页面中的使用 MCP 说明，使用远程 SSE 访问 MCP Server');
-  lines.push('');
-  lines.push('### 配置 AI IDE');
-  lines.push('');
-  lines.push('在 AI IDE 的 MCP 配置中使用 SSE 方式连接云端 MCP Server，具体配置方式请参考部署页面提供的说明。');
-  lines.push('');
-  lines.push('---');
   lines.push('');
   lines.push('## 详细规格');
   lines.push('');
