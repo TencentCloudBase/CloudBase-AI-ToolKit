@@ -2,6 +2,7 @@ import express from "express";
 import http from "http";
 import open from "open";
 import { WebSocket, WebSocketServer } from "ws";
+import { renderEnvSetupPage } from "./templates/env-setup/index.js";
 import { debug, error, info, warn } from "./utils/logger.js";
 
 // 动态导入 open 模块，兼容 ESM/CJS 环境
@@ -23,7 +24,7 @@ async function openUrl(url: string, options?: any, server?: any) {
     } catch (err) {
       error(
         `Failed to send logging message for ${url}: ${err instanceof Error ? err.message : err}`,
-        err,
+        err instanceof Error ? err : new Error(String(err)),
       );
       // 如果发送通知失败，回退到直接打开
       warn(`回退到直接打开网页: ${url}`);
@@ -36,7 +37,7 @@ async function openUrl(url: string, options?: any, server?: any) {
   } catch (err) {
     error(
       `Failed to open ${url} ${options} ${err instanceof Error ? err.message : err} `,
-      err,
+      err instanceof Error ? err : new Error(String(err)),
     );
     warn(`Please manually open: ${url}`);
   }
@@ -108,8 +109,13 @@ export class InteractiveServer {
         res.status(404).send("会话不存在或已过期");
         return;
       }
-
-      res.send(this.getEnvSetupHTML(sessionData.envs, sessionData.accountInfo));
+      
+      res.send(this.getEnvSetupHTML(
+        sessionData.envs, 
+        sessionData.accountInfo,
+        sessionData.errorContext, // Pass error context
+        sessionId // Pass sessionId for retry functionality
+      ));
     });
 
     this.app.get("/clarification/:sessionId", (req, res) => {
@@ -176,23 +182,135 @@ export class InteractiveServer {
 
       res.json({ success: true });
     });
+
+    this.app.post("/api/retry-init-tcb", (req, res) => {
+      const { sessionId } = req.body;
+      info("Received retry InitTcb request", { sessionId });
+
+      // Mark session for retry
+      const sessionData = this.sessionData.get(sessionId);
+      if (sessionData) {
+        sessionData.retryInitTcb = true;
+        debug("Marked session for InitTcb retry", { sessionId });
+      }
+
+      res.json({ success: true, message: "重试请求已提交，页面将刷新" });
+    });
   }
 
   private setupWebSocket() {
     this.wss.on("connection", (ws: WebSocket) => {
       debug("WebSocket client connected");
 
-      ws.on("message", (message: string) => {
+      ws.on("message", async (message: string) => {
         try {
           const data = JSON.parse(message.toString());
           debug("WebSocket message received", data);
+
+          // Handle session registration
+          if (data.type === 'registerSession' && data.sessionId) {
+            debug("Registering WebSocket for session:", data.sessionId);
+            const sessionData = this.sessionData.get(data.sessionId);
+            if (sessionData) {
+              sessionData.ws = ws;
+              debug("WebSocket registered successfully for session:", data.sessionId);
+            } else {
+              debug("Session not found:", data.sessionId);
+            }
+            return;
+          }
+
+          // Handle refresh environment list request
+          if (data.type === 'refreshEnvList') {
+            debug("Handling refreshEnvList request");
+            try {
+              // Find the session ID for this WebSocket connection
+              let targetSessionId: string | null = null;
+              for (const [sessionId, sessionData] of this.sessionData.entries()) {
+                if (sessionData.ws === ws) {
+                  targetSessionId = sessionId;
+                  break;
+                }
+              }
+
+              if (targetSessionId) {
+                const sessionData = this.sessionData.get(targetSessionId);
+                if (sessionData && sessionData.manager) {
+                  // Re-fetch environment list using the same API and parameters as initial query
+                  let envResult;
+                  try {
+                    // Use DescribeEnvs with filter parameters (same as initial query)
+                    const queryParams = {
+                      EnvTypes: ["weda", "baas"],
+                      IsVisible: false,
+                      Channels: ["dcloud", "iotenable", "tem", "scene_module"],
+                    };
+                    
+                    envResult = await sessionData.manager.commonService("tcb").call({
+                      Action: "DescribeEnvs",
+                      Param: queryParams,
+                    });
+                    
+                    // Transform response format to match original listEnvs() format
+                    if (envResult && envResult.EnvList) {
+                      envResult = { EnvList: envResult.EnvList };
+                    } else if (envResult && envResult.Data && envResult.Data.EnvList) {
+                      envResult = { EnvList: envResult.Data.EnvList };
+                    } else {
+                      // Fallback to listEnvs if format is unexpected
+                      debug("Unexpected response format, falling back to listEnvs()");
+                      envResult = await sessionData.manager.env.listEnvs();
+                    }
+                  } catch (error) {
+                    debug("DescribeEnvs failed, falling back to listEnvs():", error instanceof Error ? error : new Error(String(error)));
+                    // Fallback to original method on error
+                    envResult = await sessionData.manager.env.listEnvs();
+                  }
+                  
+                  const envs = envResult?.EnvList || [];
+
+                  // Update session data
+                  sessionData.envs = envs;
+
+                  // Send updated environment list to client
+                  ws.send(JSON.stringify({
+                    type: 'envListRefreshed',
+                    envs: envs,
+                    success: true
+                  }));
+
+                  info(`Environment list refreshed, found ${envs.length} environments`);
+                } else {
+                  ws.send(JSON.stringify({
+                    type: 'envListRefreshed',
+                    success: false,
+                    error: '无法获取环境管理器'
+                  }));
+                }
+              } else {
+                ws.send(JSON.stringify({
+                  type: 'envListRefreshed',
+                  success: false,
+                  error: '会话不存在'
+                }));
+              }
+            } catch (err) {
+              error("Failed to refresh environment list", err instanceof Error ? err : new Error(String(err)));
+              ws.send(JSON.stringify({
+                type: 'envListRefreshed',
+                success: false,
+                error: err instanceof Error ? err.message : '刷新失败'
+              }));
+            }
+            return;
+          }
 
           if (this.currentResolver) {
             this.currentResolver(data);
             this.currentResolver = null;
           }
         } catch (err) {
-          error("WebSocket message parsing error", err);
+          error("WebSocket message parsing error", err instanceof Error ? err : new Error(String(err)));
         }
       });
 
@@ -279,7 +397,7 @@ export class InteractiveServer {
         try {
           this.server.listen(portToTry, "127.0.0.1");
         } catch (err) {
-          error(`Failed to bind to port ${portToTry}:`, err);
+          error(`Failed to bind to port ${portToTry}:`, err instanceof Error ? err : new Error(String(err)));
           tryNextPort();
         }
       };
@@ -306,27 +424,34 @@ export class InteractiveServer {
       }, 30000);
 
       try {
-        // 首先关闭WebSocket服务器
+        // 首先关闭WebSocket服务器，等待其完全关闭
         this.wss.close(() => {
           debug("WebSocket server closed");
-        });
-
-        // 然后关闭HTTP服务器
-        this.server.close((err) => {
-          clearTimeout(timeout);
-          if (err) {
-            error("Error closing server:", err);
-            reject(err);
-          } else {
-            info("Interactive server stopped successfully");
-            this.isRunning = false;
-            this.port = 0;
-            resolve();
-          }
+          
+          // WebSocket关闭后，再关闭HTTP服务器
+          this.server.close((err) => {
+            clearTimeout(timeout);
+            if (err) {
+              error("Error closing server:", err);
+              reject(err);
+            } else {
+              info("Interactive server stopped successfully");
+              this.isRunning = false;
+              this.port = 0;
+              
+              // 重新创建整个服务器实例以便下次使用
+              this.server = http.createServer(this.app);
+              this.wss = new WebSocketServer({ server: this.server });
+              this.setupWebSocket();
+              debug("HTTP and WebSocket servers recreated for next use");
+              
+              resolve();
+            }
+          });
         });
       } catch (err) {
         clearTimeout(timeout);
-        error("Error stopping server:", err);
+        error("Error stopping server:", err instanceof Error ? err : new Error(String(err)));
         this.isRunning = false;
         this.port = 0;
         reject(err);
@@ -337,16 +462,30 @@ export class InteractiveServer {
   async collectEnvId(
     availableEnvs: any[],
     accountInfo?: { uin?: string },
+    errorContext?: any, // EnvSetupContext
+    manager?: any, // CloudBase manager instance for refreshing env list
   ): Promise<InteractiveResult> {
     try {
       info("Starting environment ID collection...");
       debug(`Available environments: ${availableEnvs.length}`);
       debug(`Account info:`, accountInfo);
+      debug(`Error context:`, {
+        hasInitTcbError: !!errorContext?.initTcbError,
+        hasCreateEnvError: !!errorContext?.createEnvError,
+        initTcbError: errorContext?.initTcbError,
+        createEnvError: errorContext?.createEnvError
+      });
 
       const port = await this.start();
 
       const sessionId = Math.random().toString(36).substring(2, 15);
-      this.sessionData.set(sessionId, { envs: availableEnvs, accountInfo });
+      this.sessionData.set(sessionId, { 
+        envs: availableEnvs, 
+        accountInfo,
+        errorContext, // Store error context
+        manager, // Store manager for refreshing env list
+        ws: null // Will be set when WebSocket connects
+      });
       debug(`Created session: ${sessionId}`);
 
       setTimeout(
@@ -365,7 +504,7 @@ export class InteractiveServer {
         await openUrl(url, { wait: false }, this._mcpServer);
         info("Browser opened successfully");
       } catch (browserError) {
-        error("Failed to open browser", browserError);
+        error("Failed to open browser", browserError instanceof Error ? browserError : new Error(String(browserError)));
         warn(`Please manually open: ${url}`);
       }
 
@@ -396,7 +535,7 @@ export class InteractiveServer {
         );
       });
     } catch (err) {
-      error("Error in collectEnvId", err);
+      error("Error in collectEnvId", err instanceof Error ? err : new Error(String(err)));
       throw err;
     }
   }
@@ -435,11 +574,60 @@ export class InteractiveServer {
     });
   }
 
+  private escapeHtml(text: string): string {
+    if (!text) return '';
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
   private getEnvSetupHTML(
     envs?: any[],
     accountInfo?: { uin?: string },
+    errorContext?: any, // EnvSetupContext
+    sessionId?: string,
+  ): string {
+    // Extract error information
+    const initTcbError = errorContext?.initTcbError;
+    const createEnvError = errorContext?.createEnvError;
+    
+    debug("getEnvSetupHTML called with:", {
+      envCount: envs?.length || 0,
+      hasInitTcbError: !!initTcbError,
+      hasCreateEnvError: !!createEnvError,
+      hasAccountInfo: !!accountInfo?.uin,
+      sessionId
+    });
+
+    // Use new template system
+    return renderEnvSetupPage({
+      envs,
+      accountInfo,
+      errorContext,
+      sessionId,
+      wsPort: this.port
+    });
+  }
+
+  // Keep the old implementation for reference (can be removed later)
+  private getEnvSetupHTML_OLD(
+    envs?: any[],
+    accountInfo?: { uin?: string },
+    errorContext?: any,
+    sessionId?: string,
   ): string {
     const accountDisplay = accountInfo?.uin ? `UIN: ${accountInfo.uin}` : "";
+    const hasAccountInfo = !!accountInfo?.uin;
+    const hasEnvs = (envs || []).length > 0;
+    
+    // Extract error information
+    const initTcbError = errorContext?.initTcbError;
+    const createEnvError = errorContext?.createEnvError;
+    const hasErrors = !!(initTcbError || createEnvError);
+    const hasInitError = !!initTcbError;
 
     return `
 <!DOCTYPE html>
@@ -831,6 +1019,94 @@ export class InteractiveServer {
             max-width: 400px;
         }
 
+        .error-banner {
+            margin-bottom: 24px;
+            padding: 16px;
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .error-item {
+            margin-bottom: 16px;
+        }
+
+        .error-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .error-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            color: #ffc107;
+        }
+
+        .error-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffc107;
+        }
+
+        .error-message {
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin-bottom: 12px;
+            padding-left: 24px;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        .error-action {
+            padding-left: 24px;
+            margin-top: 12px;
+        }
+
+        .error-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            padding: 8px 16px;
+            background: rgba(103, 233, 233, 0.1);
+            border: 1px solid rgba(103, 233, 233, 0.3);
+            border-radius: 6px;
+        }
+
+        .error-link:hover {
+            color: var(--accent-hover);
+            background: rgba(103, 233, 233, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        .error-retry-btn {
+            margin-left: 12px;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        .error-retry-btn:hover {
+            transform: rotate(180deg);
+            transition: transform 0.3s ease;
+        }
+
+        .error-action {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
         .create-env-btn {
             padding: 14px 24px;
             font-size: 15px;
@@ -1027,6 +1303,10 @@ export class InteractiveServer {
             <h1 class="content-title">选择 CloudBase 环境</h1>
             <p class="content-subtitle">请选择您要使用的 CloudBase 环境</p>
 
+            ${
+              (hasAccountInfo || hasEnvs) ? `
+            ${
+              (hasAccountInfo || hasEnvs) ? `
             <div class="account-bar">
                 <div class="account-info">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1044,6 +1324,103 @@ export class InteractiveServer {
                     切换账号
                 </button>
             </div>
+            ` : ''
+            }
+            ` : ''
+            }
+
+            ${
+              hasErrors ? `
+            <div class="error-banner" id="errorBanner">
+                ${
+                  initTcbError ? `
+                <div class="error-item">
+                    <div class="error-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <span class="error-title">CloudBase 服务初始化失败</span>
+                    </div>
+                    <div class="error-message">${this.escapeHtml(initTcbError.message)}</div>
+                    ${
+                      initTcbError.needRealNameAuth ? `
+                    <div class="error-action">
+                        <a href="${initTcbError.helpUrl || 'https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp'}" target="_blank" class="error-link">
+                            前往实名认证
+                        </a>
+                    </div>
+                    ` : ''
+                    }
+                    ${
+                      initTcbError.needCamAuth ? `
+                    <div class="error-action">
+                        <a href="${initTcbError.helpUrl || 'https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp'}" target="_blank" class="error-link">
+                            前往开通 CloudBase 服务
+                        </a>
+                        ${
+                          sessionId ? `
+                        <button class="error-link error-retry-btn" onclick="retryInitTcb('${sessionId}')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                            </svg>
+                            重试
+                        </button>
+                        ` : ''
+                        }
+                    </div>
+                    ` : ''
+                    }
+                    ${
+                      !initTcbError.needRealNameAuth && !initTcbError.needCamAuth && initTcbError.helpUrl ? `
+                    <div class="error-action">
+                        <a href="${initTcbError.helpUrl}" target="_blank" class="error-link">
+                            前往开通 CloudBase 服务
+                        </a>
+                        ${
+                          sessionId ? `
+                        <button class="error-link error-retry-btn" onclick="retryInitTcb('${sessionId}')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                            </svg>
+                            重试
+                        </button>
+                        ` : ''
+                        }
+                    </div>
+                    ` : ''
+                    }
+                </div>
+                ` : ''
+                }
+                ${
+                  createEnvError ? `
+                <div class="error-item">
+                    <div class="error-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <span class="error-title">免费环境创建失败</span>
+                    </div>
+                    <div class="error-message">${this.escapeHtml(createEnvError.message)}</div>
+                    ${
+                      createEnvError.helpUrl ? `
+                    <div class="error-action">
+                        <a href="${createEnvError.helpUrl}" target="_blank" class="error-link">
+                            手动创建环境
+                        </a>
+                    </div>
+                    ` : ''
+                    }
+                </div>
+                ` : ''
+                }
+            </div>
+            ` : ''
+            }
 
             <div class="env-list" id="envList">
                 ${
@@ -1066,6 +1443,10 @@ export class InteractiveServer {
                     : `
                     <div class="empty-state">
                         <h3 class="empty-title">暂无 CloudBase 环境</h3>
+                        ${
+                          hasInitError ? `
+                        <p class="empty-message">由于 CloudBase 服务初始化失败，无法创建新环境。请先解决初始化问题后重试。</p>
+                        ` : `
                         <p class="empty-message">当前没有可用的 CloudBase 环境，请新建后重新在 AI 对话中重试</p>
                         <button class="btn btn-primary create-env-btn" onclick="createNewEnv()">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1073,6 +1454,8 @@ export class InteractiveServer {
                             </svg>
                             新建环境
                         </button>
+                        `
+                        }
                     </div>
                     `
                 }
@@ -1230,6 +1613,42 @@ export class InteractiveServer {
                 // 页面会由服务端重新打开新的登录页面
                 window.close();
             });
+        }
+
+        function retryInitTcb(sessionId) {
+            const retryBtn = event.target.closest('.error-retry-btn');
+            if (retryBtn) {
+                retryBtn.disabled = true;
+                retryBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 重试中...';
+            }
+
+            fetch('/api/retry-init-tcb', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sessionId })
+            }).then(response => response.json())
+              .then(result => {
+                  if (result.success) {
+                      // Refresh page to retry initialization
+                      setTimeout(() => {
+                          window.location.reload();
+                      }, 500);
+                  } else {
+                      alert('重试失败，请稍后再试');
+                      if (retryBtn) {
+                          retryBtn.disabled = false;
+                          retryBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> 重试';
+                      }
+                  }
+              })
+              .catch(err => {
+                  console.error('Retry failed:', err);
+                  alert('重试失败，请稍后再试');
+                  if (retryBtn) {
+                      retryBtn.disabled = false;
+                      retryBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> 重试';
+                  }
+              });
         }
     </script>
 </body>
@@ -2436,7 +2855,7 @@ export async function resetInteractiveServer(): Promise<void> {
     try {
       await interactiveServerInstance.stop();
     } catch (err) {
-      error("Error stopping existing server instance:", err);
+      error("Error stopping existing server instance:", err instanceof Error ? err : new Error(String(err)));
     }
     interactiveServerInstance = null;
   }
@@ -2450,7 +2869,7 @@ export async function getInteractiveServerSafe(
     try {
       await interactiveServerInstance.stop();
     } catch (err) {
-      debug("Error stopping non-running server:", err);
+      debug("Error stopping non-running server:", err instanceof Error ? err : new Error(String(err)));
     }
     interactiveServerInstance = null;
   }

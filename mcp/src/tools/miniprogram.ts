@@ -107,7 +107,7 @@ export function registerMiniprogramTools(server: ExtendedMcpServer) {
           ]
         };
       } catch (err) {
-        error("上传小程序代码失败:", err);
+        error("上传小程序代码失败:", err instanceof Error ? err : new Error(String(err)));
         return {
           content: [
             {
@@ -207,7 +207,7 @@ export function registerMiniprogramTools(server: ExtendedMcpServer) {
           ]
         };
       } catch (err) {
-        error("预览小程序代码失败:", err);
+        error("预览小程序代码失败:", err instanceof Error ? err : new Error(String(err)));
         return {
           content: [
             {
@@ -274,7 +274,7 @@ export function registerMiniprogramTools(server: ExtendedMcpServer) {
           ]
         };
       } catch (err) {
-        error("构建小程序 npm 失败:", err);
+        error("构建小程序 npm 失败:", err instanceof Error ? err : new Error(String(err)));
         return {
           content: [
             {
@@ -334,7 +334,7 @@ export function registerMiniprogramTools(server: ExtendedMcpServer) {
           ]
         };
       } catch (err) {
-        error("获取小程序项目配置失败:", err);
+        error("获取小程序项目配置失败:", err instanceof Error ? err : new Error(String(err)));
         return {
           content: [
             {
@@ -404,7 +404,7 @@ export function registerMiniprogramTools(server: ExtendedMcpServer) {
           ]
         };
       } catch (err) {
-        error("获取小程序 SourceMap 失败:", err);
+        error("获取小程序 SourceMap 失败:", err instanceof Error ? err : new Error(String(err)));
         return {
           content: [
             {
@@ -470,7 +470,7 @@ export function registerMiniprogramTools(server: ExtendedMcpServer) {
           ]
         };
       } catch (err) {
-        error("检查小程序代码质量失败:", err);
+        error("检查小程序代码质量失败:", err instanceof Error ? err : new Error(String(err)));
         return {
           content: [
             {
@@ -534,7 +534,7 @@ export function registerMiniprogramTools(server: ExtendedMcpServer) {
           ]
         };
       } catch (err) {
-        error("自定义构建小程序 npm 失败:", err);
+        error("自定义构建小程序 npm 失败:", err instanceof Error ? err : new Error(String(err)));
         return {
           content: [
             {

@@ -219,7 +219,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
                 logCloudBaseResult(server.logger, result);
               }
             } catch (error) {
-              debug("获取环境列表时出错，尝试降级到 listEnvs():", error);
+              debug("获取环境列表时出错，尝试降级到 listEnvs():", error instanceof Error ? error : new Error(String(error)));
               // Fallback to original method on error
               try {
                 const cloudbaseList = await getCloudBaseManager({
@@ -229,7 +229,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
                 result = await cloudbaseList.env.listEnvs();
                 logCloudBaseResult(server.logger, result);
               } catch (fallbackError) {
-                debug("降级到 listEnvs() 也失败:", fallbackError);
+                debug("降级到 listEnvs() 也失败:", fallbackError instanceof Error ? fallbackError : new Error(String(fallbackError)));
                 return {
                   content: [
                     {

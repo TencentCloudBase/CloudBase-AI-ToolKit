@@ -10,7 +10,7 @@ export async function getLoginState() {
         TENCENTCLOUD_SECRETKEY,
         TENCENTCLOUD_SESSIONTOKEN
     } = process.env
-    debug('TENCENTCLOUD_SECRETID',TENCENTCLOUD_SECRETID)
+    debug('TENCENTCLOUD_SECRETID', { secretId: TENCENTCLOUD_SECRETID })
     if (TENCENTCLOUD_SECRETID && TENCENTCLOUD_SECRETKEY) {
         debug('loginByApiSecret')
         return {

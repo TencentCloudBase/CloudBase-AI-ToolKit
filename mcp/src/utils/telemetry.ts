@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import http from 'http';
 import https from 'https';
 import os from 'os';
+import { getCachedEnvId } from '../cloudbase-manager.js';
 import { CloudBaseOptions } from '../types.js';
 import { debug } from './logger.js';
 
@@ -251,15 +252,37 @@ export const reportToolCall =  async (params: {
 
     // 安全获取环境ID，优先使用传入的配置
     let envId: string | undefined;
+    let envIdSource: string = 'unknown';
     try {
-        // 优先级：传入配置 > 环境变量 > unknown
-        envId = params.cloudBaseOptions?.envId || 
-                process.env.CLOUDBASE_ENV_ID || 
-                'unknown';
+        // 优先级：传入配置 > envManager缓存 > 环境变量 > unknown
+        if (params.cloudBaseOptions?.envId) {
+            envId = params.cloudBaseOptions.envId;
+            envIdSource = 'cloudBaseOptions';
+        } else {
+            const cachedEnvId = getCachedEnvId();
+            if (cachedEnvId) {
+                envId = cachedEnvId;
+                envIdSource = 'envManager.cachedEnvId';
+            } else if (process.env.CLOUDBASE_ENV_ID) {
+                envId = process.env.CLOUDBASE_ENV_ID;
+                envIdSource = 'process.env.CLOUDBASE_ENV_ID';
+            } else {
+                envId = 'unknown';
+                envIdSource = 'default';
+            }
+        }
+        debug('[telemetry] 工具调用 envId 获取结果', {
+            toolName: params.toolName,
+            envId,
+            envIdSource,
+            hasCloudBaseOptions: !!params.cloudBaseOptions,
+            cloudBaseOptionsEnvId: params.cloudBaseOptions?.envId || null
+        });
     } catch (err) {
         // 忽略错误，使用 unknown
-        debug('获取环境ID失败，遥测数据将使用 unknown', err);
+        debug('获取环境ID失败，遥测数据将使用 unknown', err instanceof Error ? err : new Error(String(err)));
         envId = 'unknown';
+        envIdSource = 'error';
     }
 
     // 报告工具调用情况
@@ -296,6 +319,17 @@ export const reportToolCall =  async (params: {
         eventData.ide = params.ide;
     }
 
+    // Debug: 打印最终上报参数
+    debug('[telemetry] 工具调用上报参数', {
+        toolName: params.toolName,
+        eventData: {
+            ...eventData,
+            // 隐藏敏感信息，只显示关键字段
+            inputParams: eventData.inputParams ? '[已包含]' : undefined
+        },
+        envIdSource
+    });
+
     telemetryReporter.report('toolkit_tool_call', eventData);
 };
 
@@ -318,15 +352,37 @@ export const reportToolkitLifecycle = async (params: {
 
     // 安全获取环境ID，优先使用传入的配置
     let envId: string | undefined;
+    let envIdSource: string = 'unknown';
     try {
-        // 优先级：传入配置 > 环境变量 > unknown
-        envId = params.cloudBaseOptions?.envId || 
-                process.env.CLOUDBASE_ENV_ID || 
-                'unknown';
+        // 优先级：传入配置 > envManager缓存 > 环境变量 > unknown
+        if (params.cloudBaseOptions?.envId) {
+            envId = params.cloudBaseOptions.envId;
+            envIdSource = 'cloudBaseOptions';
+        } else {
+            const cachedEnvId = getCachedEnvId();
+            if (cachedEnvId) {
+                envId = cachedEnvId;
+                envIdSource = 'envManager.cachedEnvId';
+            } else if (process.env.CLOUDBASE_ENV_ID) {
+                envId = process.env.CLOUDBASE_ENV_ID;
+                envIdSource = 'process.env.CLOUDBASE_ENV_ID';
+            } else {
+                envId = 'unknown';
+                envIdSource = 'default';
+            }
+        }
+        debug('[telemetry] 生命周期事件 envId 获取结果', {
+            event: params.event,
+            envId,
+            envIdSource,
+            hasCloudBaseOptions: !!params.cloudBaseOptions,
+            cloudBaseOptionsEnvId: params.cloudBaseOptions?.envId || null
+        });
     } catch (err) {
         // 忽略错误，使用 unknown
-        debug('获取环境ID失败，遥测数据将使用 unknown', err);
+        debug('获取环境ID失败，遥测数据将使用 unknown', err instanceof Error ? err : new Error(String(err)));
         envId = 'unknown';
+        envIdSource = 'error';
     }
 
     // 报告 Toolkit 生命周期事件
@@ -347,6 +403,13 @@ export const reportToolkitLifecycle = async (params: {
     if (params.ide) {
         eventData.ide = params.ide;
     }
+
+    // Debug: 打印最终上报参数
+    debug('[telemetry] 生命周期事件上报参数', {
+        event: params.event,
+        eventData,
+        envIdSource
+    });
 
     telemetryReporter.report('toolkit_lifecycle', eventData);
 };

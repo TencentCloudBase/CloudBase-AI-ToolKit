@@ -1,4 +1,4 @@
-# 工具参考
+# MCP 工具
 
 当前包含 37 个工具。
 
@@ -50,6 +50,32 @@
 <tr><td><code>activateInviteCode</code></td><td>云开发 AI编程激励计划，通过邀请码激活用户激励。</td></tr>
 </tbody>
 </table>
+
+---
+
+## 云端 MCP 配置说明
+
+CloudBase MCP 支持通过远程 SSE 方式访问，无需在本地运行 MCP Server。
+
+### 环境变量配置
+
+使用云端 MCP 需要配置以下环境变量：
+
+| 环境变量 | 说明 | 获取方式 |
+|---------|------|---------|
+| `TENCENTCLOUD_SECRETID` | 腾讯云 SecretId | [获取腾讯云 API 密钥](https://console.cloud.tencent.com/cam/capi) |
+| `TENCENTCLOUD_SECRETKEY` | 腾讯云 SecretKey | [获取腾讯云 API 密钥](https://console.cloud.tencent.com/cam/capi) |
+| `TENCENTCLOUD_SESSIONTOKEN` | 腾讯云临时密钥 Token（可选） | 仅在使用临时密钥时需要，可通过 [STS 服务](https://console.cloud.tencent.com/cam/capi) 获取 |
+| `CLOUDBASE_ENV_ID` | 云开发环境 ID | [获取云开发环境 ID](https://tcb.cloud.tencent.com/dev) |
+
+### 部署云端 MCP Server
+
+1. [一键部署到云开发平台](https://tcb.cloud.tencent.com/dev#/ai?tab=mcp&p&mcp-template=mcp-tcb)
+2. 部署完成后，参考页面中的使用 MCP 说明，使用远程 SSE 访问 MCP Server
+
+### 配置 AI IDE
+
+在 AI IDE 的 MCP 配置中使用 SSE 方式连接云端 MCP Server，具体配置方式请参考部署页面提供的说明。
 
 ---
 

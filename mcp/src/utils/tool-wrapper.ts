@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import os from 'os';
-import { getEnvId } from '../cloudbase-manager.js';
+import { getCachedEnvId, getEnvId } from '../cloudbase-manager.js';
 import { ExtendedMcpServer } from "../server.js";
 import { CloudBaseOptions } from '../types.js';
 import { shouldRegisterTool } from './cloud-mode.js';
@@ -46,7 +46,7 @@ ${envId}
         }
     } catch (error) {
         // 如果获取 envId 失败，不添加环境ID部分
-        debug('无法获取环境ID:', error);
+        debug('无法获取环境ID:', error instanceof Error ? error : new Error(String(error)));
     }
 
     // 构建标题
@@ -148,13 +148,23 @@ function createWrappedHandler(name: string, handler: any, server: ExtendedMcpSer
         } finally {
             // 上报工具调用数据
             const duration = Date.now() - startTime;
+            
+            // 如果 server.cloudBaseOptions 为空或没有 envId，尝试从缓存获取并更新
+            let cloudBaseOptions = server.cloudBaseOptions;
+            if (!cloudBaseOptions?.envId) {
+                const cachedEnvId = getCachedEnvId();
+                if (cachedEnvId) {
+                    cloudBaseOptions = { ...cloudBaseOptions, envId: cachedEnvId };
+                }
+            }
+            
             reportToolCall({
                 toolName: name,
                 success,
                 duration,
                 error: errorMessage,
                 inputParams: sanitizeArgs(args), // 添加入参上报
-                cloudBaseOptions: server.cloudBaseOptions, // 传递 CloudBase 配置
+                cloudBaseOptions: cloudBaseOptions, // 传递 CloudBase 配置（可能已更新）
                 ide: server.ide || process.env.INTEGRATION_IDE // 传递集成IDE信息
             });
         }

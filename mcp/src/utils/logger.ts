@@ -108,29 +108,40 @@ const logger = winston.createLogger({
 const logWithData = (
   level: 'debug' | 'info' | 'warn' | 'error',
   message: string,
-  data?: any
+  data?: object | Error
 ) => {
   if (data !== undefined) {
-    logger.log(level, message, data);
+    // Convert Error to object format for winston
+    if (data instanceof Error) {
+      logger.log(level, message, {
+        error: {
+          name: data.name,
+          message: data.message,
+          stack: data.stack,
+        },
+      });
+    } else {
+      logger.log(level, message, data);
+    }
   } else {
     logger.log(level, message);
   }
 };
 
 // Export convenience functions
-export const debug = (message: string, data?: any) => {
+export const debug = (message: string, data?: object | Error) => {
   logWithData('debug', message, data);
 };
 
-export const info = (message: string, data?: any) => {
+export const info = (message: string, data?: object | Error) => {
   logWithData('info', message, data);
 };
 
-export const warn = (message: string, data?: any) => {
+export const warn = (message: string, data?: object | Error) => {
   logWithData('warn', message, data);
 };
 
-export const error = (message: string, data?: any) => {
+export const error = (message: string, data?: object | Error) => {
   logWithData('error', message, data);
 };
 
