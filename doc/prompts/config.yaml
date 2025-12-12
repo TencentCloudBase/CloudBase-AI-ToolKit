@@ -24,7 +24,7 @@ rules:
     order: 2
     prompts:
       - "帮我实现一个 Web 登录页面，使用 CloudBase Auth"
-      - "创建一个用户注册和登录功能"
+      - "创建一个手机号注册和登录功能"
   
   - id: auth-wechat
     title: 身份认证：微信小程序
@@ -37,7 +37,7 @@ rules:
   
   - id: auth-http-api
     title: 身份认证：App 集成
-    description: 使用 CloudBase HTTP API 进行身份认证，适用于 Android、iOS 等原生应用
+    description: 使用 CloudBase HTTP API 进行身份认证，适用于 Android、iOS、Cocos、Flutter、React Native 等原生应用和框架
     category: auth
     order: 4
     ruleDir: http-api
@@ -65,7 +65,7 @@ rules:
   
   - id: relational-database-tool
     title: 关系型数据库：工具与规则
-    description: 操作 CloudBase 关系型数据库的工具和规则
+    description: 操作 CloudBase 关系型数据库的工具和规则,支持[连接自有数据库](https://docs.cloudbase.net/database/configuration/db/hosted-mysql/init)
     category: database
     order: 3
     prompts:
@@ -74,21 +74,12 @@ rules:
   
   - id: relational-database-web
     title: 关系型数据库：Web SDK
-    description: 在 Web 应用中使用 CloudBase 关系型数据库
+    description: 在 Web 应用中使用 CloudBase 关系型数据库,支持[连接自有数据库](https://docs.cloudbase.net/database/configuration/db/hosted-mysql/init)
     category: database
     order: 4
     prompts:
       - "帮我创建一个使用关系型数据库的 Web 应用"
       - "实现 Supabase 风格的数据库查询"
-  
-  - id: data-model-creation
-    title: 数据库：数据模型创建
-    description: 使用 AI 创建复杂数据模型
-    category: database
-    order: 5
-    prompts:
-      - "帮我创建一个用户和订单的数据模型"
-      - "设计一个博客系统的数据模型"
   
   - id: database-http-api
     title: 数据库：App 集成
@@ -101,12 +92,12 @@ rules:
       - "在 iOS 应用中实现数据库操作"
   
   - id: cloudrun-development
-    title: 后端开发：CloudBase Run
-    description: CloudBase Run 后端开发规则（函数模式/容器模式）
+    title: 后端开发：云托管
+    description: 使用云托管开发和部署任意语言的后端服务
     category: backend
     order: 1
     prompts:
-      - "帮我部署一个 Node.js 后端服务到 CloudBase Run"
+      - "帮我部署一个 Node.js 后端服务到云托管"
       - "创建一个支持多语言的云托管服务"
   
   - id: web-development

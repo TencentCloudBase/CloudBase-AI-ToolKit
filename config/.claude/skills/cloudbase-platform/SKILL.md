@@ -150,14 +150,106 @@ Use this skill for **CloudBase platform knowledge** when you need to:
 
 ## Console Management
 
-After creating/deploying resources, provide corresponding console management page links:
+After creating/deploying resources, provide corresponding console management page links. All console URLs follow the pattern: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/{path}`
 
-1. **Static Hosting**: https://console.cloud.tencent.com/tcb/hosting
+### Core Function Entry Points
 
-2. **Cloud Function**: https://tcb.cloud.tencent.com/dev?envId=${envId}#/scf/detail?id=${functionName}&NameSpace=${envId}
+1. **Overview (概览)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/overview`
+   - Main dashboard showing environment status, resource usage, and quick access to key features
+   - Displays overview of all CloudBase services and their status
 
-3. **Database Collection**: https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/doc/collection/${collectionName}
+2. **Template Center (模板中心)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/template`
+   - Access project templates for React, Vue, Mini Program, UniApp, and backend frameworks
+   - AI Builder templates for rapid application generation
+   - Framework templates: React, Vue, Miniapp, UniApp, Gin, Django, Flask, SpringBoot, Express, NestJS, FastAPI
 
-4. **Data Model**: https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/doc/model/${modelName}
+3. **Document Database (文档型数据库)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/doc`
+   - Manage NoSQL document database collections
+   - **Collection Management**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/doc/collection/${collectionName}`
+     - View, edit, and manage collection data
+     - Configure security rules and permissions
+   - **Data Model Management**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/doc/model/${modelName}`
+     - Create and manage data models with relationships
+     - View model schema and field definitions
 
-**Usage**: After creating corresponding resources, replace variables with actual values, provide to user for management operations.
+4. **MySQL Database (MySQL 数据库)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/mysql`
+   - Manage MySQL relational database
+   - **Table Management**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/mysql/table/default/`
+     - Create, modify, and manage database tables
+     - Execute SQL queries and manage table structure
+   - **Important**: Must enable MySQL database in console before use
+
+5. **Cloud Functions (云函数)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/scf`
+   - Manage and deploy Node.js cloud functions
+   - **Function List**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/scf`
+   - **Function Detail**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/scf/detail?id=${functionName}&NameSpace=${envId}`
+     - View function code, logs, and configuration
+     - Manage function triggers and environment variables
+     - Monitor function invocations and performance
+
+6. **CloudRun (云托管)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/cloudrun`
+   - Manage containerized backend services
+   - Deploy services using Function mode or Container mode
+   - Configure service scaling, access types, and environment variables
+   - View service logs and monitoring data
+
+7. **Cloud Storage (云存储)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/storage`
+   - Manage file storage buckets
+   - Upload, download, and organize files
+   - Configure storage permissions and access policies
+   - Generate temporary access URLs for private files
+
+8. **AI+**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/ai`
+   - Access AI capabilities and services
+   - AI Builder for generating templates and code
+   - AI image recognition and other AI features
+
+9. **Static Website Hosting (静态网站托管)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/hosting`
+   - Deploy and manage static websites
+   - Alternative URL: `https://console.cloud.tencent.com/tcb/hosting`
+   - Configure custom domains and CDN settings
+   - View deployment history and access logs
+
+10. **Identity Authentication (身份认证)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/identity`
+    - Configure authentication methods and user management
+    - **Login Management**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/identity/login-manage`
+      - Enable/disable login methods (SMS, Email, Username/Password, WeChat, Custom Login)
+      - Configure SMS/Email templates
+      - Manage security domain whitelist
+    - **Token Management**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/identity/token-management`
+      - Manage API Keys and Publishable Keys
+      - View and manage access tokens
+
+11. **Weida Low-Code (微搭低代码)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/weida`
+    - Access Weida low-code development platform
+    - Build applications using visual drag-and-drop interface
+
+12. **Logs & Monitoring (日志监控)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/logs`
+    - View logs from cloud functions, CloudRun services, and other resources
+    - Monitor resource usage, performance metrics, and error rates
+    - Set up alerts and notifications
+
+13. **Extensions (扩展功能)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/extensions`
+    - Manage platform extensions and plugins
+    - Install and configure additional CloudBase capabilities
+
+14. **Environment Settings (环境配置)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/settings`
+    - Configure environment-level settings
+    - Manage security domains and CORS settings
+    - Configure environment variables and secrets
+    - View environment information and resource quotas
+
+### URL Construction Guidelines
+
+- **Base URL Pattern**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/{path}`
+- **Replace Variables**: Always replace `${envId}` with the actual environment ID queried via `envQuery` tool
+- **Resource-Specific URLs**: For specific resources (collections, functions, models), replace resource name variables with actual values
+- **Usage**: After creating/deploying resources, provide these console links to users for management operations
+
+### Quick Reference
+
+When directing users to console pages:
+- Use the full URL with environment ID
+- Explain what they can do on each page
+- Provide context about why they need to access that specific page
+- For configuration pages (like login management), guide users through the setup process

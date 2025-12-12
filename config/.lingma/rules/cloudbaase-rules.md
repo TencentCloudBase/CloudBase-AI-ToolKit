@@ -313,3 +313,24 @@ If development is found to not comply with standards, can:
 - Point out specific issues
 - Require re-execution of rule check process
 - Clearly specify rule files that need to be followed
+
+## CloudBase Console Entry Points
+
+After creating/deploying resources, provide corresponding console management page links. All console URLs follow the pattern: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/{path}`
+
+### Core Function Entry Points
+
+1. **Overview (概览)**: `#/overview` - Main dashboard
+2. **Template Center (模板中心)**: `#/template` - Project templates
+3. **Document Database (文档型数据库)**: `#/db/doc` - NoSQL collections: `#/db/doc/collection/${collectionName}`, Models: `#/db/doc/model/${modelName}`
+4. **MySQL Database (MySQL 数据库)**: `#/db/mysql` - Tables: `#/db/mysql/table/default/`
+5. **Cloud Functions (云函数)**: `#/scf` - Function detail: `#/scf/detail?id=${functionName}&NameSpace=${envId}`
+6. **CloudRun (云托管)**: `#/cloudrun` - Container services
+7. **Cloud Storage (云存储)**: `#/storage` - File storage
+8. **AI+**: `#/ai` - AI capabilities
+9. **Static Website Hosting (静态网站托管)**: `#/hosting`
+10. **Identity Authentication (身份认证)**: `#/identity` - Login: `#/identity/login-manage`, Tokens: `#/identity/token-management`
+11. **Weida Low-Code (微搭低代码)**: `#/weida`
+12. **Logs & Monitoring (日志监控)**: `#/logs`
+13. **Extensions (扩展功能)**: `#/extensions`
+14. **Environment Settings (环境配置)**: `#/settings`

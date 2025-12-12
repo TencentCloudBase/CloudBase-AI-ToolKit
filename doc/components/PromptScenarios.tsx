@@ -1,5 +1,5 @@
-import React from 'react';
 import Link from '@docusaurus/Link';
+import React from 'react';
 import styles from './PromptScenarios.module.css';
 
 interface Scenario {

@@ -21,7 +21,7 @@ class EnvironmentManager {
     async getEnvId(): Promise<string> {
         // 1. 优先使用内存缓存
         if (this.cachedEnvId) {
-            debug('使用内存缓存的环境ID:', this.cachedEnvId);
+            debug('使用内存缓存的环境ID:', { envId: this.cachedEnvId });
             return this.cachedEnvId;
         }
 
@@ -54,7 +54,7 @@ class EnvironmentManager {
         try {
             // 1. 检查进程环境变量
             if (process.env.CLOUDBASE_ENV_ID) {
-                debug('使用进程环境变量的环境ID:', process.env.CLOUDBASE_ENV_ID);
+                debug('使用进程环境变量的环境ID:', { envId: process.env.CLOUDBASE_ENV_ID });
                 this.cachedEnvId = process.env.CLOUDBASE_ENV_ID;
                 return this.cachedEnvId;
             }
@@ -66,7 +66,7 @@ class EnvironmentManager {
                 throw new Error("CloudBase Environment ID not found after auto setup. Please set CLOUDBASE_ENV_ID or run setupEnvironmentId tool.");
             }
 
-            debug('自动设置环境ID成功:', autoEnvId);
+            debug('自动设置环境ID成功:', { envId: autoEnvId });
             this._setCachedEnvId(autoEnvId);
             return autoEnvId;
 
@@ -101,7 +101,7 @@ const envManager = new EnvironmentManager();
 export async function getEnvId(cloudBaseOptions?: CloudBaseOptions): Promise<string> {
     // 如果传入了 cloudBaseOptions 且包含 envId，直接返回
     if (cloudBaseOptions?.envId) {
-        debug('使用传入的 envId:', cloudBaseOptions.envId);
+        debug('使用传入的 envId:', { envId: cloudBaseOptions.envId });
         return cloudBaseOptions.envId;
     }
 
@@ -112,6 +112,11 @@ export async function getEnvId(cloudBaseOptions?: CloudBaseOptions): Promise<str
 // 导出函数保持兼容性
 export function resetCloudBaseManagerCache() {
     envManager.reset();
+}
+
+// 导出获取缓存环境ID的函数，供遥测模块使用
+export function getCachedEnvId(): string | null {
+    return envManager.getCachedEnvId();
 }
 
 export interface GetManagerOptions {
@@ -147,11 +152,11 @@ export async function getCloudBaseManager(options: GetManagerOptions = {}): Prom
             // This avoids unnecessary async calls when we have a valid envId available
             const cachedEnvId = envManager.getCachedEnvId();
             if (cachedEnvId) {
-                debug('使用 envManager 缓存的环境ID:', cachedEnvId);
+                debug('使用 envManager 缓存的环境ID:', {cachedEnvId});
                 finalEnvId = cachedEnvId;
             } else if (loginEnvId) {
                 // If no cache but loginState has envId, use it to avoid triggering auto-setup
-                debug('使用 loginState 中的环境ID:', loginEnvId);
+                debug('使用 loginState 中的环境ID:', {loginEnvId});
                 finalEnvId = loginEnvId;
             } else {
                 // Only call envManager.getEnvId() when neither cache nor loginState has envId
@@ -171,7 +176,7 @@ export async function getCloudBaseManager(options: GetManagerOptions = {}): Prom
         });
         return manager;
     } catch (err) {
-        error('Failed to initialize CloudBase Manager:', err instanceof Error ? err.message : String(err));
+        error('Failed to initialize CloudBase Manager:', err instanceof Error ? err : new Error(String(err)));
         throw err;
     }
 }

@@ -44,7 +44,7 @@ export async function sendDeployNotification(
     info(`CodeBuddy IDE: 已发送部署通知 - ${notificationData.deployType} - ${notificationData.url}`);
   } catch (err) {
     // Log error but don't throw - notification failure should not affect deployment flow
-    error(`Failed to send deployment notification: ${err instanceof Error ? err.message : err}`, err);
+    error(`Failed to send deployment notification: ${err instanceof Error ? err.message : err}`, err instanceof Error ? err : new Error(String(err)));
   }
 }
 
