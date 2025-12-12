@@ -11,6 +11,7 @@ import { registerSetupTools } from "./tools/setup.js";
 import { registerStorageTools } from "./tools/storage.js";
 // import { registerMiniprogramTools } from "./tools/miniprogram.js";
 import { SetLevelRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import { registerCapiTools } from "./tools/capi.js";
 import { registerCloudRunTools } from "./tools/cloudrun.js";
 import { registerDataModelTools } from "./tools/dataModel.js";
 import { registerGatewayTools } from "./tools/gateway.js";
@@ -42,6 +43,7 @@ const DEFAULT_PLUGINS = [
   "download",
   "security-rule",
   "invite-code",
+  "capi",
 ];
 
 function registerDatabase(server: ExtendedMcpServer) {
@@ -69,6 +71,7 @@ const AVAILABLE_PLUGINS: Record<string, PluginDefinition> = {
   },
   "invite-code": { name: "invite-code", register: registerInviteCodeTools },
   cloudrun: { name: "cloudrun", register: registerCloudRunTools },
+  capi: { name: "capi", register: registerCapiTools },
 };
 
 /**
