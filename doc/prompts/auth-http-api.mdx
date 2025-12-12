@@ -1,6 +1,6 @@
 # 身份认证：App 集成
 
-使用 CloudBase HTTP API 进行身份认证，适用于 Android、iOS 等原生应用
+使用 CloudBase HTTP API 进行身份认证，适用于 Android、iOS、Cocos、Flutter、React Native 等原生应用和框架
 
 ## 如何使用
 
@@ -255,6 +255,8 @@ curl -X GET 'https://your-env.api.tcloudbasegateway.com/v1/rdb/rest/course?selec
 **POST** `/v1/rdb/rest/{table}`
 
 **Request Body**: JSON object or array of objects
+
+&gt; 💡 **Note about `_openid`**: When a user is logged in (using AccessToken authentication), the `_openid` field is **automatically populated by the server** with the current user's identity. You do NOT need to manually set this field in INSERT operations - the server will fill it automatically based on the authenticated user's session.
 
 **Example**:
 

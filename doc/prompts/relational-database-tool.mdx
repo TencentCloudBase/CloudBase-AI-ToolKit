@@ -1,6 +1,6 @@
 # 关系型数据库：工具与规则
 
-操作 CloudBase 关系型数据库的工具和规则
+操作 CloudBase 关系型数据库的工具和规则,支持[连接自有数据库](https://docs.cloudbase.net/database/configuration/db/hosted-mysql/init)
 
 ## 如何使用
 
@@ -81,6 +81,8 @@ Call this through the MCP tool instead of embedding SQL in code.
 ```sql
 _openid VARCHAR(64) DEFAULT '' NOT NULL
 ```
+
+&gt; 💡 **Note about `_openid`**: When a user is logged in, the `_openid` field is **automatically populated by the server** with the current user's identity. You do NOT need to manually set this field in INSERT operations - the server will fill it automatically based on the authenticated user's session.
 
 Before calling this tool, **confirm**:
 
