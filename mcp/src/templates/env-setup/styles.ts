@@ -630,45 +630,64 @@ export const CSS_STYLES = `
     font-family: var(--font-mono);
   }
 
-  /* Error banner */
-  .error-banner {
+  /* Info banner (for non-critical notifications) */
+  .info-banner {
     margin-bottom: 20px;
     padding: 16px;
-    background: rgba(255, 82, 82, 0.1);
-    border: 1px solid rgba(255, 82, 82, 0.3);
+    background: rgba(103, 233, 233, 0.08);
+    border: 1px solid rgba(103, 233, 233, 0.2);
     border-radius: 12px;
   }
 
-  .error-item {
+  .info-item {
     margin-bottom: 16px;
   }
 
-  .error-item:last-child {
+  .info-item:last-child {
     margin-bottom: 0;
   }
 
-  .error-header {
+  .info-header {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 8px;
   }
 
-  .error-header svg {
-    color: #ff5252;
+  .info-header svg {
+    color: var(--accent-color);
   }
 
-  .error-title {
+  .info-title {
     color: var(--text-primary);
     font-weight: 600;
     font-size: 14px;
   }
 
-  .error-message {
+  .info-message {
     color: var(--text-secondary);
     font-size: 13px;
     line-height: 1.5;
     margin-bottom: 12px;
+  }
+
+  .info-details {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    opacity: 0.7;
+  }
+
+  .detail-label {
+    font-weight: 500;
+  }
+
+  .detail-value {
+    font-family: var(--font-mono);
+    opacity: 0.8;
   }
 
   .error-action {
@@ -682,10 +701,10 @@ export const CSS_STYLES = `
     align-items: center;
     gap: 6px;
     padding: 6px 12px;
-    background: rgba(255, 82, 82, 0.2);
-    border: 1px solid rgba(255, 82, 82, 0.4);
+    background: rgba(103, 233, 233, 0.15);
+    border: 1px solid rgba(103, 233, 233, 0.3);
     border-radius: 6px;
-    color: #ff8a80;
+    color: var(--accent-color);
     text-decoration: none;
     font-size: 13px;
     cursor: pointer;
@@ -693,8 +712,8 @@ export const CSS_STYLES = `
   }
 
   .error-link:hover {
-    background: rgba(255, 82, 82, 0.3);
-    border-color: #ff5252;
+    background: rgba(103, 233, 233, 0.25);
+    border-color: var(--accent-color);
   }
 
   .error-retry-btn {

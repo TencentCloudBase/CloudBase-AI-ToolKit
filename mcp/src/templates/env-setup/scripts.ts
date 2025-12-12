@@ -174,11 +174,41 @@ export function getJavaScripts(wsPort: number): string {
     }
   }
 
+  // Universal URL opener - works with all IDEs including CodeBuddy
+  async function openUrl(event, url) {
+    if (event) {
+      event.preventDefault();
+    }
+    
+    console.log('[env-setup] Opening URL:', url);
+    
+    try {
+      const response = await fetch('/api/open-url', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+      });
+      
+      const result = await response.json();
+      
+      if (!result.success) {
+        console.error('[env-setup] Failed to open URL:', result.error);
+        // Fallback to direct open if API fails
+        window.open(url, '_blank');
+      }
+    } catch (error) {
+      console.error('[env-setup] Error opening URL:', error);
+      // Fallback to direct open if API fails
+      window.open(url, '_blank');
+    }
+  }
+
   // Create new environment
   function createNewEnv() {
     console.log('[env-setup] Creating new environment');
-    // Open purchase page with channel parameter
-    window.open('https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp', '_blank');
+    openUrl(null, 'https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp');
   }
 
   // Refresh environment list

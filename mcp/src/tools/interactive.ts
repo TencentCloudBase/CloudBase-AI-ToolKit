@@ -8,7 +8,7 @@ import {
 import { getInteractiveServer } from "../interactive-server.js";
 import { ExtendedMcpServer } from "../server.js";
 import { isCloudMode } from "../utils/cloud-mode.js";
-import { debug } from "../utils/logger.js";
+import { debug, error, warn } from "../utils/logger.js";
 import { telemetryReporter } from "../utils/telemetry.js";
 import {
   checkAndCreateFreeEnv,
@@ -195,7 +195,7 @@ export function registerInteractiveTools(server: ExtendedMcpServer) {
 // 封装了获取环境、提示选择、保存配置的核心逻辑
 export async function _promptAndSetEnvironmentId(
   autoSelectSingle: boolean,
-  options?: { server?: any; loginFromCloudBaseLoginPage?: boolean },
+  options?: { server?: any; loginFromCloudBaseLoginPage?: boolean; ignoreEnvVars?: boolean },
 ): Promise<{
   selectedEnvId: string | null;
   cancelled: boolean;
@@ -211,12 +211,24 @@ export async function _promptAndSetEnvironmentId(
   debug("[interactive] Starting _promptAndSetEnvironmentId", {
     autoSelectSingle,
     hasServer: !!server,
+    serverType: typeof server,
+    serverIsPromise: server instanceof Promise,
+    hasServerServer: !!server?.server,
+    hasServerIde: !!server?.ide,
+    ignoreEnvVars: options?.ignoreEnvVars,
+    optionsKeys: options ? Object.keys(options).join(', ') : 'null',
   });
+  
+  if (!server) {
+    error("[interactive] CRITICAL: options?.server is undefined! This will cause IDE detection to fail.");
+    error("[interactive] options object:", options);
+  }
 
   // 1. 确保用户已登录
   debug("[interactive] Step 1: Checking login state...");
   const loginState = await getLoginState({
     fromCloudBaseLoginPage: options?.loginFromCloudBaseLoginPage,
+    ignoreEnvVars: options?.ignoreEnvVars,
   });
   debug("[interactive] Login state:", {
     hasLoginState: !!loginState,
@@ -250,7 +262,43 @@ export async function _promptAndSetEnvironmentId(
 
   // Step 2.1: Check and initialize TCB service if needed
   // Check if retry is requested (from interactive server session data)
-  const interactiveServer = getInteractiveServer(server);
+  // Ensure server is resolved if it's a Promise (CLI mode)
+  // IMPORTANT: server from options is ExtendedMcpServer instance, not a Promise
+  // But we need to ensure it's properly passed through the chain
+  let resolvedServer = server instanceof Promise ? await server : server;
+  
+  // FALLBACK: If server is not provided, try to get from existing InteractiveServer instance
+  // This handles the case when autoSetupEnvironmentId is called without server parameter
+  // Note: In CloudMode with multiple server instances, this may not work perfectly,
+  // but it's better than nothing. The ideal solution is to always pass server parameter.
+  if (!resolvedServer) {
+    debug("[interactive] server is undefined, trying to get from existing InteractiveServer instance...");
+    const existingInteractiveServer = getInteractiveServer();
+    if (existingInteractiveServer && existingInteractiveServer.mcpServer) {
+      resolvedServer = existingInteractiveServer.mcpServer;
+      debug("[interactive] Got server from existing InteractiveServer instance:", {
+        hasServer: !!resolvedServer,
+        hasServerServer: !!resolvedServer?.server,
+        hasIde: !!resolvedServer?.ide
+      });
+    } else {
+      warn("[interactive] WARNING: resolvedServer is undefined and no existing InteractiveServer instance found!");
+      warn("[interactive] This may happen when autoSetupEnvironmentId is called before any tool that sets mcpServer.");
+      warn("[interactive] IDE detection (e.g., CodeBuddy) will fail, and browser will be opened instead.");
+    }
+  }
+  
+  debug("[interactive] Resolved server:", {
+    isPromise: server instanceof Promise,
+    hasServer: !!resolvedServer,
+    hasServerServer: !!resolvedServer?.server,
+    hasIde: !!resolvedServer?.ide,
+    ide: resolvedServer?.ide || process.env.INTEGRATION_IDE,
+    serverType: typeof resolvedServer,
+    serverKeys: resolvedServer ? Object.keys(resolvedServer).slice(0, 10).join(', ') : 'null'
+  });
+  
+  const interactiveServer = getInteractiveServer(resolvedServer);
   const currentSessionId = server?.currentSessionId; // We need to pass this somehow
   let shouldRetry = false;
   
@@ -562,72 +610,69 @@ export async function _promptAndSetEnvironmentId(
     }
   }
 
-  // 6. 根据情况选择或提示用户选择（正常模式）
-  if (autoSelectSingle && EnvList && EnvList.length === 1 && EnvList[0].EnvId) {
-    selectedEnvId = EnvList[0].EnvId;
-  } else {
-    const interactiveServer = getInteractiveServer(server);
-    // 提取账号 UIN 用于显示
-    // Try to get UIN from CAM API first, fallback to loginState
-    const accountInfo: { uin?: string } = {};
-    
-    // Try to get user info from CAM API
-    debug("[interactive] Attempting to get user info from CAM API...");
-    const camUserInfo = await getUserAppIdFromCam();
-    
-    // Use OwnerUin as the main account identifier
-    if (camUserInfo && camUserInfo.OwnerUin) {
-      accountInfo.uin = camUserInfo.OwnerUin;
-      debug("[interactive] Got OwnerUIN from CAM API:", { ownerUin: camUserInfo.OwnerUin, uin: camUserInfo.Uin });
-    } else if (camUserInfo && camUserInfo.Uin) {
-      // Fallback to Uin if OwnerUin is not available
-      accountInfo.uin = camUserInfo.Uin;
-      debug("[interactive] Got UIN from CAM API (OwnerUin not available):", { uin: camUserInfo.Uin });
-    }
-    
-    // Fallback to loginState if CAM API didn't work
-    if (!accountInfo.uin && loginState && typeof loginState === "object" && "uin" in loginState) {
-      accountInfo.uin = String(loginState.uin);
-      debug("[interactive] Using UIN from loginState:", { uin: accountInfo.uin });
-    }
-
-    // Report display_env_selection event
-    await telemetryReporter.report('toolkit_env_setup', {
-      step: 'display_env_selection',
-      success: 'true',
-      uin: setupContext.uin || 'unknown',
-      envIds: (EnvList || []).map((env: any) => env.EnvId).join(',')
-    });
-
-    debug("[interactive] Step 6: Calling collectEnvId with error context:", {
-      envCount: (EnvList || []).length,
-      hasInitTcbError: !!setupContext.initTcbError,
-      hasCreateEnvError: !!setupContext.createEnvError,
-      initTcbError: setupContext.initTcbError,
-      createEnvError: setupContext.createEnvError
-    });
-
-    const result = await interactiveServer.collectEnvId(
-      EnvList || [],
-      accountInfo,
-      setupContext, // Pass error context
-      cloudbase, // Pass manager for refreshing env list
-    );
-
-    if (result.cancelled) {
-      return { selectedEnvId: null, cancelled: true };
-    }
-    if (result.switch) {
-      // Report switch_account event
-      await telemetryReporter.report('toolkit_env_setup', {
-        step: 'switch_account',
-        success: 'true',
-        uin: setupContext.uin || 'unknown'
-      });
-      return { selectedEnvId: null, cancelled: false, switch: true };
-    }
-    selectedEnvId = result.data;
+  // 6. 显示环境选择页面（即使只有一个环境也显示，让用户确认）
+  // interactiveServer 已在前面声明，直接使用
+  // 提取账号 UIN 用于显示
+  // Try to get UIN from CAM API first, fallback to loginState
+  const accountInfo: { uin?: string } = {};
+  
+  // Try to get user info from CAM API
+  debug("[interactive] Attempting to get user info from CAM API...");
+  const camUserInfo = await getUserAppIdFromCam();
+  
+  // Use OwnerUin as the main account identifier
+  if (camUserInfo && camUserInfo.OwnerUin) {
+    accountInfo.uin = camUserInfo.OwnerUin;
+    debug("[interactive] Got OwnerUIN from CAM API:", { ownerUin: camUserInfo.OwnerUin, uin: camUserInfo.Uin });
+  } else if (camUserInfo && camUserInfo.Uin) {
+    // Fallback to Uin if OwnerUin is not available
+    accountInfo.uin = camUserInfo.Uin;
+    debug("[interactive] Got UIN from CAM API (OwnerUin not available):", { uin: camUserInfo.Uin });
   }
+  
+  // Fallback to loginState if CAM API didn't work
+  if (!accountInfo.uin && loginState && typeof loginState === "object" && "uin" in loginState) {
+    accountInfo.uin = String(loginState.uin);
+    debug("[interactive] Using UIN from loginState:", { uin: accountInfo.uin });
+  }
+
+  // Report display_env_selection event
+  await telemetryReporter.report('toolkit_env_setup', {
+    step: 'display_env_selection',
+    success: 'true',
+    uin: setupContext.uin || 'unknown',
+    envIds: (EnvList || []).map((env: any) => env.EnvId).join(',')
+  });
+
+  debug("[interactive] Step 6: Calling collectEnvId with error context:", {
+    envCount: (EnvList || []).length,
+    hasInitTcbError: !!setupContext.initTcbError,
+    hasCreateEnvError: !!setupContext.createEnvError,
+    initTcbError: setupContext.initTcbError,
+    createEnvError: setupContext.createEnvError
+  });
+
+  const result = await interactiveServer.collectEnvId(
+    EnvList || [],
+    accountInfo,
+    setupContext, // Pass error context
+    cloudbase, // Pass manager for refreshing env list
+    resolvedServer, // Pass resolved MCP server instance for IDE detection
+  );
+
+  if (result.cancelled) {
+    return { selectedEnvId: null, cancelled: true };
+  }
+  if (result.switch) {
+    // Report switch_account event
+    await telemetryReporter.report('toolkit_env_setup', {
+      step: 'switch_account',
+      success: 'true',
+      uin: setupContext.uin || 'unknown'
+    });
+    return { selectedEnvId: null, cancelled: false, switch: true };
+  }
+  selectedEnvId = result.data;
 
   // 7. 更新环境ID缓存
   if (selectedEnvId) {
@@ -640,10 +685,10 @@ export async function _promptAndSetEnvironmentId(
 }
 
 // 自动设置环境ID（无需MCP工具调用）
-export async function autoSetupEnvironmentId(): Promise<string | null> {
+export async function autoSetupEnvironmentId(mcpServer?: any): Promise<string | null> {
   try {
     const { selectedEnvId, cancelled, error, noEnvs } =
-      await _promptAndSetEnvironmentId(true, undefined);
+      await _promptAndSetEnvironmentId(true, { server: mcpServer });
 
     if (error || noEnvs || cancelled) {
       debug("Auto setup environment ID interrupted or failed silently.", {

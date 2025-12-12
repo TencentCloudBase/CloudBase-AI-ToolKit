@@ -1,8 +1,8 @@
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { useLocation } from '@docusaurus/router';
-import React, { useState, useMemo, useEffect } from 'react';
-import IDESelector from './IDESelector';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import React, { useEffect, useMemo, useState } from 'react';
 import styles from './ErrorCodeIDEButton.module.css';
+import IDESelector from './IDESelector';
 import { reportEvent } from './analytics';
 
 // IDE list for icons (from IDESelector)
@@ -58,24 +58,22 @@ function generatePrompt(pageUrl: string, locale: string): string {
 
 请帮助我解决这个问题：
 
-1. **建议修复方案**：分析我的代码库上下文，提出需要更改什么来解决这个错误
+1. **分析代码库并使用 CloudBase MCP 工具解决问题**：
+   - 深入分析我的代码库上下文，理解代码结构和相关模块
+   - 阅读 CloudBase 的 AI rules 和 MCP 工具文档，理解问题的本质
+   - 尝试使用 CloudBase MCP 工具（如 envQuery、login、executeReadOnlySQL 等）来诊断和解决这个问题
+   - 如果需要修改代码，提出具体的修改方案，包括需要修改的文件、函数和代码行
 
-2. **解释根本原因**：分析为什么会出现这个错误：
-   - 代码实际在做什么 vs. 它需要做什么？
-   - 什么条件触发了这个特定错误？
-   - 是什么误解或疏忽导致了这个问题？
+2. **解释根本原因**：
+   - 代码实际在做什么 vs. 它应该做什么？
+   - 什么条件或场景触发了这个特定错误？
+   - 是什么误解、疏忽或不当使用导致了这个问题？
 
-3. **教授概念**：帮助我理解底层原理：
-   - 为什么这个错误存在，它保护我免受什么？
-   - 这个概念的正确心智模型是什么？
-   - 这如何融入更广泛的框架/语言设计？
-
-4. **展示警告信号**：帮助我在未来识别这种模式：
-   - 我应该注意什么可能导致这种情况再次发生？
-   - 在相关场景中我可能犯哪些类似的错误？
-   - 哪些代码异味或模式表明这个问题？
-
-5. **讨论替代方案**：解释是否有不同的有效方法及其权衡
+3. **用费曼学习法教授概念**：
+   - 用简单易懂的语言解释底层原理，就像教一个初学者一样
+   - 如果涉及我不熟悉的概念（如 MCP 工具、CloudBase API、框架特性等），请先解释这些基础概念
+   - 用类比和具体例子帮助我建立正确的心智模型
+   - 解释这个概念在整个系统中的作用和重要性
 
 我的目标是修复眼前的问题，同时建立持久的理解，这样我就可以在未来独立避免和解决类似的错误。`;
   }
@@ -84,24 +82,22 @@ function generatePrompt(pageUrl: string, locale: string): string {
 
 Please help me resolve this by:
 
-1. **Suggest the fix**: Analyze my codebase context and propose what needs to be changed to resolve this error
+1. **Analyze codebase and solve using CloudBase MCP tools**:
+   - Deeply analyze my codebase context to understand the code structure and related modules
+   - Read CloudBase AI rules and MCP tools documentation to understand the root cause
+   - Try using CloudBase MCP tools (such as envQuery, login, executeReadOnlySQL, etc.) to diagnose and solve this problem
+   - If code changes are needed, propose specific modifications including files, functions, and code lines to modify
 
-2. **Explain the root cause**: Break down why this error occurred:
-   - What was the code actually doing vs. what it needed to do?
-   - What conditions triggered this specific error?
-   - What misconception or oversight led to this?
+2. **Explain the root cause**:
+   - What was the code actually doing vs. what it should be doing?
+   - What conditions or scenarios triggered this specific error?
+   - What misconception, oversight, or improper usage led to this problem?
 
-3. **Teach the concept**: Help me understand the underlying principle:
-   - Why does this error exist and what is it protecting me from?
-   - What's the correct mental model for this concept?
-   - How does this fit into the broader framework/language design?
-
-4. **Show warning signs**: Help me recognize this pattern in the future:
-   - What should I look out for that might cause this again?
-   - Are there similar mistakes I might make in related scenarios?
-   - What code smells or patterns indicate this issue?
-
-5. **Discuss alternatives**: Explain if there are different valid approaches and their trade-offs
+3. **Teach concepts using the Feynman technique**:
+   - Explain underlying principles in simple, accessible language, as if teaching a beginner
+   - If unfamiliar concepts are involved (like MCP tools, CloudBase APIs, framework features, etc.), explain these fundamentals first
+   - Use analogies and concrete examples to help me build the correct mental model
+   - Explain how this concept fits into and matters within the broader system
 
 My goal is to fix the immediate issue while building lasting understanding so I can avoid and resolve similar errors independently in the future.`;
 }

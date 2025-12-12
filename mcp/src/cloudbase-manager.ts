@@ -18,7 +18,7 @@ class EnvironmentManager {
     }
 
     // 获取环境ID的核心逻辑
-    async getEnvId(): Promise<string> {
+    async getEnvId(mcpServer?: any): Promise<string> {
         // 1. 优先使用内存缓存
         if (this.cachedEnvId) {
             debug('使用内存缓存的环境ID:', { envId: this.cachedEnvId });
@@ -30,8 +30,8 @@ class EnvironmentManager {
             return this.envIdPromise;
         }
 
-        // 3. 开始获取环境ID
-        this.envIdPromise = this._fetchEnvId();
+        // 3. 开始获取环境ID (pass mcpServer for IDE detection)
+        this.envIdPromise = this._fetchEnvId(mcpServer);
 
         // 增加超时保护
         const timeoutPromise = new Promise<string>((_, reject) => {
@@ -50,7 +50,7 @@ class EnvironmentManager {
         }
     }
 
-    private async _fetchEnvId(): Promise<string> {
+    private async _fetchEnvId(mcpServer?: any): Promise<string> {
         try {
             // 1. 检查进程环境变量
             if (process.env.CLOUDBASE_ENV_ID) {
@@ -59,9 +59,9 @@ class EnvironmentManager {
                 return this.cachedEnvId;
             }
 
-            // 2. 自动设置环境ID
+            // 2. 自动设置环境ID (pass mcpServer for IDE detection)
             debug('未找到环境ID，尝试自动设置...');
-            const autoEnvId = await autoSetupEnvironmentId();
+            const autoEnvId = await autoSetupEnvironmentId(mcpServer);
             if (!autoEnvId) {
                 throw new Error("CloudBase Environment ID not found after auto setup. Please set CLOUDBASE_ENV_ID or run setupEnvironmentId tool.");
             }
@@ -122,13 +122,14 @@ export function getCachedEnvId(): string | null {
 export interface GetManagerOptions {
     requireEnvId?: boolean;
     cloudBaseOptions?: CloudBaseOptions;
+    mcpServer?: any; // Optional MCP server instance for IDE detection (e.g., CodeBuddy)
 }
 
 /**
  * 每次都实时获取最新的 token/secretId/secretKey
  */
 export async function getCloudBaseManager(options: GetManagerOptions = {}): Promise<CloudBase> {
-    const { requireEnvId = true, cloudBaseOptions } = options;
+    const { requireEnvId = true, cloudBaseOptions, mcpServer } = options;
 
     // 如果传入了 cloudBaseOptions，直接使用传入的配置
     if (cloudBaseOptions) {
@@ -160,8 +161,8 @@ export async function getCloudBaseManager(options: GetManagerOptions = {}): Prom
                 finalEnvId = loginEnvId;
             } else {
                 // Only call envManager.getEnvId() when neither cache nor loginState has envId
-                // This may trigger auto-setup flow
-                finalEnvId = await envManager.getEnvId();
+                // This may trigger auto-setup flow (pass mcpServer for IDE detection)
+                finalEnvId = await envManager.getEnvId(mcpServer);
             }
         }
 

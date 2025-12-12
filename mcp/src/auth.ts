@@ -5,6 +5,7 @@ const auth = AuthSupevisor.getInstance({});
 
 export async function getLoginState(options?: {
   fromCloudBaseLoginPage?: boolean;
+  ignoreEnvVars?: boolean;
 }) {
   const {
     TENCENTCLOUD_SECRETID,
@@ -12,7 +13,10 @@ export async function getLoginState(options?: {
     TENCENTCLOUD_SESSIONTOKEN,
   } = process.env;
   debug("TENCENTCLOUD_SECRETID", { secretId: TENCENTCLOUD_SECRETID });
-  if (TENCENTCLOUD_SECRETID && TENCENTCLOUD_SECRETKEY) {
+  
+  // If ignoreEnvVars is true (e.g., when switching account), skip environment variables
+  // and force Web authentication to allow account switching
+  if (!options?.ignoreEnvVars && TENCENTCLOUD_SECRETID && TENCENTCLOUD_SECRETKEY) {
     debug("loginByApiSecret");
     return {
       secretId: TENCENTCLOUD_SECRETID,

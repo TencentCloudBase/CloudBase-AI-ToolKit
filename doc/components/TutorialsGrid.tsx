@@ -120,13 +120,13 @@ const tutorials: Tutorial[] = [
   },
   // 视频
   {
-    id: 'video-ai-programming-deploy',
-    title: 'AI编程，一键部署',
-    description: '腾讯云云开发',
+    id: 'video-bilibili-ai-assistant',
+    title: '【教程】不写一行代码，开发B站热门选题AI助手 | 数据分析  | 爬虫',
+    description: '熠辉IndieDev',
     category: '视频教程',
-    url: 'https://www.bilibili.com/video/BV1Honwz1E64/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
+    url: 'https://www.bilibili.com/video/BV1JBmKBBEZa/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
-    thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1Honwz1E64.jpg',
+    thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1JBmKBBEZa.jpg',
   },
   {
     id: 'video-mbti-dating',
@@ -379,6 +379,15 @@ const tutorials: Tutorial[] = [
     url: 'https://www.bilibili.com/video/BV1YReMz7EKn/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
     thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1YReMz7EKn.jpg',
+  },
+  {
+    id: 'video-ai-programming-deploy',
+    title: 'AI编程，一键部署',
+    description: '腾讯云云开发',
+    category: '视频教程',
+    url: 'https://www.bilibili.com/video/BV1Honwz1E64/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
+    type: 'video',
+    thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1Honwz1E64.jpg',
   },
   // 应用项目
   {

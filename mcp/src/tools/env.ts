@@ -14,7 +14,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
   // 获取 cloudBaseOptions，如果没有则为 undefined
   const cloudBaseOptions = server.cloudBaseOptions;
 
-  const getManager = () => getCloudBaseManager({ cloudBaseOptions });
+  const getManager = () => getCloudBaseManager({ cloudBaseOptions, mcpServer: server });
 
   // login - 登录云开发环境
   server.registerTool?.(
@@ -40,6 +40,15 @@ export function registerEnvTools(server: ExtendedMcpServer) {
       try {
         // 使用 while 循环处理用户切换账号的情况
         while (true) {
+          // CRITICAL: Ensure server is passed correctly
+          debug("[env] Calling _promptAndSetEnvironmentId with server:", {
+            hasServer: !!server,
+            serverType: typeof server,
+            hasServerServer: !!server?.server,
+            hasServerIde: !!server?.ide,
+            serverIde: server?.ide
+          });
+          
           const {
             selectedEnvId,
             cancelled,
@@ -47,8 +56,10 @@ export function registerEnvTools(server: ExtendedMcpServer) {
             noEnvs,
             switch: switchAccount,
           } = await _promptAndSetEnvironmentId(forceUpdate, {
-            server,
+            server, // Pass ExtendedMcpServer instance
             loginFromCloudBaseLoginPage: isSwitching,
+            // When switching account, ignore environment variables to force Web login
+            ignoreEnvVars: isSwitching,
           });
 
           isSwitching = Boolean(switchAccount);
@@ -76,6 +87,9 @@ export function registerEnvTools(server: ExtendedMcpServer) {
               await logout();
               resetCloudBaseManagerCache();
               debug("Logged out successfully, restarting login flow...");
+              // Set isSwitching to true so next iteration will ignore env vars
+              // and force Web authentication to allow account switching
+              isSwitching = true;
               // 继续循环，重新显示登录界面
               continue;
             } catch (logoutError) {
@@ -202,6 +216,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
               const cloudbaseList = await getCloudBaseManager({
                 cloudBaseOptions,
                 requireEnvId: true,
+                mcpServer: server, // Pass server for IDE detection
               });
               // Use commonService to call DescribeEnvs with filter parameters
               // Filter parameters match the reference conditions provided by user
@@ -232,6 +247,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
                 const cloudbaseList = await getCloudBaseManager({
                   cloudBaseOptions,
                   requireEnvId: true,
+                  mcpServer: server, // Pass server for IDE detection
                 });
                 result = await cloudbaseList.env.listEnvs();
                 logCloudBaseResult(server.logger, result);

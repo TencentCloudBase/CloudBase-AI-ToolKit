@@ -21,6 +21,8 @@ export interface EnvSetupError {
   helpUrl?: string;
   needRealNameAuth?: boolean;
   needCamAuth?: boolean;
+  actionText?: string; // User-friendly action text
+  requestId?: string; // Request ID for debugging
 }
 
 /**
@@ -48,54 +50,21 @@ export interface EnvSetupResult {
  * Parse InitTcb error and extract user-friendly information
  */
 function parseInitTcbError(err: any): EnvSetupError {
-  let errorMessage = err.message || String(err);
+  const rawMessage = err.message || String(err);
+  const errorCode = err.code || err.Code || "UnknownError";
+  const requestId = err.requestId || err.RequestId || '';
   
-  // Replace TCB with CloudBase in error messages
-  errorMessage = errorMessage.replace(/TCB/g, 'CloudBase');
-  errorMessage = errorMessage.replace(/tcb/gi, 'CloudBase');
+  // User-friendly error message
+  let friendlyMessage = "准备工作";
+  let actionText = "为了开始使用 CloudBase，请先完成账号认证和服务授权";
   
-  // Clean up error message - remove JSON-like structures and extract readable message
-  // Handle cases like "[InitTcb] pleaes Create TCB_QcsRole Role first"
-  if (errorMessage.includes('[') && errorMessage.includes(']')) {
-    // Extract message after the bracket
-    const match = errorMessage.match(/\]\s*(.+)/);
-    if (match && match[1]) {
-      errorMessage = match[1].trim();
-      // Replace TCB again in extracted message
-      errorMessage = errorMessage.replace(/TCB/g, 'CloudBase');
-      errorMessage = errorMessage.replace(/tcb/gi, 'CloudBase');
-    }
-  }
-  
-  // Handle JSON error messages
-  if (errorMessage.includes('{') && errorMessage.includes('ReturnMessage')) {
-    try {
-      const jsonMatch = errorMessage.match(/\{.*\}/);
-      if (jsonMatch) {
-        const parsed = JSON.parse(jsonMatch[0]);
-        if (parsed.ReturnMessage) {
-          errorMessage = parsed.ReturnMessage;
-        }
-      }
-    } catch (e) {
-      // If parsing fails, use original message
-    }
-  }
-
   const errorInfo: EnvSetupError = {
-    code: err.code || err.Code || "UnknownError",
-    message: errorMessage,
-    helpUrl: "https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp"
+    code: errorCode,
+    message: friendlyMessage,
+    helpUrl: "https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp",
+    actionText,
+    requestId
   };
-
-  const message = errorInfo.message.toLowerCase();
-  
-  // Try to identify error type from message
-  if (message.includes("实名") || message.includes("realname")) {
-    errorInfo.needRealNameAuth = true;
-  } else if (message.includes("授权") || message.includes("cam") || message.includes("role")) {
-    errorInfo.needCamAuth = true;
-  }
 
   return errorInfo;
 }

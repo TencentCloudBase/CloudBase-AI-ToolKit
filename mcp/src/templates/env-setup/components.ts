@@ -88,7 +88,7 @@ export function renderEmptyState(hasInitError: boolean) {
   return `
     <div class="empty-state">
       <p class="empty-message">
-        暂无环境，请先<a href="https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp" target="_blank" class="create-env-link">创建环境</a>，然后点击刷新按钮重试
+        暂无环境，请先<a href="https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp" onclick="openUrl(event, 'https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp'); return false;" class="create-env-link">创建环境</a>，然后点击刷新按钮重试
       </p>
     </div>
   `.trim();
@@ -109,7 +109,7 @@ export function renderNoResultsState() {
 export function renderHelpLinks() {
   return `
     <div class="help-links">
-      <a href="https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/" target="_blank" class="help-link">
+      <a href="https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/" onclick="openUrl(event, 'https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/'); return false;" class="help-link">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
           <polyline points="14 2 14 8 20 8"/>
@@ -118,14 +118,14 @@ export function renderHelpLinks() {
         </svg>
         帮助文档
       </a>
-      <a href="https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials" target="_blank" class="help-link">
+      <a href="https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials" onclick="openUrl(event, 'https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/tutorials'); return false;" class="help-link">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <polygon points="23 7 16 12 23 17 23 7"/>
           <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
         </svg>
         视频教程
       </a>
-      <a href="https://github.com/TencentCloudBase/CloudBase-AI-ToolKit" target="_blank" class="help-link">
+      <a href="https://github.com/TencentCloudBase/CloudBase-AI-ToolKit" onclick="openUrl(event, 'https://github.com/TencentCloudBase/CloudBase-AI-ToolKit'); return false;" class="help-link">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
         </svg>
@@ -185,33 +185,40 @@ export function renderErrorBanner(errorContext: any, sessionId?: string) {
   const initTcbError = errorContext?.initTcbError;
   const createEnvError = errorContext?.createEnvError;
   
-  if (!initTcbError && !createEnvError) {
+  // Only show initTcbError, hide createEnvError
+  if (!initTcbError) {
     return '';
   }
   
   return `
-    <div class="error-banner" id="errorBanner">
+    <div class="info-banner" id="errorBanner">
       ${initTcbError ? `
-        <div class="error-item">
-          <div class="error-header">
+        <div class="info-item">
+          <div class="info-header">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/>
               <line x1="12" y1="8" x2="12" y2="12"/>
               <line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
-            <span class="error-title">CloudBase 服务初始化失败</span>
+            <span class="info-title">${escapeHtml(initTcbError.message)}</span>
           </div>
-          <div class="error-message">${escapeHtml(initTcbError.message)}</div>
+          <div class="info-message">${escapeHtml(initTcbError.actionText || '')}</div>
+          ${initTcbError.requestId ? `
+            <div class="info-details">
+              <span class="detail-label">错误码:</span> <span class="detail-value">${escapeHtml(initTcbError.code)}</span>
+              <span class="detail-label">请求 ID:</span> <span class="detail-value">${escapeHtml(initTcbError.requestId)}</span>
+            </div>
+          ` : ''}
           ${initTcbError.needRealNameAuth ? `
             <div class="error-action">
-              <a href="${initTcbError.helpUrl || 'https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp'}" target="_blank" class="error-link">
+              <a href="${initTcbError.helpUrl || 'https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp'}" onclick="openUrl(event, '${initTcbError.helpUrl || 'https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp'}'); return false;" class="error-link">
                 前往实名认证
               </a>
             </div>
           ` : ''}
           ${initTcbError.needCamAuth ? `
             <div class="error-action">
-              <a href="${initTcbError.helpUrl || 'https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp'}" target="_blank" class="error-link">
+              <a href="${initTcbError.helpUrl || 'https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp'}" onclick="openUrl(event, '${initTcbError.helpUrl || 'https://buy.cloud.tencent.com/lowcode?buyType=tcb&channel=mcp'}'); return false;" class="error-link">
                 前往开通 CloudBase 服务
               </a>
               ${sessionId ? `
@@ -226,7 +233,7 @@ export function renderErrorBanner(errorContext: any, sessionId?: string) {
           ` : ''}
           ${!initTcbError.needRealNameAuth && !initTcbError.needCamAuth && initTcbError.helpUrl ? `
             <div class="error-action">
-              <a href="${initTcbError.helpUrl}" target="_blank" class="error-link">
+              <a href="${initTcbError.helpUrl}" onclick="openUrl(event, '${initTcbError.helpUrl}'); return false;" class="error-link">
                 前往开通 CloudBase 服务
               </a>
               ${sessionId ? `
@@ -237,26 +244,6 @@ export function renderErrorBanner(errorContext: any, sessionId?: string) {
                   重试
                 </button>
               ` : ''}
-            </div>
-          ` : ''}
-        </div>
-      ` : ''}
-      ${createEnvError ? `
-        <div class="error-item">
-          <div class="error-header">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="12"/>
-              <line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-            <span class="error-title">免费环境创建失败</span>
-          </div>
-          <div class="error-message">${escapeHtml(createEnvError.message)}</div>
-          ${createEnvError.helpUrl ? `
-            <div class="error-action">
-              <a href="${createEnvError.helpUrl}" target="_blank" class="error-link">
-                手动创建环境
-              </a>
             </div>
           ` : ''}
         </div>

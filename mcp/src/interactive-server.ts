@@ -6,13 +6,23 @@ import { renderEnvSetupPage } from "./templates/env-setup/index.js";
 import { debug, error, info, warn } from "./utils/logger.js";
 
 // 动态导入 open 模块，兼容 ESM/CJS 环境
-async function openUrl(url: string, options?: any, server?: any) {
-  // 检查是否为 CodeBuddy IDE (优先使用 server.ide，回退到环境变量)
-  const currentIde = server?.ide || process.env.INTEGRATION_IDE;
-  if (currentIde === "CodeBuddy" && server) {
+async function openUrl(url: string, options?: any, mcpServer?: any) {
+  // mcpServer 是 ExtendedMcpServer 实例，它有 server 和 ide 属性
+  // server 属性是 MCP server 的内部 server 实例，有 sendLoggingMessage 方法
+  const currentIde = mcpServer?.ide || process.env.INTEGRATION_IDE;
+  const internalServer = mcpServer?.server; // 内部的 server 实例
+  
+  debug(`[openUrl] Checking IDE: ${currentIde}`);
+  debug(`[openUrl] mcpServer type: ${typeof mcpServer}, has server: ${!!mcpServer?.server}, has ide: ${!!mcpServer?.ide}`);
+  if (internalServer) {
+    debug(`[openUrl] internalServer type: ${typeof internalServer}, has sendLoggingMessage: ${typeof internalServer.sendLoggingMessage === 'function'}`);
+  }
+  
+  // 检查是否为 CodeBuddy IDE (优先使用 mcpServer.ide，回退到环境变量)
+  if (currentIde === "CodeBuddy" && internalServer && typeof internalServer.sendLoggingMessage === 'function') {
     try {
-      // 发送通知而不是直接打开网页
-      server.server.sendLoggingMessage({
+      // internalServer 是 MCP server 的内部 server 实例，有 sendLoggingMessage 方法
+      internalServer.sendLoggingMessage({
         level: "notice",
         data: {
           type: "tcb",
@@ -26,12 +36,14 @@ async function openUrl(url: string, options?: any, server?: any) {
         `Failed to send logging message for ${url}: ${err instanceof Error ? err.message : err}`,
         err instanceof Error ? err : new Error(String(err)),
       );
-      // 如果发送通知失败，回退到直接打开
-      warn(`回退到直接打开网页: ${url}`);
+      // 如果发送通知失败，在 CodeBuddy IDE 中不打开网页，直接返回
+      warn(`CodeBuddy IDE: 发送通知失败，不打开网页 - ${url}`);
+      return;
     }
   }
 
   // 默认行为：直接打开网页
+  debug(`[openUrl] Opening URL in browser: ${url}`);
   try {
     return await open(url, options);
   } catch (err) {
@@ -195,6 +207,30 @@ export class InteractiveServer {
       }
 
       res.json({ success: true, message: "重试请求已提交，页面将刷新" });
+    });
+
+    // Universal URL opener API - ensures proper handling in different IDEs (e.g., CodeBuddy)
+    this.app.post("/api/open-url", async (req, res) => {
+      const { url } = req.body;
+      
+      if (!url) {
+        res.status(400).json({ success: false, error: "URL is required" });
+        return;
+      }
+
+      info("Received open URL request", { url });
+
+      try {
+        // Pass mcpServer directly - it's an ExtendedMcpServer instance with server property
+        await openUrl(url, undefined, this._mcpServer);
+        res.json({ success: true });
+      } catch (err) {
+        error("Failed to open URL", err instanceof Error ? err : new Error(String(err)));
+        res.status(500).json({ 
+          success: false, 
+          error: err instanceof Error ? err.message : String(err)
+        });
+      }
     });
   }
 
@@ -464,8 +500,36 @@ export class InteractiveServer {
     accountInfo?: { uin?: string },
     errorContext?: any, // EnvSetupContext
     manager?: any, // CloudBase manager instance for refreshing env list
+    mcpServer?: any, // MCP server instance for IDE detection
   ): Promise<InteractiveResult> {
     try {
+      // CRITICAL: Clean up any existing unresolved request to prevent hanging
+      if (this.currentResolver) {
+        warn("[collectEnvId] Found existing unresolved request, cleaning up...");
+        const oldResolver = this.currentResolver;
+        this.currentResolver = null;
+        // Resolve the old request as cancelled to prevent it from hanging forever
+        oldResolver({ type: "envId", data: null, cancelled: true });
+      }
+
+      // Update mcpServer if provided, or use existing this._mcpServer as fallback
+      debug(`[collectEnvId] Received mcpServer parameter: type=${typeof mcpServer}, is null=${mcpServer === null}, is undefined=${mcpServer === undefined}, has server=${!!mcpServer?.server}, has ide=${!!mcpServer?.ide}`);
+      debug(`[collectEnvId] Current this._mcpServer before update: type=${typeof this._mcpServer}, is null=${this._mcpServer === null}, is undefined=${this._mcpServer === undefined}, has server=${!!this._mcpServer?.server}, has ide=${!!this._mcpServer?.ide}`);
+      
+      // Use mcpServer parameter if provided, otherwise keep existing this._mcpServer
+      const effectiveMcpServer = mcpServer || this._mcpServer;
+      
+      if (mcpServer) {
+        this._mcpServer = mcpServer;
+        debug(`[collectEnvId] Updated mcpServer from parameter, has server: ${!!mcpServer?.server}, has ide: ${!!mcpServer?.ide}`);
+      } else if (this._mcpServer) {
+        debug(`[collectEnvId] mcpServer parameter is falsy, using existing this._mcpServer`);
+      } else {
+        warn(`[collectEnvId] WARNING: Both mcpServer parameter and this._mcpServer are undefined! IDE detection will fail.`);
+      }
+      
+      debug(`[collectEnvId] Effective mcpServer: type=${typeof effectiveMcpServer}, has server=${!!effectiveMcpServer?.server}, has ide=${!!effectiveMcpServer?.ide}`);
+      
       info("Starting environment ID collection...");
       debug(`Available environments: ${availableEnvs.length}`);
       debug(`Account info:`, accountInfo);
@@ -499,9 +563,21 @@ export class InteractiveServer {
       const url = `http://localhost:${port}/env-setup/${sessionId}`;
       info(`Opening browser: ${url}`);
 
+      // Check if this is CodeBuddy IDE and notification was sent (no browser opened)
+      const isCodeBuddy = effectiveMcpServer?.ide === "CodeBuddy" || process.env.INTEGRATION_IDE === "CodeBuddy";
+      let notificationSent = false;
+
       try {
-        // 使用默认浏览器打开一个新窗口
-        await openUrl(url, { wait: false }, this._mcpServer);
+        // Use effectiveMcpServer (from parameter or this._mcpServer) for openUrl
+        debug(`[collectEnvId] Using effectiveMcpServer for openUrl: type=${typeof effectiveMcpServer}, has server=${!!effectiveMcpServer?.server}, has ide=${!!effectiveMcpServer?.ide}`);
+        debug(`[collectEnvId] effectiveMcpServer keys: ${effectiveMcpServer ? Object.keys(effectiveMcpServer).slice(0, 10).join(', ') : 'null'}`);
+        
+        // Store the original openUrl to check if it returns early (notification sent)
+        const openUrlResult = await openUrl(url, { wait: false }, effectiveMcpServer);
+        if (isCodeBuddy && openUrlResult === undefined) {
+          notificationSent = true;
+          debug("[collectEnvId] CodeBuddy notification sent, no browser opened");
+        }
         info("Browser opened successfully");
       } catch (browserError) {
         error("Failed to open browser", browserError instanceof Error ? browserError : new Error(String(browserError)));
@@ -510,19 +586,26 @@ export class InteractiveServer {
 
       info("Waiting for user selection...");
 
+      // Use shorter timeout for CodeBuddy when notification is sent (2 minutes)
+      // This prevents hanging while still giving users enough time to respond
+      // Otherwise use the default 10 minutes timeout
+      const timeoutDuration = (isCodeBuddy && notificationSent) ? 2 * 60 * 1000 : 10 * 60 * 1000;
+      debug(`[collectEnvId] Using timeout duration: ${timeoutDuration / 1000} seconds (CodeBuddy: ${isCodeBuddy}, notification sent: ${notificationSent})`);
+
       return new Promise((resolve) => {
         this.currentResolver = (result) => {
           // 用户选择完成后，关闭服务器
+          this.currentResolver = null;
           this.stop().catch((err) => {
             debug("Error stopping server after user selection:", err);
           });
           resolve(result);
         };
 
-        setTimeout(
+        const timeoutId = setTimeout(
           () => {
             if (this.currentResolver) {
-              warn("Request timeout, resolving with cancelled");
+              warn(`Request timeout after ${timeoutDuration / 1000} seconds, resolving with cancelled`);
               this.currentResolver = null;
               // 超时后也关闭服务器
               this.stop().catch((err) => {
@@ -531,10 +614,18 @@ export class InteractiveServer {
               resolve({ type: "envId", data: null, cancelled: true });
             }
           },
-          10 * 60 * 1000,
+          timeoutDuration,
         );
+
+        // Store timeout ID so we can clear it if resolved early
+        // Note: We can't clear it here, but the timeout will be cleared when the promise resolves
+        // The timeout will be automatically cleared when the promise resolves or rejects
       });
     } catch (err) {
+      // Clean up currentResolver on error
+      if (this.currentResolver) {
+        this.currentResolver = null;
+      }
       error("Error in collectEnvId", err instanceof Error ? err : new Error(String(err)));
       throw err;
     }
@@ -560,7 +651,7 @@ export class InteractiveServer {
 
     const url = `http://localhost:${port}/clarification/${sessionId}`;
 
-    // 打开浏览器
+    // Pass mcpServer directly - it's an ExtendedMcpServer instance with server property
     await openUrl(url, undefined, this._mcpServer);
 
     return new Promise((resolve) => {
@@ -2843,9 +2934,10 @@ let interactiveServerInstance: InteractiveServer | null = null;
 export function getInteractiveServer(mcpServer?: any): InteractiveServer {
   if (!interactiveServerInstance) {
     interactiveServerInstance = new InteractiveServer(mcpServer);
-  } else if (mcpServer && !interactiveServerInstance.mcpServer) {
-    // 如果实例已存在但没有 mcpServer，更新它
+  } else if (mcpServer) {
+    // Always update mcpServer if provided, to ensure it's current
     interactiveServerInstance.mcpServer = mcpServer;
+    debug(`[getInteractiveServer] Updated mcpServer, has server: ${!!mcpServer?.server}, has ide: ${!!mcpServer?.ide}`);
   }
   return interactiveServerInstance;
 }
