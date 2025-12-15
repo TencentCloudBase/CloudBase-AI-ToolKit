@@ -13,6 +13,13 @@ interface IDE {
 
 const IDES: IDE[] = [
   {
+    id: 'wechat-devtools',
+    name: '微信开发者工具',
+    platform: '微信开发者工具',
+    iconUrl: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/assets/wechat-devtools-logo.png?v=2',
+    docUrl: '/ai/cloudbase-ai-toolkit/ide-setup/wechat-devtools',
+  },
+  {
     id: 'cursor',
     name: 'Cursor',
     platform: '独立 IDE',

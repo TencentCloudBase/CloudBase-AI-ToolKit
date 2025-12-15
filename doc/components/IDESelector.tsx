@@ -26,6 +26,19 @@ interface IDE {
 
 const IDES: IDE[] = [
   {
+    id: 'wechat-devtools',
+    name: '微信开发者工具',
+    platform: '微信开发者工具',
+    configPath: 'CodeBuddy MCP 市场',
+    iconUrl: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/assets/wechat-devtools-logo.png?v=2',
+    docUrl: 'https://www.codebuddy.ai/docs/zh/ide/Config%20MCP',
+    supportsProjectMCP: false,
+    useCommandInsteadOfConfig: true,
+    installCommandDocs: '**步骤 1：安装 CodeBuddy 扩展**\n\n1. 在微信开发者工具中，点击顶部菜单栏的「扩展」\n2. 在扩展市场中搜索「CodeBuddy」\n3. 安装「腾讯云代码助手 CodeBuddy」扩展\n\n**步骤 2：安装 CloudBase AI ToolKit**\n\n1. 安装完成后，在工具栏找到 CodeBuddy 图标\n2. 点击右上角的 CodeBuddy 设置图标\n3. 在 MCP 市场中搜索并安装「CloudBase AI ToolKit」\n\n安装完成后即可在 CodeBuddy 中使用 CloudBase AI 功能。',
+    verificationPrompt: '检查 CloudBase MCP 工具是否可用, 下载 CloudBase AI 开发规则到当前项目',
+    configExample: '',
+  },
+  {
     id: 'cursor',
     name: 'Cursor',
     platform: '独立 IDE',
