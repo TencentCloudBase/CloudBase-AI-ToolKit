@@ -1,5 +1,16 @@
 # 常见问题 FAQ
 
+## ☁️ CloudBase MCP 是什么？
+
+云开发 CloudBase 是专为 AI Coding 提供的 **AI 原生后端服务**，通过 MCP 协议可以在 AI IDE 内一站式获得数据库、登录认证、云函数、容器托管、网站托管等后端集成和部署能力。换句话说，它把「云开发 CloudBase」变成了一个可以被 AI 直接调用的后端平台，让 AI 不止会写代码，还能帮你完成从数据存储、业务逻辑到上线部署的完整闭环。
+
+CloudBase MCP 可以与多种 AI IDE 配合使用（例如 Cursor、WindSurf、CodeBuddy、Claude Code、GitHub Copilot 等），只需要简单配置一次 MCP，后续你就可以在这些 IDE 里用自然语言完成：
+
+- 设计和创建数据库表、集合
+- 管理文件存储、网站托管和静态资源
+- 开发和部署云函数、云托管服务
+- 一键完成前后端项目的构建和上线
+
 ## 🌟 选择 CloudBase 的原因
 
 ### 为什么选择 CloudBase？
@@ -93,7 +104,7 @@ AI 会自动下载并更新最新的规则配置到你的项目目录。
 
 一般情况下，在 MCP 列表中重新启用或刷新即可正常安装并显示工具。
 
-参考下方的 如何全局安装 CloudBase AI ToolKit？ 的步骤进行操作
+参考下方的 如何全局安装 CloudBase MCP？ 的步骤进行操作
 
 ---
 
@@ -101,13 +112,13 @@ AI 会自动下载并更新最新的规则配置到你的项目目录。
 
 如果在配置 MCP 时遇到 `MCP error -32001: Request timed out` 错误，可以按以下步骤解决：
 
-参考下方的 如何全局安装 CloudBase AI ToolKit？ 的步骤进行操作
+参考下方的 如何全局安装 CloudBase MCP？ 的步骤进行操作
 
-### 如何全局安装 CloudBase AI ToolKit？
+### 如何全局安装 CloudBase MCP？
 
 #### 遇到的问题
 
-在使用 CloudBase AI ToolKit 时，你是否遇到过以下问题？
+在使用 CloudBase MCP 时，你是否遇到过以下问题？
 
 - **安装速度慢** - 使用 `npx` 每次都要重新下载，等待时间过长
 - **配置复杂** - 需要手动配置 npm 源、Node.js 版本等环境依赖
