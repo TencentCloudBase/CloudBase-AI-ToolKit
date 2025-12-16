@@ -31,10 +31,18 @@ export async function getLoginState(options?: {
     await auth.loginByWebAuth(
       options?.fromCloudBaseLoginPage
         ? {
-            getAuthUrl: (url) =>
-              `https://tcb.cloud.tencent.com/login?_redirect_uri=${encodeURIComponent(url)}`,
+            getAuthUrl: (url) => {
+              const separator = url.includes('?') ? '&' : '?';
+              const urlWithParam = `${url}${separator}allowNoEnv=true`;
+              return `https://tcb.cloud.tencent.com/login?_redirect_uri=${encodeURIComponent(urlWithParam)}`;
+            },
           }
-        : {},
+        : {
+            getAuthUrl: (url) => {
+              const separator = url.includes('?') ? '&' : '?';
+              return `${url}${separator}allowNoEnv=true`;
+            },
+          },
     );
     const loginState = await auth.getLoginState();
     debug("loginByWebAuth", loginState);
