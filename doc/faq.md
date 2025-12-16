@@ -1,15 +1,26 @@
 # 常见问题 FAQ
 
-## 🌟 选择 CloudBase 的原因
+## CloudBase MCP 是什么？
+
+云开发 CloudBase 是专为 AI Coding 提供的 **AI 原生后端服务**，通过 MCP 协议可以在 AI IDE 内一站式获得数据库、登录认证、云函数、容器托管、网站托管等后端集成和部署能力。换句话说，它把「云开发 CloudBase」变成了一个可以被 AI 直接调用的后端平台，让 AI 不止会写代码，还能帮你完成从数据存储、业务逻辑到上线部署的完整闭环。
+
+CloudBase MCP 可以与多种 AI IDE 配合使用（例如 Cursor、WindSurf、CodeBuddy、Claude Code、GitHub Copilot 等），只需要简单配置一次 MCP，后续你就可以在这些 IDE 里用自然语言完成：
+
+- 设计和创建数据库表、集合
+- 管理文件存储、网站托管和静态资源
+- 开发和部署云函数、云托管服务
+- 一键完成前后端项目的构建和上线
+
+## 选择 CloudBase 的原因
 
 ### 为什么选择 CloudBase？
 
-- **⚡ 极速部署**：国内节点,访问速度比海外更快
-- **🛡️ 稳定可靠**：330 万开发者选择的 Serverless 平台
-- **🔧 开发友好**：专为AI时代设计的全栈平台，支持自动环境配置
-- **💰 成本优化**：Serverless 架构更具弹性，新用户开发期间可以免费体验
+- **极速部署**：国内节点,访问速度比海外更快
+- **稳定可靠**：330 万开发者选择的 Serverless 平台
+- **开发友好**：专为AI时代设计的全栈平台，支持自动环境配置
+- **成本优化**：Serverless 架构更具弹性，新用户开发期间可以免费体验
 
-## 🚀 开始使用
+## 开始使用
 
 ### 我是新用户，如何快速开始？
 
@@ -21,7 +32,7 @@
 ### 支持哪些 AI 开发工具？
 支持 CloudBase AI CLI、Cursor、WindSurf、CodeBuddy、CLINE、GitHub Copilot、Claude Code、Gemini CLI、OpenAI Codex CLI、OpenCode、Trae、通义灵码、RooCode、文心快码、Augment Code、Qwen Code 等主流 AI 开发工具。
 
-## 🛠️ 技术问题
+## 技术问题
 
 
 ### 已有项目如何集成本模板和规则体系？
@@ -93,7 +104,7 @@ AI 会自动下载并更新最新的规则配置到你的项目目录。
 
 一般情况下，在 MCP 列表中重新启用或刷新即可正常安装并显示工具。
 
-参考下方的 如何全局安装 CloudBase AI ToolKit？ 的步骤进行操作
+参考下方的 如何全局安装 CloudBase MCP？ 的步骤进行操作
 
 ---
 
@@ -101,13 +112,13 @@ AI 会自动下载并更新最新的规则配置到你的项目目录。
 
 如果在配置 MCP 时遇到 `MCP error -32001: Request timed out` 错误，可以按以下步骤解决：
 
-参考下方的 如何全局安装 CloudBase AI ToolKit？ 的步骤进行操作
+参考下方的 如何全局安装 CloudBase MCP？ 的步骤进行操作
 
-### 如何全局安装 CloudBase AI ToolKit？
+### 如何全局安装 CloudBase MCP？
 
 #### 遇到的问题
 
-在使用 CloudBase AI ToolKit 时，你是否遇到过以下问题？
+在使用 CloudBase MCP 时，你是否遇到过以下问题？
 
 - **安装速度慢** - 使用 `npx` 每次都要重新下载，等待时间过长
 - **配置复杂** - 需要手动配置 npm 源、Node.js 版本等环境依赖
@@ -116,12 +127,12 @@ AI 会自动下载并更新最新的规则配置到你的项目目录。
 
 #### 解决方案：CloudBase AI CLI 快速安装
 
-推荐使用 **CloudBase AI CLI** 的快速安装方式，一次性解决所有问题：
+推荐使用 **CloudBase AI CLI** 的快速安装方式，一次性解决以下问题：
 
-- 🚀 **快速安装** - 相比 npm 安装通常需要几分钟，一键安装脚本只需几秒即可完成
-- 🛠️ **统一管理** - 一个命令管理多种 AI 编程 CLI 工具，包括内置的 CloudBase AI Toolkit MCP
-- 🌍 **无处不在** - 可在任意环境中运行，包括小程序开发者工具、VS Code、GitHub Actions 等
-- 🔧 **开箱即用** - 安装完成后自动配置 MCP 服务，无需额外配置
+- 快速安装：相比 npm 安装通常需要几分钟，一键安装脚本只需几秒即可完成
+- 统一管理：一个命令管理多种 AI 编程 CLI 工具，包括内置的 CloudBase AI Toolkit MCP
+- 使用场景丰富：可在小程序开发者工具、VS Code、GitHub Actions 等环境中运行
+- 开箱即用：安装完成后自动配置 MCP 服务，无需额外配置
 
 #### 快速安装步骤
 
@@ -321,7 +332,7 @@ CloudBase AI ToolKit 与微信开发者工具可以完美配合使用，提供�
 
 ---
 
-## 🔄 环境管理
+## 环境管理
 
 ### 如何切换云开发环境？
 
@@ -346,7 +357,7 @@ CloudBase AI ToolKit 与微信开发者工具可以完美配合使用，提供�
 查询当前云开发环境信息
 ```
 
-## 🐛 问题排查
+## 问题排查
 
 ### 部署失败了怎么办？
 把完整的错误信息发给 AI：
@@ -362,7 +373,7 @@ CloudBase AI ToolKit 与微信开发者工具可以完美配合使用，提供�
 
 
 
-## 💬 技术交流群
+## 技术交流群
 
 遇到问题或想要交流经验？加入我们的技术社区！
 

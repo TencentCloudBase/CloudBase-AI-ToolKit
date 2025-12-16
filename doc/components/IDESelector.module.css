@@ -556,7 +556,7 @@
 
 .codeContent {
   margin: 0;
-  padding: 0;
+  padding: 16px;
   overflow-x: auto;
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Fira Mono', 'Droid Sans Mono', 'Source Code Pro', monospace;
   font-size: 0.8125rem;

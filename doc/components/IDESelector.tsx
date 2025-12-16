@@ -34,7 +34,7 @@ const IDES: IDE[] = [
     docUrl: 'https://www.codebuddy.ai/docs/zh/ide/Config%20MCP',
     supportsProjectMCP: false,
     useCommandInsteadOfConfig: true,
-    installCommandDocs: '**步骤 1：安装 CodeBuddy 扩展**\n\n1. 在微信开发者工具中，点击顶部菜单栏的「扩展」\n2. 在扩展市场中搜索「CodeBuddy」\n3. 安装「腾讯云代码助手 CodeBuddy」扩展\n\n**步骤 2：安装 CloudBase AI ToolKit**\n\n1. 安装完成后，在工具栏找到 CodeBuddy 图标\n2. 点击右上角的 CodeBuddy 设置图标\n3. 在 MCP 市场中搜索并安装「CloudBase AI ToolKit」\n\n安装完成后即可在 CodeBuddy 中使用 CloudBase AI 功能。',
+    installCommandDocs: '**步骤 1：安装 CodeBuddy 扩展**\n\n1. 在微信开发者工具中，点击顶部菜单栏的「扩展」\n2. 在扩展市场中搜索「CodeBuddy」\n3. 安装「腾讯云代码助手 CodeBuddy」扩展\n\n**步骤 2：安装 CloudBase MCP**\n\n1. 安装完成后，在工具栏找到 CodeBuddy 图标\n2. 点击右上角的 CodeBuddy 设置图标\n3. 在 MCP 市场中搜索并安装「CloudBase MCP」\n\n安装完成后即可在 CodeBuddy 中使用 CloudBase AI 功能。',
     verificationPrompt: '检查 CloudBase MCP 工具是否可用, 下载 CloudBase AI 开发规则到当前项目',
     configExample: '',
   },
@@ -89,8 +89,6 @@ const IDES: IDE[] = [
     iconSlug: 'claude',
     docUrl: 'https://docs.anthropic.com/en/docs/claude-code/mcp#project-scope',
     supportsProjectMCP: true,
-    cliCommand: 'claude mcp add --transport stdio cloudbase --env INTEGRATION_IDE=ClaudeCode -- npx @cloudbase/cloudbase-mcp@latest',
-    alternativeConfig: 'Alternatively, add this configuration to .mcp.json:',
     verificationPrompt: '检查 CloudBase MCP 工具是否可用, 下载 CloudBase AI 开发规则到当前项目',
     configExample: `{
   "mcpServers": {
@@ -323,6 +321,27 @@ const IDES: IDE[] = [
 }`,
   },
   {
+    id: 'kiro',
+    name: 'Kiro',
+    platform: '独立 IDE',
+    configPath: '.kiro/settings/mcp.json',
+    iconUrl: 'https://kiro.dev/favicon.ico',
+    docUrl: 'https://kiro.dev/docs/mcp/configuration/',
+    supportsProjectMCP: true,
+    verificationPrompt: '检查 CloudBase MCP 工具是否可用, 下载 CloudBase AI 开发规则到当前项目',
+    configExample: `{
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "INTEGRATION_IDE": "Kiro"
+      }
+    }
+  }
+}`,
+  },
+  {
     id: 'qoder',
     name: 'Qoder',
     platform: '独立 IDE',
@@ -493,7 +512,7 @@ const translations: Record<string, Record<string, string>> = {
     viewTemplates: '查看模板',
     oneClickInstall: '一键安装',
     orManualConfig: '或手动配置',
-    orAddConfig: '将以下配置添加到',
+    orAddConfig: '将以下配置添加到项目目录下的',
     step2Verify: '步骤 2：和 AI 对话',
     showMore: '显示配置选项',
     showLess: '收起',

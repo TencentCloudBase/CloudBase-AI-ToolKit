@@ -1,5 +1,5 @@
 import Link from '@docusaurus/Link';
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import styles from './TutorialsGrid.module.css';
 
 interface Tutorial {
@@ -10,10 +10,173 @@ interface Tutorial {
   url: string;
   type: 'article' | 'video' | 'project';
   thumbnail?: string;
+  // Terminal / platform tags, e.g. 小程序 / 小游戏 / Web / H5 / 多端应用
+  terminalTags?: string[];
+  // Application type tags, e.g. 游戏 / 工具/效率 / 教育/学习 / 社交/社区 / 电商/业务系统 / 多媒体/音视频
+  appTypeTags?: string[];
+  // Development tool tags, e.g. CodeBuddy / Cursor / Claude Code / CloudBase AI CLI
+  devToolTags?: string[];
+  // Tech stack tags, e.g. Vue / React / 小程序原生 / 云函数 / 云托管
+  techStackTags?: string[];
 }
+
+const TERMINAL_ORDER = ['小程序', 'Web', '小游戏', '原生应用'];
 
 const tutorials: Tutorial[] = [
   // 文章
+  {
+    id: 'meeting-room-system',
+    title: '低代码？不！是高效代码：CodeBuddy IDE + CloudBase 开发会议室系统实战',
+    description: '会议室系统开发实战',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2593378',
+    type: 'article',
+    terminalTags: ['Web'],
+    appTypeTags: ['工具/效率', '电商/业务系统'],
+    devToolTags: ['CodeBuddy'],
+    techStackTags: ['CloudBase AI Toolkit'],
+  },
+  {
+    id: 'ai-game-paradigm',
+    title: 'CloudBase + AI 游戏开发新范式，3小时极速开发',
+    description: '游戏开发新范式探索',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2575573',
+    type: 'article',
+    terminalTags: ['Web', '小游戏'],
+    appTypeTags: ['游戏'],
+    devToolTags: ['CodeBuddy'],
+    techStackTags: ['CloudBase AI Toolkit'],
+  },
+  {
+    id: 'anime-tracker',
+    title: '追番新姿势： 美少女程序员用CloudBase+CodeBuddy 8分钟手搓追番神器！！！',
+    description: '追番工具开发案例',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2574377',
+    type: 'article',
+    terminalTags: ['Web'],
+    appTypeTags: ['工具/效率', '多媒体/音视频'],
+    devToolTags: ['CodeBuddy'],
+  },
+  {
+    id: 'zero-code-miniprogram',
+    title: '从没写过代码的小白，也能用 CodeBuddy + CloudBase 打造商业小程序！',
+    description: '零基础小程序开发',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2571757',
+    type: 'article',
+    terminalTags: ['小程序'],
+    appTypeTags: ['电商/业务系统'],
+    devToolTags: ['CodeBuddy'],
+  },
+  {
+    id: 'claude-code-figma',
+    title: '手把手教你用 Claude Code + CloudBase + Figma 完成商业小程序全栈开发',
+    description: '全栈开发实战',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2547137',
+    type: 'article',
+    terminalTags: ['小程序', 'Web'],
+    appTypeTags: ['电商/业务系统'],
+    devToolTags: ['Claude Code'],
+    techStackTags: ['CloudBase AI Toolkit'],
+  },
+  {
+    id: 'anonymous-social-app',
+    title: '手把手带你用AI 2天撸出6端匿名社交App！',
+    description: '多端应用开发案例',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2549936',
+    type: 'article',
+  },
+  {
+    id: 'finance-assistant',
+    title: '腾讯云CodeBuddy AI IDE+CloudBase AI ToolKit打造理财小助手网页',
+    description: '理财助手开发实战',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2551403',
+    type: 'article',
+  },
+  {
+    id: 'animal-match-game',
+    title: '基于CloudBase AI Toolkit十首歌的时间开发《动物连连看》微信小游戏',
+    description: '小游戏快速开发',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2544009',
+    type: 'article',
+  },
+  {
+    id: 'gomoku-online',
+    title: 'CodeBuddy IDE + 云开发CloudBase 实现五子棋在线小游戏',
+    description: '在线小游戏开发',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2547526',
+    type: 'article',
+  },
+  {
+    id: 'sleep-assistant',
+    title: '基于CloudBase AI Toolkit + Vue Web轻松构建智能睡眠助手网站',
+    description: '智能睡眠助手开发',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2538039',
+    type: 'article',
+    terminalTags: ['Web'],
+    appTypeTags: ['工具/效率', '多媒体/音视频'],
+    devToolTags: ['CodeBuddy'],
+    techStackTags: ['Vue', 'CloudBase AI Toolkit'],
+  },
+  {
+    id: 'english-learning-h5',
+    title: 'CloudBase AI ToolKit编程实战，无痛开发刷视频学英语h5应用',
+    description: 'H5应用开发实战',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2538050',
+    type: 'article',
+    terminalTags: ['Web'],
+    appTypeTags: ['教育/学习', '多媒体/音视频'],
+    devToolTags: ['CodeBuddy'],
+    techStackTags: ['CloudBase AI Toolkit'],
+  },
+  {
+    id: 'fps-game',
+    title: 'AI编程实战：云开发疯狂助攻，React + Vite 做出 FPS 网页游戏不是梦',
+    description: 'FPS游戏开发案例',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2537874',
+    type: 'article',
+    terminalTags: ['Web'],
+    appTypeTags: ['游戏'],
+    devToolTags: ['CodeBuddy'],
+    techStackTags: ['React', 'Vite', 'CloudBase AI Toolkit'],
+  },
+  {
+    id: 'h5-shooting-game',
+    title: '从Prompt到上线：CloudBase AI Toolkit 3步打造H5射击小游戏新体验',
+    description: 'H5游戏开发实战',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2536222',
+    type: 'article',
+    terminalTags: ['Web'],
+    appTypeTags: ['游戏'],
+    devToolTags: ['CodeBuddy'],
+  },
+  {
+    id: 'art-gallery-h5',
+    title: '极速开发实践！AI助你打造专属时空艺术馆H5，小白也能变策展人！',
+    description: 'H5应用开发案例',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2535206',
+    type: 'article',
+  },
+  {
+    id: 'calendar-memo',
+    title: 'CloudBase AI Toolkit给我做了一个H5日历备忘录，终于不靠记性生活了',
+    description: 'H5工具开发案例',
+    category: '文章',
+    url: 'https://cloud.tencent.com/developer/article/2536280',
+    type: 'article',
+  },
   {
     id: 'ai-cli-miniprogram',
     title: '用 CloudBase AI CLI 开发邻里闲置物品循环利用小程序',
@@ -37,6 +200,9 @@ const tutorials: Tutorial[] = [
     category: '文章',
     url: 'https://cloud.tencent.com/developer/article/2532595',
     type: 'article',
+    terminalTags: ['小游戏'],
+    appTypeTags: ['游戏'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'cursor-game',
@@ -55,20 +221,15 @@ const tutorials: Tutorial[] = [
     type: 'article',
   },
   {
-    id: 'hospital-scheduling',
-    title: 'CloudBase AI Toolkit 做一个医院实习生排班系统',
-    description: '告别痛苦的 excel 表格',
-    category: '文章',
-    url: 'https://cloud.tencent.com/developer/article/2538023',
-    type: 'article',
-  },
-  {
     id: 'cloud-deploy',
     title: '没有服务器，怎么云化部署前后端项目',
     description: '云化部署实战',
     category: '文章',
     url: 'https://cloud.tencent.com/developer/article/2537971',
     type: 'article',
+    terminalTags: ['Web'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'business-card',
@@ -77,6 +238,9 @@ const tutorials: Tutorial[] = [
     category: '文章',
     url: 'https://cloud.tencent.com/developer/article/2536273',
     type: 'article',
+    terminalTags: ['Web'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'hot-words-miniprogram',
@@ -85,6 +249,9 @@ const tutorials: Tutorial[] = [
     category: '文章',
     url: 'https://cloud.tencent.com/developer/article/2537907',
     type: 'article',
+    terminalTags: ['小程序'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'cloud-library',
@@ -93,6 +260,9 @@ const tutorials: Tutorial[] = [
     category: '文章',
     url: 'https://cloud.tencent.com/developer/article/2535789',
     type: 'article',
+    terminalTags: ['小程序'],
+    appTypeTags: ['教育/学习'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'resume-miniprogram',
@@ -101,6 +271,9 @@ const tutorials: Tutorial[] = [
     category: '文章',
     url: 'https://cloud.tencent.com/developer/article/2535894',
     type: 'article',
+    terminalTags: ['小程序'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'worry-box',
@@ -109,6 +282,9 @@ const tutorials: Tutorial[] = [
     category: '文章',
     url: 'https://mp.weixin.qq.com/s/DYekRheNQ2u8LAl_F830fA',
     type: 'article',
+    terminalTags: ['小程序'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'figma-cursor-cloudbase',
@@ -117,6 +293,9 @@ const tutorials: Tutorial[] = [
     category: '文章',
     url: 'https://mp.weixin.qq.com/s/nT2JsKnwBiup1imniCr2jA',
     type: 'article',
+    terminalTags: ['小程序'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['Cursor', 'Figma'],
   },
   // 视频
   {
@@ -154,6 +333,9 @@ const tutorials: Tutorial[] = [
     url: 'https://www.bilibili.com/video/BV1TXuVzoE9p/?vd_source=c8763f6ab9c7c6f7f760ad7ea9157011',
     type: 'video',
     thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1TXuVzoE9p.jpg',
+    terminalTags: ['Web'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['Cursor'],
   },
   {
     id: 'video-english-learning',
@@ -181,6 +363,9 @@ const tutorials: Tutorial[] = [
     url: 'https://www.bilibili.com/video/BV123SyB4Ekt/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
     thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV123SyB4Ekt.jpg',
+    terminalTags: ['小程序'],
+    appTypeTags: ['教育/学习'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'video-software30',
@@ -190,6 +375,9 @@ const tutorials: Tutorial[] = [
     url: 'https://www.bilibili.com/video/BV15gKdz1E5N/?share_source=copy_web',
     type: 'video',
     thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV15gKdz1E5N.jpg',
+    terminalTags: ['小程序'],
+    appTypeTags: ['教育/学习'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'video-overcooked',
@@ -199,6 +387,9 @@ const tutorials: Tutorial[] = [
     url: 'https://www.bilibili.com/video/BV1v5KAzwEf9/',
     type: 'video',
     thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1v5KAzwEf9.jpg',
+    terminalTags: ['Web', '小游戏'],
+    appTypeTags: ['游戏'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'video-resume',
@@ -226,6 +417,9 @@ const tutorials: Tutorial[] = [
     url: 'https://www.bilibili.com/video/BV1NEbjzjEeZ/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
     thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1NEbjzjEeZ.jpg',
+    terminalTags: ['小程序'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'video-codebuddy-backend',
@@ -235,6 +429,9 @@ const tutorials: Tutorial[] = [
     url: 'https://www.bilibili.com/video/BV13C8nzzEoq/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
     thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV13C8nzzEoq.jpg',
+    terminalTags: ['Web'],
+    appTypeTags: ['电商/业务系统'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'video-cloudbase-deploy',
@@ -253,6 +450,9 @@ const tutorials: Tutorial[] = [
     url: 'https://www.bilibili.com/video/BV1DWbwz1EBU/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
     thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1DWbwz1EBU.jpg',
+    terminalTags: ['Web'],
+    appTypeTags: ['电商/业务系统'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'video-cursor-miniprogram',
@@ -262,6 +462,9 @@ const tutorials: Tutorial[] = [
     url: 'https://www.bilibili.com/video/BV1jx5kziEqz/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
     thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1jx5kziEqz.jpg',
+    terminalTags: ['小程序'],
+    appTypeTags: ['教育/学习'],
+    devToolTags: ['Cursor'],
   },
   {
     id: 'video-podcast-tool',
@@ -280,6 +483,9 @@ const tutorials: Tutorial[] = [
     url: 'https://www.bilibili.com/video/BV12J3XzzE67/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
     thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV12J3XzzE67.jpg',
+    terminalTags: ['小游戏'],
+    appTypeTags: ['游戏'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'video-jixian-huiche',
@@ -307,6 +513,9 @@ const tutorials: Tutorial[] = [
     url: 'https://www.bilibili.com/video/BV1hpbsz1E7m/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
     thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1hpbsz1E7m.jpg',
+    terminalTags: ['Web'],
+    appTypeTags: ['游戏'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'video-codebuddy-zero-coding',
@@ -316,6 +525,9 @@ const tutorials: Tutorial[] = [
     url: 'https://www.bilibili.com/video/BV1mNY2z3ESU/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
     thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1mNY2z3ESU.jpg',
+    terminalTags: ['小程序'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'video-hospital-scheduling-saas',
@@ -343,6 +555,9 @@ const tutorials: Tutorial[] = [
     url: 'https://www.bilibili.com/video/BV1uE3uzHEou/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
     type: 'video',
     thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1uE3uzHEou.jpg',
+    terminalTags: ['Web'],
+    appTypeTags: ['游戏'],
+    devToolTags: ['Cursor'],
   },
   {
     id: 'video-one-person-company',
@@ -397,6 +612,9 @@ const tutorials: Tutorial[] = [
     category: '应用项目',
     url: 'https://gitcode.com/qq_33681891/resume_template',
     type: 'project',
+    terminalTags: ['小程序'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'project-gomoku',
@@ -405,6 +623,9 @@ const tutorials: Tutorial[] = [
     category: '应用项目',
     url: 'https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/gomoku-game',
     type: 'project',
+    terminalTags: ['Web'],
+    appTypeTags: ['游戏'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'project-overcooked',
@@ -413,6 +634,9 @@ const tutorials: Tutorial[] = [
     category: '应用项目',
     url: 'https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/overcooked-game',
     type: 'project',
+    terminalTags: ['Web'],
+    appTypeTags: ['游戏'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'project-ecommerce',
@@ -421,6 +645,9 @@ const tutorials: Tutorial[] = [
     category: '应用项目',
     url: 'https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/web/ecommerce-management-backend',
     type: 'project',
+    terminalTags: ['Web'],
+    appTypeTags: ['电商/业务系统'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'project-video',
@@ -429,6 +656,9 @@ const tutorials: Tutorial[] = [
     category: '应用项目',
     url: 'https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/cloudbase-ai-video',
     type: 'project',
+    terminalTags: ['小程序'],
+    appTypeTags: ['多媒体/音视频'],
+    devToolTags: ['CodeBuddy'],
   },
   {
     id: 'project-dating',
@@ -437,6 +667,9 @@ const tutorials: Tutorial[] = [
     category: '应用项目',
     url: 'https://github.com/TencentCloudBase/awesome-cloudbase-examples/tree/master/miniprogram/dating',
     type: 'project',
+    terminalTags: ['小程序'],
+    appTypeTags: ['社交/社区'],
+    devToolTags: ['CodeBuddy'],
   },
 ];
 
@@ -446,23 +679,203 @@ const categoryLabels: Record<string, string> = {
   '应用项目': '应用项目',
 };
 
-const groupedTutorials = tutorials.reduce((acc, tutorial) => {
-  if (!acc[tutorial.category]) {
-    acc[tutorial.category] = [];
-  }
-  acc[tutorial.category].push(tutorial);
-  return acc;
-}, {} as Record<string, Tutorial[]>);
-
 export default function TutorialsGrid() {
+  const [selectedTerminalTags, setSelectedTerminalTags] = useState<string[]>([]);
+  const [selectedAppTypeTags, setSelectedAppTypeTags] = useState<string[]>([]);
+  const [selectedDevToolTags, setSelectedDevToolTags] = useState<string[]>([]);
+
+  const allTerminalTags = useMemo(() => {
+    const tags = Array.from(
+      new Set(
+        tutorials
+          .flatMap((t) => t.terminalTags || [])
+          .filter(Boolean),
+      ),
+    );
+    return tags.sort((a, b) => {
+      const ia = TERMINAL_ORDER.indexOf(a);
+      const ib = TERMINAL_ORDER.indexOf(b);
+      const sa = ia === -1 ? Number.MAX_SAFE_INTEGER : ia;
+      const sb = ib === -1 ? Number.MAX_SAFE_INTEGER : ib;
+      return sa - sb || a.localeCompare(b);
+    });
+  }, []);
+
+  const allAppTypeTags = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          tutorials
+            .flatMap((t) => t.appTypeTags || [])
+            .filter(Boolean),
+        ),
+      ),
+    [],
+  );
+
+  const allDevToolTags = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          tutorials
+            .flatMap((t) => t.devToolTags || [])
+            .filter(Boolean),
+        ),
+      ),
+    [],
+  );
+
+  const matchesTags = (tutorial: Tutorial) => {
+    const hasIntersection = (source: string[] | undefined, selected: string[]) => {
+      if (!selected.length) return true;
+      if (!source || !source.length) return false;
+      return selected.some((tag) => source.includes(tag));
+    };
+
+    return (
+      hasIntersection(tutorial.terminalTags, selectedTerminalTags) &&
+      hasIntersection(tutorial.appTypeTags, selectedAppTypeTags) &&
+      hasIntersection(tutorial.devToolTags, selectedDevToolTags)
+    );
+  };
+
+  const filteredTutorials = useMemo(
+    () => tutorials.filter((t) => matchesTags(t)),
+    [selectedTerminalTags, selectedAppTypeTags, selectedDevToolTags],
+  );
+
+  const groupedTutorials = useMemo(
+    () =>
+      filteredTutorials.reduce((acc, tutorial) => {
+        if (!acc[tutorial.category]) {
+          acc[tutorial.category] = [];
+        }
+        acc[tutorial.category].push(tutorial);
+        return acc;
+      }, {} as Record<string, Tutorial[]>),
+    [filteredTutorials],
+  );
+
+  const toggleTag = (
+    type: 'terminal' | 'appType' | 'devTool',
+    tag: string,
+  ) => {
+    const toggle = (current: string[]) =>
+      current.includes(tag)
+        ? current.filter((t) => t !== tag)
+        : [...current, tag];
+
+    if (type === 'terminal') {
+      setSelectedTerminalTags((prev) => toggle(prev));
+    } else if (type === 'appType') {
+      setSelectedAppTypeTags((prev) => toggle(prev));
+    } else {
+      setSelectedDevToolTags((prev) => toggle(prev));
+    }
+  };
+
+  const clearAllFilters = () => {
+    setSelectedTerminalTags([]);
+    setSelectedAppTypeTags([]);
+    setSelectedDevToolTags([]);
+  };
+
   // Separate videos with thumbnails from others
   const videoCategory = groupedTutorials['视频教程'] || [];
   const videosWithThumbnails = videoCategory.filter(v => v.thumbnail);
   const videosWithoutThumbnails = videoCategory.filter(v => !v.thumbnail);
-  const otherCategories = Object.entries(groupedTutorials).filter(([cat]) => cat !== '视频教程');
+  const otherCategories = Object.entries(groupedTutorials).filter(
+    ([cat]) => cat !== '视频教程',
+  ) as [string, Tutorial[]][];
+
+  const hasActiveFilter =
+    selectedTerminalTags.length > 0 ||
+    selectedAppTypeTags.length > 0 ||
+    selectedDevToolTags.length > 0;
 
   return (
     <div className={styles.container}>
+      <div className={styles.filters}>
+        <div className={styles.filterHeader}>
+          <span className={styles.filterTitle}>按标签筛选</span>
+          {hasActiveFilter && (
+            <button
+              type="button"
+              className={styles.filterReset}
+              onClick={clearAllFilters}
+            >
+              清除筛选
+            </button>
+          )}
+        </div>
+
+        {allTerminalTags.length > 0 && (
+          <div className={styles.filterGroup}>
+            <span className={styles.filterLabel}>终端</span>
+            <div className={styles.filterTags}>
+              {allTerminalTags.map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  className={`${styles.filterTag} ${
+                    selectedTerminalTags.includes(tag)
+                      ? styles.filterTagActive
+                      : ''
+                  }`.trim()}
+                  onClick={() => toggleTag('terminal', tag)}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {allAppTypeTags.length > 0 && (
+          <div className={styles.filterGroup}>
+            <span className={styles.filterLabel}>应用类型</span>
+            <div className={styles.filterTags}>
+              {allAppTypeTags.map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  className={`${styles.filterTag} ${
+                    selectedAppTypeTags.includes(tag)
+                      ? styles.filterTagActive
+                      : ''
+                  }`.trim()}
+                  onClick={() => toggleTag('appType', tag)}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {allDevToolTags.length > 0 && (
+          <div className={styles.filterGroup}>
+            <span className={styles.filterLabel}>开发工具</span>
+            <div className={styles.filterTags}>
+              {allDevToolTags.map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  className={`${styles.filterTag} ${
+                    selectedDevToolTags.includes(tag)
+                      ? styles.filterTagActive
+                      : ''
+                  }`.trim()}
+                  onClick={() => toggleTag('devTool', tag)}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Videos with thumbnails - displayed first */}
       {videosWithThumbnails.length > 0 && (
         <div className={styles.category}>
@@ -506,21 +919,12 @@ export default function TutorialsGrid() {
               <Link
                 key={tutorial.id}
                 to={tutorial.url}
-                className={styles.card}
+                className={styles.videoListItem}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div className={styles.content}>
-                  <div className={styles.header}>
-                    <span className={styles.icon}>
-                      {tutorial.type === 'article' && '📖'}
-                      {tutorial.type === 'video' && '🎥'}
-                      {tutorial.type === 'project' && '💻'}
-                    </span>
-                    <div className={styles.title}>{tutorial.title}</div>
-                  </div>
-                  <div className={styles.description}>{tutorial.description}</div>
-                </div>
+                <div className={styles.videoListTitle}>{tutorial.title}</div>
+                <div className={styles.videoListDescription}>{tutorial.description}</div>
               </Link>
             ))}
           </div>
@@ -531,29 +935,60 @@ export default function TutorialsGrid() {
       {otherCategories.map(([category, items]) => (
         <div key={category} className={styles.category}>
           <h3 className={styles.categoryTitle}>{categoryLabels[category] || category}</h3>
-          <div className={styles.grid}>
-            {items.map((tutorial) => (
-              <Link
-                key={tutorial.id}
-                to={tutorial.url}
-                className={styles.card}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <div className={styles.content}>
-                  <div className={styles.header}>
-                    <span className={styles.icon}>
-                      {tutorial.type === 'article' && '📖'}
-                      {tutorial.type === 'video' && '🎥'}
-                      {tutorial.type === 'project' && '💻'}
-                    </span>
-                    <div className={styles.title}>{tutorial.title}</div>
-                  </div>
-                  <div className={styles.description}>{tutorial.description}</div>
+          {category === '文章' ? (
+            <div className={styles.articleList}>
+              {items.map((tutorial, index) => (
+                <div key={tutorial.id} className={styles.articleItem}>
+                  <Link
+                    to={tutorial.url}
+                    className={styles.articleLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <div className={styles.articleTitle}>{tutorial.title}</div>
+                    <div className={styles.articleDescription}>{tutorial.description}</div>
+                  </Link>
+                  {index < items.length - 1 && (
+                    <div className={styles.articleDivider} />
+                  )}
                 </div>
-              </Link>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.projectList}>
+              {items.map((tutorial) => (
+                <Link
+                  key={tutorial.id}
+                  to={tutorial.url}
+                  className={styles.projectCard}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div className={styles.projectHeader}>
+                    <div className={styles.projectName}>{tutorial.title}</div>
+                  </div>
+                  <div className={styles.projectDescription}>{tutorial.description}</div>
+                  <div className={styles.projectMeta}>
+                    {tutorial.terminalTags && tutorial.terminalTags.length > 0 && (
+                      <span className={styles.projectMetaItem}>
+                        {tutorial.terminalTags.join(' / ')}
+                      </span>
+                    )}
+                    {tutorial.appTypeTags && tutorial.appTypeTags.length > 0 && (
+                      <span className={styles.projectMetaItem}>
+                        {tutorial.appTypeTags.join(' / ')}
+                      </span>
+                    )}
+                    {tutorial.devToolTags && tutorial.devToolTags.length > 0 && (
+                      <span className={styles.projectMetaItem}>
+                        {tutorial.devToolTags.join(' / ')}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       ))}
     </div>
