@@ -269,8 +269,12 @@ function updateSidebar(config) {
     });
   }
   
-  // Find the main category
-  const mainCategory = sidebar.find(item => item.label === 'CloudBase AI Toolkit');
+  // Find the main category - try multiple possible labels
+  const mainCategory = sidebar.find(item => 
+    item.label === 'CloudBase AI Toolkit' || 
+    item.label === 'AI 原生开发' ||
+    (item.type === 'category' && item.items && item.items.length > 0)
+  );
   if (!mainCategory || !mainCategory.items) {
     console.warn('Warning: Could not find main category in sidebar.json');
     return;
