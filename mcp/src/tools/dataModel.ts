@@ -1058,7 +1058,7 @@ classDiagram
     note for Identity "身份模型"
 `),
         action: z
-          .enum(["create", "update"])
+          .enum(["create"])
           .optional()
           .default("create")
           .describe("操作类型：create=创建新模型"),

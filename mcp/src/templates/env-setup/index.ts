@@ -24,13 +24,14 @@ export interface EnvSetupOptions {
   errorContext?: any;
   sessionId?: string;
   wsPort: number;
+  ide?: string;
 }
 
 /**
  * Render the complete env setup page
  */
 export function renderEnvSetupPage(options: EnvSetupOptions): string {
-  const { envs = [], accountInfo, errorContext, sessionId, wsPort } = options;
+  const { envs = [], accountInfo, errorContext, sessionId, wsPort, ide } = options;
   
   const hasEnvs = envs.length > 0;
   const hasInitError = !!errorContext?.initTcbError;
@@ -60,7 +61,7 @@ export function renderEnvSetupPage(options: EnvSetupOptions): string {
   // Build body HTML
   const bodyHTML = `
     <div class="modal">
-      ${renderHeader(accountInfo)}
+      ${renderHeader(accountInfo, ide)}
       <div class="content">
         <h1 class="content-title">选择环境</h1>
         

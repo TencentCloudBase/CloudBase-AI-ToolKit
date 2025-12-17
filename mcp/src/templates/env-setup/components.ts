@@ -2,8 +2,9 @@
  * Reusable UI components for env setup page
  */
 
-export function renderHeader(accountInfo?: { uin?: string }) {
+export function renderHeader(accountInfo?: { uin?: string }, ide?: string) {
   const hasAccount = !!accountInfo?.uin;
+  const isCodeBuddy = ide === "CodeBuddy";
   
   return `
     <div class="header">
@@ -19,11 +20,13 @@ export function renderHeader(accountInfo?: { uin?: string }) {
               <circle cx="12" cy="7" r="4"/>
             </svg>
             <span class="account-uin">${accountInfo.uin}</span>
-            <button class="btn-switch" onclick="switchAccount()" title="切换账号">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M17 2l4 4-4 4M7 22l-4-4 4-4M21 6H10M3 18h11"/>
-              </svg>
-            </button>
+            ${!isCodeBuddy ? `
+              <button class="btn-switch" onclick="switchAccount()" title="切换账号">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M17 2l4 4-4 4M7 22l-4-4 4-4M21 6H10M3 18h11"/>
+                </svg>
+              </button>
+            ` : ''}
           </div>
         </div>
       ` : ''}

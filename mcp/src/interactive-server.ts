@@ -693,13 +693,17 @@ export class InteractiveServer {
       sessionId
     });
 
+    // Get current IDE information
+    const currentIde = this._mcpServer?.ide || process.env.INTEGRATION_IDE;
+    
     // Use new template system
     return renderEnvSetupPage({
       envs,
       accountInfo,
       errorContext,
       sessionId,
-      wsPort: this.port
+      wsPort: this.port,
+      ide: currentIde
     });
   }
 
