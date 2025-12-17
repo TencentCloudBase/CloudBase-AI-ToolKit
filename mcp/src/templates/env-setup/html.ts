@@ -9,7 +9,7 @@ export function buildHTMLPage(css: string, body: string, scripts: string): strin
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloudBase AI Toolkit - 环境配置</title>
+    <title>CloudBase MCP - 环境配置</title>
     ${css}
 </head>
 <body>
