@@ -13,6 +13,13 @@ interface Scenario {
 const scenarios: Scenario[] = [
   // 身份认证
   {
+    id: 'auth-tool',
+    title: '身份认证：配置管理',
+    description: '配置和管理 CloudBase 认证提供商，启用/禁用登录方式',
+    category: '身份认证',
+    docUrl: '/ai/cloudbase-ai-toolkit/prompts/auth-tool',
+  },
+  {
     id: 'auth-web',
     title: '身份认证：Web',
     description: 'Web SDK 身份认证',

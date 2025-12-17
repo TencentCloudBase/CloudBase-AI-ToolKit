@@ -17,6 +17,17 @@ categories:
 
 rules:
   
+  - id: auth-tool
+    title: 身份认证：配置管理
+    description: 配置和管理 CloudBase 认证提供商，启用/禁用登录方式（短信、邮箱、微信、Google、匿名、用户名密码等）
+    category: auth
+    order: 1
+    prompts:
+      - "帮我配置短信登录方式"
+      - "启用邮箱验证码登录"
+      - "配置微信开放平台登录"
+      - "设置匿名登录功能"
+  
   - id: auth-web
     title: 身份认证：Web SDK
     description: 使用 CloudBase Web SDK 进行前端身份认证

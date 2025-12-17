@@ -67,7 +67,7 @@ const IDES: IDE[] = [
     iconUrl: 'https://codebuddy-1328495429.cos.accelerate.myqcloud.com/web/ide/logo.svg',
     docUrl: 'https://www.codebuddy.ai/docs/zh/ide/Config%20MCP',
     supportsProjectMCP: true,
-    alternativeConfig: 'Alternatively, add this configuration to',
+    alternativeConfig: '在 MCP 配置中增加如下配置',
     verificationPrompt: '检查 CloudBase MCP 工具是否可用, 下载 CloudBase AI 开发规则到当前项目',
     configExample: `{
   "mcpServers": {
@@ -111,7 +111,7 @@ const IDES: IDE[] = [
     docUrl: 'https://cnb.cool/codebuddy/codebuddy-code/-/blob/main/docs/mcp.md',
     supportsProjectMCP: true,
     cliCommand: 'codebuddy mcp add --scope project cloudbase --env INTEGRATION_IDE=CodeBuddyCode -- npx @cloudbase/cloudbase-mcp@latest',
-    alternativeConfig: 'Alternatively, add this configuration to .mcp.json:',
+    alternativeConfig: '或者将以下配置添加到 .mcp.json:',
     verificationPrompt: '检查 CloudBase MCP 工具是否可用, 下载 CloudBase AI 开发规则到当前项目',
     configExample: `{
   "mcpServers": {
