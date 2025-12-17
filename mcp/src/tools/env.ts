@@ -16,6 +16,8 @@ export function registerEnvTools(server: ExtendedMcpServer) {
 
   const getManager = () => getCloudBaseManager({ cloudBaseOptions, mcpServer: server });
 
+  const hasEnvId = typeof cloudBaseOptions?.envId === 'string' && cloudBaseOptions?.envId.length > 0;
+
   // login - 登录云开发环境
   server.registerTool?.(
     "login",
@@ -48,7 +50,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
             hasServerIde: !!server?.ide,
             serverIde: server?.ide
           });
-          
+
           const {
             selectedEnvId,
             cancelled,
@@ -266,6 +268,9 @@ export function registerEnvTools(server: ExtendedMcpServer) {
                   ],
                 };
               }
+            }
+            if (hasEnvId && result && Array.isArray(result.EnvList) && result.EnvList.length > 1) {
+              result.EnvList = result.EnvList.filter((env: any) => env.EnvId === cloudBaseOptions?.envId);
             }
             break;
 

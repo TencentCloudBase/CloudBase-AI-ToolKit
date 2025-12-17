@@ -75,27 +75,42 @@ const AVAILABLE_PLUGINS: Record<string, PluginDefinition> = {
 };
 
 /**
- * 解析启用的插件列表
+ * Parse enabled plugins list
+ * @param pluginsEnabled Optional array of enabled plugin names (takes precedence over env var)
+ * @param pluginsDisabled Optional array of disabled plugin names (merged with env var)
+ * @returns Array of enabled plugin names
  */
-function parseEnabledPlugins(): string[] {
+function parseEnabledPlugins(
+  pluginsEnabled?: string[],
+  pluginsDisabled?: string[]
+): string[] {
   const enabledEnv = process.env.CLOUDBASE_MCP_PLUGINS_ENABLED;
   const disabledEnv = process.env.CLOUDBASE_MCP_PLUGINS_DISABLED;
 
   let enabledPlugins: string[];
 
-  if (enabledEnv) {
-    // 如果指定了启用的插件，使用指定的插件
+  // Priority: parameter > environment variable > default plugins
+  if (pluginsEnabled && pluginsEnabled.length > 0) {
+    enabledPlugins = pluginsEnabled;
+  } else if (enabledEnv) {
     enabledPlugins = enabledEnv.split(",").map((p) => p.trim());
   } else {
-    // 否则使用默认插件
     enabledPlugins = [...DEFAULT_PLUGINS];
   }
 
+  const allDisabledPlugins = new Set<string>();
+
   if (disabledEnv) {
-    // 从启用列表中移除禁用的插件
-    const disabledPlugins = disabledEnv.split(",").map((p) => p.trim());
-    enabledPlugins = enabledPlugins.filter((p) => !disabledPlugins.includes(p));
+    disabledEnv.split(",").map((p) => p.trim()).forEach((p) => allDisabledPlugins.add(p));
   }
+
+  if (pluginsDisabled && pluginsDisabled.length > 0) {
+    pluginsDisabled.forEach((p) => allDisabledPlugins.add(p));
+  }
+
+  enabledPlugins = enabledPlugins.filter(
+    (p) => !allDisabledPlugins.has(p)
+  );
 
   return enabledPlugins;
 }
@@ -137,6 +152,8 @@ export async function createCloudBaseMcpServer(options?: {
   cloudMode?: boolean;
   ide?: string;
   logger?: Logger;
+  pluginsEnabled?: string[];
+  pluginsDisabled?: string[];
 }): Promise<ExtendedMcpServer> {
   const {
     name = "cloudbase-mcp",
@@ -146,6 +163,8 @@ export async function createCloudBaseMcpServer(options?: {
     cloudMode = false,
     ide,
     logger,
+    pluginsEnabled,
+    pluginsDisabled,
   } = options ?? {};
 
   // Enable cloud mode if specified
@@ -199,8 +218,8 @@ export async function createCloudBaseMcpServer(options?: {
     wrapServerWithTelemetry(server);
   }
 
-  // 根据配置注册插件
-  const enabledPlugins = parseEnabledPlugins();
+  // Register plugins based on configuration
+  const enabledPlugins = parseEnabledPlugins(pluginsEnabled, pluginsDisabled);
 
   for (const pluginName of enabledPlugins) {
     const plugin = AVAILABLE_PLUGINS[pluginName];
