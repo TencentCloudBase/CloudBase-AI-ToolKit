@@ -263,6 +263,7 @@ For example, many interfaces require a confirm parameter, which is a boolean typ
 - **Mini Program**: `rules/auth-wechat/rule.md` - **Naturally login-free, get OPENID in cloud functions**
 - **Node.js**: `rules/auth-nodejs/rule.md`
 - **HTTP API**: `rules/auth-http-api/rule.md`
+- **Auth Tool (MCP)**: `rules/auth-tool/rule.md` - Configure and manage authentication providers (enable/disable login methods, setup provider settings) via MCP tools
 
 ### Database Skills
 - **NoSQL (Web)**: `rules/no-sql-web-sdk/rule.md`
