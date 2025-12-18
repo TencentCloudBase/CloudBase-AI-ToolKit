@@ -35,7 +35,7 @@ const IDES: IDE[] = [
     supportsProjectMCP: false,
     useCommandInsteadOfConfig: true,
     installCommandDocs: '**步骤 1：安装 CodeBuddy 扩展**\n\n1. 在微信开发者工具中，点击顶部菜单栏的「扩展」\n2. 在扩展市场中搜索「CodeBuddy」\n3. 安装「腾讯云代码助手 CodeBuddy」扩展\n\n**步骤 2：安装 CloudBase MCP**\n\n1. 安装完成后，在工具栏找到 CodeBuddy 图标\n2. 点击右上角的 CodeBuddy 设置图标\n3. 在 MCP 市场中搜索并安装「CloudBase MCP」\n\n安装完成后即可在 CodeBuddy 中使用 CloudBase AI 功能。',
-    verificationPrompt: '下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
+    verificationPrompt: '调用工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
     configExample: '',
   },
   {
@@ -46,7 +46,7 @@ const IDES: IDE[] = [
     iconSlug: 'cursor',
     docUrl: 'https://docs.cursor.com/context/model-context-protocol#configuration-locations',
     supportsProjectMCP: true,
-    verificationPrompt: '下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
+    verificationPrompt: '调用工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
     configExample: `{
   "mcpServers": {
     "cloudbase": {
@@ -68,7 +68,7 @@ const IDES: IDE[] = [
     docUrl: 'https://www.codebuddy.ai/docs/zh/ide/Config%20MCP',
     supportsProjectMCP: true,
     alternativeConfig: '在 MCP 配置中增加如下配置',
-    verificationPrompt: '下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
+    verificationPrompt: '调用工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
     configExample: `{
   "mcpServers": {
     "cloudbase": {
@@ -89,7 +89,7 @@ const IDES: IDE[] = [
     iconSlug: 'claude',
     docUrl: 'https://docs.anthropic.com/en/docs/claude-code/mcp#project-scope',
     supportsProjectMCP: true,
-    verificationPrompt: '下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
+    verificationPrompt: '调用工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
     configExample: `{
   "mcpServers": {
     "cloudbase": {
@@ -112,7 +112,7 @@ const IDES: IDE[] = [
     supportsProjectMCP: true,
     cliCommand: 'codebuddy mcp add --scope project cloudbase --env INTEGRATION_IDE=CodeBuddyCode -- npx @cloudbase/cloudbase-mcp@latest',
     alternativeConfig: '或者将以下配置添加到 .mcp.json:',
-    verificationPrompt: '下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
+    verificationPrompt: '调用工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
     configExample: `{
   "mcpServers": {
     "cloudbase": {
@@ -134,7 +134,7 @@ const IDES: IDE[] = [
     iconUrl: 'https://code.visualstudio.com/favicon.ico',
     docUrl: 'https://code.visualstudio.com/docs/copilot/chat/mcp-servers',
     supportsProjectMCP: true,
-    verificationPrompt: '下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
+    verificationPrompt: '调用工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
     configExample: `{
   "servers": {
     "cloudbase": {
@@ -232,7 +232,7 @@ const IDES: IDE[] = [
     useCommandInsteadOfConfig: true,
     installCommand: 'codex mcp add cloudbase --env INTEGRATION_IDE=CodeX -- cloudbase-mcp',
     installCommandDocs: '**前置步骤：** 请先全局安装 CloudBase MCP 工具：\n```bash\nnpm i @cloudbase/cloudbase-mcp -g\n```\n\n根据运行系统在终端中运行指令：\n\n**MacOS, Linux, WSL:**\n```bash\ncodex mcp add cloudbase --env INTEGRATION_IDE=CodeX -- cloudbase-mcp\n```\n\n**Windows Powershell:**\n```bash\ncodex mcp add cloudbase --env INTEGRATION_IDE=CodeX -- cmd /c cloudbase-mcp\n```',
-    verificationPrompt: '下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
+    verificationPrompt: '调用工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
     configExample: `{
   "mcpServers": {
     "cloudbase": {
@@ -328,7 +328,7 @@ const IDES: IDE[] = [
     iconUrl: 'https://kiro.dev/favicon.ico',
     docUrl: 'https://kiro.dev/docs/mcp/configuration/',
     supportsProjectMCP: true,
-    verificationPrompt: '下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
+    verificationPrompt: '调用工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
     configExample: `{
   "mcpServers": {
     "cloudbase": {
@@ -349,7 +349,7 @@ const IDES: IDE[] = [
     iconUrl: 'https://g.alicdn.com/qbase/qoder/0.0.183/favIcon.svg',
     docUrl: 'https://docs.qoder.com/zh/user-guide/chat/model-context-protocol',
     supportsProjectMCP: false,
-    verificationPrompt: '下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
+    verificationPrompt: '调用工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
     configExample: `{
   "mcpServers": {
     "cloudbase": {
@@ -370,7 +370,7 @@ const IDES: IDE[] = [
     iconUrl: 'https://antigravity.google/assets/image/antigravity-logo.png',
     docUrl: 'https://antigravity.google/docs',
     supportsProjectMCP: true,
-    verificationPrompt: '下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
+    verificationPrompt: '调用工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
     configExample: `{
   "mcpServers": {
     "cloudbase": {
@@ -391,7 +391,7 @@ const IDES: IDE[] = [
     iconSlug: 'windsurf',
     docUrl: 'https://docs.windsurf.com/windsurf/cascade/memories',
     supportsProjectMCP: true,
-    verificationPrompt: '下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
+    verificationPrompt: '调用工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
     configExample: `{
   "mcpServers": {
     "cloudbase": {
@@ -438,7 +438,7 @@ const IDES: IDE[] = [
     useCommandInsteadOfConfig: true,
     installCommand: 'npm i -g @cloudbase/cli',
     installCommandDocs: '**安装 CloudBase CLI：**\n\n```bash\nnpm i -g @cloudbase/cli\n```\n\n**初始化配置：**\n\n```bash\ntcb ai\n```\n\n配置向导会引导你完成 AI 工具的配置。CloudBase CLI 内置了 MCP 和 AI 开发规则，无需手动配置。\n\n**开始使用：**\n\n```bash\ntcb ai\n```',
-    verificationPrompt: '下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
+    verificationPrompt: '调用工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
     configExample: '',
   },
 ];
@@ -517,7 +517,7 @@ const translations: Record<string, Record<string, string>> = {
     showMore: '显示配置选项',
     showLess: '收起',
     verifyDescription: '配置完成后，在 AI 对话中输入以下内容:',
-    defaultVerifyPrompt: '下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
+    defaultVerifyPrompt: '调用工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
     cliCommand: 'CLI 命令',
     alternativeConfig: '替代配置',
     needHelp: '需要帮助？',
