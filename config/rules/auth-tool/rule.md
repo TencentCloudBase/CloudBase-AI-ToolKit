@@ -195,6 +195,7 @@ Save `result.Data.StaticDomain` as `staticDomain`.
         "EnvId": `env`,
         "ProviderType": "OAUTH",
         "Id": "google",
+        "On": "TRUE",  // "FALSE" to disable
         "Name": { "Message": "Google" },
         "Description": { "Message": "" },
         "Config": {
