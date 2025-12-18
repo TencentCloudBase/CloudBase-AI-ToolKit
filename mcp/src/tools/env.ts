@@ -386,7 +386,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
           content: [
             {
               type: "text",
-              text: JSON.stringify(result, null, 2),
+              text: `${JSON.stringify(result, null, 2)}\n\n请注意安全域名需要10分钟才能生效，用户也应该了解这一点。`,
             },
           ],
         };
