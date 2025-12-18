@@ -60,6 +60,8 @@ export interface InteractiveResult {
   data: any;
   cancelled?: boolean;
   switch?: boolean;
+  timeout?: boolean; // Indicates if the cancellation was due to timeout
+  timeoutDuration?: number; // Timeout duration in milliseconds (if timeout occurred)
 }
 
 export class InteractiveServer {
@@ -611,7 +613,7 @@ export class InteractiveServer {
               this.stop().catch((err) => {
                 debug("Error stopping server after timeout:", err);
               });
-              resolve({ type: "envId", data: null, cancelled: true });
+              resolve({ type: "envId", data: null, cancelled: true, timeout: true, timeoutDuration });
             }
           },
           timeoutDuration,

@@ -192,6 +192,22 @@ export function registerInteractiveTools(server: ExtendedMcpServer) {
   );
 }
 
+/**
+ * Detailed error information for environment setup failures
+ */
+export interface EnvSetupFailureInfo {
+  reason: 'timeout' | 'cancelled' | 'no_environments' | 'login_failed' | 'tcb_init_failed' | 'env_query_failed' | 'env_creation_failed' | 'unknown_error';
+  error?: string;
+  errorCode?: string;
+  helpUrl?: string;
+  details?: {
+    initTcbError?: any;
+    createEnvError?: any;
+    queryEnvError?: string;
+    timeoutDuration?: number;
+  };
+}
+
 // 封装了获取环境、提示选择、保存配置的核心逻辑
 export async function _promptAndSetEnvironmentId(
   autoSelectSingle: boolean,
@@ -202,6 +218,7 @@ export async function _promptAndSetEnvironmentId(
   error?: string;
   noEnvs?: boolean;
   switch?: boolean;
+  failureInfo?: EnvSetupFailureInfo;
 }> {
   const server = options?.server;
 
@@ -242,6 +259,11 @@ export async function _promptAndSetEnvironmentId(
       selectedEnvId: null,
       cancelled: false,
       error: "请先登录云开发账户",
+      failureInfo: {
+        reason: 'login_failed',
+        error: "请先登录云开发账户",
+        errorCode: "LOGIN_REQUIRED",
+      },
     };
   }
 
@@ -381,13 +403,15 @@ export async function _promptAndSetEnvironmentId(
     }
   }
 
-  // Report query_env_list event
+  // Report query_env_list event with detailed information
   await telemetryReporter.report('toolkit_env_setup', {
     step: 'query_env_list',
     success: queryEnvSuccess ? 'true' : 'false',
     uin: setupContext.uin || 'unknown',
     error: queryEnvError ? queryEnvError.substring(0, 200) : undefined,
-    envCount: (envResult?.EnvList || []).length
+    envCount: (envResult?.EnvList || []).length,
+    hasInitTcbError: !!setupContext.initTcbError,
+    tcbServiceInitialized: setupContext.tcbServiceInitialized,
   });
 
   debug("[interactive] Environment query result:", {
@@ -396,6 +420,25 @@ export async function _promptAndSetEnvironmentId(
     querySuccess: queryEnvSuccess,
     queryError: queryEnvError
   });
+
+  // If query failed completely, return error
+  if (!queryEnvSuccess && queryEnvError) {
+    debug("[interactive] Environment query failed completely, returning error");
+    return {
+      selectedEnvId: null,
+      cancelled: false,
+      error: `无法获取环境列表: ${queryEnvError}`,
+      failureInfo: {
+        reason: 'env_query_failed',
+        error: `无法获取环境列表: ${queryEnvError}`,
+        errorCode: "ENV_QUERY_FAILED",
+        helpUrl: "https://docs.cloudbase.net/cli-v1/env",
+        details: {
+          queryEnvError,
+        },
+      },
+    };
+  }
 
   const { EnvList } = envResult || {};
   let selectedEnvId: string | null = null;
@@ -410,11 +453,15 @@ export async function _promptAndSetEnvironmentId(
   if (!EnvList || EnvList.length === 0) {
     debug("[interactive] No environments found");
     
-    // Report no_envs event
+    // Report no_envs event with context
     await telemetryReporter.report('toolkit_env_setup', {
       step: 'no_envs',
       success: 'true',
-      uin: setupContext.uin || 'unknown'
+      uin: setupContext.uin || 'unknown',
+      hasInitTcbError: !!setupContext.initTcbError,
+      tcbServiceInitialized: setupContext.tcbServiceInitialized,
+      initTcbErrorCode: setupContext.initTcbError?.code,
+      inCloudMode,
     });
 
     // Only try to create free environment if TCB service is initialized successfully
@@ -573,11 +620,20 @@ export async function _promptAndSetEnvironmentId(
     if (inCloudMode) {
       debug("[interactive] CloudMode: Returning error message");
       let errorMsg = "未找到可用环境";
+      let failureReason: EnvSetupFailureInfo['reason'] = 'no_environments';
+      let errorCode = "NO_ENVIRONMENTS";
+      
       if (setupContext.initTcbError) {
         errorMsg += `\nCloudBase 初始化失败: ${setupContext.initTcbError.message}`;
+        failureReason = 'tcb_init_failed';
+        errorCode = setupContext.initTcbError.code || "TCB_INIT_FAILED";
       }
       if (setupContext.createEnvError) {
         errorMsg += `\n环境创建失败: ${setupContext.createEnvError.message}`;
+        if (failureReason === 'no_environments') {
+          failureReason = 'env_creation_failed';
+        }
+        errorCode = setupContext.createEnvError.code || "ENV_CREATION_FAILED";
       }
       const helpUrl = setupContext.createEnvError?.helpUrl || setupContext.initTcbError?.helpUrl;
       if (helpUrl) {
@@ -587,7 +643,17 @@ export async function _promptAndSetEnvironmentId(
         selectedEnvId: null,
         cancelled: false,
         error: errorMsg,
-        noEnvs: true
+        noEnvs: true,
+        failureInfo: {
+          reason: failureReason,
+          error: errorMsg,
+          errorCode,
+          helpUrl,
+          details: {
+            initTcbError: setupContext.initTcbError,
+            createEnvError: setupContext.createEnvError,
+          },
+        },
       };
     }
 
@@ -661,7 +727,23 @@ export async function _promptAndSetEnvironmentId(
   );
 
   if (result.cancelled) {
-    return { selectedEnvId: null, cancelled: true };
+    const isTimeout = (result as any).timeout === true;
+    const timeoutDuration = (result as any).timeoutDuration;
+    return {
+      selectedEnvId: null,
+      cancelled: true,
+      failureInfo: {
+        reason: isTimeout ? 'timeout' : 'cancelled',
+        error: isTimeout
+          ? `环境选择超时（${timeoutDuration ? timeoutDuration / 1000 : 120}秒），请重新尝试或手动设置环境ID`
+          : "用户取消了环境选择",
+        errorCode: isTimeout ? "ENV_SELECTION_TIMEOUT" : "USER_CANCELLED",
+        helpUrl: isTimeout ? "https://docs.cloudbase.net/cli-v1/env" : undefined,
+        details: isTimeout ? {
+          timeoutDuration,
+        } : undefined,
+      },
+    };
   }
   if (result.switch) {
     // Report switch_account event
@@ -684,25 +766,90 @@ export async function _promptAndSetEnvironmentId(
   return { selectedEnvId, cancelled: false };
 }
 
+/**
+ * Result of auto setup environment ID operation
+ */
+export interface AutoSetupEnvIdResult {
+  envId: string | null;
+  failureInfo?: EnvSetupFailureInfo;
+  error?: Error;
+}
+
 // 自动设置环境ID（无需MCP工具调用）
 export async function autoSetupEnvironmentId(mcpServer?: any): Promise<string | null> {
   try {
-    const { selectedEnvId, cancelled, error, noEnvs } =
+    const { selectedEnvId, cancelled, error, noEnvs, failureInfo } =
       await _promptAndSetEnvironmentId(true, { server: mcpServer });
 
     if (error || noEnvs || cancelled) {
-      debug("Auto setup environment ID interrupted or failed silently.", {
+      debug("Auto setup environment ID interrupted or failed.", {
         error,
         noEnvs,
         cancelled,
+        failureInfo,
       });
+      
+      // Report failure to telemetry with detailed information
+      if (failureInfo) {
+        const telemetryData: any = {
+          step: 'auto_setup_failed',
+          success: 'false',
+          reason: failureInfo.reason,
+          errorCode: failureInfo.errorCode,
+          error: failureInfo.error?.substring(0, 200),
+        };
+        
+        // Add detailed context based on failure reason
+        if (failureInfo.details) {
+          if (failureInfo.details.initTcbError) {
+            telemetryData.initTcbErrorCode = failureInfo.details.initTcbError.code;
+            telemetryData.needRealNameAuth = failureInfo.details.initTcbError.needRealNameAuth;
+            telemetryData.needCamAuth = failureInfo.details.initTcbError.needCamAuth;
+          }
+          if (failureInfo.details.createEnvError) {
+            telemetryData.createEnvErrorCode = failureInfo.details.createEnvError.code;
+          }
+          if (failureInfo.details.queryEnvError) {
+            telemetryData.queryEnvError = failureInfo.details.queryEnvError.substring(0, 200);
+          }
+          if (failureInfo.details.timeoutDuration) {
+            telemetryData.timeoutDuration = failureInfo.details.timeoutDuration;
+          }
+        }
+        
+        if (failureInfo.helpUrl) {
+          telemetryData.helpUrl = failureInfo.helpUrl;
+        }
+        
+        await telemetryReporter.report('toolkit_env_setup', telemetryData);
+      } else {
+        // Fallback: report without failureInfo
+        await telemetryReporter.report('toolkit_env_setup', {
+          step: 'auto_setup_failed',
+          success: 'false',
+          reason: 'unknown',
+          error: error || (noEnvs ? 'no_environments' : cancelled ? 'cancelled' : 'unknown'),
+        });
+      }
+      
       return null;
     }
 
     debug("Auto setup environment ID successful.", { selectedEnvId });
     return selectedEnvId;
   } catch (error) {
-    console.error("自动配置环境ID时出错:", error);
+    const errorObj = error instanceof Error ? error : new Error(String(error));
+    console.error("自动配置环境ID时出错:", errorObj);
+    
+    // Report unexpected error to telemetry
+    await telemetryReporter.report('toolkit_env_setup', {
+      step: 'auto_setup_exception',
+      success: 'false',
+      reason: 'unknown_error',
+      error: errorObj.message.substring(0, 200),
+      stack: errorObj.stack?.substring(0, 500),
+    });
+    
     return null;
   }
 }

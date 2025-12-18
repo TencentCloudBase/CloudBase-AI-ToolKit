@@ -81,3 +81,4 @@
 4. When 在 CloudMode 下查询到环境列表时，the MCP 系统 shall 自动选择第一个环境
 5. When 在 CloudMode 下返回错误时，the MCP 系统 shall 返回结构化的错误消息，不展示 UI
 
+

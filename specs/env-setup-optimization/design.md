@@ -1127,3 +1127,4 @@ export async function reportEnvSetupFlow(event: EnvSetupFlowEvent) {
 - `mcp/src/interactive-server.ts` - 添加错误展示和重试 API
 - `mcp/src/types.ts` - 添加 `EnvSetupContext` 类型定义
 
+

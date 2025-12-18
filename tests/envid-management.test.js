@@ -153,8 +153,8 @@ describe('EnvId Management Tests', () => {
       expect(managerCode).not.toMatch(/loadEnvIdFromUserConfig/);
       expect(managerCode).not.toMatch(/saveEnvIdToUserConfig/);
       
-      // Should only import autoSetupEnvironmentId
-      expect(managerCode).toMatch(/autoSetupEnvironmentId/);
+      // Should import _promptAndSetEnvironmentId (internal function for environment setup)
+      expect(managerCode).toMatch(/_promptAndSetEnvironmentId/);
     });
   });
 

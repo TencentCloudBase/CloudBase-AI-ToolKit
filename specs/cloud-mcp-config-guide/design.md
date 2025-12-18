@@ -82,3 +82,4 @@
 - 部署链接：https://tcb.cloud.tencent.com/dev#/ai?tab=mcp&p&mcp-template=mcp-tcb
 - 代码实现：`mcp/src/utils/cloud-mode.ts`, `mcp/meta.json`
 
+
