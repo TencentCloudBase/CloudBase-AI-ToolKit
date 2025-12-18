@@ -1128,3 +1128,4 @@ export async function reportEnvSetupFlow(event: EnvSetupFlowEvent) {
 - `mcp/src/types.ts` - 添加 `EnvSetupContext` 类型定义
 
 
+

@@ -60,3 +60,4 @@
 2. `collectEnvId` 的 `mcpServer` 参数是否正确传递
 3. `this._mcpServer` 在 `collectEnvId` 中是否被正确更新
 
+

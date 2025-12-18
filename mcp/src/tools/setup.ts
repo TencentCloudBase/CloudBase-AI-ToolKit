@@ -355,6 +355,22 @@ function matchesPath(file: string, pathPattern: string): boolean {
   }
 }
 
+// 构建 IDE 配置文件检查清单
+// 返回所有需要检查的路径模式列表
+function buildIDEChecklist(): string[] {
+  return ALL_IDE_FILES;
+}
+
+// 检查文件是否在检查清单范围内
+function isInChecklist(file: string, checklist: string[]): boolean {
+  for (const pattern of checklist) {
+    if (matchesPath(file, pattern)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 // 文件过滤函数
 function filterFilesByIDE(files: string[], ide: string): string[] {
   if (ide === "all") {
@@ -366,35 +382,27 @@ function filterFilesByIDE(files: string[], ide: string): string[] {
     return files; // 如果找不到映射，返回所有文件
   }
 
-  // 计算需要排除的IDE文件（除了当前IDE需要的文件）
-  const filesToExclude: string[] = [];
-  
-  // 遍历所有IDE文件，找出不属于当前IDE的文件
-  for (const ideFile of ALL_IDE_FILES) {
-    // 检查这个文件是否属于当前IDE需要的文件
-    let isCurrentIDEFile = false;
-    for (const currentIDEFile of ideFiles) {
-      if (matchesPath(ideFile, currentIDEFile)) {
-        isCurrentIDEFile = true;
-        break;
-      }
-    }
-    
-    // 如果不属于当前IDE，加入排除列表
-    if (!isCurrentIDEFile) {
-      filesToExclude.push(ideFile);
-    }
-  }
+  // 构建检查清单
+  const checklist = buildIDEChecklist();
 
-  // 排除不需要的IDE配置文件，保留其他所有文件
+  // 两阶段过滤
   return files.filter((file) => {
-    // 检查文件是否应该被排除
-    for (const excludePath of filesToExclude) {
-      if (matchesPath(file, excludePath)) {
-        return false; // 排除
+    // 阶段1: 检查文件是否在检查清单范围内
+    if (!isInChecklist(file, checklist)) {
+      // 不在检查清单范围内，直接保留
+      return true;
+    }
+
+    // 阶段2: 在检查清单范围内，检查是否属于当前 IDE
+    for (const ideFile of ideFiles) {
+      if (matchesPath(file, ideFile)) {
+        // 属于当前 IDE，保留
+        return true;
       }
     }
-    return true; // 保留
+
+    // 在检查清单范围内但不属于当前 IDE，排除
+    return false;
   });
 }
 
