@@ -2,6 +2,7 @@ import { z } from "zod";
 import { getCloudBaseManager, logCloudBaseResult } from '../cloudbase-manager.js';
 import { ExtendedMcpServer } from '../server.js';
 
+import { IEnvVariable } from "@cloudbase/manager-node/types/function/types.js";
 import path from 'path';
 
 // 支持的 Node.js 运行时列表
@@ -313,7 +314,21 @@ export function registerFunctionTools(server: ExtendedMcpServer) {
       // }
       // 使用闭包中的 cloudBaseOptions
       const cloudbase = await getManager();
-      const result = await cloudbase.functions.updateFunctionConfig(funcParam);
+      const functionDetail = await cloudbase.functions.getFunctionDetail(funcParam.name);
+      functionDetail.Environment
+      const vpc = (typeof functionDetail.VpcConfig === 'object' && functionDetail.VpcConfig !== null && functionDetail.VpcConfig.SubnetId && functionDetail.VpcConfig.VpcId) ? {
+        subnetId: functionDetail.VpcConfig.SubnetId,
+        vpcId: functionDetail.VpcConfig.VpcId
+      } : undefined;
+      const result = await cloudbase.functions.updateFunctionConfig({
+        name: funcParam.name,
+        envVariables: Object.assign({}, functionDetail.Environment.Variables.reduce((acc: Record<string, string | number | boolean>, curr: IEnvVariable) => {
+          acc[curr.Key] = curr.Value;
+          return acc;
+        }, {}), funcParam.envVariables ?? {}),
+        timeout: funcParam.timeout ?? functionDetail.Timeout,
+        vpc: Object.assign({}, vpc, funcParam.vpc ?? {}),
+      });
       logCloudBaseResult(server.logger, result);
       return {
         content: [
