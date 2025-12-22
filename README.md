@@ -11,6 +11,7 @@
 
 <!-- SHIELD GROUP -->
 
+
 [![][npm-version-shield]][npm-link]
 [![][npm-downloads-shield]][npm-link]
 [![][github-stars-shield]][github-stars-link]
@@ -20,6 +21,7 @@
 ![][github-contributors-shield]
 [![][cnb-shield]][cnb-link]
 [![][deepwiki-shield]][deepwiki-link]
+[![MCP Badge](https://lobehub.com/badge/mcp/tencentcloudbase-cloudbase-ai-toolkit)](https://lobehub.com/mcp/tencentcloudbase-cloudbase-ai-toolkit)
 
 **发现了一个让 AI 编程一键上线的神器，推荐给正在用 AI 编程的朋友**
 
