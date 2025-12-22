@@ -229,11 +229,7 @@ After creating/deploying resources, provide corresponding console management pag
     - Monitor resource usage, performance metrics, and error rates
     - Set up alerts and notifications
 
-13. **Extensions (扩展功能)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/extensions`
-    - Manage platform extensions and plugins
-    - Install and configure additional CloudBase capabilities
-
-14. **Environment Settings (环境配置)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/settings`
+13. **Environment Settings (环境配置)**: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/settings`
     - Configure environment-level settings
     - Manage security domains and CORS settings
     - Configure environment variables and secrets
