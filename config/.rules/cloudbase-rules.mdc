@@ -37,6 +37,7 @@ When this document references a rule file, try locations in this order:
 | `no-sql-web-sdk` | NoSQL Web SDK |
 | `no-sql-wx-mp-sdk` | NoSQL WeChat Mini Program SDK |
 | `cloudbase-platform` | CloudBase Platform Knowledge |
+| `cloud-storage-web` | Cloud Storage Web SDK |
 | `ui-design` | UI Design Guidelines |
 | `spec-workflow` | Software Engineering Workflow |
 | `data-model-creation` | Data Model Creation |
@@ -222,6 +223,7 @@ Identify current development scenario type, mainly for understanding project typ
 - `rules/no-sql-web-sdk/rule.md` - NoSQL database operations
 - `rules/relational-database-web/rule.md` - MySQL database operations (Web)
 - `rules/relational-database-tool/rule.md` - MySQL database management (tools)
+- `rules/cloud-storage-web/rule.md` - Cloud storage operations (upload, download, file management)
 - `rules/cloudbase-platform/rule.md` - Universal CloudBase platform knowledge
 
 **Mini Program Projects - Required Rule Files:**
@@ -358,6 +360,9 @@ For example, many interfaces require a confirm parameter, which is a boolean typ
 - **NoSQL (Mini Program)**: `rules/no-sql-wx-mp-sdk/rule.md`
 - **MySQL (Web)**: `rules/relational-database-web/rule.md`
 - **MySQL (Tool)**: `rules/relational-database-tool/rule.md`
+
+### Storage Skills
+- **Cloud Storage (Web)**: `rules/cloud-storage-web/rule.md` - Upload, download, temporary URLs, file management using Web SDK
 
 ### 🎨 ⚠️ UI Design Skill (CRITICAL - Read FIRST)
 - **`rules/ui-design/rule.md`** - **MANDATORY - HIGHEST PRIORITY**
