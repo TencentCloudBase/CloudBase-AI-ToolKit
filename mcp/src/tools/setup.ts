@@ -58,6 +58,7 @@ const IDE_TYPES = [
   "antigravity", // Google Antigravity AI编辑器
   "vscode", // Visual Studio Code
   "kiro", // Kiro AI编辑器
+  "aider", // Aider AI编辑器
 ] as const;
 
 // IDE映射关系表
@@ -68,48 +69,85 @@ interface IDEMapping {
   directories?: string[];
 }
 
+// IDE文件描述符
+interface IdeFileDescriptor {
+  path: string;
+  isMcpConfig?: boolean;
+}
+
+
 // IDE到文件的映射关系
 // 注意：以 "/" 结尾的路径表示目录，会包含该目录下的所有文件
-const IDE_FILE_MAPPINGS: Record<string, string[]> = {
-  cursor: [".cursor/rules/", ".cursor/mcp.json"],
-  windsurf: [".windsurf/rules/"],
-  codebuddy: [".rules/cloudbase-rules.md", "CODEBUDDY.md", ".mcp.json"],
+export const RAW_IDE_FILE_MAPPINGS: Record<string, IdeFileDescriptor[]> = {
+  cursor: [
+    { path: ".cursor/rules/" },
+    { path: ".cursor/mcp.json", isMcpConfig: true },
+  ],
+  windsurf: [{ path: ".windsurf/rules/" }],
+  codebuddy: [
+    { path: ".rules/cloudbase-rules.md" },
+    { path: "CODEBUDDY.md" },
+    { path: ".mcp.json", isMcpConfig: true },
+  ],
   "claude-code": [
-    "CLAUDE.md",
-    ".mcp.json",
-    ".claude/settings.local.json",
-    ".claude/commands/prototype.md",
-    ".claude/commands/spec.md",
-    ".claude/commands/no_spec.md",
+    { path: "CLAUDE.md" },
+    { path: ".mcp.json", isMcpConfig: true },
+    { path: ".claude/" },
   ],
-  cline: [".clinerules/"],
-  "gemini-cli": [".gemini/GEMINI.md", ".gemini/settings.json"],
-  opencode: [".opencode.json"],
-  "qwen-code": [".qwen/QWEN.md", ".qwen/settings.json"],
+  cline: [{ path: ".clinerules/" }],
+  "gemini-cli": [
+    { path: ".gemini/GEMINI.md" },
+    { path: ".gemini/settings.json", isMcpConfig: true },
+  ],
+  opencode: [{ path: ".opencode.json", isMcpConfig: true }],
+  "qwen-code": [
+    { path: ".qwen/QWEN.md" },
+    { path: ".qwen/settings.json", isMcpConfig: true },
+  ],
   "baidu-comate": [
-    ".comate/rules/cloudbase-rules.mdr",
-    ".comate/rules/cloudbaase-rules.mdr",
-    ".comate/mcp.json",
+    { path: ".comate/rules/cloudbase-rules.mdr" },
+    { path: ".comate/rules/cloudbaase-rules.mdr" },
+    { path: ".comate/mcp.json", isMcpConfig: true },
   ],
-  "openai-codex-cli": [".codex/config.toml", "AGENTS.md"],
-  "augment-code": [".augment-guidelines"],
-  "github-copilot": [".github/copilot-instructions.md"],
-  roocode: [".roo/rules/cloudbaase-rules.md", ".roo/mcp.json"],
-  "tongyi-lingma": [".lingma/rules/cloudbaase-rules.md"],
-  trae: [".trae/rules/"],
-  qoder: [".qoder/rules/"],
-  antigravity: [".agent/rules/"],
-  vscode: [".vscode/mcp.json", ".vscode/settings.json"],
-  kiro: [".kiro/settings/mcp.json", ".kiro/steering/"],
+  "openai-codex-cli": [
+    { path: ".codex/config.toml", isMcpConfig: true },
+    { path: "AGENTS.md" },
+  ],
+  "augment-code": [{ path: ".augment-guidelines" }],
+  "github-copilot": [{ path: ".github/copilot-instructions.md" }],
+  roocode: [
+    { path: ".roo/rules/cloudbaase-rules.md" },
+    { path: ".roo/mcp.json", isMcpConfig: true },
+  ],
+  "tongyi-lingma": [{ path: ".lingma/rules/cloudbaase-rules.md" }],
+  trae: [{ path: ".trae/rules/" }],
+  qoder: [{ path: ".qoder/rules/" }],
+  antigravity: [{ path: ".agent/rules/" }],
+  vscode: [
+    { path: ".vscode/mcp.json", isMcpConfig: true },
+    { path: ".vscode/settings.json" },
+  ],
+  kiro: [
+    { path: ".kiro/settings/mcp.json", isMcpConfig: true },
+    { path: ".kiro/steering/" },
+  ],
+  aider: [{ path: "mcp.json", isMcpConfig: true }],
 };
+
+const IDE_FILE_MAPPINGS = structuredClone(RAW_IDE_FILE_MAPPINGS)
+
 
 // 所有IDE配置文件的完整列表 - 通过IDE_FILE_MAPPINGS计算得出
 const ALL_IDE_FILES = Array.from(
-  new Set(Object.values(IDE_FILE_MAPPINGS).flat()),
+  new Set(
+    Object.values(IDE_FILE_MAPPINGS)
+      .flat()
+      .map((descriptor) => descriptor.path),
+  ),
 );
 
 // 为"all"选项添加映射
-IDE_FILE_MAPPINGS["all"] = ALL_IDE_FILES;
+IDE_FILE_MAPPINGS["all"] = ALL_IDE_FILES.map((path) => ({ path }));
 
 // IDE描述映射
 const IDE_DESCRIPTIONS: Record<string, string> = {
@@ -133,6 +171,7 @@ const IDE_DESCRIPTIONS: Record<string, string> = {
   antigravity: "Google Antigravity AI编辑器",
   vscode: "Visual Studio Code",
   kiro: "Kiro AI编辑器",
+  aider: "Aider AI编辑器",
 };
 
 // INTEGRATION_IDE 环境变量值到 IDE 类型的映射
@@ -395,7 +434,7 @@ function filterFilesByIDE(files: string[], ide: string): string[] {
 
     // 阶段2: 在检查清单范围内，检查是否属于当前 IDE
     for (const ideFile of ideFiles) {
-      if (matchesPath(file, ideFile)) {
+      if (matchesPath(file, ideFile.path)) {
         // 属于当前 IDE，保留
         return true;
       }
@@ -443,7 +482,7 @@ export function registerSetupTools(server: ExtendedMcpServer) {
       title: "下载项目模板",
       description: `自动下载并部署CloudBase项目模板。⚠️ **MANDATORY FOR NEW PROJECTS** ⚠️
 
-**CRITICAL**: This tool MUST be called FIRST when starting a new project.\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n支持的IDE类型:\n- all: 下载所有IDE配置（默认）\n- cursor: Cursor AI编辑器\n- windsurf: WindSurf AI编辑器\n- codebuddy: CodeBuddy AI编辑器\n- claude-code: Claude Code AI编辑器\n- cline: Cline AI编辑器\n- gemini-cli: Gemini CLI\n- opencode: OpenCode AI编辑器\n- qwen-code: 通义灵码\n- baidu-comate: 百度Comate\n- openai-codex-cli: OpenAI Codex CLI\n- augment-code: Augment Code\n- github-copilot: GitHub Copilot\n- roocode: RooCode AI编辑器\n- tongyi-lingma: 通义灵码\n- trae: Trae AI编辑器\n- qoder: Qoder AI编辑器\n- antigravity: Google Antigravity AI编辑器\n- vscode: Visual Studio Code\n\n特别说明：\n- rules 模板会自动包含当前 mcp 版本号信息（版本号：${typeof __MCP_VERSION__ !== "undefined" ? __MCP_VERSION__ : "unknown"}），便于后续维护和版本追踪\n- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）`,
+**CRITICAL**: This tool MUST be called FIRST when starting a new project.\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n支持的IDE类型:\n- all: 下载所有IDE配置（默认）\n- cursor: Cursor AI编辑器\n- windsurf: WindSurf AI编辑器\n- codebuddy: CodeBuddy AI编辑器\n- claude-code: Claude Code AI编辑器\n- cline: Cline AI编辑器\n- gemini-cli: Gemini CLI\n- opencode: OpenCode AI编辑器\n- qwen-code: 通义灵码\n- baidu-comate: 百度Comate\n- openai-codex-cli: OpenAI Codex CLI\n- augment-code: Augment Code\n- github-copilot: GitHub Copilot\n- roocode: RooCode AI编辑器\n- tongyi-lingma: 通义灵码\n- trae: Trae AI编辑器\n- qoder: Qoder AI编辑器\n- antigravity: Google Antigravity AI编辑器\n- vscode: Visual Studio Code\n- kiro: Kiro AI编辑器\n- aider: Aider AI编辑器\n\n特别说明：\n- rules 模板会自动包含当前 mcp 版本号信息（版本号：${typeof __MCP_VERSION__ !== "undefined" ? __MCP_VERSION__ : "unknown"}），便于后续维护和版本追踪\n- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）`,
       inputSchema: {
         template: z
           .enum(["react", "vue", "miniprogram", "uniapp", "rules"])
