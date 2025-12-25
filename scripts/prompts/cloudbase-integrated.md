@@ -50,6 +50,7 @@ When user mentions login/auth requirements:
     - `.codebuddy/rules/tcb/rules/relational-database-tool/rule.md` (MANDATORY - MySQL operations)
   - **MySQL Setup**: MUST prompt user to enable MySQL in console first: `https://tcb.cloud.tencent.com/dev?envId=${envId}#/db/mysql/table/default/`
   - **Optional**: `.codebuddy/rules/tcb/rules/cloudbase-platform/rule.md` (platform knowledge), `.codebuddy/rules/tcb/rules/ui-design/rule.md` (if UI involved)
+- **Cloud Functions**: `.codebuddy/rules/tcb/rules/cloud-functions/rule.md` (cloud function development, deployment, logging, HTTP access)
 - **CloudRun Backend**: `.codebuddy/rules/tcb/rules/cloudrun-development/rule.md` (functions/containers deployment)
 - **Universal Platform**: `.codebuddy/rules/tcb/rules/cloudbase-platform/rule.md` (environment, services, console management)
 - **Additional Rules**: `.codebuddy/rules/tcb/rules/auth-nodejs/rule.md` (Node.js auth), `.codebuddy/rules/tcb/rules/auth-http-api/rule.md` (HTTP API auth), `.codebuddy/rules/tcb/rules/data-model-creation/rule.md` (data models), `.codebuddy/rules/tcb/rules/spec-workflow/rule.md` (workflow)

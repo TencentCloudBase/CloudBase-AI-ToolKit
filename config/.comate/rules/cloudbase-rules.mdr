@@ -31,6 +31,7 @@ When this document references a rule file, try locations in this order:
 | `web-development` | Web Platform Development |
 | `miniprogram-development` | Mini Program Platform Development |
 | `cloudrun-development` | CloudRun Backend Development |
+| `cloud-functions` | Cloud Functions Development |
 | `http-api` | HTTP API Usage |
 | `relational-database-tool` | MySQL Database Tool Operations |
 | `relational-database-web` | MySQL Web SDK |
@@ -191,9 +192,8 @@ As the most important part of application development, the following four core c
 - Generate markdown format access links with random queryString
 
 ### 4. Backend Deployment (Cloud Functions or CloudRun)
-**Refer to `rules/cloudrun-development/rule.md`**
-- **Cloud Function Deployment**: Use `getFunctionList` to query, then call `createFunction` or `updateFunctionCode` to deploy
-- **CloudRun Deployment**: Use `manageCloudRun` tool for containerized deployment
+- **Cloud Function Deployment**: Refer to `rules/cloud-functions/rule.md` - Use `getFunctionList` to query, then call `createFunction` or `updateFunctionCode` to deploy. **Important**: Runtime cannot be changed after creation, must select correct runtime initially.
+- **CloudRun Deployment**: Refer to `rules/cloudrun-development/rule.md` - Use `manageCloudRun` tool for containerized deployment
 - Ensure backend code supports CORS, prepare Dockerfile (for container type)
 
 ## Development Process Standards
@@ -315,9 +315,11 @@ If remote links are needed in the application, can continue to call uploadFile t
 
 1. **Cloud Function Deployment Process**: Can use getFunctionList tool to query if there are cloud functions, then directly call createFunction or updateFunctionCode to update cloud function code. Only need to point functionRootPath to parent directory of cloud function directory (e.g., absolute path of cloudfunctions directory). No need for code compression and other operations. The above tools will automatically read files from cloud function subdirectories with same name under parent directory and automatically deploy
 
-2. **CloudRun Deployment Process**: For non-cloud function backend services (Java, Go, PHP, Python, Node.js, etc.), use manageCloudRun tool for deployment. Ensure backend code supports CORS, prepare Dockerfile, then call manageCloudRun for containerized deployment. For details, refer to `rules/cloudrun-development/rule.md`
+2. **Cloud Function Deployment Process**: For Node.js cloud functions, use `getFunctionList` to query, then call `createFunction` or `updateFunctionCode` to deploy. **Important**: Runtime cannot be changed after creation. For details, refer to `rules/cloud-functions/rule.md`
 
-3. **Static Hosting Deployment Process**: Deploy using uploadFiles tool. After deployment, remind users that CDN has a few minutes of cache. Can generate markdown format access links with random queryString. For details, refer to `rules/web-development/rule.md`
+3. **CloudRun Deployment Process**: For non-cloud function backend services (Java, Go, PHP, Python, Node.js, etc.), use manageCloudRun tool for deployment. Ensure backend code supports CORS, prepare Dockerfile, then call manageCloudRun for containerized deployment. For details, refer to `rules/cloudrun-development/rule.md`
+
+4. **Static Hosting Deployment Process**: Deploy using uploadFiles tool. After deployment, remind users that CDN has a few minutes of cache. Can generate markdown format access links with random queryString. For details, refer to `rules/web-development/rule.md`
 
 ### Documentation Generation Rules
 
@@ -345,6 +347,7 @@ For example, many interfaces require a confirm parameter, which is a boolean typ
 ### Platform Development Skills
 - **Web**: `rules/web-development/rule.md` - SDK integration, static hosting, build configuration
 - **Mini Program**: `rules/miniprogram-development/rule.md` - Project structure, WeChat Developer Tools, wx.cloud
+- **Cloud Functions**: `rules/cloud-functions/rule.md` - Cloud function development, deployment, logging, HTTP access
 - **CloudRun**: `rules/cloudrun-development/rule.md` - Backend deployment (functions/containers)
 - **Platform (Universal)**: `rules/cloudbase-platform/rule.md` - Environment, authentication, services
 
