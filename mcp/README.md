@@ -68,6 +68,7 @@ AI 编程工具（如 Cursor、CodeBuddy）解决了**代码生成**的难题。
 
 在支持 MCP 的 AI IDE 中（Cursor、WindSurf、CodeBuddy 等），只需添加一行配置：
 
+Local Mode (推荐):
 ```json
 {
   "mcpServers": {
@@ -78,6 +79,36 @@ AI 编程工具（如 Cursor、CodeBuddy）解决了**代码生成**的难题。
   }
 }
 ```
+
+Hosted Mode:
+```json
+{
+  "mcpServers": {
+    "cloudbase": {
+      "type": "http",
+      "url": "https://weda-api.cloud.tencent.com/mcp/v1?env_id=<env_id>",
+      "headers": {
+          "X-TencentCloud-SecretId": "<腾讯云 Secret ID>",
+          "X-TencentCloud-SecretKey": "<腾讯云 Secret Key"
+      }
+    }
+  }
+}
+  
+```
+
+> [!TIP]
+> 推荐在本地可以执行Node(npx)时使用本地CLI模式，Host 模式下缺少部分依赖文件系统的tools。
+
+使用 HTTP 模式的 MCP Server 时，可以通过 URL query 参数控制启用的插件：
+
+**禁用插件示例：**
+```
+# 禁用 rag 和 env 插件
+https://weda-api.cloud.tencent.com/mcp/v1?env_id=YOUR_ENV_ID&disable_plugins=rag&disable_plugins=env
+```
+**可用插件枚举值：**
+`env`, `database`, `functions`, `hosting`, `storage`, `setup`, `interactive`, `rag`, `cloudrun`, `gateway`, `download`, `security-rule`, `invite-code`, `capi`
 
 > [!TIP]
 > **推荐使用 CloudBase AI CLI**
