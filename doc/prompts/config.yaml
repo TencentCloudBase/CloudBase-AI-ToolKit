@@ -102,11 +102,22 @@ rules:
       - "在 Android 应用中实现数据查询和更新"
       - "在 iOS 应用中实现数据库操作"
   
+  - id: cloud-functions
+    title: 后端开发：云函数
+    description: 开发和部署 Node.js 云函数，包括运行时选择、部署、日志查询、HTTP 访问配置
+    category: backend
+    order: 1
+    prompts:
+      - "帮我创建一个云函数并部署"
+      - "配置云函数的 HTTP 访问"
+      - "查询云函数的执行日志"
+      - "更新云函数的环境变量"
+  
   - id: cloudrun-development
     title: 后端开发：云托管
     description: 使用云托管开发和部署任意语言的后端服务
     category: backend
-    order: 1
+    order: 2
     prompts:
       - "帮我部署一个 Node.js 后端服务到云托管"
       - "创建一个支持多语言的云托管服务"
