@@ -91,6 +91,7 @@
             "collapsible": true,
             "collapsed": true,
             "items": [
+              "ai/cloudbase-ai-toolkit/prompts/cloud-functions",
               "ai/cloudbase-ai-toolkit/prompts/cloudrun-development"
             ]
           },
