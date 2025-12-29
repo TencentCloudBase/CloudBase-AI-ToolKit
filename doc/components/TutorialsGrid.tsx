@@ -25,6 +25,39 @@ const TERMINAL_ORDER = ['小程序', 'Web', '小游戏', '原生应用'];
 const tutorials: Tutorial[] = [
   // 文章
   {
+    id: 'article-mastermind-ai',
+    title: '人人都有董事会：AI + CloudBase 激活超级个体商业思维（开发实录）',
+    description: '洞穴之外 1.0',
+    category: '文章',
+    url: 'https://mp.weixin.qq.com/s?src=11&timestamp=1767001743&ver=6448&signature=zxbHfdLNiqLFfOsgndZOGzcB389CpBMERkutIhDa45gXScyzGuic0CLG0Bb4ieAFqVtoAXow*TFvPw30WQb4ZEYLecTi9f6yKqmfG4rvXLPkAYEoSC1qP*O24wV9fe9M&new=1',
+    type: 'article',
+    terminalTags: ['Web'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['Cursor'],
+  },
+  {
+    id: 'article-ai-assistant-iq-double',
+    title: '只需一个动作,让你的 AI 编程助手智商翻倍(附 CloudBase 开发秘籍)',
+    description: '洞穴之外 1.0',
+    category: '文章',
+    url: 'https://mp.weixin.qq.com/s?src=11&timestamp=1767001814&ver=6448&signature=zxbHfdLNiqLFfOsgndZOGzcB389CpBMERkutIhDa45j1ZbFKrSRJrjJwJeYNoTmFDiNqRqYLhqsaEfaAlh2RuG-lMIQwXgxY2OcwYTJgWTm5urHpeZ7Idbu98s3Z-UB7&new=1',
+    type: 'article',
+    terminalTags: ['Web'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['Cursor'],
+  },
+  {
+    id: 'article-cursor-cloudbase-fragment-assistant',
+    title: 'Cursor + CloudBase，两周闲暇时间做出我的"AI 碎片助理"',
+    description: '飞哥数智谈',
+    category: '文章',
+    url: 'https://mp.weixin.qq.com/s?src=11&timestamp=1767001814&ver=6448&signature=O6aF1lz1uMOcfEictINN62Ifi2CXPyEkUfxAa87l7-fbPfr1GU2KxadpBNz3MS05OVDublTRQBHt7kBZCmjgld7o*25t-ualb-RwiGX4XuZIA5g2bKCjCTyQMukYcXOc&new=1',
+    type: 'article',
+    terminalTags: ['Web'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['Cursor'],
+  },
+  {
     id: 'meeting-room-system',
     title: '低代码？不！是高效代码：CodeBuddy IDE + CloudBase 开发会议室系统实战',
     description: '会议室系统开发实战',
@@ -34,7 +67,6 @@ const tutorials: Tutorial[] = [
     terminalTags: ['Web'],
     appTypeTags: ['工具/效率', '电商/业务系统'],
     devToolTags: ['CodeBuddy'],
-    techStackTags: ['CloudBase AI Toolkit'],
   },
   {
     id: 'ai-game-paradigm',
@@ -46,7 +78,6 @@ const tutorials: Tutorial[] = [
     terminalTags: ['Web', '小游戏'],
     appTypeTags: ['游戏'],
     devToolTags: ['CodeBuddy'],
-    techStackTags: ['CloudBase AI Toolkit'],
   },
   {
     id: 'anime-tracker',
@@ -80,7 +111,6 @@ const tutorials: Tutorial[] = [
     terminalTags: ['小程序', 'Web'],
     appTypeTags: ['电商/业务系统'],
     devToolTags: ['Claude Code'],
-    techStackTags: ['CloudBase AI Toolkit'],
   },
   {
     id: 'anonymous-social-app',
@@ -124,7 +154,7 @@ const tutorials: Tutorial[] = [
     terminalTags: ['Web'],
     appTypeTags: ['工具/效率', '多媒体/音视频'],
     devToolTags: ['CodeBuddy'],
-    techStackTags: ['Vue', 'CloudBase AI Toolkit'],
+    techStackTags: ['Vue'],
   },
   {
     id: 'english-learning-h5',
@@ -136,7 +166,6 @@ const tutorials: Tutorial[] = [
     terminalTags: ['Web'],
     appTypeTags: ['教育/学习', '多媒体/音视频'],
     devToolTags: ['CodeBuddy'],
-    techStackTags: ['CloudBase AI Toolkit'],
   },
   {
     id: 'fps-game',
@@ -148,7 +177,7 @@ const tutorials: Tutorial[] = [
     terminalTags: ['Web'],
     appTypeTags: ['游戏'],
     devToolTags: ['CodeBuddy'],
-    techStackTags: ['React', 'Vite', 'CloudBase AI Toolkit'],
+    techStackTags: ['React', 'Vite'],
   },
   {
     id: 'h5-shooting-game',
@@ -298,6 +327,41 @@ const tutorials: Tutorial[] = [
     devToolTags: ['Cursor', 'Figma'],
   },
   // 视频
+  {
+    id: 'video-figma-codebuddy-miniprogram',
+    title: 'Figma + CodeBuddy + CloudBase 实战：完整开发一个微信小程序',
+    description: 'JavaPub',
+    category: '视频教程',
+    url: 'https://www.bilibili.com/video/BV1bRBkBFE7x/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
+    type: 'video',
+    thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1bRBkBFE7x.jpg',
+    terminalTags: ['小程序'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['CodeBuddy', 'Figma'],
+  },
+  {
+    id: 'video-ai-topic-miner',
+    title: '我做了一个"AI 热门视频选题挖掘机"丨全网热点一键掌控！CodeBuddy AI 编程项目实战',
+    description: '吕立青_JimmyLv',
+    category: '视频教程',
+    url: 'https://www.bilibili.com/video/BV1nsB7BCEgD/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
+    type: 'video',
+    thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV1nsB7BCEgD.jpg',
+    terminalTags: ['Web'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['CodeBuddy'],
+  },
+  {
+    id: 'video-cloudbase-backend',
+    title: 'cloudbase软件分享：一键写后端',
+    description: 'AI创业进行时',
+    category: '视频教程',
+    url: 'https://www.bilibili.com/video/BV11DB4B2Eie/?share_source=copy_web&vd_source=068decbd00a3d00ff8662b6a358e5e1e',
+    type: 'video',
+    thumbnail: 'https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/video-thumbnails/BV11DB4B2Eie.jpg',
+    terminalTags: ['Web'],
+    appTypeTags: ['工具/效率'],
+  },
   {
     id: 'video-bilibili-ai-assistant',
     title: '【教程】不写一行代码，开发B站热门选题AI助手 | 数据分析  | 爬虫',
@@ -887,7 +951,7 @@ export default function TutorialsGrid() {
                 to={tutorial.url}
                 className={styles.videoCard}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
               >
                 <div className={styles.thumbnailWrapper}>
                   <img 
@@ -921,7 +985,7 @@ export default function TutorialsGrid() {
                 to={tutorial.url}
                 className={styles.videoListItem}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
               >
                 <div className={styles.videoListTitle}>{tutorial.title}</div>
                 <div className={styles.videoListDescription}>{tutorial.description}</div>
@@ -943,7 +1007,7 @@ export default function TutorialsGrid() {
                     to={tutorial.url}
                     className={styles.articleLink}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="noopener noreferrer nofollow"
                   >
                     <div className={styles.articleTitle}>{tutorial.title}</div>
                     <div className={styles.articleDescription}>{tutorial.description}</div>
@@ -962,7 +1026,7 @@ export default function TutorialsGrid() {
                   to={tutorial.url}
                   className={styles.projectCard}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                 >
                   <div className={styles.projectHeader}>
                     <div className={styles.projectName}>{tutorial.title}</div>
