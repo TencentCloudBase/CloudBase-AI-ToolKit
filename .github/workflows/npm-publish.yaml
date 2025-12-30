@@ -30,7 +30,6 @@ jobs:
         run: | 
           cd mcp
           node -v
-          node -e 
           node -e 'console.log(require("./package.json").version)'
 
       - name: Install dependencies
