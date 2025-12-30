@@ -1,0 +1,46 @@
+name: Publish to npm
+
+on:
+  # 1. Tag 触发规则
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+  workflow_dispatch:
+
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+        
+      - name: Cd to mcp
+        run: | 
+          cd mcp
+          node -v
+          node -e 
+          node -e 'console.log(require("./package.json").version)'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to npm
+        run: npm publish --provenance --access public
+        env:
+          # 显式确保不使用任何 Token 环境变量，强迫使用 OIDC
+          NODE_AUTH_TOKEN: ''
