@@ -68,16 +68,6 @@ alwaysApply: true
 8. 测试IDE特定下载功能是否正常工作
 </add_aiide>
 
-
-<add_example>
-# CloudBase AI Toolkit - 新增用户案例/视频/文章工作流
-0. 注意标题尽量用原标题，然后适当增加一些描述
-1. 更新 README.md
-2. 更新 doc/tutorials.md
-
-例如 艺术展览预约系统 - 一个完全通过AI 编程开发的艺术展览预约系统, 包含预约功能、管理后台等功能。
-</add_example>
-
 <sync_doc>
 cp -r doc/* {cloudbase-docs dir}/docs/ai/cloudbase-ai-toolkit/
 </sync_doc>

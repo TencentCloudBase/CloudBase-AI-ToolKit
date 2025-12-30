@@ -1,50 +1,76 @@
 # Add Article Tutorial
 
 ## Function
-Add a new WeChat Official Account article tutorial to the TutorialsGrid component, including metadata extraction from article pages.
+Add a new article tutorial (from Juejin or other platforms) to the TutorialsGrid component, including metadata extraction from article pages.
 
 ## Trigger Condition
-When user inputs `/add_article_tutorial` or provides a WeChat article URL with request to add it as a tutorial
+When user inputs `/add_article_tutorial` or provides an article URL with request to add it as a tutorial
 
-**Default Behavior**: If no article URL is provided, automatically open Sogou WeChat search page to browse for new CloudBase articles
+**Default Behavior**: If no article URL is provided, automatically open Juejin search page to browse for new CloudBase articles
 
 ## Workflow
 
 ### 0. Check for New Articles (Default Action)
-- **Default Behavior**: When command is triggered without a specific article URL, automatically open Sogou WeChat search page to check for new CloudBase-related articles
-- **Search URL**: `https://weixin.sogou.com/weixin?ie=utf8&s_from=input&_sug_=y&_sug_type_=&type=2&query=cloudbase&w=01019900&sut=2647&sst0=1766994680294&lkt=7%2C1766994679517%2C1766994680191`
-- **Purpose**: Browse CloudBase articles from WeChat Official Accounts
+- **Default Behavior**: When command is triggered without a specific article URL, automatically open Juejin search page to check for new CloudBase-related articles
+- **Search URL**: `https://juejin.cn/search?query=cloudbase&fromSeo=0&fromHistory=0&fromSuggest=0&enterFrom=home_page&sort=1`
+- **Purpose**: Browse CloudBase articles from Juejin (掘金)
 - **Tool**: Use `mcp_cursor-ide-browser_browser_navigate` to open the search page
+- **Content Filtering Requirements**:
+  - **MUST be related to**: CloudBase MCP, AI Coding, AI 编程, CloudBase AI Toolkit, MCP 工具, AI 开发工具等
+  - **MUST NOT include**: 
+    - 低代码 (low-code), 无代码 (no-code), 微搭, 可视化搭建等低代码平台相关内容
+    - 活动、福利、奖品、周边、抽奖、参与有礼、晒出、领取等营销活动相关内容
+  - **Preferred topics**: 
+    - CloudBase MCP 使用案例
+    - AI Coding 开发实践
+    - Cursor/CodeBuddy/WindSurf 等 AI IDE 与 CloudBase 集成
+    - CloudBase AI Toolkit 使用教程
+    - MCP 工具开发和应用
+    - AI 原生开发实践
+  - **Filtering method**: 
+    - Check article title and description for relevance
+    - Skip articles that mention "低代码", "无代码", "微搭", "可视化" prominently
+    - Skip articles that mention "福利", "活动", "奖品", "周边", "抽奖", "参与有礼", "晒出", "领取" in title (these are marketing/promotional activities)
+    - Focus on articles that mention "AI", "MCP", "CloudBase MCP", "AI Coding", "AI 编程" in title or description
 - **Note**: 
-  - Search results are NOT sorted by publication date (unlike Bilibili)
-  - Need to check publication date from search results (dates are visible in results)
+  - Search results support sorting by time (sort=1 means sorted by time, newest first)
   - Calculate cutoff date: one month ago from current date (e.g., if today is 2025-12-29, look for articles after 2025-11-29)
   - Search results show dates in various formats: "3小时前" (3 hours ago), "2025-12-22", etc.
-  - **Important**: Links in search results may be dynamically loaded via JavaScript, making direct extraction difficult
-  - If unable to extract links, identify articles by title, author, and date, then ask user to provide URLs
+  - Juejin article URLs format: `https://juejin.cn/post/{article-id}`
+  - Article links in search results should be extractable from the page
 - **After browsing**: 
   - Identify articles published within the last month
+  - **Filter out low-code related articles** (低代码, 无代码, 微搭, 可视化搭建等)
+  - **Filter out activity/promotional articles** (福利, 活动, 奖品, 周边, 抽奖, 参与有礼, 晒出, 领取等)
+  - **Prioritize articles related to CloudBase MCP and AI Coding**
+  - Extract article links from filtered results
   - If links can be extracted, proceed to extract article information
   - If links cannot be extracted, list identified articles and ask user to provide URLs
   - User can provide specific article URLs to add, or command can proceed to extract information if URL is already provided
 
 ### 1. Extract Article Information
-- Parse WeChat article URL (usually from `mp.weixin.qq.com`)
+- Parse article URL (Juejin: `juejin.cn/post/...`, WeChat: `mp.weixin.qq.com/s/...`, or other platforms)
 - Navigate to article page using browser
 - Extract article metadata from page:
   - Article title
-  - Author name (公众号名称)
+  - Author name (作者名称)
   - Publication date (for sorting)
   - Article URL
   - Article description/summary (optional, can use first paragraph or title)
 
-**Key Information to Extract**:
+**Key Information to Extract (Juejin)**:
+- **Title**: Usually in `<h1>` tag with class containing "title" or in article header
+- **Author**: Usually in author info section, look for author name link or profile
+- **Date**: Usually in time element, format: `YYYY-MM-DD` or relative time like "3小时前"
+- **URL**: Use the canonical URL from the article page (format: `https://juejin.cn/post/{id}`)
+
+**Key Information to Extract (WeChat - for existing articles)**:
 - **Title**: Usually in `<h1>` or `<h2>` tag with `id="activity-name"` or similar
 - **Author**: Usually in `<a>` tag with class containing "profile" or "account", or in meta tags
 - **Date**: Usually in `<em>` tag with `id="publish_time"` or similar, format: `YYYY-MM-DD` or `YYYY年MM月DD日`
 - **URL**: Use the canonical URL from the article page
 
-**Note**: WeChat article pages may require JavaScript to fully load. Use browser tools to wait for page load and extract information.
+**Note**: Article pages may require JavaScript to fully load. Use browser tools to wait for page load and extract information.
 
 ### 2. Determine Tags
 - **Terminal Tags** (终端/平台):
@@ -90,11 +116,14 @@ When user inputs `/add_article_tutorial` or provides a WeChat article URL with r
 ### 4. Sorting
 - **Requirement**: Articles should be sorted in descending order by publication date (newest first)
 - New articles should be inserted at the beginning of the article tutorials section
-- **Important**: Since search results are not sorted, need to check publication date by clicking into articles
+- **Important**: Juejin search results support sorting by time (sort=1), but still verify publication date from article page
 - After adding, verify the chronological order
 
 ### 5. Quality Checklist
-- [ ] WeChat article URL is valid and accessible
+- [ ] Article URL is valid and accessible (Juejin, WeChat, or other platforms)
+- [ ] **Article content is relevant to CloudBase MCP and AI Coding** (NOT low-code related)
+- [ ] Article does NOT focus on low-code platforms (低代码, 无代码, 微搭, 可视化搭建)
+- [ ] Article is NOT a marketing/promotional activity (福利, 活动, 奖品, 周边, 抽奖, 参与有礼, 晒出, 领取等)
 - [ ] Article metadata (title, author, date) successfully extracted
 - [ ] Publication date is verified (click into article if needed)
 - [ ] Article entry added to TutorialsGrid.tsx with correct format
@@ -109,11 +138,11 @@ When user inputs `/add_article_tutorial` or provides a WeChat article URL with r
 **Input**: 
 ```
 /add_article_tutorial
-https://mp.weixin.qq.com/s/xxxxx
+https://juejin.cn/post/xxxxx
 ```
 
 **Process**:
-1. (If no URL provided) Open Sogou WeChat search page
+1. (If no URL provided) Open Juejin search page for CloudBase articles
 2. Navigate to article page
 3. Extract metadata: Title, Author, Publication Date, URL
 4. Determine tags from title: `terminalTags: ['小程序']`, `appTypeTags: ['工具/效率']`, `devToolTags: ['CodeBuddy']` (Note: CloudBase MCP is default, don't include it)
@@ -122,12 +151,19 @@ https://mp.weixin.qq.com/s/xxxxx
 
 ## Important Notes
 
-1. **Default Search Page**: When command is triggered without a specific URL, automatically open the Sogou WeChat search page for CloudBase articles to help discover new content.
+1. **Default Search Page**: When command is triggered without a specific URL, automatically open the Juejin search page for CloudBase articles to help discover new content.
 
-2. **No Sorting in Search Results**: Unlike Bilibili, Sogou WeChat search does NOT support sorting by publication date. You need to:
-   - Click into articles to check their publication dates
-   - Manually identify which articles are newer
-   - Sort them when adding to the list
+2. **Content Filtering**: 
+   - **MUST filter out low-code related articles**: Skip articles that focus on "低代码", "无代码", "微搭", "可视化搭建" platforms
+   - **MUST filter out activity/promotional articles**: Skip articles that are marketing activities, such as "福利", "活动", "奖品", "周边", "抽奖", "参与有礼", "晒出", "领取" in title
+   - **MUST prioritize AI Coding and MCP content**: Focus on articles about CloudBase MCP, AI Coding, AI 编程, AI IDE integration
+   - **Relevance check**: Before adding an article, verify it's about AI Coding with CloudBase MCP, not low-code platform usage or promotional activities
+   - If article is primarily about low-code platforms or is a marketing activity, skip it even if it mentions CloudBase
+
+3. **Search Results Sorting**: Juejin search supports sorting by time (sort=1 means newest first). However, you should still:
+   - Verify publication date by clicking into articles
+   - Ensure articles are added in correct chronological order (newest first)
+   - Filter articles by relevance to CloudBase MCP and AI Coding
 
 3. **Tag Determination**: 
    - Try to infer tags from article title and content
@@ -160,13 +196,12 @@ https://mp.weixin.qq.com/s/xxxxx
 
 ## Error Handling
 
-- **Invalid WeChat Article URL**: Prompt user to provide valid WeChat article URL (usually from `mp.weixin.qq.com`)
+- **Invalid Article URL**: Prompt user to provide valid article URL (Juejin: `juejin.cn/post/...`, WeChat: `mp.weixin.qq.com/s/...`, or other platforms)
 - **Page Load Failure**: Wait for page to fully load, retry navigation if needed
 - **Metadata Extraction Failure**: Use browser tools to inspect page structure, try alternative selectors
 - **Date Not Found**: Ask user for publication date or skip date-based sorting
 - **Duplicate Entry**: Check existing entries by URL or title, skip if already exists
 - **Link Extraction Failure from Search Results**: 
-  - Sogou WeChat search results may use JavaScript to dynamically load links
   - If unable to extract links directly from search results, identify articles by title, author, and publication date
   - Ask user to provide article URLs, or note that links need to be added manually
   - When user confirms articles are valid, proceed with adding them once URLs are provided
@@ -174,7 +209,7 @@ https://mp.weixin.qq.com/s/xxxxx
 ## Differences from Video Tutorial Command
 
 1. **No Thumbnail**: Articles don't have cover images, so no download/upload step needed
-2. **No API**: WeChat articles don't have a public API, need to scrape from page
-3. **No Sorting**: Search results aren't sorted, need manual date checking
-4. **Browser Required**: Must use browser tools to extract information (no API alternative)
+2. **No API**: Articles don't have a public API, need to scrape from page
+3. **Browser Required**: Must use browser tools to extract information (no API alternative)
+4. **Platform Support**: Supports Juejin (primary), WeChat Official Accounts, and other article platforms
 

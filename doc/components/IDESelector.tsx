@@ -441,6 +441,29 @@ const IDES: IDE[] = [
     verificationPrompt: '调用 MCP 工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
     configExample: '',
   },
+  {
+    id: 'iflow-cli',
+    name: 'iFlow CLI',
+    platform: '命令行工具',
+    configPath: '.iflow/settings.json',
+    iconUrl: 'https://img.alicdn.com/imgextra/i1/O1CN01nulwex1q7Eq1TVqUh_!!6000000005448-55-tps-32-32.svg',
+    docUrl: 'https://platform.iflow.cn/cli/examples/mcp',
+    supportsProjectMCP: true,
+    cliCommand: 'iflow mcp add-json --scope project cloudbase \'{"command":"npx","args":["@cloudbase/cloudbase-mcp@latest"],"env":{"INTEGRATION_IDE":"iFlow"}}\'',
+    alternativeConfig: '或者将以下配置添加到 .iflow/settings.json:',
+    verificationPrompt: '调用 MCP 工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
+    configExample: `{
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"],
+      "env": {
+        "INTEGRATION_IDE": "iFlow"
+      }
+    }
+  }
+}`,
+  },
 ];
 
 // JSON syntax highlighter

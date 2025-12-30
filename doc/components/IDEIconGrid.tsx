@@ -153,6 +153,13 @@ const IDES: IDE[] = [
     docUrl: '/ai/cloudbase-ai-toolkit/ide-setup/kiro',
   },
   {
+    id: 'iflow-cli',
+    name: 'iFlow CLI',
+    platform: '命令行工具',
+    iconUrl: 'https://img.alicdn.com/imgextra/i1/O1CN01nulwex1q7Eq1TVqUh_!!6000000005448-55-tps-32-32.svg',
+    docUrl: '/ai/cloudbase-ai-toolkit/ide-setup/iflow-cli',
+  },
+  {
     id: 'cloudbase-cli',
     name: 'CloudBase CLI',
     platform: '命令行工具',

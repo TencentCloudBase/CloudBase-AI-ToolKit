@@ -40,63 +40,6 @@ function parseFrontmatter(content) {
 }
 
 /**
- * Extract "How to use" section from content
- * Usually before "## How to use this skill" or similar sections
- * Excludes "## When to use this skill" section and file header (title/description)
- */
-function extractHowToUse(content) {
-  // First, find and exclude "When to use this skill" section (including everything until next ##)
-  const whenToUsePattern = /^##\s+When\s+to\s+use\s+this\s+skill[\s\S]*?(?=\n##|\n---|$)/im;
-  let cleanedContent = content;
-  const whenToUseMatch = content.match(whenToUsePattern);
-  if (whenToUseMatch) {
-    // Remove the "When to use this skill" section and everything after it until next section
-    cleanedContent = content.substring(0, whenToUseMatch.index).trim();
-  }
-  
-  // Skip file header (title and description after frontmatter)
-  // Usually starts with # Title, followed by description paragraph, then ## sections
-  const headerPattern = /^#\s+[^\n]+\n\n[^\n]+\n\n/;
-  const headerMatch = cleanedContent.match(headerPattern);
-  if (headerMatch) {
-    cleanedContent = cleanedContent.substring(headerMatch[0].length).trim();
-  }
-  
-  // If after removing header, content starts with ##, there's no "how to use" section
-  // Return null to skip adding it
-  if (cleanedContent.match(/^##/)) {
-    return null;
-  }
-  
-  // Look for sections that indicate the start of the actual prompt content
-  const patterns = [
-    /^##\s+How\s+to\s+use\s+this\s+skill/i,
-    /^##\s+Implementation/i,
-    /^##\s+Scenarios/i,
-    /^##\s+Core\s+Concepts/i,
-  ];
-  
-  let howToUseEnd = cleanedContent.length;
-  
-  for (const pattern of patterns) {
-    const match = cleanedContent.match(pattern);
-    if (match && match.index < howToUseEnd) {
-      howToUseEnd = match.index;
-    }
-  }
-  
-  const howToUse = cleanedContent.substring(0, howToUseEnd).trim();
-  
-  // If no clear section found or content is too short, return empty
-  // (we don't want to show file header in "How to use" section)
-  if (!howToUse || howToUse.length < 50) {
-    return null;
-  }
-  
-  return howToUse;
-}
-
-/**
  * Read all markdown files from a directory
  */
 async function readRuleFiles(ruleDir) {
@@ -137,15 +80,6 @@ function generateMDX(ruleConfig, files) {
   // How to use section - just a brief note with link
   mdx += `## 如何使用\n\n`;
   mdx += `查看[如何使用提示词](/ai/cloudbase-ai-toolkit/prompts/how-to-use)了解详细的使用方法。\n\n`;
-  
-  // Extract how to use from rule.md (if exists) or first file
-  const ruleFile = files.find(f => f.filename === 'rule.md') || files[0];
-  if (ruleFile) {
-    const howToUse = extractHowToUse(ruleFile.content);
-    if (howToUse) {
-      mdx += `${howToUse}\n\n`;
-    }
-  }
   
   // Test prompts section
   if (prompts.length > 0) {

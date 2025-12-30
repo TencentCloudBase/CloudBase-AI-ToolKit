@@ -57,17 +57,17 @@ const scenarios: Scenario[] = [
   },
   {
     id: 'relational-database-tool',
-    title: '关系型数据库',
+    title: '关系型数据库：工具与规则',
     description: 'MySQL 关系型数据库',
     category: '数据库',
     docUrl: '/ai/cloudbase-ai-toolkit/prompts/relational-database-tool',
   },
   {
-    id: 'data-model-creation',
-    title: '数据模型创建',
-    description: 'AI 创建数据模型',
+    id: 'relational-database-web',
+    title: '关系型数据库：Web SDK',
+    description: 'Web 应用中使用关系型数据库',
     category: '数据库',
-    docUrl: '/ai/cloudbase-ai-toolkit/prompts/data-model-creation',
+    docUrl: '/ai/cloudbase-ai-toolkit/prompts/relational-database-web',
   },
   {
     id: 'database-http-api',
@@ -78,8 +78,15 @@ const scenarios: Scenario[] = [
   },
   // 后端开发
   {
+    id: 'cloud-functions',
+    title: '后端开发：云函数',
+    description: '开发和部署 Node.js 云函数',
+    category: '后端开发',
+    docUrl: '/ai/cloudbase-ai-toolkit/prompts/cloud-functions',
+  },
+  {
     id: 'cloudrun-development',
-    title: '云托管开发',
+    title: '后端开发：云托管',
     description: 'Node.js、Python、Go、Java 等',
     category: '后端开发',
     docUrl: '/ai/cloudbase-ai-toolkit/prompts/cloudrun-development',
