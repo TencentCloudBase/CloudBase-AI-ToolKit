@@ -59,6 +59,7 @@ const IDE_TYPES = [
   "vscode", // Visual Studio Code
   "kiro", // Kiro AI编辑器
   "aider", // Aider AI编辑器
+  "iflow-cli", // iFlow CLI
 ] as const;
 
 // IDE映射关系表
@@ -132,6 +133,10 @@ export const RAW_IDE_FILE_MAPPINGS: Record<string, IdeFileDescriptor[]> = {
     { path: ".kiro/steering/" },
   ],
   aider: [{ path: "mcp.json", isMcpConfig: true }],
+  "iflow-cli": [
+    { path: "IFLOW.md" },
+    { path: ".iflow/settings.json", isMcpConfig: true },
+  ],
 };
 
 const IDE_FILE_MAPPINGS = structuredClone(RAW_IDE_FILE_MAPPINGS)
@@ -172,6 +177,7 @@ const IDE_DESCRIPTIONS: Record<string, string> = {
   vscode: "Visual Studio Code",
   kiro: "Kiro AI编辑器",
   aider: "Aider AI编辑器",
+  "iflow-cli": "iFlow CLI",
 };
 
 // INTEGRATION_IDE 环境变量值到 IDE 类型的映射
@@ -197,6 +203,7 @@ const INTEGRATION_IDE_MAPPING: Record<string, string> = {
   Antigravity: "antigravity",
   VSCode: "vscode",
   Kiro: "kiro",
+  iFlow: "iflow-cli",
 };
 
 // 根据 INTEGRATION_IDE 环境变量获取默认 IDE 类型

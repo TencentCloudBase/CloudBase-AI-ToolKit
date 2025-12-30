@@ -48,6 +48,7 @@
               "ai/cloudbase-ai-toolkit/ide-setup/qoder",
               "ai/cloudbase-ai-toolkit/ide-setup/antigravity",
               "ai/cloudbase-ai-toolkit/ide-setup/cloudbase-cli",
+              "ai/cloudbase-ai-toolkit/ide-setup/iflow-cli",
               "ai/cloudbase-ai-toolkit/ide-setup/kiro"
             ]
           }
