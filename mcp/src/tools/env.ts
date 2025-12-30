@@ -1,14 +1,41 @@
 import { z } from "zod";
 import { logout } from "../auth.js";
 import {
-  getCloudBaseManager,
-  logCloudBaseResult,
-  resetCloudBaseManagerCache,
+    getCloudBaseManager,
+    logCloudBaseResult,
+    resetCloudBaseManagerCache,
 } from "../cloudbase-manager.js";
 import { ExtendedMcpServer } from "../server.js";
 import { debug } from "../utils/logger.js";
 import { _promptAndSetEnvironmentId } from "./interactive.js";
 import { getClaudePrompt } from "./rag.js";
+
+/**
+ * Simplify environment list data by keeping only essential fields for AI assistant
+ * This reduces token consumption when returning environment lists via MCP tools
+ * @param envList - Full environment list from API
+ * @returns Simplified environment list with only essential fields
+ */
+export function simplifyEnvList(envList: any[]): any[] {
+  if (!Array.isArray(envList)) {
+    return envList;
+  }
+
+  return envList.map((env: any) => {
+    // Only keep essential fields that are useful for AI assistant
+    const simplified: any = {};
+    
+    if (env.EnvId !== undefined) simplified.EnvId = env.EnvId;
+    if (env.Alias !== undefined) simplified.Alias = env.Alias;
+    if (env.Status !== undefined) simplified.Status = env.Status;
+    if (env.EnvType !== undefined) simplified.EnvType = env.EnvType;
+    if (env.Region !== undefined) simplified.Region = env.Region;
+    if (env.PackageName !== undefined) simplified.PackageName = env.PackageName;
+    if (env.IsDefault !== undefined) simplified.IsDefault = env.IsDefault;
+    
+    return simplified;
+  });
+}
 
 export function registerEnvTools(server: ExtendedMcpServer) {
   // 获取 cloudBaseOptions，如果没有则为 undefined
@@ -242,6 +269,10 @@ export function registerEnvTools(server: ExtendedMcpServer) {
                 result = await cloudbaseList.env.listEnvs();
                 logCloudBaseResult(server.logger, result);
               }
+              // Apply field simplification for MCP tool response to reduce token consumption
+              if (result && Array.isArray(result.EnvList)) {
+                result.EnvList = simplifyEnvList(result.EnvList);
+              }
             } catch (error) {
               debug("获取环境列表时出错，尝试降级到 listEnvs():", error instanceof Error ? error : new Error(String(error)));
               // Fallback to original method on error
@@ -253,6 +284,10 @@ export function registerEnvTools(server: ExtendedMcpServer) {
                 });
                 result = await cloudbaseList.env.listEnvs();
                 logCloudBaseResult(server.logger, result);
+                // Apply field simplification for fallback response as well
+                if (result && Array.isArray(result.EnvList)) {
+                  result.EnvList = simplifyEnvList(result.EnvList);
+                }
               } catch (fallbackError) {
                 debug("降级到 listEnvs() 也失败:", fallbackError instanceof Error ? fallbackError : new Error(String(fallbackError)));
                 return {

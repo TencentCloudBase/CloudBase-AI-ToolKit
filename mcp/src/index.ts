@@ -37,6 +37,8 @@ export {
   envManager
 } from "./cloudbase-manager.js";
 
+export { simplifyEnvList } from "./tools/env.js";
+
 export { RAW_IDE_FILE_MAPPINGS } from "./tools/setup.js";
 export type { InteractiveResult } from "./interactive-server.js";
 
