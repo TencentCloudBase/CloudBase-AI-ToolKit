@@ -42,6 +42,3 @@ jobs:
       - name: Publish to npm
         working-directory: ./mcp
         run: npm publish --provenance --access public
-        env:
-          # 显式确保不使用任何 Token 环境变量，强迫使用 OIDC
-          NODE_AUTH_TOKEN: ''
