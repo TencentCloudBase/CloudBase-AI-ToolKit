@@ -87,6 +87,7 @@ export const RAW_IDE_FILE_MAPPINGS: Record<string, IdeFileDescriptor[]> = {
   windsurf: [{ path: ".windsurf/rules/" }],
   codebuddy: [
     { path: ".rules/cloudbase-rules.md" },
+    { path: ".rules/cloudbase-rules.mdc" },
     { path: ".codebuddy/" },
     { path: "CODEBUDDY.md" },
     { path: ".mcp.json", isMcpConfig: true },
