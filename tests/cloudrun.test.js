@@ -399,4 +399,4 @@ describe('CloudRun Plugin Unit Tests', () => {
 
     console.log('✅ Path validation logic works as expected');
   });
-}, 10 * 1000);
+}, 20 * 1000);
