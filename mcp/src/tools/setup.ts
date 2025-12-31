@@ -209,17 +209,6 @@ const INTEGRATION_IDE_MAPPING: Record<string, string> = {
 };
 
 // 根据 INTEGRATION_IDE 环境变量获取默认 IDE 类型
-function getDefaultIDEFromEnv(): string {
-  const integrationIDE = process.env.INTEGRATION_IDE;
-  if (integrationIDE) {
-    const mappedIDE = INTEGRATION_IDE_MAPPING[integrationIDE];
-    if (mappedIDE) {
-      return mappedIDE;
-    }
-  }
-  return "all";
-}
-
 // 下载文件到临时目录
 async function downloadFile(url: string, filePath: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -491,7 +480,7 @@ export function registerSetupTools(server: ExtendedMcpServer) {
       title: "下载项目模板",
       description: `自动下载并部署CloudBase项目模板。⚠️ **MANDATORY FOR NEW PROJECTS** ⚠️
 
-**CRITICAL**: This tool MUST be called FIRST when starting a new project.\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n支持的IDE类型:\n- all: 下载所有IDE配置（默认）\n- cursor: Cursor AI编辑器\n- windsurf: WindSurf AI编辑器\n- codebuddy: CodeBuddy AI编辑器\n- claude-code: Claude Code AI编辑器\n- cline: Cline AI编辑器\n- gemini-cli: Gemini CLI\n- opencode: OpenCode AI编辑器\n- qwen-code: 通义灵码\n- baidu-comate: 百度Comate\n- openai-codex-cli: OpenAI Codex CLI\n- augment-code: Augment Code\n- github-copilot: GitHub Copilot\n- roocode: RooCode AI编辑器\n- tongyi-lingma: 通义灵码\n- trae: Trae AI编辑器\n- qoder: Qoder AI编辑器\n- antigravity: Google Antigravity AI编辑器\n- vscode: Visual Studio Code\n- kiro: Kiro AI编辑器\n- aider: Aider AI编辑器\n\n特别说明：\n- rules 模板会自动包含当前 mcp 版本号信息（版本号：${typeof __MCP_VERSION__ !== "undefined" ? __MCP_VERSION__ : "unknown"}），便于后续维护和版本追踪\n- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）`,
+**CRITICAL**: This tool MUST be called FIRST when starting a new project.\n\n支持的模板:\n- react: React + CloudBase 全栈应用模板\n- vue: Vue + CloudBase 全栈应用模板\n- miniprogram: 微信小程序 + 云开发模板  \n- uniapp: UniApp + CloudBase 跨端应用模板\n- rules: 只包含AI编辑器配置文件（包含Cursor、WindSurf、CodeBuddy等所有主流编辑器配置），适合在已有项目中补充AI编辑器配置\n\n支持的IDE类型:\n- all: 下载所有IDE配置\n- cursor: Cursor AI编辑器\n- 其他IDE类型见下方列表\n\n注意：如果未传入 ide 参数且无法从环境变量检测到 IDE，将提示错误并要求传入 ide 参数\n- windsurf: WindSurf AI编辑器\n- codebuddy: CodeBuddy AI编辑器\n- claude-code: Claude Code AI编辑器\n- cline: Cline AI编辑器\n- gemini-cli: Gemini CLI\n- opencode: OpenCode AI编辑器\n- qwen-code: 通义灵码\n- baidu-comate: 百度Comate\n- openai-codex-cli: OpenAI Codex CLI\n- augment-code: Augment Code\n- github-copilot: GitHub Copilot\n- roocode: RooCode AI编辑器\n- tongyi-lingma: 通义灵码\n- trae: Trae AI编辑器\n- qoder: Qoder AI编辑器\n- antigravity: Google Antigravity AI编辑器\n- vscode: Visual Studio Code\n- kiro: Kiro AI编辑器\n- aider: Aider AI编辑器\n\n特别说明：\n- rules 模板会自动包含当前 mcp 版本号信息（版本号：${typeof __MCP_VERSION__ !== "undefined" ? __MCP_VERSION__ : "unknown"}），便于后续维护和版本追踪\n- 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）`,
       inputSchema: {
         template: z
           .enum(["react", "vue", "miniprogram", "uniapp", "rules"])
@@ -500,7 +489,7 @@ export function registerSetupTools(server: ExtendedMcpServer) {
           .enum(IDE_TYPES)
           .optional()
           .describe(
-            "指定要下载的IDE类型。如果未指定，会根据 INTEGRATION_IDE 环境变量自动选择对应的IDE配置；如果环境变量也未设置，则默认下载所有IDE配置",
+            "指定要下载的IDE类型。如果未指定，会根据 INTEGRATION_IDE 环境变量自动选择对应的IDE配置；如果环境变量也未设置，则必须传入此参数",
           ),
         overwrite: z
           .boolean()
@@ -525,8 +514,39 @@ export function registerSetupTools(server: ExtendedMcpServer) {
       overwrite?: boolean;
     }) => {
       try {
-        // 如果没有传入 ide 参数，根据 INTEGRATION_IDE 环境变量获取默认值
-        const resolvedIDE = ide ?? getDefaultIDEFromEnv();
+        // 如果没有传入 ide 参数，尝试从环境变量获取
+        let resolvedIDE = ide;
+        if (!resolvedIDE) {
+          const integrationIDE = process.env.INTEGRATION_IDE;
+          if (integrationIDE) {
+            const mappedIDE = INTEGRATION_IDE_MAPPING[integrationIDE];
+            if (mappedIDE) {
+              resolvedIDE = mappedIDE;
+            } else {
+              // 环境变量存在但无法映射，要求用户显式传入 ide 参数
+              const supportedIDEs = IDE_TYPES.filter(t => t !== "all").join(", ");
+              return {
+                content: [
+                  {
+                    type: "text",
+                    text: `❌ 无法识别当前 IDE 环境\n\n检测到 INTEGRATION_IDE="${integrationIDE}"，但无法映射到支持的 IDE 类型。\n\n请显式传入 \`ide\` 参数来指定要下载的 IDE 配置。\n\n支持的 IDE 类型: ${supportedIDEs}\n\n示例: \`ide: "cursor"\` 或 \`ide: "all"\`（下载所有 IDE 配置）`,
+                  },
+                ],
+              };
+            }
+          } else {
+            // 环境变量不存在，要求用户必须传入 ide 参数
+            const supportedIDEs = IDE_TYPES.filter(t => t !== "all").join(", ");
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `❌ 必须指定 IDE 参数\n\n请传入 \`ide\` 参数来指定要下载的 IDE 配置。\n\n支持的 IDE 类型: ${supportedIDEs}\n\n示例: \`ide: "cursor"\` 或 \`ide: "all"\`（下载所有 IDE 配置）`,
+                },
+              ],
+            };
+          }
+        }
 
         // 验证IDE类型
         const ideValidation = validateIDE(resolvedIDE);
