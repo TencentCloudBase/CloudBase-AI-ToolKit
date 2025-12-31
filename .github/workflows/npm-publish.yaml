@@ -23,12 +23,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
         
       - name: Cd to mcp
         run: | 
           node -v
+          npm -v
           node -e 'console.log(require("./package.json").version)'
 
       - name: Install dependencies
@@ -42,3 +43,6 @@ jobs:
       - name: Publish to npm
         working-directory: ./mcp
         run: npm publish --provenance --access public
+        env:
+          # 显式确保不使用任何 Token 环境变量，强迫使用 OIDC
+          NODE_AUTH_TOKEN: ''
