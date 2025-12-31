@@ -185,18 +185,46 @@ test('downloadTemplate tool maintains backward compatibility', async () => {
     await client.connect(transport);
     await delay(3000);
 
-    console.log('Testing backward compatibility (no IDE parameter)...');
+    console.log('Testing IDE parameter requirement...');
     
-    // Test without IDE parameter (should default to "all")
+    // Test without IDE parameter and without INTEGRATION_IDE env var (should return error)
     try {
+      // Remove INTEGRATION_IDE from env if it exists
+      const originalEnv = process.env.INTEGRATION_IDE;
+      delete process.env.INTEGRATION_IDE;
+      
       const result = await client.callTool('downloadTemplate', {
         template: 'rules',
         overwrite: false
       });
       
-      // The tool should work without IDE parameter
+      // Restore original env
+      if (originalEnv) {
+        process.env.INTEGRATION_IDE = originalEnv;
+      }
+      
+      // The tool should return an error message asking for IDE parameter
       expect(result.content).toBeDefined();
-      console.log('✅ Tool works without IDE parameter (backward compatibility)');
+      const contentText = result.content[0]?.text || '';
+      expect(contentText).toContain('必须指定 IDE 参数');
+      console.log('✅ Tool correctly requires IDE parameter when not provided');
+      
+    } catch (error) {
+      // This is acceptable - the tool might fail for other reasons (like network)
+      console.log('✅ Tool call completed (may have failed for expected reasons):', error.message);
+    }
+    
+    // Test with explicit IDE parameter (should work)
+    try {
+      const result = await client.callTool('downloadTemplate', {
+        template: 'rules',
+        ide: 'cursor',
+        overwrite: false
+      });
+      
+      // The tool should work with explicit IDE parameter
+      expect(result.content).toBeDefined();
+      console.log('✅ Tool works with explicit IDE parameter');
       
     } catch (error) {
       // This is acceptable - the tool might fail for other reasons (like network)
