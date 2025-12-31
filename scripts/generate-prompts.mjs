@@ -73,7 +73,7 @@ async function readRuleFiles(ruleDir) {
  * Generate MDX content for a single rule
  */
 function generateMDX(ruleConfig, files) {
-  const { title, description, prompts = [] } = ruleConfig;
+  const { id, title, description, prompts = [] } = ruleConfig;
   
   let mdx = `# ${title}\n\n${description}\n\n`;
   
@@ -90,6 +90,10 @@ function generateMDX(ruleConfig, files) {
     }
     mdx += `\n`;
   }
+  
+  // Add AIDevelopmentPrompt component
+  mdx += `import AIDevelopmentPrompt from '../components/AIDevelopmentPrompt';\n\n`;
+  mdx += `<AIDevelopmentPrompt ruleId="${id}" />\n\n`;
   
   // Prompt section
   mdx += `## 提示词\n\n`;

@@ -42,7 +42,7 @@ const RULES_TARGETS = [
   "config/AGENTS.md",
   "config/.qwen/QWEN.md",
   "config/CODEBUDDY.md",
-  "config/IFLOW.md",
+  // "config/IFLOW.md",
 ];
 
 const MCP_SOURCE = "config/.mcp.json";

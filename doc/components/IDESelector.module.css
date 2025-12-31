@@ -752,6 +752,11 @@
   padding: 0.75rem;
   background: var(--ifm-background-color);
   gap: 0.75rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.promptContent:first-of-type {
+  border-top: none;
 }
 
 .promptActions {
@@ -794,26 +799,22 @@
 
 .promptText {
   flex: 1;
+  display: block;
   font-family: var(--ifm-font-family-monospace);
   font-size: 0.875rem;
   color: var(--ifm-font-color-base);
   white-space: pre-wrap;
   word-break: break-word;
-  line-height: 1.6;
-  max-height: calc(1.6em * 3);
-  overflow: hidden;
-  position: relative;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0.5rem;
+  box-sizing: border-box;
 }
 
-.promptText::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: calc(1.6em * 1.5);
-  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.95));
-  pointer-events: none;
+/* Second row prompt text - limit max height */
+.promptContent:not(:first-of-type) .promptText {
+  max-height: 6rem;
+  overflow-y: auto;
 }
 
 .copyPromptButton {
@@ -835,6 +836,50 @@
 .copyPromptButton:hover {
   background: var(--ifm-color-emphasis-100);
   border-color: var(--ifm-color-primary);
+}
+
+.refreshPromptButton {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  min-height: 2.75rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--ifm-color-emphasis-300);
+  color: var(--ifm-color-emphasis-600);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  line-height: 1;
+}
+
+.refreshPromptButton:hover {
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-emphasis-900);
+}
+
+.refreshPromptButton:active {
+  transform: scale(0.95);
+}
+
+.refreshPromptButton:active svg {
+  animation: rotate 0.3s ease;
+}
+
+.refreshPromptButton svg {
+  flex-shrink: 0;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .copyPromptButton:active {

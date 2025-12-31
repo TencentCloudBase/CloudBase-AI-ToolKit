@@ -1,41 +1,20 @@
 /* Wrapper */
 .wrapper {
-  margin: 1.5rem 0;
+  margin: 2rem 0;
 }
 
 /* Container */
 .container {
-  position: relative;
-  padding: 1rem;
-  background: var(--ifm-color-emphasis-100);
-  border: 1px solid var(--ifm-color-emphasis-200);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-/* Bottom gradient overlay (like Vercel) - shown when collapsed */
-/* Only show gradient if there's overflow content, not over the button */
-.containerCollapsed::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 20px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--ifm-color-emphasis-100)
-  );
-  pointer-events: none;
-  z-index: 1;
+  padding: 1.25rem;
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
 }
 
 /* Content */
 .content {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
 /* Header Content */
@@ -45,107 +24,60 @@
   gap: 1rem;
 }
 
-/* IDE Icons */
-.ideIcons {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  margin-right: 0.5rem;
-}
-
-.ideIcon {
-  width: 24px;
-  height: 24px;
-  border-radius: 50% !important;
-  border: 2px solid var(--ifm-background-color);
-  background: rgba(255, 255, 255, 0.5) !important;
-  object-fit: cover;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 /* Description */
 .description {
   margin: 0;
-  font-size: 0.875rem;
-  color: var(--ifm-color-emphasis-700);
+  font-size: 0.9375rem;
+  color: var(--ifm-font-color-base);
   line-height: 1.6;
+  font-weight: 400;
 }
 
-/* Button */
+/* Button - Minimalist design */
 .button {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 10px 18px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(37, 99, 235, 0.12) 100%);
-  border: 1px solid rgba(59, 130, 246, 0.25);
-  border-radius: 8px;
-  color: #3b82f6 !important;
+  padding: 0.75rem 1rem;
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  color: var(--ifm-font-color-base);
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 400;
+  font-family: var(--ifm-font-family-base);
   cursor: pointer;
-  transition: all 0.25s ease;
-  text-decoration: none;
+  transition: all 0.2s ease;
   width: 100%;
-  position: relative;
-  z-index: 2;
-  overflow: hidden;
-}
-
-.button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.5s ease;
-}
-
-.button:hover::before {
-  left: 100%;
-}
-
-.buttonLeft {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  position: relative;
-  z-index: 1;
+  text-align: left;
 }
 
 .button:hover {
-  color: #ffffff !important;
-  text-decoration: none;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  border-color: #2563eb;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
 }
 
-.button:active,
+.button:active {
+  transform: scale(0.98);
+}
+
 .button:focus {
-  transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  border-color: #2563eb;
-  color: #ffffff !important;
   outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px var(--ifm-color-primary-lightest);
 }
-
 
 .buttonText {
+  flex: 1;
   line-height: 1.5;
 }
 
 .buttonArrow {
   flex-shrink: 0;
-  color: #3b82f6;
-  transition: transform 0.2s ease, color 0.25s ease;
-  position: relative;
-  z-index: 1;
+  color: var(--ifm-color-emphasis-600);
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .buttonArrowExpanded {
@@ -153,33 +85,30 @@
 }
 
 .button:hover .buttonArrow {
-  color: #ffffff;
+  color: var(--ifm-color-primary);
 }
 
 .buttonExpanded {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  border-color: #2563eb;
-  color: #ffffff !important;
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
 }
 
 .buttonExpanded .buttonArrow {
-  color: #ffffff;
+  color: var(--ifm-color-primary);
 }
 
 /* Expanded Content */
 .expandedContent {
   margin-top: 1rem;
-  padding: 0 1.5rem;
-  background: var(--ifm-background-color);
-  border: 1px solid var(--ifm-color-emphasis-200);
-  border-radius: 8px;
-  animation: slideDown 0.3s ease;
+  padding: 0;
+  animation: slideDown 0.2s ease;
 }
 
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
@@ -187,70 +116,32 @@
   }
 }
 
-
 /* IDE Selector Section */
 .ideSelectorSection {
   /* No additional styling needed, IDESelector has its own styles */
 }
 
-/* Dark theme */
-[data-theme="dark"] .button {
-  background: linear-gradient(135deg, rgba(96, 165, 250, 0.1) 0%, rgba(59, 130, 246, 0.15) 100%);
-  border-color: rgba(96, 165, 250, 0.3);
-  color: #60a5fa !important;
-}
-
-[data-theme="dark"] .button:hover {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  border-color: #3b82f6;
-  color: #ffffff !important;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-[data-theme="dark"] .button:active,
-[data-theme="dark"] .button:focus {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  border-color: #3b82f6;
-  color: #ffffff !important;
-}
-
-[data-theme="dark"] .buttonArrow {
-  color: #60a5fa;
-}
-
-[data-theme="dark"] .button:hover .buttonArrow,
-[data-theme="dark"] .buttonExpanded .buttonArrow {
-  color: #ffffff;
-}
-
-[data-theme="dark"] .buttonExpanded {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  border-color: #3b82f6;
-  color: #ffffff !important;
-}
-
 /* Responsive */
 @media (max-width: 640px) {
+  .wrapper {
+    margin: 1.5rem 0;
+  }
+
   .container {
-    padding: 0.875rem;
+    padding: 1rem;
   }
 
   .description {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
   }
 
   .button {
     font-size: 0.875rem;
-    padding: 0.625rem 1rem;
+    padding: 0.625rem 0.875rem;
   }
 
   .headerContent {
     gap: 0.875rem;
-  }
-
-  .ideIcon {
-    width: 20px;
-    height: 20px;
   }
 }
 

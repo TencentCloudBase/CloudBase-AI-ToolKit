@@ -23,10 +23,10 @@ rules:
     category: auth
     order: 1
     prompts:
-      - "帮我配置短信登录方式"
-      - "启用邮箱验证码登录"
-      - "配置微信开放平台登录"
-      - "设置匿名登录功能"
+      - "在 CloudBase 控制台帮我配置短信登录方式"
+      - "在 CloudBase 中启用邮箱验证码登录"
+      - "在 CloudBase 中配置微信开放平台登录"
+      - "在 CloudBase 中设置匿名登录功能"
   
   - id: auth-web
     title: 身份认证：Web SDK
@@ -35,7 +35,7 @@ rules:
     order: 2
     prompts:
       - "帮我实现一个 Web 登录页面，使用 CloudBase Auth"
-      - "创建一个手机号注册和登录功能"
+      - "在 Web 应用中创建一个使用 CloudBase Auth 的手机号注册和登录功能"
   
   - id: auth-wechat
     title: 身份认证：微信小程序
@@ -43,8 +43,8 @@ rules:
     category: auth
     order: 3
     prompts:
-      - "帮我实现微信小程序的用户登录功能"
-      - "创建一个支持微信登录的小程序应用"
+      - "在微信小程序中使用 CloudBase Auth 实现用户登录功能"
+      - "创建一个使用 CloudBase Auth 支持微信登录的小程序应用"
   
   - id: auth-http-api
     title: 身份认证：App 集成
@@ -53,8 +53,8 @@ rules:
     order: 4
     ruleDir: http-api
     prompts:
-      - "在 Android 应用中实现用户登录功能"
-      - "在 iOS 应用中实现用户注册和登录"
+      - "在 Android 应用中使用 CloudBase HTTP API 实现用户登录功能"
+      - "在 iOS 应用中使用 CloudBase HTTP API 实现用户注册和登录"
   
   - id: no-sql-web-sdk
     title: 文档数据库：Web SDK
@@ -62,8 +62,8 @@ rules:
     category: database
     order: 1
     prompts:
-      - "帮我创建一个待办事项应用，使用文档数据库存储数据"
-      - "实现分页查询和复杂查询功能"
+      - "帮我创建一个待办事项应用，使用 CloudBase 文档数据库存储数据"
+      - "在 Web 应用中使用 CloudBase 文档数据库实现分页查询和复杂查询功能"
   
   - id: no-sql-wx-mp-sdk
     title: 文档数据库：小程序 SDK
@@ -71,8 +71,8 @@ rules:
     category: database
     order: 2
     prompts:
-      - "帮我在小程序中实现数据查询和更新"
-      - "创建一个使用文档数据库的小程序应用"
+      - "在微信小程序中使用 CloudBase 文档数据库实现数据查询和更新"
+      - "创建一个使用 CloudBase 文档数据库的小程序应用"
   
   - id: relational-database-tool
     title: 关系型数据库：工具与规则
@@ -80,8 +80,8 @@ rules:
     category: database
     order: 3
     prompts:
-      - "帮我创建一个用户表并设置权限"
-      - "执行 SQL 查询和更新操作"
+      - "在 CloudBase 关系型数据库中帮我创建一个用户表并设置权限"
+      - "在 CloudBase 关系型数据库中执行 SQL 查询和更新操作"
   
   - id: relational-database-web
     title: 关系型数据库：Web SDK
@@ -89,8 +89,8 @@ rules:
     category: database
     order: 4
     prompts:
-      - "帮我创建一个使用关系型数据库的 Web 应用"
-      - "实现 Supabase 风格的数据库查询"
+      - "帮我创建一个使用 CloudBase 关系型数据库的 Web 应用"
+      - "在 Web 应用中使用 CloudBase 关系型数据库 SDK 实现数据查询和操作"
   
   - id: database-http-api
     title: 数据库：App 集成
@@ -99,8 +99,8 @@ rules:
     order: 6
     ruleDir: http-api
     prompts:
-      - "在 Android 应用中实现数据查询和更新"
-      - "在 iOS 应用中实现数据库操作"
+      - "在 Android 应用中使用 CloudBase HTTP API 实现数据查询和更新"
+      - "在 iOS 应用中使用 CloudBase HTTP API 实现数据库操作"
   
   - id: cloud-functions
     title: 后端开发：云函数
@@ -108,10 +108,10 @@ rules:
     category: backend
     order: 1
     prompts:
-      - "帮我创建一个云函数并部署"
-      - "配置云函数的 HTTP 访问"
-      - "查询云函数的执行日志"
-      - "更新云函数的环境变量"
+      - "帮我创建一个 CloudBase 云函数并部署"
+      - "配置 CloudBase 云函数的 HTTP 访问"
+      - "查询 CloudBase 云函数的执行日志"
+      - "更新 CloudBase 云函数的环境变量"
   
   - id: cloudrun-development
     title: 后端开发：云托管
@@ -119,8 +119,8 @@ rules:
     category: backend
     order: 2
     prompts:
-      - "帮我部署一个 Node.js 后端服务到云托管"
-      - "创建一个支持多语言的云托管服务"
+      - "帮我部署一个 Node.js 后端服务到 CloudBase 云托管"
+      - "在 CloudBase 云托管中创建一个支持多语言的后端服务"
   
   - id: web-development
     title: 应用集成：Web 应用
@@ -128,7 +128,7 @@ rules:
     category: frontend
     order: 1
     prompts:
-      - "帮我创建一个 React Web 应用"
+      - "帮我创建一个 React Web 应用并集成 CloudBase"
       - "部署前端应用到 CloudBase 静态托管"
   
   - id: miniprogram-development
@@ -137,8 +137,8 @@ rules:
     category: frontend
     order: 2
     prompts:
-      - "帮我创建一个微信小程序项目"
-      - "实现小程序与 CloudBase 的集成"
+      - "帮我创建一个微信小程序项目并集成 CloudBase"
+      - "实现小程序与 CloudBase 的完整集成"
   
   - id: ui-design
     title: 应用集成：UI 设计
@@ -146,8 +146,8 @@ rules:
     category: frontend
     order: 3
     prompts:
-      - "帮我设计一个现代化的用户界面"
-      - "创建一个美观的登录页面"
+      - "帮我设计一个现代化的用户界面，用于 CloudBase 应用"
+      - "创建一个美观的登录页面，集成 CloudBase Auth"
   
   - id: http-api
     title: 应用集成：App 集成
@@ -165,8 +165,8 @@ rules:
     category: tools
     order: 1
     prompts:
-      - "帮我按照 Spec 工作流开发一个新功能"
-      - "创建一个完整的需求文档和技术方案"
+      - "帮我按照 Spec 工作流开发一个 CloudBase 新功能"
+      - "为 CloudBase 项目创建一个完整的需求文档和技术方案"
   
   - id: cloudbase-platform
     title: 开发工具：CloudBase 平台
@@ -174,6 +174,8 @@ rules:
     category: tools
     order: 2
     prompts:
-      - "帮我了解 CloudBase 平台的功能和特性"
-      - "创建一个完整的 CloudBase 应用架构"
+      - "帮我了解 CloudBase 平台的功能和特性，包括云函数、小程序云开发、数据库等"
+      - "创建一个完整的 CloudBase 应用架构，包含云函数、数据库、存储等组件"
+      - "介绍 CloudBase 云函数的使用场景和最佳实践"
+      - "介绍小程序云开发的核心概念和使用方法"
 

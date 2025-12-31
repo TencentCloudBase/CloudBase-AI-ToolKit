@@ -10,7 +10,8 @@
     "release:rc": "standard-version --prerelease rc",
     "check:readme-sync": "node scripts/check-readme-sync.js",
     "build:tools-json": "cd mcp && npm run build && cd .. && node scripts/generate-tools-json.mjs",
-    "build:tools-doc": "node scripts/generate-tools-doc.mjs"
+    "build:tools-doc": "node scripts/generate-tools-doc.mjs",
+    "build:prompts-data": "node scripts/generate-prompts-data.mjs && node scripts/generate-prompts.mjs"
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.16.0",

@@ -2,6 +2,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './IDESelector.module.css';
 import { reportEvent } from './analytics';
+import { getRandomPrompt } from './promptsData';
 
 interface IDE {
   id: string;
@@ -448,7 +449,7 @@ const IDES: IDE[] = [
     configPath: '.iflow/settings.json',
     iconUrl: 'https://img.alicdn.com/imgextra/i1/O1CN01nulwex1q7Eq1TVqUh_!!6000000005448-55-tps-32-32.svg',
     docUrl: 'https://platform.iflow.cn/cli/examples/mcp',
-    supportsProjectMCP: true,
+    supportsProjectMCP: false,
     cliCommand: 'iflow mcp add-json --scope project cloudbase \'{"command":"npx","args":["@cloudbase/cloudbase-mcp@latest"],"env":{"INTEGRATION_IDE":"iFlow"}}\'',
     alternativeConfig: '或者将以下配置添加到 .iflow/settings.json:',
     verificationPrompt: '调用 MCP 工具下载 CloudBase AI 开发规则到当前项目，然后介绍CloudBase MCP 的所有功能',
@@ -550,6 +551,7 @@ const translations: Record<string, Record<string, string>> = {
     noResults: '未找到匹配的 IDE',
     copyCode: '复制代码',
     copyPrompt: '复制提示词',
+    refreshPrompt: '刷新',
     openInIDE: '用 {name} 打开',
   },
   'en': {
@@ -576,6 +578,7 @@ const translations: Record<string, Record<string, string>> = {
     noResults: 'No matching IDE found',
     copyCode: 'Copy code',
     copyPrompt: 'Copy prompt',
+    refreshPrompt: 'Refresh',
     openInIDE: 'Open with {name}',
   },
 };
@@ -736,9 +739,36 @@ export default function IDESelector({
 
   const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [copiedCli, setCopiedCli] = useState(false);
+  // Second prompt row: customPrompt if provided, otherwise random prompt
+  const [secondPrompt, setSecondPrompt] = useState<string>(() => 
+    customPrompt || getRandomPrompt()
+  );
+  const [copiedSecondPrompt, setCopiedSecondPrompt] = useState(false);
+
+  // Update secondPrompt when customPrompt changes
+  useEffect(() => {
+    if (customPrompt) {
+      setSecondPrompt(customPrompt);
+    } else {
+      setSecondPrompt(getRandomPrompt());
+    }
+  }, [customPrompt]);
+
+  const handleRefreshPrompt = () => {
+    // Only refresh if there's no customPrompt (customPrompt is fixed)
+    if (!customPrompt) {
+      setSecondPrompt(getRandomPrompt());
+      reportEvent({
+        name: 'IDE Selector - Refresh Prompt',
+        ideId: ide.id,
+        eventType: 'refresh_prompt',
+      });
+    }
+  };
 
   const handleCopyPrompt = async () => {
-    const prompt = customPrompt || ide.verificationPrompt || t.defaultVerifyPrompt;
+    // First prompt is always the fixed verification prompt
+    const prompt = ide.verificationPrompt || t.defaultVerifyPrompt;
     await navigator.clipboard.writeText(prompt);
     setCopiedPrompt(true);
     setTimeout(() => setCopiedPrompt(false), 2000);
@@ -749,20 +779,31 @@ export default function IDESelector({
     });
   };
 
+  const handleCopySecondPrompt = async () => {
+    await navigator.clipboard.writeText(secondPrompt);
+    setCopiedSecondPrompt(true);
+    setTimeout(() => setCopiedSecondPrompt(false), 2000);
+    reportEvent({
+      name: 'IDE Selector - Copy Second Prompt',
+      ideId: ide.id,
+      eventType: 'copy_prompt',
+    });
+  };
+
   // Generate IDE deep link URL (only Cursor is supported currently)
-  const getIDEDeepLink = (): string | null => {
+  const getIDEDeepLink = (promptToUse?: string): string | null => {
     // Only Cursor supports deep link currently
     if (ide.id !== 'cursor') {
       return null;
     }
 
-    const prompt = customPrompt || ide.verificationPrompt || t.defaultVerifyPrompt;
+    const prompt = promptToUse || customPrompt || ide.verificationPrompt || t.defaultVerifyPrompt;
     const encodedPrompt = encodeURIComponent(prompt);
     return `https://cursor.com/link/prompt?text=${encodedPrompt}`;
   };
 
-  const handleOpenIDE = () => {
-    const deepLink = getIDEDeepLink();
+  const handleOpenIDE = (promptToUse?: string) => {
+    const deepLink = getIDEDeepLink(promptToUse);
     if (deepLink) {
       // Try protocol handler first (for desktop apps)
       if (deepLink.startsWith('http')) {
@@ -1349,9 +1390,10 @@ export default function IDESelector({
         <p className={styles.verifyDescription}>{t.verifyDescription}</p>
         <div className={styles.promptWrapper}>
           <div className={styles.promptLabel}>prompt</div>
+          {/* First prompt row - Always fixed verification prompt */}
           <div className={styles.promptContent}>
             <code className={styles.promptText}>
-              {customPrompt || ide.verificationPrompt || t.defaultVerifyPrompt}
+              {ide.verificationPrompt || t.defaultVerifyPrompt}
             </code>
             <div className={styles.promptActions}>
               {getIDEDeepLink() && (
@@ -1388,6 +1430,65 @@ export default function IDESelector({
               </button>
             </div>
           </div>
+          {/* Second prompt row - customPrompt if provided, otherwise random prompt */}
+          {secondPrompt && (
+            <div className={styles.promptContent}>
+              <code className={styles.promptText}>
+                {secondPrompt}
+              </code>
+              <div className={styles.promptActions}>
+                {!customPrompt && (
+                  <button
+                    onClick={handleRefreshPrompt}
+                    className={styles.refreshPromptButton}
+                    title={t.refreshPrompt}
+                  >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path
+                      d="M2.5 3.5V6.5H5.5M13.5 12.5V9.5H10.5M2.5 6.5C3.5 4.5 5.5 3 8 3C10.5 3 12.5 4.5 13.5 6.5M13.5 9.5C12.5 11.5 10.5 13 8 13C5.5 13 3.5 11.5 2.5 9.5"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+                )}
+                {getIDEDeepLink(secondPrompt) && (
+                  <button
+                    onClick={() => handleOpenIDE(secondPrompt)}
+                    className={styles.openIDEButton}
+                    title={getOpenInIDEText(ide?.name)}
+                  >
+                    {getIconUrl(ide) && (
+                      <img
+                        src={getIconUrl(ide)!}
+                        alt=""
+                        className={styles.openIDEIcon}
+                      />
+                    )}
+                    <span>{getOpenInIDEText(ide?.name)}</span>
+                  </button>
+                )}
+                <button
+                  onClick={handleCopySecondPrompt}
+                  className={styles.copyPromptButton}
+                  title={t.copyPrompt}
+                >
+                  {copiedSecondPrompt ? (
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  ) : (
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1.5" />
+                      <path d="M3 11V3C3 2.44772 3.44772 2 4 2H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

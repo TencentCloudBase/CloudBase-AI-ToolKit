@@ -38,13 +38,13 @@ interface ErrorCodeIDEButtonProps {
 // i18n translations
 const translations: Record<string, Record<string, string>> = {
     'zh-CN': {
-        openInAI: '使用 AI 工具修复错误',
+        openInAI: '使用 AI 工具排查错误',
         troubleshoot: '故障排除',
         promptLabel: '提示词',
         copyPrompt: '复制提示词',
     },
     'en': {
-        openInAI: 'Fix Error with AI Tool',
+        openInAI: 'Troubleshoot Error with AI',
         troubleshoot: 'Troubleshoot',
         promptLabel: 'Prompt',
         copyPrompt: 'Copy prompt',
@@ -145,14 +145,13 @@ export default function ErrorCodeIDEButton({
                     <div className={styles.headerContent}>
                         <p className={styles.description}>
                             {isChinese
-                                ? '我遇到了一个错误，正在查看文档以了解发生了什么。请帮助我解决这个问题。'
-                                : "I'm encountering an error and reviewing the docs to understand what's happening. Please help me resolve this."}
+                                ? '遇到错误？使用 AI 工具协助排查'
+                                : 'Encountering an error? Get help with AI tools'}
                         </p>
-                        <a
-                            href="#"
+                        <button
+                            type="button"
                             className={`${styles.button} ${isExpanded ? styles.buttonExpanded : ''}`}
-                            onClick={(e) => {
-                                e.preventDefault();
+                            onClick={() => {
                                 const newExpandedState = !isExpanded;
                                 setIsExpanded(newExpandedState);
                                 reportEvent({
@@ -161,43 +160,23 @@ export default function ErrorCodeIDEButton({
                                 });
                             }}
                         >
-                            <div className={styles.buttonLeft}>
-                                <div className={styles.ideIcons}>
-                                    {POPULAR_IDES.map((ide, index) => {
-                                        const iconUrl = getIconUrl(ide);
-                                        if (!iconUrl) return null;
-                                        return (
-                                            <img
-                                                key={ide.id}
-                                                src={iconUrl}
-                                                alt=""
-                                                className={styles.ideIcon}
-                                                style={{
-                                                    marginLeft: index > 0 ? '-8px' : '0',
-                                                    zIndex: POPULAR_IDES.length - index,
-                                                }}
-                                            />
-                                        );
-                                    })}
-                                </div>
-                                <span className={styles.buttonText}>{t.openInAI}</span>
-                            </div>
+                            <span className={styles.buttonText}>{t.openInAI}</span>
                             <svg
                                 className={`${styles.buttonArrow} ${isExpanded ? styles.buttonArrowExpanded : ''}`}
-                                width="12"
-                                height="12"
-                                viewBox="0 0 12 12"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
                                 fill="none"
                             >
                                 <path
-                                    d="M3 4.5L6 7.5L9 4.5"
+                                    d="M4 6L8 10L12 6"
                                     stroke="currentColor"
-                                    strokeWidth="1.5"
+                                    strokeWidth="2"
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                 />
                             </svg>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>

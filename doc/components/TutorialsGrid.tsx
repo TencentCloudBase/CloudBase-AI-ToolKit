@@ -25,6 +25,17 @@ const TERMINAL_ORDER = ['小程序', 'Web', '小游戏', '原生应用'];
 const tutorials: Tutorial[] = [
   // 文章
   {
+    id: 'article-yuandan-xinnian-xingyunqian',
+    title: '元旦快乐！手把手教你0代码手搓新年幸运签（附保姆级教程）',
+    description: '鹅厂技术派',
+    category: '文章',
+    url: 'https://mp.weixin.qq.com/s/5-RS9ncn2diRf0e7i_3oqw',
+    type: 'article',
+    terminalTags: ['小程序'],
+    appTypeTags: ['工具/效率'],
+    devToolTags: ['CodeBuddy'],
+  },
+  {
     id: 'article-mastermind-ai',
     title: '人人都有董事会：AI + CloudBase 激活超级个体商业思维（开发实录）',
     description: '洞穴之外 1.0',
