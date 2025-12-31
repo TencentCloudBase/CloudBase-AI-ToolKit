@@ -1,3 +1,5 @@
+<a href="https://tencentcloudbase.github.io/CloudBase-MCP/2025/" target="_blank"><img width="3094" height="654" alt="banner" src="https://github.com/user-attachments/assets/39adbeac-1f43-4a31-bb9b-d6f65e905295" /></a>
+
 <div align="center"><a name="readme-top"></a>
 
 ![](scripts/assets/toolkit-better.gif)
