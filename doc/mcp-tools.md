@@ -2,7 +2,7 @@ import ParameterTable from '../../api-reference/components/ApiContainer';
 
 # MCP 工具
 
-当前包含 40 个工具，按功能分组如下。
+当前包含 42 个工具，按功能分组如下。
 
 源数据: [tools.json](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit/blob/main/scripts/tools.json)
 
@@ -18,6 +18,8 @@ import ParameterTable from '../../api-reference/components/ApiContainer';
 
 - [`queryEnv`](#queryenv)
 - [`manageEnv`](#manageenv)
+- [`deployPlan`](#deployplan)
+- [`deployApply`](#deployapply)
 - [`queryApps`](#queryapps)
 - [`manageApps`](#manageapps)
 
@@ -161,7 +163,7 @@ CloudBase（腾讯云开发）开发阶段登录与环境绑定。登录后即�
     {
       name: "oauthCustom",
       type: "boolean",
-      description: `高级可选：自定义 endpoint 返回格式开关。未配置 endpoint 时默认 false；配置 endpoint 后默认 true。标准 {code,result} 包装格式的端点（如国际站 tcb-api.tencentcloud.com）应显式传 false`,
+      description: `高级可选：自定义 endpoint 返回格式开关。未配置 endpoint 时默认 false；配置 endpoint 后默认 true，且不能设为 false`,
     },
     {
       name: "envId",
@@ -2091,7 +2093,7 @@ CloudBase 云函数统一写入口。支持创建函数、更新代码、更新�
 - aider: Aider AI编辑器
 
 特别说明：
-- rules 模板会自动包含当前 mcp 版本号信息（版本号：2.33.1），便于后续维护和版本追踪
+- rules 模板会自动包含当前 mcp 版本号信息（版本号：2.32.5），便于后续维护和版本追踪
 - 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）
 
 #### 参数
@@ -2136,7 +2138,7 @@ CloudBase 云函数统一写入口。支持创建函数、更新代码、更新�
       - 需要 auth-web 指南时：searchKnowledgeBase(mode=skill, skillName=auth-web)
       - 需要 cloudbase-agent 指南时：searchKnowledgeBase(mode=skill, skillName=cloudbase-agent)
 
-      固定技能文档 (skill) 查询当前支持 28 个固定文档，分别是：
+      固定技能文档 (skill) 查询当前支持 30 个固定文档，分别是：
       文档名：ai-model-nodejs 文档介绍："Use this skill for Node.js backend AI via @cloudbase/node-sdk (&gt;=3.16.0) — cloud functions, CloudRun, Express/Koa/NestJS, serverless APIs, scheduled jobs, LLM proxies, agent orchestration. The only SDK supporting image generation (ai.createImageModel + generateImage). Text via ai.createModel with groups cloudbase, hunyuan-exp, or custom-*; model ids (e.g. deepseek-v4-flash, glm-5, kimi-k2.6) go in the `model` field of generateText/streamText. MUST run two-step preflight before code — see body. NOT for browser/Web (use ai-model-web) or Mini Program (use ai-model-wechat)."
 文档名：ai-model-web 文档介绍："Use this skill when a browser/Web app (React, Vue, Next, Nuxt, static sites, SPAs, dashboards, AI chat UI, 页面, 前端, 网页) needs AI models via @cloudbase/js-sdk. Default routing for Web/frontend AI — call directly from the browser, do NOT propose a Node.js proxy. Covers generateText and streamText; models via ai.createModel with groups cloudbase, hunyuan-exp, or custom-*, model id in the `model` field. MUST run two-step preflight before code — see body. NOT for Node.js backend (use ai-model-nodejs), Mini Program (use ai-model-wechat), or image generation (Node SDK only)."
 文档名：ai-model-wechat 文档介绍："Use this skill for WeChat Mini Program AI via wx.cloud.extend.AI (小程序, wx.cloud apps). Covers generateText and streamText with callbacks (onText, onEvent, onFinish); streamText needs a data wrapper, generateText returns the raw response. Models via wx.cloud.extend.AI.createModel with groups hunyuan-exp (小程序成长计划), cloudbase (main managed), or custom-*; model id goes in the data wrapper `model` field. MUST run two-step preflight before code — see body. NOT for browser/Web (use ai-model-web), Node.js backend (use ai-model-nodejs), or image generation (use ai-model-nodejs)."
@@ -2144,11 +2146,13 @@ CloudBase 云函数统一写入口。支持创建函数、更新代码、更新�
 文档名：auth-tool-cloudbase 文档介绍：CloudBase auth provider configuration and login-readiness guide. This skill should be used when users need to inspect, enable, disable, or configure auth providers, publishable-key prerequisites, login methods, SMS/email sender setup, or other provider-side readiness before implementing a client or backend auth flow.
 文档名：auth-web-cloudbase 文档介绍：CloudBase Web Authentication Quick Guide for frontend integration after auth-tool has already been checked. Provides concise and practical Web authentication solutions with multiple login methods and complete user management.
 文档名：auth-wechat-miniprogram 文档介绍：CloudBase WeChat Mini Program native authentication guide. This skill should be used when users need mini program identity handling, OPENID/UNIONID access, or `wx.cloud` auth behavior in projects where login is native and automatic.
+文档名：cloud-api-operations 文档介绍：Operate Tencent Cloud control-plane resources (monitoring/alarms, CLB, CAM roles, COS, MySQL, SCF, etc.) via cloud APIs when no dedicated MCP tool exists. Covers API discovery via the api-reference index, calling via MCP callCloudApi or official SDKs, credential/permission models with CAM authorization escalation, and battle-tested workflow recipes. Use when the task requires Tencent Cloud control-plane operations beyond CloudBase's own tooling.
 文档名：cloud-functions 文档介绍：CloudBase function runtime guide for building, deploying, and debugging your own Event Functions or HTTP Functions. This skill should be used when users need application runtime code on CloudBase, not when they are merely calling CloudBase official platform APIs.
 文档名：cloud-storage-web 文档介绍：Complete guide for CloudBase cloud storage using Web SDK (@cloudbase/js-sdk) - upload, download, temporary URLs, file management, and best practices.
 文档名：cloudbase-agent 文档介绍：Build and deploy AI agents with CloudBase Agent SDK (TypeScript & Python). Implements the AG-UI protocol for streaming agent-UI communication. Use when deploying agent servers, using LangGraph/LangChain/CrewAI adapters, building custom adapters, understanding AG-UI protocol events, or building web/mini-program UI clients. Supports both TypeScript (@cloudbase/agent-server) and Python (cloudbase-agent-server via FastAPI).
 文档名：cloudbase-cli 文档介绍：CloudBase CLI (tcb, 云开发CLI, Tencent CloudBase命令行) resource management skill. Use when deploying cloud functions, CloudRun, storage, NoSQL/MySQL, static hosting, permissions, CORS/domains via tcb; for CI/CD and batch ops; when the user prefers CLI; or as the first-session fallback when CloudBase MCP tools are not loaded yet (after install/config, before IDE restart). Covers tcb login (device code for Tencent Cloud accounts; --cloudbase-api-key -e for environment API Key without an account; --apiKeyId/--apiKey for CI) and domain commands (fn/hosting/cloudrun/…) as MCP auth/manage parity — do not default to tcb deploy.
 文档名：cloudbase-code-review 文档介绍："Code review and validation for CloudBase projects. After writing code for Web / miniprogram / CloudRun / cloud-function projects, call this skill to check for known pitfalls — auth guard misuse, missing database tables, RLS misconfiguration, storage domain setup, and SDK API misuse. Supports automated lint scripts (regex-based) + LLM semantic review."
+文档名：cloudbase-declarative-deploy 文档介绍：CloudBase declarative deployment from a cloudbaserc config (声明式部署, 配置式部署, cloudbaserc 部署) through the deploy / deployPlan MCP tools. Use when deploying database, functions, app, hosting, or gateway resources described in cloudbaserc.json/yaml as a single desired-state config, when a user wants a dry-run plan before applying, or when handling multi-environment deploys via mode / envOverrides. Covers plan-then-apply flow (deployPlan dry-run → deploy confirm=true), envId resolution priority, only/skip filtering, concurrency, and continueOnError. Prefer deployPlan before deploy; do not confuse with per-resource tcb CLI deploy or single-function deploy.
 文档名：cloudbase-document-database-in-wechat-miniprogram 文档介绍：Use CloudBase document database WeChat MiniProgram SDK to query, create, update, and delete data. Supports complex queries, pagination, aggregation, and geolocation queries.
 文档名：cloudbase-document-database-web-sdk 文档介绍：Use CloudBase document database Web SDK only for confirmed NoSQL collection work. Query, create, update, and delete document data; if the task mentions PostgreSQL / CloudBase PG / app.rdb(), route to postgresql-development instead.
 文档名：cloudbase-platform 文档介绍：CloudBase platform overview and routing guide. This skill should be used when users need high-level capability selection, platform concepts, console navigation, or cross-platform best practices before choosing a more specific implementation skill.
@@ -2167,13 +2171,13 @@ CloudBase 云函数统一写入口。支持创建函数、更新代码、更新�
 文档名：web-development 文档介绍：Use when users need to implement, integrate, debug, build, deploy, or validate a Web frontend after the product direction is already clear, especially for React, Vue, Vite, browser flows, or CloudBase Web integration.
 
       OpenAPI 文档 (openapi) 查询只需要传 mode="openapi" 和 apiName，不要传 action；action 仅用于 mode="docs"。当前支持 7 个 API 文档，分别是：
-      API名：mysqldb API介绍：关系型数据库 RESTful API (MySQL/PostgreSQL) - 云开发关系型数据库 HTTP API
-API名：functions API介绍：Cloud Functions API - 云函数 HTTP API
-API名：auth API介绍：Authentication API - 身份认证 HTTP API
+      API名：functions API介绍：Cloud Functions API - 云函数 HTTP API
 API名：cloudrun API介绍：CloudRun API - 云托管服务 HTTP API
+API名：mysqldb API介绍：关系型数据库 RESTful API (MySQL/PostgreSQL) - 云开发关系型数据库 HTTP API
+API名：ai_model API介绍：AI 大模型接入 API - 统一 AI 模型 HTTP API
 API名：storage API介绍：Storage API - 云存储 HTTP API
 API名：nosql API介绍：NoSQL RESTful API - 文档型数据库 HTTP API
-API名：ai_model API介绍：AI 大模型接入 API - 统一 AI 模型 HTTP API
+API名：auth API介绍：Authentication API - 身份认证 HTTP API
 
 #### 参数
 
@@ -2188,12 +2192,12 @@ API名：ai_model API介绍：AI 大模型接入 API - 统一 AI 模型 HTTP API
     {
       name: "skillName",
       type: "string",
-      description: `mode=skill 时指定。技能名称。 可填写的值: "ai-model-nodejs", "ai-model-web", "ai-model-wechat", "auth-nodejs-cloudbase", "auth-tool-cloudbase", "auth-web-cloudbase", "auth-wechat-miniprogram", "cloud-functions", "cloud-storage-web", "cloudbase-agent", "cloudbase-cli", "cloudbase-code-review", "cloudbase-document-database-in-wechat-miniprogram", "cloudbase-document-database-web-sdk", "cloudbase-platform", "cloudbase-wechat-integration", "cloudrun-development", "data-model-creation", "http-api-cloudbase", "minimal-web-baas-demo", "miniprogram-development", "ops-inspector", "postgresql-development-cloudbase", "relational-database-mcp-cloudbase", "relational-database-web-cloudbase", "spec-workflow", "ui-design", "web-development"`,
+      description: `mode=skill 时指定。技能名称。 可填写的值: "ai-model-nodejs", "ai-model-web", "ai-model-wechat", "auth-nodejs-cloudbase", "auth-tool-cloudbase", "auth-web-cloudbase", "auth-wechat-miniprogram", "cloud-api-operations", "cloud-functions", "cloud-storage-web", "cloudbase-agent", "cloudbase-cli", "cloudbase-code-review", "cloudbase-declarative-deploy", "cloudbase-document-database-in-wechat-miniprogram", "cloudbase-document-database-web-sdk", "cloudbase-platform", "cloudbase-wechat-integration", "cloudrun-development", "data-model-creation", "http-api-cloudbase", "minimal-web-baas-demo", "miniprogram-development", "ops-inspector", "postgresql-development-cloudbase", "relational-database-mcp-cloudbase", "relational-database-web-cloudbase", "spec-workflow", "ui-design", "web-development"`,
     },
     {
       name: "apiName",
       type: "string",
-      description: `mode=openapi 时指定。API 名称。 可填写的值: "mysqldb", "functions", "auth", "cloudrun", "storage", "nosql", "ai_model"`,
+      description: `mode=openapi 时指定。API 名称。 可填写的值: "functions", "cloudrun", "mysqldb", "ai_model", "storage", "nosql", "auth"`,
     },
     {
       name: "action",
@@ -2664,6 +2668,128 @@ API名：ai_model API介绍：AI 大模型接入 API - 统一 AI 模型 HTTP API
       name: "serverType",
       type: "string",
       description: `服务类型配置：function=函数型云托管（仅支持Node.js，有特殊的开发要求和限制，适合简单的API服务），container=容器型服务（推荐使用，支持任意语言和框架如Java/Go/Python/PHP/.NET等，适合大多数应用场景）。不提供时自动检测：1)现有服务类型 2)有Dockerfile→container 3)有@cloudbase/aiagent-framework依赖→function 4)其他情况→container 可填写的值: "function", "container"`,
+    }
+  ]}
+/>
+
+---
+
+### `deployPlan`
+解析 cloudbaserc 并计算声明式部署计划（dry-run，不产生任何变更）。这是 deployApply 的预演对仗工具：plan 计算、deployApply 执行同一份 cloudbaserc。返回每个资源的动作分类：create=新建，update=覆盖更新，skip=无变更/不会执行，conflict=检测到冲突需中断，deploy=直传覆盖。计划已按 yes 复算为「实际会发生的动作」：不传 yes=true 时，云端已存在的函数会标为 skip（并在 declaredStatus 保留 update），与 deployApply 的实际执行结果一致，避免预演与执行相反。
+适用边界：本工具用于项目级声明式编排（一份 cloudbaserc 统一 plan/apply）；单资源临时直传请用 manageFunctions/manageHosting/manageApps。
+- cwd：项目根目录，默认当前工作目录
+- mode：环境名，命中 envOverrides.&lt;mode&gt; 时合并对应的多环境覆盖配置
+- envId：目标环境 ID，优先级高于 cloudbaserc 中的 envId；不传则用配置值或当前绑定环境
+- only：仅计算指定资源类型的计划
+- skip：跳过指定资源类型
+- yes：与 deployApply 的 yes 对齐，用于复算已存在函数的有效动作。true=预演为覆盖更新(update)；false（默认）=预演为保守跳过(skip)
+
+#### 参数
+
+<ParameterTable
+  parameters={[
+    {
+      name: "cwd",
+      type: "string",
+      description: `项目根目录，从此目录向下搜索 cloudbaserc；默认当前工作目录`,
+    },
+    {
+      name: "mode",
+      type: "string",
+      description: `环境名（如 production/staging），命中 envOverrides.<mode> 时合并覆盖`,
+    },
+    {
+      name: "envId",
+      type: "string",
+      description: `目标环境 ID，优先级高于 cloudbaserc 中的 envId；不传则用配置值或当前绑定环境`,
+    },
+    {
+      name: "only",
+      type: "array of string",
+      description: `仅计算指定资源类型的计划，可选值：database/functions/app/hosting/gateway`,
+    },
+    {
+      name: "skip",
+      type: "array of string",
+      description: `跳过指定资源类型，可选值：database/functions/app/hosting/gateway`,
+    },
+    {
+      name: "yes",
+      type: "boolean",
+      description: `与 deployApply 的 yes 对齐，用于复算已存在函数的有效动作。true=预演为覆盖更新；false（默认）=预演为保守跳过`,
+    }
+  ]}
+/>
+
+---
+
+### `deployApply`
+解析 cloudbaserc 并按 database→functions→app→hosting→gateway 顺序执行声明式部署。这是 deployPlan 的执行对仗工具（plan 预演 / deployApply 执行同一份 cloudbaserc），属于本地形态的 apply（读本地 cloudbaserc 并在本地构建上传），是会变更云端资源的写操作，必须显式传 confirm=true 才会执行。建议先用 deployPlan 预演，确认计划无误后再执行。
+适用边界：本工具用于项目级声明式编排（一份 cloudbaserc 统一 plan/apply）；单资源临时直传请用 manageFunctions/manageHosting/manageApps。
+- confirm：必须显式传 true 才执行部署，否则直接拒绝
+- confirmDestructive：当本次待执行的数据库迁移含破坏性语句（DROP/TRUNCATE/DELETE、ALTER…DROP/RENAME）时，除 confirm 外还必须显式传 confirmDestructive=true 才会执行；否则拒绝并列出命中的迁移与语句。无破坏性迁移时该参数不生效
+- cwd：项目根目录，默认当前工作目录
+- mode：环境名，命中 envOverrides.&lt;mode&gt; 时合并对应的多环境覆盖配置
+- envId：目标环境 ID，优先级高于 cloudbaserc 中的 envId；不传则用配置值或当前绑定环境
+- only：仅部署指定资源类型
+- skip：跳过指定资源类型
+- yes：遇到已存在资源时的处理方式。true=直接覆盖更新；false（默认）=保守跳过，在无法交互确认的场景下已存在资源不会被覆盖（与 deployPlan 的 yes 语义一致）
+- concurrency：同类型资源最大并行数，默认 1（串行）
+- continueOnError：某个资源失败后继续部署其余资源（database 失败仍强制中断）
+
+#### 参数
+
+<ParameterTable
+  parameters={[
+    {
+      name: "confirm",
+      type: "boolean",
+      description: `危险操作确认开关。部署会变更云端资源，必须显式传 confirm=true 才会执行`,
+    },
+    {
+      name: "confirmDestructive",
+      type: "boolean",
+      description: `破坏性数据库变更确认开关。当待执行迁移含 DROP/TRUNCATE/DELETE 或 ALTER…DROP/RENAME 时，必须在 confirm=true 之外额外显式传 confirmDestructive=true；无破坏性迁移时不生效`,
+    },
+    {
+      name: "cwd",
+      type: "string",
+      description: `项目根目录，从此目录向下搜索 cloudbaserc；默认当前工作目录`,
+    },
+    {
+      name: "mode",
+      type: "string",
+      description: `环境名（如 production/staging），命中 envOverrides.<mode> 时合并覆盖`,
+    },
+    {
+      name: "envId",
+      type: "string",
+      description: `目标环境 ID，优先级高于 cloudbaserc 中的 envId；不传则用配置值或当前绑定环境`,
+    },
+    {
+      name: "only",
+      type: "array of string",
+      description: `仅部署指定资源类型，可选值：database/functions/app/hosting/gateway`,
+    },
+    {
+      name: "skip",
+      type: "array of string",
+      description: `跳过指定资源类型，可选值：database/functions/app/hosting/gateway`,
+    },
+    {
+      name: "yes",
+      type: "boolean",
+      description: `遇到已存在资源时是否直接覆盖更新。true=覆盖；false（默认）=保守跳过已存在资源`,
+    },
+    {
+      name: "concurrency",
+      type: "integer",
+      description: `同类型资源最大并行数，默认 1（串行）；仅作用于同类型资源，跨类型依赖顺序不变`,
+    },
+    {
+      name: "continueOnError",
+      type: "boolean",
+      description: `某个资源失败后是否继续部署其余资源；database 失败始终强制中断`,
     }
   ]}
 />
@@ -3441,7 +3567,7 @@ CloudBase Agent 域统一写入口。支持创建、更新和删除远端 Agent�
 ---
 
 ### `callCloudApi`
-通用的云 API 调用工具，主要用于 CloudBase / 腾讯云管控面与依赖资源相关 API 调用。**调用前必读接口索引** https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/api-reference.md （每日自动同步的 Action 级索引，含 rate limit；先查此索引确认 service/Action/参数，避免猜测 Action 名称；索引未覆盖的产品再去该产品官方 API 文档核对）。如果你的目标是通过 HTTP 协议直接集成 auth/functions/cloudrun/storage/mysqldb 等 CloudBase 业务 API，请不要优先使用 callCloudApi，而应优先查看对应 OpenAPI / Swagger。现有 OpenAPI / Swagger 能力不是通用的管控面 Action 集合；管控面 API 请优先参考 CloudBase API 概览 https://cloud.tencent.com/document/product/876/34809 与云开发依赖资源接口指引 https://cloud.tencent.com/document/product/876/34808。对于 tcb service，常用 Action 分类如下：
+通用的云 API 调用工具，主要用于 CloudBase / 腾讯云管控面与依赖资源相关 API 调用。调用前请先确认 service、Action 与 Param，避免猜测 Action 名称。如果你的目标是通过 HTTP 协议直接集成 auth/functions/cloudrun/storage/mysqldb 等 CloudBase 业务 API，请不要优先使用 callCloudApi，而应优先查看对应 OpenAPI / Swagger。现有 OpenAPI / Swagger 能力不是通用的管控面 Action 集合；管控面 API 请优先参考 CloudBase API 概览 https://cloud.tencent.com/document/product/876/34809 与云开发依赖资源接口指引 https://cloud.tencent.com/document/product/876/34808。对于 tcb service，常用 Action 分类如下：
 
 **环境管理**: `CreateEnv`、`ModifyEnv`、`DescribeEnvs`、`DestroyEnv`
 **用户管理**: `CreateUser`、`ModifyUser`、`DescribeUserList`、`DeleteUsers`
@@ -3463,7 +3589,7 @@ CloudBase Agent 域统一写入口。支持创建、更新和删除远端 Agent�
       name: "service",
       type: "string",
       required: true,
-      description: `选择要访问的服务。可选：tcb、tcbr、scf、sts、cam、lowcode、cdn、vpc、monitor（云监控/告警，version 需传 2018-07-24）、postgres（云数据库 PostgreSQL，version 需传 2017-03-12）。对于 tcb / scf / lowcode 等 CloudBase 管控面 Action，请优先查官方文档，不要直接猜测 Action。云托管统一走 tcbr（version 需传 2022-02-17）。 可填写的值: "tcb", "tcbr", "scf", "sts", "cam", "lowcode", "cdn", "vpc", "monitor", "postgres"`,
+      description: `选择要访问的服务。可选：tcb、tcbr、scf、sts、cam、lowcode、cdn、vpc。对于 tcb / scf / lowcode 等 CloudBase 管控面 Action，请优先查官方文档，不要直接猜测 Action。云托管统一走 tcbr（version 需传 2022-02-17）。 可填写的值: "tcb", "tcbr", "scf", "sts", "cam", "lowcode", "cdn", "vpc"`,
     },
     {
       name: "action",
@@ -3474,7 +3600,7 @@ CloudBase Agent 域统一写入口。支持创建、更新和删除远端 Agent�
     {
       name: "version",
       type: "string",
-      description: `API 版本（可选）。缺省时按 service 使用 SDK 内置默认版本；tcbr 必须传 "2022-02-17"（否则请求缺少 X-TC-Version 会失败），monitor 必须传 "2018-07-24"、postgres 必须传 "2017-03-12"（这两个 service 无内置默认版本，不传会失败）。示例：service="tcbr", version="2022-02-17", action="CreateCloudRunEnv", params={EnvId:"env-xxx",PackageType:"Standard"}。`,
+      description: `API 版本（可选）。缺省时按 service 使用 SDK 内置默认版本；tcbr 必须传 "2022-02-17"（否则请求缺少 X-TC-Version 会失败）。示例：service="tcbr", version="2022-02-17", action="CreateCloudRunEnv", params={EnvId:"env-xxx",PackageType:"Standard"}。`,
     },
     {
       name: "params",
