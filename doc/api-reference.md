@@ -1,10 +1,10 @@
-# CloudBase 开放 API 清单
+# CloudBase 云 API（CloudAPI）清单
 
 > 本页面由定时任务每日自动从腾讯云官方文档同步生成（脚本：`scripts/generate-api-reference.mjs`），请勿手工编辑。
 >
 > - 数据源：[API 概览](https://cloud.tencent.com/document/api/876/34809) · [依赖产品接口指引](https://cloud.tencent.com/document/api/876/34808)
-> - 所有接口均可通过 API 3.0 调用（如 CloudBase MCP 的 `callCloudApi` 工具、[API Explorer](https://console.cloud.tencent.com/api/explorer)）
-> - 最近同步：2026-09-05
+> - 所有接口均为腾讯云 API 3.0 管控面接口，支持各语言官方 SDK 调用；也可通过 CloudBase MCP 的 `callCloudApi` 工具或 [API Explorer](https://console.cloud.tencent.com/api/explorer) 直接调用
+> - 最近同步：2026-09-07
 
 ## API 概览
 

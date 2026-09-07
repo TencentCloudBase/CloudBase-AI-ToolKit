@@ -43,6 +43,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "docs: 🔄 sync CloudBase open API reference page"
+            git commit -m "docs: 🔄 sync CloudBase CloudAPI reference page"
             git push
           fi
