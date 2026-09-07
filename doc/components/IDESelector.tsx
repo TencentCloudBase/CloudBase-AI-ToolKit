@@ -616,7 +616,7 @@ const translations: Record<string, Record<string, string>> = {
     showMore: '显示配置选项',
     showLess: '收起',
     verifyDescription: '在 AI 对话中依次输入以下内容:',
-    installSkillsPrompt: '安装 CloudBase Skills：命令 npx skills add tencentcloudbase/cloudbase-skills -y',
+    installSkillsPrompt: '阅读 https://docs.cloudbase.net/skill.md，帮我介绍可以做什么',
     useSkillsPrefix: '使用 CloudBase Skills：',
     cliCommand: 'CLI 命令',
     alternativeConfig: '替代配置',
@@ -647,7 +647,7 @@ const translations: Record<string, Record<string, string>> = {
     showMore: 'Show configuration options',
     showLess: 'Show less',
     verifyDescription: 'Enter the following in your AI chat in order:',
-    installSkillsPrompt: 'Install CloudBase Skills: run npx skills add tencentcloudbase/cloudbase-skills -y',
+    installSkillsPrompt: 'Read https://docs.cloudbase.net/skill.md and tell me what it can do',
     useSkillsPrefix: 'Use CloudBase Skills:',
     cliCommand: 'CLI command',
     alternativeConfig: 'Alternative configuration',
@@ -825,7 +825,7 @@ export default function IDESelector({
   const [randomPrompt, setRandomPrompt] = useState<string>(() => getRandomPrompt());
   const [copiedSecondPrompt, setCopiedSecondPrompt] = useState(false);
   const secondPrompt = customPrompt || randomPrompt;
-  const installPrompt = t.installSkillsPrompt || '安装 CloudBase Skills：命令 npx skills add tencentcloudbase/cloudbase-skills -y';
+  const installPrompt = t.installSkillsPrompt || '阅读 https://docs.cloudbase.net/skill.md，帮我介绍可以做什么';
   const secondPromptWithSkills = `${t.useSkillsPrefix || '使用 CloudBase Skills：'} ${secondPrompt}`.trim();
 
   const handleRefreshPrompt = () => {
@@ -1085,11 +1085,11 @@ export default function IDESelector({
 
             {ide.id === 'openclaw' && (
               <div className={styles.templateHint}>
-                <strong>{isEnglish ? 'Chat-based setup:' : '通过对话安装：'}</strong>
+                <strong>{isEnglish ? 'Guided setup:' : '自引导配置：'}</strong>
                 {isEnglish ? (
-                  <span> In OpenClaw, you can install CloudBase Skills through chat. If you do not need extra CloudBase rules yet, you can also start the conversation directly.</span>
+                  <span> In OpenClaw, you can let the AI read https://docs.cloudbase.net/skill.md and follow the guided setup. If you do not need extra CloudBase rules yet, you can also start the conversation directly.</span>
                 ) : (
-                  <span> 在 OpenClaw 中可通过对话安装 CloudBase Skills；如果暂时不需要额外的 CloudBase 规则和工作流，也可以直接开始对话。</span>
+                  <span> 在 OpenClaw 中可让 AI 阅读 https://docs.cloudbase.net/skill.md 自引导完成配置；如果暂时不需要额外的 CloudBase 规则和工作流，也可以直接开始对话。</span>
                 )}
               </div>
             )}
