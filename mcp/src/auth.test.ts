@@ -193,17 +193,77 @@ describe("auth config resolution", () => {
     ).toContain("oauthCustom=true");
   });
 
-  it("should reject oauthEndpoint when oauthCustom is explicitly false", async () => {
+  it("should allow oauthEndpoint when oauthCustom is explicitly false (standard wrapped endpoint)", async () => {
     const { getAuthConfigValidationError } = await import("./auth.js");
 
     expect(
       getAuthConfigValidationError({
         authMode: "device",
-        oauthEndpoint: "https://custom.example.com/oauth",
+        oauthEndpoint: "https://tcb-api.tencentcloud.com/qcloud-tcb/v1/oauth",
         oauthCustom: false,
         usesToolboxDefaults: false,
       }),
-    ).toContain("oauthEndpoint");
+    ).toBeNull();
+  });
+
+  it("buildDeviceLoginOptions should apply intl endpoint override and auth URL rewrite", async () => {
+    const { buildDeviceLoginOptions } = await import("./auth.js");
+
+    const loginOptions = buildDeviceLoginOptions(
+      {
+        authMode: "device",
+        oauthCustom: false,
+        usesToolboxDefaults: true,
+      },
+      { site: "intl" },
+    );
+
+    expect(loginOptions.flow).toBe("device");
+    expect((loginOptions.getOAuthEndpoint as (h: string) => string)("ignored")).toBe(
+      "https://tcb-api.tencentcloud.com/qcloud-tcb/v1/oauth",
+    );
+    const rewritten = (loginOptions.getAuthUrl as (u: string) => string)(
+      "https://tcb.cloud.tencent.com/dev#/cli-auth?from=cli&flow=device",
+    );
+    expect(rewritten).toBe(
+      "https://tcb.tencentcloud.com/dev#/cli-auth?from=cli&flow=device",
+    );
+    expect(loginOptions.custom).toBeUndefined();
+  });
+
+  it("buildDeviceLoginOptions should prefer explicit oauthEndpoint over intl override", async () => {
+    const { buildDeviceLoginOptions } = await import("./auth.js");
+
+    const loginOptions = buildDeviceLoginOptions(
+      {
+        authMode: "device",
+        oauthEndpoint: "https://custom.example.com/oauth",
+        oauthCustom: true,
+        usesToolboxDefaults: false,
+      },
+      { site: "intl" },
+    );
+
+    expect((loginOptions.getOAuthEndpoint as (h: string) => string)("ignored")).toBe(
+      "https://custom.example.com/oauth",
+    );
+    expect(loginOptions.custom).toBe(true);
+  });
+
+  it("buildDeviceLoginOptions should not rewrite anything for domestic site", async () => {
+    const { buildDeviceLoginOptions } = await import("./auth.js");
+
+    const loginOptions = buildDeviceLoginOptions(
+      {
+        authMode: "device",
+        oauthCustom: false,
+        usesToolboxDefaults: true,
+      },
+      { site: "domestic" },
+    );
+
+    expect(loginOptions.getOAuthEndpoint).toBeUndefined();
+    expect(loginOptions.getAuthUrl).toBeUndefined();
   });
 
   it("should reject device-only overrides when authMode is web", async () => {
@@ -335,6 +395,25 @@ describe("CloudBase API Key env resolution", () => {
       "env-intl",
       expect.objectContaining({ cwd: expect.any(String), region: "ap-singapore" }),
     );
+  });
+
+  it("peekLoginState should pass through TENCENTCLOUD_SECRETID/SECRETKEY directly under TCB_SITE=intl", async () => {
+    // 国际站腾讯云密钥直登：密钥凭据与站点无关，原样透传，不触发 API Key 换取或 device flow
+    process.env.TENCENTCLOUD_SECRETID = "intl-secret-id";
+    process.env.TENCENTCLOUD_SECRETKEY = "intl-secret-key";
+    process.env.CLOUDBASE_ENV_ID = "soroli-i2gzw04ic6518ac3a";
+    process.env.TCB_SITE = "intl";
+
+    const { peekLoginState } = await import("./auth.js");
+    const loginState = await peekLoginState();
+
+    expect(mockAuthLoginByApiKey).not.toHaveBeenCalled();
+    expect(mockAuthLoginByWebAuth).not.toHaveBeenCalled();
+    expect(loginState).toMatchObject({
+      secretId: "intl-secret-id",
+      secretKey: "intl-secret-key",
+      envId: "soroli-i2gzw04ic6518ac3a",
+    });
   });
 
   it("peekLoginState should not pass region for domestic default gateway", async () => {

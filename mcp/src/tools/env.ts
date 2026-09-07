@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   buildAuthConfigSummary,
   buildDeviceAuthChallengePayload,
+  buildDeviceLoginOptions,
   buildVerificationUriComplete,
   ensureLogin,
   ensureSlottedCredential,
@@ -2085,7 +2086,7 @@ export function registerEnvTools(server: ExtendedMcpServer) {
               oauthCustom: z
                 .boolean()
                 .optional()
-                .describe("高级可选：自定义 endpoint 返回格式开关。未配置 endpoint 时默认 false；配置 endpoint 后默认 true，且不能设为 false"),
+                .describe("高级可选：自定义 endpoint 返回格式开关。未配置 endpoint 时默认 false；配置 endpoint 后默认 true。标准 {code,result} 包装格式的端点（如国际站 tcb-api.tencentcloud.com）应显式传 false"),
             }
           : {}),
         envId: z
@@ -2371,19 +2372,15 @@ export function registerEnvTools(server: ExtendedMcpServer) {
             };
 
             try {
-              // 启动 Device Flow，全流程由 toolbox 负责轮询和写入 credential，这里不等待完成
+              // 启动 Device Flow，全流程由 toolbox 负责轮询和写入 credential，这里不等待完成。
+              // 登录参数（含 TCB_SITE=intl 端点覆写与授权页改写）与 ensureLogin 共享同一 helper，
+              // 避免此直连路径绕过国际站改写导致国际站账号拿到的仍是国内站链接
               auth
                 .loginByWebAuth({
-                  flow: "device",
-                  ...(resolvedAuthOptions.clientId
-                    ? { client_id: resolvedAuthOptions.clientId }
-                    : {}),
-                  ...(resolvedAuthOptions.oauthEndpoint
-                    ? { getOAuthEndpoint: () => resolvedAuthOptions.oauthEndpoint! }
-                    : {}),
-                  ...(resolvedAuthOptions.oauthCustom
-                    ? { custom: true }
-                    : {}),
+                  ...buildDeviceLoginOptions(resolvedAuthOptions, {
+                    region,
+                    site: server.cloudBaseOptions?.site,
+                  }),
                   onDeviceCode: deviceOnCode,
                 })
                 .then(async () => {

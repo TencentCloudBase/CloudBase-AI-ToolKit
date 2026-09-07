@@ -39,7 +39,7 @@
           },
           "oauthCustom": {
             "type": "boolean",
-            "description": "高级可选：自定义 endpoint 返回格式开关。未配置 endpoint 时默认 false；配置 endpoint 后默认 true，且不能设为 false"
+            "description": "高级可选：自定义 endpoint 返回格式开关。未配置 endpoint 时默认 false；配置 endpoint 后默认 true。标准 {code,result} 包装格式的端点（如国际站 tcb-api.tencentcloud.com）应显式传 false"
           },
           "envId": {
             "type": "string",

@@ -81,9 +81,6 @@ const {
     if (options.oauthCustom && !options.oauthEndpoint) {
       return "oauthCustom=true 时必须同时提供 oauthEndpoint。";
     }
-    if (options.oauthEndpoint && !options.oauthCustom) {
-      return "配置自定义 oauthEndpoint 时必须启用 oauthCustom=true。";
-    }
     return null;
   }),
   mockSupervisorLoginByWebAuth: vi.fn(),
@@ -133,24 +130,28 @@ vi.mock("@cloudbase/toolbox", () => ({
   },
 }));
 
-vi.mock("../auth.js", () => ({
-  buildAuthConfigSummary: mockBuildAuthConfigSummary,
-  buildDeviceAuthChallengePayload: mockBuildDeviceAuthChallengePayload,
-  buildVerificationUriComplete: mockBuildVerificationUriComplete,
-  ensureLogin: mockEnsureLogin,
-  ensureSlottedCredential: mockEnsureSlottedCredential,
-  listUsableCredentialSites: mockListUsableCredentialSites,
-  getAuthConfigValidationError: mockGetAuthConfigValidationError,
-  getCloudBaseApiKeyFromEnv: () =>
-    process.env.CLOUDBASE_API_KEY || process.env.CLOUDBASE_APIKEY || undefined,
-  peekLoginState: mockPeekLoginState,
-  getAuthProgressState: mockGetAuthProgressState,
-  logout: mockLogout,
-  rejectAuthProgressState: vi.fn(),
-  resolveAuthOptions: mockResolveAuthOptions,
-  resolveAuthProgressState: vi.fn(),
-  setPendingAuthProgressState: vi.fn(),
-}));
+vi.mock("../auth.js", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../auth.js")>();
+  return {
+    ...actual,
+    buildAuthConfigSummary: mockBuildAuthConfigSummary,
+    buildDeviceAuthChallengePayload: mockBuildDeviceAuthChallengePayload,
+    buildVerificationUriComplete: mockBuildVerificationUriComplete,
+    ensureLogin: mockEnsureLogin,
+    ensureSlottedCredential: mockEnsureSlottedCredential,
+    listUsableCredentialSites: mockListUsableCredentialSites,
+    getAuthConfigValidationError: mockGetAuthConfigValidationError,
+    getCloudBaseApiKeyFromEnv: () =>
+      process.env.CLOUDBASE_API_KEY || process.env.CLOUDBASE_APIKEY || undefined,
+    peekLoginState: mockPeekLoginState,
+    getAuthProgressState: mockGetAuthProgressState,
+    logout: mockLogout,
+    rejectAuthProgressState: vi.fn(),
+    resolveAuthOptions: mockResolveAuthOptions,
+    resolveAuthProgressState: vi.fn(),
+    setPendingAuthProgressState: vi.fn(),
+  };
+});
 
 vi.mock("../cloudbase-manager.js", () => ({
   envManager: {
@@ -691,16 +692,73 @@ describe("env tools - auth", () => {
     expect(payload.message).toContain("oauthCustom=true");
   });
 
-  it("auth(action=start_auth) should reject oauthEndpoint when oauthCustom is explicitly false", async () => {
+  it("auth(action=start_auth) should allow standard-format endpoint with explicit oauthCustom=false", async () => {
+    mockPeekLoginState.mockResolvedValue(null);
+    mockSupervisorLoginByWebAuth.mockImplementation(
+      async ({ onDeviceCode }: { onDeviceCode: (info: any) => void }) => {
+        onDeviceCode({
+          user_code: "WDJB-MJHT",
+          verification_uri: "https://example.com/device",
+          device_code: "device-code",
+          expires_in: 600,
+        });
+        return new Promise(() => {});
+      },
+    );
+
     const result = await tools.auth.handler({
       action: "start_auth",
-      oauthEndpoint: "https://custom.example.com/oauth",
+      oauthEndpoint: "https://tcb-api.tencentcloud.com/qcloud-tcb/v1/oauth",
       oauthCustom: false,
     });
     const payload = JSON.parse(result.content[0].text);
 
-    expect(payload).toHaveProperty("code", "INVALID_ARGS");
-    expect(payload.message).toContain("oauthEndpoint");
+    expect(payload).toHaveProperty("code", "AUTH_PENDING");
+    const callArgs = mockSupervisorLoginByWebAuth.mock.calls.at(-1)![0];
+    expect(callArgs.getOAuthEndpoint("ignored")).toBe(
+      "https://tcb-api.tencentcloud.com/qcloud-tcb/v1/oauth",
+    );
+    expect(callArgs.custom).toBeUndefined();
+  });
+
+  it("auth(action=start_auth) should rewrite device endpoint and auth URL for intl site", async () => {
+    mockPeekLoginState.mockResolvedValue(null);
+    mockSupervisorLoginByWebAuth.mockImplementation(
+      async ({ onDeviceCode }: { onDeviceCode: (info: any) => void }) => {
+        onDeviceCode({
+          user_code: "WDJB-MJHT",
+          verification_uri:
+            "https://tcb.cloud.tencent.com/dev#/cli-auth?from=cli&flow=device",
+          device_code: "device-code",
+          expires_in: 600,
+        });
+        return new Promise(() => {});
+      },
+    );
+
+    process.env.TCB_SITE = "intl";
+    try {
+      const result = await tools.auth.handler({
+        action: "start_auth",
+        authMode: "device",
+      });
+      const payload = JSON.parse(result.content[0].text);
+
+      expect(payload).toHaveProperty("code", "AUTH_PENDING");
+      const callArgs = mockSupervisorLoginByWebAuth.mock.calls.at(-1)![0];
+      expect(callArgs.getOAuthEndpoint("ignored")).toBe(
+        "https://tcb-api.tencentcloud.com/qcloud-tcb/v1/oauth",
+      );
+      expect(
+        callArgs.getAuthUrl(
+          "https://tcb.cloud.tencent.com/dev#/cli-auth?from=cli&flow=device",
+        ),
+      ).toBe(
+        "https://tcb.tencentcloud.com/dev#/cli-auth?from=cli&flow=device",
+      );
+    } finally {
+      delete process.env.TCB_SITE;
+    }
   });
 
   it("auth(action=start_auth, authMode=web) should continue environment preparation after login", async () => {
