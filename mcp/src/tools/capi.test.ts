@@ -1,10 +1,24 @@
 import { describe, expect, it } from "vitest";
 import {
+  ALLOWED_SERVICES,
   assertTcbCloudRunActionAllowed,
   buildCapiErrorMessage,
   removeEmptyStringParams,
   resolveCloudApiRegionAndParams,
 } from "./capi.js";
+
+describe("callCloudApi service whitelist schema", () => {
+  it("includes monitor and postgres (2026-09-08, PG storage alarm use case)", () => {
+    expect(ALLOWED_SERVICES).toContain("monitor");
+    expect(ALLOWED_SERVICES).toContain("postgres");
+  });
+
+  it("keeps the full original service set", () => {
+    expect([...ALLOWED_SERVICES].sort()).toEqual(
+      ["cam", "cdn", "lowcode", "monitor", "postgres", "scf", "sts", "tcb", "tcbr", "vpc"].sort(),
+    );
+  });
+});
 
 describe("buildCapiErrorMessage", () => {
   it("suggests likely tcb actions for invalid action names", () => {

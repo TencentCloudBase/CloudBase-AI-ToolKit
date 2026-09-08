@@ -7,7 +7,7 @@ const CATEGORY = "cloud-api";
 const CLOUDBASE_CONTROL_PLANE_DOC_URL = "https://cloud.tencent.com/document/product/876/34809";
 const CLOUDBASE_DEPENDENCY_API_DOC_URL = "https://cloud.tencent.com/document/product/876/34808";
 
-const ALLOWED_SERVICES = [
+export const ALLOWED_SERVICES = [
     "tcb",
     "tcbr",
     "scf",
@@ -16,6 +16,8 @@ const ALLOWED_SERVICES = [
     "lowcode",
     "cdn",
     "vpc",
+    "monitor",
+    "postgres",
 ] as const;
 
 type AllowedService = (typeof ALLOWED_SERVICES)[number];
@@ -174,6 +176,10 @@ function buildCapiDocGuidance(service: AllowedService) {
         return `优先查阅 CloudBase API 概览 ${CLOUDBASE_CONTROL_PLANE_DOC_URL} 与云开发依赖资源接口指引 ${CLOUDBASE_DEPENDENCY_API_DOC_URL}。`;
     }
 
+    if (service === "monitor") {
+        return `请优先核对云监控（腾讯云可观测平台）官方 API 文档：API 概览 https://cloud.tencent.com/document/product/649/30343 ，单 Action 详细文档在 https://cloud.tencent.com/document/api/248/ 产品线下。`;
+    }
+
     return `请优先核对对应官方云 API 文档；若你的场景其实是通过 HTTP 协议直接集成 auth/functions/cloudrun/storage/mysqldb 等 CloudBase 业务 API，请优先使用 OpenAPI / Swagger 或 searchKnowledgeBase(mode="openapi")，不要继续猜测管控面 Action。`;
 }
 
@@ -303,7 +309,7 @@ export function registerCapiTools(server: ExtendedMcpServer) {
         {
             title: "调用云API",
             description:
-                `通用的云 API 调用工具，主要用于 CloudBase / 腾讯云管控面与依赖资源相关 API 调用。调用前请先确认 service、Action 与 Param，避免猜测 Action 名称。如果你的目标是通过 HTTP 协议直接集成 auth/functions/cloudrun/storage/mysqldb 等 CloudBase 业务 API，请不要优先使用 callCloudApi，而应优先查看对应 OpenAPI / Swagger。现有 OpenAPI / Swagger 能力不是通用的管控面 Action 集合；管控面 API 请优先参考 CloudBase API 概览 ${CLOUDBASE_CONTROL_PLANE_DOC_URL} 与云开发依赖资源接口指引 ${CLOUDBASE_DEPENDENCY_API_DOC_URL}。对于 tcb service，常用 Action 分类如下：
+                `通用的云 API 调用工具，主要用于 CloudBase / 腾讯云管控面与依赖资源相关 API 调用。**调用前必读接口索引** https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/api-reference.md （每日自动同步的 Action 级索引，含 rate limit；先查此索引确认 service/Action/参数，避免猜测 Action 名称；索引未覆盖的产品再去该产品官方 API 文档核对）。如果你的目标是通过 HTTP 协议直接集成 auth/functions/cloudrun/storage/mysqldb 等 CloudBase 业务 API，请不要优先使用 callCloudApi，而应优先查看对应 OpenAPI / Swagger。现有 OpenAPI / Swagger 能力不是通用的管控面 Action 集合；管控面 API 请优先参考 CloudBase API 概览 ${CLOUDBASE_CONTROL_PLANE_DOC_URL} 与云开发依赖资源接口指引 ${CLOUDBASE_DEPENDENCY_API_DOC_URL}。对于 tcb service，常用 Action 分类如下：
 
 **环境管理**: \`CreateEnv\`、\`ModifyEnv\`、\`DescribeEnvs\`、\`DestroyEnv\`
 **用户管理**: \`CreateUser\`、\`ModifyUser\`、\`DescribeUserList\`、\`DeleteUsers\`
@@ -320,7 +326,7 @@ export function registerCapiTools(server: ExtendedMcpServer) {
                 service: z
                     .enum(ALLOWED_SERVICES)
                     .describe(
-                        "选择要访问的服务。可选：tcb、tcbr、scf、sts、cam、lowcode、cdn、vpc。对于 tcb / scf / lowcode 等 CloudBase 管控面 Action，请优先查官方文档，不要直接猜测 Action。云托管统一走 tcbr（version 需传 2022-02-17）。",
+                        "选择要访问的服务。可选：tcb、tcbr、scf、sts、cam、lowcode、cdn、vpc、monitor（云监控/告警，version 需传 2018-07-24）、postgres（云数据库 PostgreSQL，version 需传 2017-03-12）。对于 tcb / scf / lowcode 等 CloudBase 管控面 Action，请优先查官方文档，不要直接猜测 Action。云托管统一走 tcbr（version 需传 2022-02-17）。",
                     ),
                 action: z
                     .string()
@@ -329,7 +335,7 @@ export function registerCapiTools(server: ExtendedMcpServer) {
                 version: z
                     .string()
                     .optional()
-                    .describe("API 版本（可选）。缺省时按 service 使用 SDK 内置默认版本；tcbr 必须传 \"2022-02-17\"（否则请求缺少 X-TC-Version 会失败）。示例：service=\"tcbr\", version=\"2022-02-17\", action=\"CreateCloudRunEnv\", params={EnvId:\"env-xxx\",PackageType:\"Standard\"}。"),
+                    .describe("API 版本（可选）。缺省时按 service 使用 SDK 内置默认版本；tcbr 必须传 \"2022-02-17\"（否则请求缺少 X-TC-Version 会失败），monitor 必须传 \"2018-07-24\"、postgres 必须传 \"2017-03-12\"（这两个 service 无内置默认版本，不传会失败）。示例：service=\"tcbr\", version=\"2022-02-17\", action=\"CreateCloudRunEnv\", params={EnvId:\"env-xxx\",PackageType:\"Standard\"}。"),
                 params: z
                     .record(z.any())
                     .optional()
