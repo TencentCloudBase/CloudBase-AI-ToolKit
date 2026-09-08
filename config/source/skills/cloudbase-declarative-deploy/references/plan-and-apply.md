@@ -7,6 +7,9 @@ Two MCP tools implement the declarative flow. **Always run `deployPlan` first.**
 Parses `cloudbaserc`, validates it, resolves `envId`, and computes the plan **without
 making any change**.
 
+> `deployPlan` / `deployApply` are local-form tools. In cloud-hosted MCP mode they are
+> intentionally not registered; use the cloud upload-channel fallback below.
+
 Parameters:
 
 | param | type | notes |
@@ -60,7 +63,58 @@ Parameters:
 - `concurrency` only parallelizes within one resource type; cross-type order is preserved.
 - A database-stage failure aborts the whole deploy even with `continueOnError=true`.
 
-## Recommended sequence
+## Build-first mental model
+
+Do not model declarative deploy as only `plan → apply`. Operationally, use:
+
+```text
+build → plan → apply
+```
+
+Where build runs depends on resource and path:
+
+- `hosting`: local build when `buildCommand` exists, then upload artifacts
+- `app` (`framework=static`): local/prebuilt artifacts uploaded directly
+- `app` (non-static): source package uploaded, cloud pipeline builds and deploys
+- `functions`: path depends on `buildStrategy` (`zip`/`cloud`/`local`/`image`)
+
+## Cloud-hosted upload pipeline path (not local-form deployPlan/deployApply)
+
+In cloud-hosted MCP mode, `deployPlan` / `deployApply` are intentionally not registered.
+Treat this as an **execution-channel switch**, not a change in declarative intent.
+
+Use this supported cloud path:
+
+1. `queryApps(action=getUploadUrl)` to receive `uploadUrl`, `uploadHeaders`, `unixTimestamp`
+2. Upload source/build package zip to `uploadUrl` using returned headers
+3. `manageApps(action=deployApp, cosTimestamp=<unixTimestamp>, installCmd?, buildCmd?, deployCmd?)`
+
+`installCmd` / `buildCmd` / `deployCmd` are pipeline declarations (staticCmd) executed by
+cloud build container. Agent behavior in cloud mode is: pass artifact + declarations,
+not run local shell commands.
+
+### Packaging note: `node_modules`
+
+Upload packaging strategy depends on path:
+
+- `app` non-static (source upload → cloud build): may need to include `node_modules`
+  for private/offline dependencies
+- `app` static prebuilt artifact upload: normally exclude `node_modules`
+- bare `uploadCode`-like defaults are often exclude-first; include explicitly when required
+
+Rule of thumb: if cloud install can resolve dependencies from registry using lockfile,
+you can upload source + lockfile; if dependencies are private/offline/non-resolvable,
+package required modules explicitly.
+
+Key constraints in cloud-hosted mode:
+
+- No local `cwd` probing for deploy execution
+- No local filesystem-bound build/apply executor
+- Build runs in cloud pipeline or is replaced by prebuilt artifact upload
+
+This path deploys by package artifact (not local path).
+
+## Recommended sequence (local mode)
 
 ```
 1. deployPlan({ cwd, mode?, envId?, only?, skip?, yes? })

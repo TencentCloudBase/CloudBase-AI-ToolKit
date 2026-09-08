@@ -4,6 +4,11 @@ The `cloudbaserc` config declares the **desired state** of a CloudBase project.
 Supported file formats (searched from `cwd` downward): `cloudbaserc.json`,
 `cloudbaserc.yaml`, `cloudbaserc.yml`, `cloudbaserc.js`.
 
+> Local-mode note: `deployPlan` / `deployApply` discover these files from local `cwd`.
+> In cloud-hosted MCP mode, those tools are not registered; use the cloud upload pipeline
+> path described in `references/plan-and-apply.md` (no local `cwd` / filesystem execution).
+> The config contract remains the same desired-state model.
+
 `deployApply` / `deployPlan` validate the parsed config against the official cloudbaserc schema
 before applying. A schema failure aborts with the offending field path and reason.
 
@@ -99,6 +104,10 @@ There is also a top-level conditional rule in the official schema:
   `buildCommand`, `outputDir`, `deployPath`, `envVariables`, `ignore`.
 - `app`: supports `root`, `serviceName`, `framework`, `installCommand`, `buildCommand`,
   `outputDir`, `deployPath`, `envVariables`, `ignore`.
+
+Build/install fields are declarative intent in the spec. Execution side depends on
+resource path: some flows execute locally, while cloud-mode-compatible flows execute in
+cloud pipeline (staticCmd declarations) or consume prebuilt artifacts.
 - `gateway`: built around `routes[]`; each route requires `path` and `target`, with
   protocol/auth/QPS-related constraints.
 
