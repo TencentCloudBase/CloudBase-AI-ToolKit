@@ -97,6 +97,7 @@ describe("wrapServerWithTelemetry", () => {
         logger: vi.fn(),
         cloudBaseOptions: undefined,
         ide: "Cursor",
+        client: "cursor",
       } as any;
 
       wrapServerWithTelemetry(server);
@@ -114,6 +115,7 @@ describe("wrapServerWithTelemetry", () => {
       expect(reportToolCall).toHaveBeenCalledWith(
         expect.objectContaining({
           requestId: "req-success",
+          client: "cursor",
           mcpClientInfo: {
             name: "test-client",
             version: "0.0.1",

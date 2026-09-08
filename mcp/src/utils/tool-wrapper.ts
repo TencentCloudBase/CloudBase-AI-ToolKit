@@ -268,6 +268,7 @@ function createWrappedHandler(name: string, handler: any, server: ExtendedMcpSer
                     inputParams: sanitizeArgs(args), // 添加入参上报
                     cloudBaseOptions: cloudBaseOptions, // 传递 CloudBase 配置（可能已更新）
                     ide: server.ide || process.env.INTEGRATION_IDE, // 传递集成IDE信息
+                    client: server.client || process.env.CLOUDBASE_MCP_CLIENT, // 传递 MCP client 来源标识
                     mcpClientInfo: readMcpClientInfoFromServer(server),
                 }).catch(err => {
                     // 静默处理上报错误，不影响主要功能

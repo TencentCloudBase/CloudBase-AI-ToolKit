@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   extractMcpClientInfo,
+  normalizeClientName,
   readMcpClientInfoFromServer,
   reportToolCall,
   reportToolkitLifecycle,
@@ -58,6 +59,31 @@ describe("telemetry payload serialization", () => {
     );
   });
 
+  it("should include client, region and site fields when provided", async () => {
+    const reportSpy = vi
+      .spyOn(telemetryReporter, "report")
+      .mockResolvedValue(undefined);
+
+    await reportToolCall({
+      toolName: "queryEnv",
+      success: true,
+      client: "Cursor",
+      cloudBaseOptions: {
+        region: "ap-singapore",
+        site: "intl",
+      } as any,
+    });
+
+    expect(reportSpy).toHaveBeenCalledWith(
+      "toolkit_tool_call",
+      expect.objectContaining({
+        client: "cursor",
+        region: "ap-singapore",
+        site: "intl",
+      }),
+    );
+  });
+
   it("should stringify lifecycle duration and exitCode", async () => {
     const reportSpy = vi
       .spyOn(telemetryReporter, "report")
@@ -76,6 +102,24 @@ describe("telemetry payload serialization", () => {
         exitCode: "2",
       }),
     );
+  });
+});
+
+describe("normalizeClientName", () => {
+  it("should trim, lowercase and strip disallowed characters", () => {
+    expect(normalizeClientName("  Cursor ")).toBe("cursor");
+    expect(normalizeClientName("claude-code")).toBe("claude-code");
+    expect(normalizeClientName("CLine_v1")).toBe("cline_v1");
+    expect(normalizeClientName("Cursor/VSCode 1.0")).toBe("cursorvscode10");
+    expect(normalizeClientName("A".repeat(100))).toHaveLength(64);
+  });
+
+  it("should return undefined for empty or non-string values", () => {
+    expect(normalizeClientName("")).toBeUndefined();
+    expect(normalizeClientName("   ")).toBeUndefined();
+    expect(normalizeClientName("///")).toBeUndefined();
+    expect(normalizeClientName(undefined)).toBeUndefined();
+    expect(normalizeClientName(123)).toBeUndefined();
   });
 });
 
