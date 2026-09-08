@@ -325,6 +325,8 @@ AI 在写业务/权限/存储代码前必须先看这三项：PG 模式下新业
 
 AI 在写业务/权限/存储代码前必须先看这三项：PG 模式下新业务推荐 `app.rdb()` + RLS（`managePgDatabase action=execute` 跑 `CREATE POLICY`）+ pgstore；已存在的 NoSQL 集合 / 旧 storage / `managePermissions(resourceType="noSqlDatabase")` 在 PG 环境下仍然有效。真正不适用的是 MySQL：当 `RuntimeBackends.mysql === false` 时，`manageMysqlDatabase` / `queryMysqlDatabase` / `relational-database-mcp-cloudbase` skill 都不该使用。
 
+⚠️ DEPRECATED：此工具名已废弃，是 queryEnv 的旧词序别名，入参与 action 完全一致。请直接调用 queryEnv；本别名将在下个版本移除。
+
 #### 参数
 
 <ParameterTable
@@ -426,7 +428,11 @@ AI 在写业务/权限/存储代码前必须先看这三项：PG 模式下新业
 ---
 
 ### `envDomainManagement`
-管理 CloudBase 环境的安全域名（安全域名 / CORS 白名单），支持添加和删除操作。（原工具名：createEnvDomain/deleteEnvDomain，为兼容旧AI规则可继续使用这些名称）当浏览器 Web 应用需要从本地 Vite / dev server 直接访问 CloudBase 资源时，应先用 queryEnv(action=domains) 检查当前实际浏览器 origin 对应的 host:port 是否已在白名单中，再按该实际值添加。新增或删除后请每约 10 秒轮询 queryEnv(action=domains) 确认状态收敛，勿一次 sleep 满 10 分钟；多数环境数分钟内可收敛。⚠️ 重要：此工具仅用于 CORS/请求来源验证，不涉及 SSL 证书。自定义域名公网 HTTPS：先 queryGateway(listCustomDomains)；已有域名则 manageGateway(createRoute) 显式传 domain（无需证书）；仅首次绑定新域名才用 bindCustomDomain（需 certificateId）。
+⚠️ DEPRECATED：此工具已废弃并收编进 manageEnv，请改用 manageEnv(action="addSecurityDomain") / manageEnv(action="removeSecurityDomain")（入参 domains 完全一致）。本别名将在下个版本移除。
+
+管理【环境安全域名】＝浏览器跨域（CORS）白名单：控制允许哪些网页 origin（host:port）从浏览器直接调用本环境的 CloudBase 资源。只做 CORS 来源验证，不提供访问域名，不涉及 HTTPS 证书。⚠️ 与【网关自定义域名】是两套完全独立的配置，互不相干：如需给自己的域名绑定 HTTPS 访问入口（云托管 / 网关服务），那属于 manageGateway 的职责——先 queryGateway(listCustomDomains)；已有域名则 manageGateway(createRoute) 显式传 domain（无需证书）；仅首次绑定新域名才用 bindCustomDomain（需 certificateId）。不要用本工具做这件事。
+
+操作指引：（原工具名 createEnvDomain/deleteEnvDomain，为兼容旧 AI 规则可继续使用这些名称）当浏览器 Web 应用需要从本地 Vite / dev server 直接访问 CloudBase 资源时，先用 queryEnv(action=domains) 检查当前实际浏览器 origin 对应的 host:port 是否已在白名单中，再按该实际值添加。新增或删除后请每约 10 秒轮询 queryEnv(action=domains) 确认状态收敛，勿一次 sleep 满 10 分钟；多数环境数分钟内可收敛。
 
 #### 参数
 
@@ -450,9 +456,11 @@ AI 在写业务/权限/存储代码前必须先看这三项：PG 模式下新业
 ---
 
 ### `manageEnv`
-管理 CloudBase 环境，支持：listPackages=查询可选套餐列表，create=创建新环境（需确认），modifyPlan=变更套餐（升降配，需确认），renew=续费环境（需确认）。
+管理 CloudBase 环境，支持：listPackages=查询可选套餐列表，create=创建新环境（需确认），modifyPlan=变更套餐（升降配，需确认），renew=续费环境（需确认），addSecurityDomain=添加环境安全域名（浏览器 CORS 白名单，不计费、无需确认），removeSecurityDomain=删除环境安全域名（不计费、无需确认）。
 
-⚠️ 所有涉及费用的操作（create/modifyPlan/renew），执行前必须展示配置摘要并等待用户通过 confirm="yes" 确认。
+⚠️ 涉及费用的操作（create/modifyPlan/renew），执行前必须展示配置摘要并等待用户通过 confirm="yes" 确认；安全域名操作（addSecurityDomain/removeSecurityDomain）不计费，无需 confirm。
+
+ℹ️ 安全域名＝浏览器跨域（CORS）白名单，控制允许哪些网页 origin（host:port）从浏览器直接调用本环境的 CloudBase 资源，不提供访问域名、不涉及 HTTPS 证书。给自己的域名绑定 HTTPS 访问入口（云托管/网关服务）属于 manageGateway（listCustomDomains/bindCustomDomain）的职责，与本工具无关。
 
 #### 参数
 
@@ -462,7 +470,12 @@ AI 在写业务/权限/存储代码前必须先看这三项：PG 模式下新业
       name: "action",
       type: "string",
       required: true,
-      description: `操作类型：listPackages=查询可选套餐，create=创建环境，modifyPlan=变更套餐，renew=续费 可填写的值: "listPackages", "create", "modifyPlan", "renew"`,
+      description: `操作类型：listPackages=查询可选套餐，create=创建环境，modifyPlan=变更套餐，renew=续费，addSecurityDomain=添加安全域名（CORS 白名单条目），removeSecurityDomain=删除安全域名 可填写的值: "listPackages", "create", "modifyPlan", "renew", "addSecurityDomain", "removeSecurityDomain"`,
+    },
+    {
+      name: "domains",
+      type: "array of string",
+      description: `安全域名数组（格式：host:port，例如 localhost:5173 或 127.0.0.1:4173）。仅 action=addSecurityDomain/removeSecurityDomain 时有效且必填。注意：这是 CORS 白名单条目，不是自定义域名，不需要证书。添加前应先用 queryEnv(action=domains) 检查浏览器实际 origin 是否已在白名单中。`,
     },
     {
       name: "alias",
@@ -2078,7 +2091,7 @@ CloudBase 云函数统一写入口。支持创建函数、更新代码、更新�
 - aider: Aider AI编辑器
 
 特别说明：
-- rules 模板会自动包含当前 mcp 版本号信息（版本号：2.32.5），便于后续维护和版本追踪
+- rules 模板会自动包含当前 mcp 版本号信息（版本号：2.33.0），便于后续维护和版本追踪
 - 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）
 
 #### 参数
@@ -2123,9 +2136,8 @@ CloudBase 云函数统一写入口。支持创建函数、更新代码、更新�
       - 需要 auth-web 指南时：searchKnowledgeBase(mode=skill, skillName=auth-web)
       - 需要 cloudbase-agent 指南时：searchKnowledgeBase(mode=skill, skillName=cloudbase-agent)
 
-      固定技能文档 (skill) 查询当前支持 29 个固定文档，分别是：
-      文档名：skills 文档介绍：Unified CloudBase execution guide for all-in-one skill installs. Use this first for CloudBase app tasks, especially existing apps with TODOs, fixed pages, or active handlers. Routes PostgreSQL / CloudBase PG / app.rdb() / queryPgDatabase / managePgDatabase work away from legacy NoSQL and old auth patterns.
-文档名：ai-model-nodejs 文档介绍："Use this skill for Node.js backend AI via @cloudbase/node-sdk (&gt;=3.16.0) — cloud functions, CloudRun, Express/Koa/NestJS, serverless APIs, scheduled jobs, LLM proxies, agent orchestration. The only SDK supporting image generation (ai.createImageModel + generateImage). Text via ai.createModel with groups cloudbase, hunyuan-exp, or custom-*; model ids (e.g. deepseek-v4-flash, glm-5, kimi-k2.6) go in the `model` field of generateText/streamText. MUST run two-step preflight before code — see body. NOT for browser/Web (use ai-model-web) or Mini Program (use ai-model-wechat)."
+      固定技能文档 (skill) 查询当前支持 28 个固定文档，分别是：
+      文档名：ai-model-nodejs 文档介绍："Use this skill for Node.js backend AI via @cloudbase/node-sdk (&gt;=3.16.0) — cloud functions, CloudRun, Express/Koa/NestJS, serverless APIs, scheduled jobs, LLM proxies, agent orchestration. The only SDK supporting image generation (ai.createImageModel + generateImage). Text via ai.createModel with groups cloudbase, hunyuan-exp, or custom-*; model ids (e.g. deepseek-v4-flash, glm-5, kimi-k2.6) go in the `model` field of generateText/streamText. MUST run two-step preflight before code — see body. NOT for browser/Web (use ai-model-web) or Mini Program (use ai-model-wechat)."
 文档名：ai-model-web 文档介绍："Use this skill when a browser/Web app (React, Vue, Next, Nuxt, static sites, SPAs, dashboards, AI chat UI, 页面, 前端, 网页) needs AI models via @cloudbase/js-sdk. Default routing for Web/frontend AI — call directly from the browser, do NOT propose a Node.js proxy. Covers generateText and streamText; models via ai.createModel with groups cloudbase, hunyuan-exp, or custom-*, model id in the `model` field. MUST run two-step preflight before code — see body. NOT for Node.js backend (use ai-model-nodejs), Mini Program (use ai-model-wechat), or image generation (Node SDK only)."
 文档名：ai-model-wechat 文档介绍："Use this skill for WeChat Mini Program AI via wx.cloud.extend.AI (小程序, wx.cloud apps). Covers generateText and streamText with callbacks (onText, onEvent, onFinish); streamText needs a data wrapper, generateText returns the raw response. Models via wx.cloud.extend.AI.createModel with groups hunyuan-exp (小程序成长计划), cloudbase (main managed), or custom-*; model id goes in the data wrapper `model` field. MUST run two-step preflight before code — see body. NOT for browser/Web (use ai-model-web), Node.js backend (use ai-model-nodejs), or image generation (use ai-model-nodejs)."
 文档名：auth-nodejs-cloudbase 文档介绍：CloudBase Node SDK auth guide for server-side identity, user lookup, and custom login tickets. This skill should be used when Node.js code must read caller identity, inspect end users, or bridge an existing user system into CloudBase; not when configuring providers or building client login UI.
@@ -2155,13 +2167,13 @@ CloudBase 云函数统一写入口。支持创建函数、更新代码、更新�
 文档名：web-development 文档介绍：Use when users need to implement, integrate, debug, build, deploy, or validate a Web frontend after the product direction is already clear, especially for React, Vue, Vite, browser flows, or CloudBase Web integration.
 
       OpenAPI 文档 (openapi) 查询只需要传 mode="openapi" 和 apiName，不要传 action；action 仅用于 mode="docs"。当前支持 7 个 API 文档，分别是：
-      API名：mysqldb API介绍：关系型数据库 RESTful API (MySQL/PostgreSQL) - 云开发关系型数据库 HTTP API
-API名：functions API介绍：Cloud Functions API - 云函数 HTTP API
-API名：auth API介绍：Authentication API - 身份认证 HTTP API
-API名：cloudrun API介绍：CloudRun API - 云托管服务 HTTP API
+      API名：functions API介绍：Cloud Functions API - 云函数 HTTP API
 API名：storage API介绍：Storage API - 云存储 HTTP API
-API名：nosql API介绍：NoSQL RESTful API - 文档型数据库 HTTP API
+API名：cloudrun API介绍：CloudRun API - 云托管服务 HTTP API
 API名：ai_model API介绍：AI 大模型接入 API - 统一 AI 模型 HTTP API
+API名：nosql API介绍：NoSQL RESTful API - 文档型数据库 HTTP API
+API名：mysqldb API介绍：关系型数据库 RESTful API (MySQL/PostgreSQL) - 云开发关系型数据库 HTTP API
+API名：auth API介绍：Authentication API - 身份认证 HTTP API
 
 #### 参数
 
@@ -2176,12 +2188,12 @@ API名：ai_model API介绍：AI 大模型接入 API - 统一 AI 模型 HTTP API
     {
       name: "skillName",
       type: "string",
-      description: `mode=skill 时指定。技能名称。 可填写的值: "skills", "ai-model-nodejs", "ai-model-web", "ai-model-wechat", "auth-nodejs-cloudbase", "auth-tool-cloudbase", "auth-web-cloudbase", "auth-wechat-miniprogram", "cloud-functions", "cloud-storage-web", "cloudbase-agent", "cloudbase-cli", "cloudbase-code-review", "cloudbase-document-database-in-wechat-miniprogram", "cloudbase-document-database-web-sdk", "cloudbase-platform", "cloudbase-wechat-integration", "cloudrun-development", "data-model-creation", "http-api-cloudbase", "minimal-web-baas-demo", "miniprogram-development", "ops-inspector", "postgresql-development-cloudbase", "relational-database-mcp-cloudbase", "relational-database-web-cloudbase", "spec-workflow", "ui-design", "web-development"`,
+      description: `mode=skill 时指定。技能名称。 可填写的值: "ai-model-nodejs", "ai-model-web", "ai-model-wechat", "auth-nodejs-cloudbase", "auth-tool-cloudbase", "auth-web-cloudbase", "auth-wechat-miniprogram", "cloud-functions", "cloud-storage-web", "cloudbase-agent", "cloudbase-cli", "cloudbase-code-review", "cloudbase-document-database-in-wechat-miniprogram", "cloudbase-document-database-web-sdk", "cloudbase-platform", "cloudbase-wechat-integration", "cloudrun-development", "data-model-creation", "http-api-cloudbase", "minimal-web-baas-demo", "miniprogram-development", "ops-inspector", "postgresql-development-cloudbase", "relational-database-mcp-cloudbase", "relational-database-web-cloudbase", "spec-workflow", "ui-design", "web-development"`,
     },
     {
       name: "apiName",
       type: "string",
-      description: `mode=openapi 时指定。API 名称。 可填写的值: "mysqldb", "functions", "auth", "cloudrun", "storage", "nosql", "ai_model"`,
+      description: `mode=openapi 时指定。API 名称。 可填写的值: "functions", "storage", "cloudrun", "ai_model", "nosql", "mysqldb", "auth"`,
     },
     {
       name: "action",
@@ -2697,7 +2709,7 @@ CloudBase HTTP 网关统一只读入口（Domain/Route）。查询域名下路�
 ---
 
 ### `manageGateway`
-CloudBase HTTP 网关统一写入口（Domain/Route）。createRoute/updateRoute/deleteRoute 把域名下的 path 转到上游；enableRoute/disableRoute 启用或禁用已有路由（底层 ModifyHTTPServiceRoute 的 Routes[].Enable，不是 ModifyGatewayRoute）。未传 domain 时用 DomainType=HTTPSERVICE 的 IsDefault 默认 HTTP 域名（形如 *.\{region\}.app.tcloudbase.com），不会使用静态托管 CDN 域名（*.tcloudbaseapp.com，DomainType=STATIC_STORE）。这是网关默认域上的路径路由，不是 STATIC_STORE 上游绑定；STATIC_STORE 上游必须显式传 upstreamResourceType=STATIC_STORE。关闭静态托管默认域名（*.tcloudbaseapp.com）：先 queryGateway(listRoutes) 找到 DomainType=STATIC_STORE 且 IsDefault=true 的 domain，再 manageGateway(action="disableRoute", domain=该域名, path="/")；勿用 manageHosting。创建后可用 queryGateway(action="listRoutes") 核对 Domain / DomainType / Path / UpstreamResourceType。上游类型只用一个参数 upstreamResourceType（也可写在 route.upstreamResourceType，route 优先）：WEB_SCF=HTTP云函数，SCF=Event云函数，CBR=云托管，STATIC_STORE=静态托管，LH=轻量应用服务器；配合 targetName 或 route.serviceName（云函数名/云托管服务名/静态托管实例名，常见 staticstore）。createRoute 只建网关入口，不改上游权限。enablePathTransmission：默认 false 剥触发路径前缀；true 透传完整路径（CBR 多路由、WEB_SCF 自管子路径常需 true；STATIC_STORE 自定义触发路径映射站点根通常 false）。⚠️ 自定义域名访问：若环境已有自定义域名（先 queryGateway listCustomDomains），优先 createRoute 并显式传入该 domain，无需 certificateId；仅首次绑定全新自定义域名时用 bindCustomDomain（certificateId 可选：未传时按域名自动检索证书，单证书自动选用、多证书返回选择指引）。createRoute / bindCustomDomain 创建前会调用 VerifyHTTPServiceRoute 做归属权等预检（探测→创建）；失败时返回 data.checks 与 DNS TXT 指引，配置后重试。CORS/安全域名用 envDomainManagement。enableService/authSwitch：HTTP 网关总开关与访问鉴权开关；createRoute 后若访问报 HTTPSERVICE_NONACTIVATED，通常是总开关未开启（用 queryGateway getPrivilege 查询、enableService 开启）。
+CloudBase HTTP 网关统一写入口（Domain/Route）。createRoute/updateRoute/deleteRoute 把域名下的 path 转到上游；enableRoute/disableRoute 启用或禁用已有路由（底层 ModifyHTTPServiceRoute 的 Routes[].Enable，不是 ModifyGatewayRoute）。未传 domain 时用 DomainType=HTTPSERVICE 的 IsDefault 默认 HTTP 域名（形如 *.\{region\}.app.tcloudbase.com），不会使用静态托管 CDN 域名（*.tcloudbaseapp.com，DomainType=STATIC_STORE）。这是网关默认域上的路径路由，不是 STATIC_STORE 上游绑定；STATIC_STORE 上游必须显式传 upstreamResourceType=STATIC_STORE。关闭静态托管默认域名（*.tcloudbaseapp.com）：先 queryGateway(listRoutes) 找到 DomainType=STATIC_STORE 且 IsDefault=true 的 domain，再 manageGateway(action="disableRoute", domain=该域名, path="/")；勿用 manageHosting。创建后可用 queryGateway(action="listRoutes") 核对 Domain / DomainType / Path / UpstreamResourceType。上游类型只用一个参数 upstreamResourceType（也可写在 route.upstreamResourceType，route 优先）：WEB_SCF=HTTP云函数，SCF=Event云函数，CBR=云托管，STATIC_STORE=静态托管，LH=轻量应用服务器；配合 targetName 或 route.serviceName（云函数名/云托管服务名/静态托管实例名，常见 staticstore）。createRoute 只建网关入口，不改上游权限。enablePathTransmission：默认 false 剥触发路径前缀；true 透传完整路径（CBR 多路由、WEB_SCF 自管子路径常需 true；STATIC_STORE 自定义触发路径映射站点根通常 false）。⚠️ 自定义域名访问：若环境已有自定义域名（先 queryGateway listCustomDomains），优先 createRoute 并显式传入该 domain，无需 certificateId；仅首次绑定全新自定义域名时用 bindCustomDomain（certificateId 可选：未传时按域名自动检索证书，单证书自动选用、多证书返回选择指引）。createRoute / bindCustomDomain 创建前会调用 VerifyHTTPServiceRoute 做归属权等预检（探测→创建）；失败时返回 data.checks 与 DNS TXT 指引，配置后重试。CORS/安全域名（浏览器跨域白名单，与本工具的网关自定义域名无关）用 manageEnv(action=addSecurityDomain/removeSecurityDomain)。enableService/authSwitch：HTTP 网关总开关与访问鉴权开关；createRoute 后若访问报 HTTPSERVICE_NONACTIVATED，通常是总开关未开启（用 queryGateway getPrivilege 查询、enableService 开启）。
 
 #### 参数
 
