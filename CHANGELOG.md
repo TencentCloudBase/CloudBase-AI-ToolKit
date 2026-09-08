@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. Follow the 
 
 ## Unreleased
 
+### Features
+
+* **capi**: `callCloudApi` service whitelist adds `monitor` (Tencent Cloud Monitor / alarm policies) and `postgres` (Cloud PostgreSQL), enabling alarm-policy workflows (CreateAlarmPolicy / BindingPolicyObject etc.) and PG instance queries directly through the tool. Both services have no SDK built-in default version — `monitor` requires version `2018-07-24`, `postgres` requires `2017-03-12` (enforced in schema guidance). The tool description now embeds the daily-synced api-reference index (https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/api-reference.md) as the first-stop Action lookup, and monitor auth-failure guidance points to the official monitor API overview.
+
 ### Bug Fixes
 
 * **auth**: international-site (`TCB_SITE=intl`) device-flow login now rewrites the OAuth endpoint and verification page to the intl hosts (`tcb-api.tencentcloud.com` / `tcb.tencentcloud.com`). The auth tool's `start_auth` device branch called `loginByWebAuth` directly and bypassed the intl rewrite in `ensureLogin`, so intl accounts kept getting domestic-site device codes that can never be authorized (the device-code registries are isolated per site). Both paths now share one `buildDeviceLoginOptions` helper.

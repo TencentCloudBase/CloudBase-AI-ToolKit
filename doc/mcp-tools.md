@@ -2091,7 +2091,7 @@ CloudBase 云函数统一写入口。支持创建函数、更新代码、更新�
 - aider: Aider AI编辑器
 
 特别说明：
-- rules 模板会自动包含当前 mcp 版本号信息（版本号：2.33.0），便于后续维护和版本追踪
+- rules 模板会自动包含当前 mcp 版本号信息（版本号：2.33.1），便于后续维护和版本追踪
 - 下载 rules 模板时，如果项目中已存在 README.md 文件，系统会自动保护该文件不被覆盖（除非设置 overwrite=true）
 
 #### 参数
@@ -2167,13 +2167,13 @@ CloudBase 云函数统一写入口。支持创建函数、更新代码、更新�
 文档名：web-development 文档介绍：Use when users need to implement, integrate, debug, build, deploy, or validate a Web frontend after the product direction is already clear, especially for React, Vue, Vite, browser flows, or CloudBase Web integration.
 
       OpenAPI 文档 (openapi) 查询只需要传 mode="openapi" 和 apiName，不要传 action；action 仅用于 mode="docs"。当前支持 7 个 API 文档，分别是：
-      API名：functions API介绍：Cloud Functions API - 云函数 HTTP API
-API名：storage API介绍：Storage API - 云存储 HTTP API
-API名：cloudrun API介绍：CloudRun API - 云托管服务 HTTP API
-API名：ai_model API介绍：AI 大模型接入 API - 统一 AI 模型 HTTP API
-API名：nosql API介绍：NoSQL RESTful API - 文档型数据库 HTTP API
-API名：mysqldb API介绍：关系型数据库 RESTful API (MySQL/PostgreSQL) - 云开发关系型数据库 HTTP API
+      API名：mysqldb API介绍：关系型数据库 RESTful API (MySQL/PostgreSQL) - 云开发关系型数据库 HTTP API
+API名：functions API介绍：Cloud Functions API - 云函数 HTTP API
 API名：auth API介绍：Authentication API - 身份认证 HTTP API
+API名：cloudrun API介绍：CloudRun API - 云托管服务 HTTP API
+API名：storage API介绍：Storage API - 云存储 HTTP API
+API名：nosql API介绍：NoSQL RESTful API - 文档型数据库 HTTP API
+API名：ai_model API介绍：AI 大模型接入 API - 统一 AI 模型 HTTP API
 
 #### 参数
 
@@ -2193,7 +2193,7 @@ API名：auth API介绍：Authentication API - 身份认证 HTTP API
     {
       name: "apiName",
       type: "string",
-      description: `mode=openapi 时指定。API 名称。 可填写的值: "functions", "storage", "cloudrun", "ai_model", "nosql", "mysqldb", "auth"`,
+      description: `mode=openapi 时指定。API 名称。 可填写的值: "mysqldb", "functions", "auth", "cloudrun", "storage", "nosql", "ai_model"`,
     },
     {
       name: "action",
@@ -3441,7 +3441,7 @@ CloudBase Agent 域统一写入口。支持创建、更新和删除远端 Agent�
 ---
 
 ### `callCloudApi`
-通用的云 API 调用工具，主要用于 CloudBase / 腾讯云管控面与依赖资源相关 API 调用。调用前请先确认 service、Action 与 Param，避免猜测 Action 名称。如果你的目标是通过 HTTP 协议直接集成 auth/functions/cloudrun/storage/mysqldb 等 CloudBase 业务 API，请不要优先使用 callCloudApi，而应优先查看对应 OpenAPI / Swagger。现有 OpenAPI / Swagger 能力不是通用的管控面 Action 集合；管控面 API 请优先参考 CloudBase API 概览 https://cloud.tencent.com/document/product/876/34809 与云开发依赖资源接口指引 https://cloud.tencent.com/document/product/876/34808。对于 tcb service，常用 Action 分类如下：
+通用的云 API 调用工具，主要用于 CloudBase / 腾讯云管控面与依赖资源相关 API 调用。**调用前必读接口索引** https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/api-reference.md （每日自动同步的 Action 级索引，含 rate limit；先查此索引确认 service/Action/参数，避免猜测 Action 名称；索引未覆盖的产品再去该产品官方 API 文档核对）。如果你的目标是通过 HTTP 协议直接集成 auth/functions/cloudrun/storage/mysqldb 等 CloudBase 业务 API，请不要优先使用 callCloudApi，而应优先查看对应 OpenAPI / Swagger。现有 OpenAPI / Swagger 能力不是通用的管控面 Action 集合；管控面 API 请优先参考 CloudBase API 概览 https://cloud.tencent.com/document/product/876/34809 与云开发依赖资源接口指引 https://cloud.tencent.com/document/product/876/34808。对于 tcb service，常用 Action 分类如下：
 
 **环境管理**: `CreateEnv`、`ModifyEnv`、`DescribeEnvs`、`DestroyEnv`
 **用户管理**: `CreateUser`、`ModifyUser`、`DescribeUserList`、`DeleteUsers`
@@ -3463,7 +3463,7 @@ CloudBase Agent 域统一写入口。支持创建、更新和删除远端 Agent�
       name: "service",
       type: "string",
       required: true,
-      description: `选择要访问的服务。可选：tcb、tcbr、scf、sts、cam、lowcode、cdn、vpc。对于 tcb / scf / lowcode 等 CloudBase 管控面 Action，请优先查官方文档，不要直接猜测 Action。云托管统一走 tcbr（version 需传 2022-02-17）。 可填写的值: "tcb", "tcbr", "scf", "sts", "cam", "lowcode", "cdn", "vpc"`,
+      description: `选择要访问的服务。可选：tcb、tcbr、scf、sts、cam、lowcode、cdn、vpc、monitor（云监控/告警，version 需传 2018-07-24）、postgres（云数据库 PostgreSQL，version 需传 2017-03-12）。对于 tcb / scf / lowcode 等 CloudBase 管控面 Action，请优先查官方文档，不要直接猜测 Action。云托管统一走 tcbr（version 需传 2022-02-17）。 可填写的值: "tcb", "tcbr", "scf", "sts", "cam", "lowcode", "cdn", "vpc", "monitor", "postgres"`,
     },
     {
       name: "action",
@@ -3474,7 +3474,7 @@ CloudBase Agent 域统一写入口。支持创建、更新和删除远端 Agent�
     {
       name: "version",
       type: "string",
-      description: `API 版本（可选）。缺省时按 service 使用 SDK 内置默认版本；tcbr 必须传 "2022-02-17"（否则请求缺少 X-TC-Version 会失败）。示例：service="tcbr", version="2022-02-17", action="CreateCloudRunEnv", params={EnvId:"env-xxx",PackageType:"Standard"}。`,
+      description: `API 版本（可选）。缺省时按 service 使用 SDK 内置默认版本；tcbr 必须传 "2022-02-17"（否则请求缺少 X-TC-Version 会失败），monitor 必须传 "2018-07-24"、postgres 必须传 "2017-03-12"（这两个 service 无内置默认版本，不传会失败）。示例：service="tcbr", version="2022-02-17", action="CreateCloudRunEnv", params={EnvId:"env-xxx",PackageType:"Standard"}。`,
     },
     {
       name: "params",
