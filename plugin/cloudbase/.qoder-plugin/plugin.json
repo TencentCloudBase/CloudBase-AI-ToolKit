@@ -33,6 +33,7 @@
     "./skills/auth-tool-cloudbase/",
     "./skills/auth-web-cloudbase/",
     "./skills/auth-wechat-miniprogram/",
+    "./skills/cloud-api-operations/",
     "./skills/cloud-functions/",
     "./skills/cloud-storage-web/",
     "./skills/cloudbase-agent/",
