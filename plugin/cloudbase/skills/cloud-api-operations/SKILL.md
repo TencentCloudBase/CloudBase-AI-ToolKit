@@ -1,7 +1,7 @@
 ---
 name: cloud-api-operations
 description: Operate Tencent Cloud control-plane resources (monitoring/alarms, CLB, CAM roles, COS, MySQL, SCF, etc.) via cloud APIs when no dedicated MCP tool exists. Covers API discovery via the api-reference index, calling via MCP callCloudApi or official SDKs, credential/permission models with CAM authorization escalation, and battle-tested workflow recipes. Use when the task requires Tencent Cloud control-plane operations beyond CloudBase's own tooling.
-version: 1.1.0
+version: 2.33.2
 ---
 
 # Cloud API Operations
