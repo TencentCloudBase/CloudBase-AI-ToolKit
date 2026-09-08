@@ -29,6 +29,7 @@ The CloudBase integration layer for AI coding tools: Plugin installs the stack, 
 - Functions / Apps: custom container-image deploy for cloud functions with async status query; cloud upload channel (`getUploadUrl` + `deployApp` cosTimestamp)
 - Env binding: `cloudbaserc.json` as field-level fallback for envId / region / site (literal + `{{env.KEY}}`)
 - Errors / Skills: centralized error guidance by structured `Code`; virtual-pay reference; CodeBuddy IDE MCP upgrade skill; WorkBuddy experts
+- Cloud API / Deploy: `callCloudApi` opens monitor & postgres services; declarative deploy with `deployPlan` / `deployApply`; `cloud-api-operations` skill
 
 **v2.32.x** (2026-08)
 

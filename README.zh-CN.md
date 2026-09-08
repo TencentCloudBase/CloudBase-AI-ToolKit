@@ -29,6 +29,7 @@
 - 云函数 / 应用：支持自定义容器镜像部署与异步状态查询；云端上传通道（`getUploadUrl` + `deployApp` cosTimestamp）
 - 环境绑定：`cloudbaserc.json` 可作为 envId / region / site 的字段级回退（字面量与 `{{env.KEY}}`）
 - 错误引导 / Skills：按结构化 `Code` 集中引导；虚拟支付参考；CodeBuddy IDE MCP 升级 skill；WorkBuddy experts
+- 云 API / 部署：`callCloudApi` 开放 monitor / postgres 服务；声明式部署 `deployPlan` / `deployApply`；新增 `cloud-api-operations` skill
 
 **v2.32.x**（2026-08）
 
