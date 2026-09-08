@@ -28,6 +28,7 @@ import { info } from './utils/logger.js';
 import { resolveSiteAndRegion, SITE_REGION_MAP } from "./utils/site-map.js";
 import { buildJsonToolResult, isToolPayloadError } from "./utils/tool-result.js";
 import { wrapServerWithTelemetry, applyCategoryAnnotationMeta, type ToolAnnotations } from "./utils/tool-wrapper.js";
+import { normalizeClientName } from "./utils/telemetry.js";
 
 // 插件定义
 interface PluginDefinition {
@@ -195,6 +196,8 @@ export interface ExtendedMcpServer extends McpServer {
   cloudBaseOptions?: CloudBaseOptions;
   authOptions?: AuthOptions;
   ide?: string;
+  /** MCP client 来源标识（hosted 场景由上游解析注入，如 cursor / claude-code） */
+  client?: string;
   logger?: Logger;
   enabledPlugins?: string[];
   pluginOptions?: PluginOptions;
@@ -242,6 +245,7 @@ export async function createCloudBaseMcpServer(options?: {
   authOptions?: AuthOptions;
   cloudMode?: boolean;
   ide?: string;
+  client?: string;
   logger?: Logger;
   pluginsEnabled?: string[];
   pluginsDisabled?: string[];
@@ -255,6 +259,7 @@ export async function createCloudBaseMcpServer(options?: {
     authOptions,
     cloudMode = false,
     ide,
+    client,
     logger,
     pluginsEnabled,
     pluginsDisabled,
@@ -334,6 +339,12 @@ export async function createCloudBaseMcpServer(options?: {
     server.ide = ide;
   }
 
+  // Store client in server instance for telemetry (normalized, invalid values dropped)
+  const normalizedClient = normalizeClientName(client);
+  if (normalizedClient) {
+    server.client = normalizedClient;
+  }
+
   // Store logger in server instance for tools to access
   if (logger) {
     server.logger = logger;
@@ -376,5 +387,6 @@ export { error, info, warn } from "./utils/logger.js";
 export {
   reportToolCall,
   reportToolkitLifecycle,
-  telemetryReporter
+  telemetryReporter,
+  normalizeClientName
 } from "./utils/telemetry.js";

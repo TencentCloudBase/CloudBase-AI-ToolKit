@@ -5,6 +5,7 @@ import os from 'os';
 import { getCachedEnvId } from '../cloudbase-manager.js';
 import { CloudBaseOptions } from '../types.js';
 import { debug } from './logger.js';
+import { normalizeSite, resolveSiteAndRegion } from './site-map.js';
 
 // 构建时注入的版本号
 declare const __MCP_VERSION__: string;
@@ -41,6 +42,13 @@ class TelemetryReporter {
         if (process.env.INTEGRATION_IDE) {
             this.addAdditionalParams({ ide: process.env.INTEGRATION_IDE });
             debug('检测到 IDE 集成环境', { ide: process.env.INTEGRATION_IDE });
+        }
+
+        // 检查 CLOUDBASE_MCP_CLIENT 环境变量（hosted 场景由上游解析真实 MCP client 后注入）
+        const envClient = normalizeClientName(process.env.CLOUDBASE_MCP_CLIENT);
+        if (envClient) {
+            this.addAdditionalParams({ client: envClient });
+            debug('检测到 MCP client 标识', { client: envClient });
         }
         
         debug('report_init', { 
@@ -306,6 +314,61 @@ export function readMcpClientInfoFromServer(server: {
     }
 }
 
+/**
+ * Normalize upstream-provided client identifier into a telemetry-safe token:
+ * trim + lowercase + keep [a-z0-9-_] only + cap at 64 chars.
+ * Canonical mapping (cursor-vscode -> cursor etc.) is the upstream's responsibility;
+ * we only sanitize. Returns undefined when nothing usable remains.
+ */
+export function normalizeClientName(value: unknown): string | undefined {
+    if (typeof value !== "string") {
+        return undefined;
+    }
+    const cleaned = value
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9_-]/g, "")
+        .slice(0, 64);
+    return cleaned || undefined;
+}
+
+// 进程内缓存 site/region 解析结果（resolveSiteAndRegion 会读项目配置文件，避免每次工具调用都走 IO）
+let cachedSiteRegion: { site: string; region: string } | null = null;
+
+/**
+ * Resolve region/site for telemetry.
+ * Priority: cloudBaseOptions（会话实际使用值）> resolveSiteAndRegion（env/项目配置解析，进程内缓存）。
+ * 失败时降级 unknown，绝不影响工具调用主链路。
+ */
+function resolveTelemetrySiteRegion(cloudBaseOptions?: CloudBaseOptions): { region: string; site: string } {
+    const explicitRegion = cloudBaseOptions?.region;
+    const explicitSite = normalizeSite(cloudBaseOptions?.site);
+    try {
+        if (!cachedSiteRegion) {
+            const resolved = resolveSiteAndRegion();
+            cachedSiteRegion = { site: resolved.site, region: resolved.region };
+        }
+        return {
+            region: explicitRegion || cachedSiteRegion.region,
+            site: explicitSite || cachedSiteRegion.site,
+        };
+    } catch (err) {
+        debug('解析 site/region 失败，遥测使用 unknown', err instanceof Error ? err : new Error(String(err)));
+        return {
+            region: explicitRegion || 'unknown',
+            site: explicitSite || 'unknown',
+        };
+    }
+}
+
+/**
+ * Resolve MCP client identifier for a single report:
+ * explicit param (server.client) > CLOUDBASE_MCP_CLIENT env (hosted upstream injection).
+ */
+function resolveClientName(explicit?: string): string | undefined {
+    return normalizeClientName(explicit || process.env.CLOUDBASE_MCP_CLIENT);
+}
+
 function appendMcpClientInfoFields(
     eventData: { [key: string]: any },
     clientInfo?: McpClientInfo,
@@ -334,6 +397,7 @@ export const reportToolCall =  async (params: {
     inputParams?: any; // 入参上报
     cloudBaseOptions?: CloudBaseOptions; // 新增：CloudBase 配置选项
     ide?: string; // 新增：集成IDE信息
+    client?: string; // 新增：MCP client 来源标识（hosted 场景由上游解析传入）
     mcpClientInfo?: McpClientInfo; // MCP initialize clientInfo
 }) => {
     const {
@@ -346,6 +410,7 @@ export const reportToolCall =  async (params: {
 
     // 安全获取环境ID，优先使用传入的配置
     const { envId, envIdSource } = resolveEnvId(params.cloudBaseOptions);
+    const siteRegion = resolveTelemetrySiteRegion(params.cloudBaseOptions);
     debug('[telemetry] 工具调用 envId 获取结果', {
         toolName: params.toolName,
         envId,
@@ -362,6 +427,8 @@ export const reportToolCall =  async (params: {
         duration: params.duration !== undefined ? String(params.duration) : undefined,
         error: params.error ? params.error.substring(0, 200) : undefined ,// 限制错误信息长度
         envId: envId || 'unknown',
+        region: siteRegion.region,
+        site: siteRegion.site,
         nodeVersion,
         osType,
         osRelease,
@@ -388,6 +455,12 @@ export const reportToolCall =  async (params: {
         eventData.ide = params.ide;
     }
 
+    // 添加 MCP client 标识（如果提供）
+    const client = resolveClientName(params.client);
+    if (client) {
+        eventData.client = client;
+    }
+
     appendMcpClientInfoFields(eventData, params.mcpClientInfo);
 
     // Debug: 打印最终上报参数
@@ -412,6 +485,7 @@ export const reportToolkitLifecycle = async (params: {
     error?: string; // 对于异常退出
     cloudBaseOptions?: CloudBaseOptions; // 新增：CloudBase 配置选项
     ide?: string; // 新增：集成IDE信息
+    client?: string; // 新增：MCP client 来源标识（hosted 场景由上游解析传入）
     mcpClientInfo?: McpClientInfo; // MCP initialize clientInfo (usually unavailable at start)
 }) => {
     const {
@@ -424,6 +498,7 @@ export const reportToolkitLifecycle = async (params: {
 
     // 安全获取环境ID，优先使用传入的配置
     const { envId, envIdSource } = resolveEnvId(params.cloudBaseOptions);
+    const siteRegion = resolveTelemetrySiteRegion(params.cloudBaseOptions);
     debug('[telemetry] 生命周期事件 envId 获取结果', {
         event: params.event,
         envId,
@@ -439,6 +514,8 @@ export const reportToolkitLifecycle = async (params: {
         exitCode: params.exitCode !== undefined ? String(params.exitCode) : undefined,
         error: params.error ? params.error.substring(0, 200) : undefined, // 限制错误信息长度
         envId: envId || 'unknown',
+        region: siteRegion.region,
+        site: siteRegion.site,
         nodeVersion,
         osType,
         osRelease,
@@ -449,6 +526,12 @@ export const reportToolkitLifecycle = async (params: {
     // 添加集成IDE信息（如果提供）
     if (params.ide) {
         eventData.ide = params.ide;
+    }
+
+    // 添加 MCP client 标识（如果提供）
+    const lifecycleClient = resolveClientName(params.client);
+    if (lifecycleClient) {
+        eventData.client = lifecycleClient;
     }
 
     appendMcpClientInfoFields(eventData, params.mcpClientInfo);

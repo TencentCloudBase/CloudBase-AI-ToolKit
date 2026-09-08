@@ -13,11 +13,12 @@ declare const __MCP_VERSION__: string;
 
 /**
  * Parse command line arguments
- * Supports --cloud-mode, --integration-ide, --api-key, --env-id, and --site flags
+ * Supports --cloud-mode, --integration-ide, --client, --api-key, --env-id, and --site flags
  */
 function parseCommandLineArgs(): {
   cloudMode: boolean;
   ide?: string;
+  client?: string;
   apiKey?: string;
   envId?: string;
   site?: string;
@@ -25,6 +26,7 @@ function parseCommandLineArgs(): {
   const args = process.argv.slice(2);
   let cloudMode = false;
   let ide: string | undefined;
+  let client: string | undefined;
   let apiKey: string | undefined;
   let envId: string | undefined;
   let site: string | undefined;
@@ -39,6 +41,11 @@ function parseCommandLineArgs(): {
       i++;
     } else if (arg.startsWith("--integration-ide=")) {
       ide = arg.split("=")[1];
+    } else if (arg === "--client" && i + 1 < args.length) {
+      client = args[i + 1];
+      i++;
+    } else if (arg.startsWith("--client=")) {
+      client = arg.split("=")[1];
     } else if (arg === "--api-key" && i + 1 < args.length) {
       apiKey = args[i + 1];
       i++;
@@ -57,7 +64,7 @@ function parseCommandLineArgs(): {
     }
   }
 
-  return { cloudMode, ide, apiKey, envId, site };
+  return { cloudMode, ide, client, apiKey, envId, site };
 }
 
 // 劫持 console.log/info/warn，防止污染 stdout 协议流
@@ -92,7 +99,7 @@ const isTestEnvironment =
 const enableTelemetry = !isTestEnvironment;
 
 // Parse command line arguments
-let { cloudMode, ide, apiKey, envId, site } = parseCommandLineArgs();
+let { cloudMode, ide, client, apiKey, envId, site } = parseCommandLineArgs();
 
 // Set API Key env vars from CLI flags (if provided)
 if (apiKey) {
@@ -111,9 +118,13 @@ if (cloudMode) {
 }
 
 ide = ide || process.env.INTEGRATION_IDE;
+client = client || process.env.CLOUDBASE_MCP_CLIENT;
 
 if (ide) {
   info(`Integration IDE: ${ide}`);
+}
+if (client) {
+  info(`MCP client: ${client}`);
 }
 
 // Create server instance with conditional telemetry and CLI options
@@ -123,6 +134,7 @@ const server = createCloudBaseMcpServer({
   enableTelemetry,
   cloudMode,
   ide,
+  client,
 });
 
 async function main() {
@@ -135,6 +147,7 @@ async function main() {
     await reportToolkitLifecycle({
       event: "start",
       ide,
+      client,
     });
   }
 }
@@ -150,6 +163,7 @@ function setupExitHandlers() {
         exitCode,
         error: signal ? `Process terminated by signal: ${signal}` : undefined,
         ide,
+        client,
       });
     }
   };
@@ -199,6 +213,7 @@ main().catch(async (error) => {
       exitCode: 1,
       error: `Startup failed: ${error.message}`,
       ide,
+      client,
     });
   }
 
