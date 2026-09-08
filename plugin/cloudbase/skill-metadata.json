@@ -457,6 +457,80 @@
         ]
       }
     },
+    "cloud-api-operations": {
+      "priority": 6,
+      "promptSignals": {
+        "phrases": [
+          "callCloudApi 报错",
+          "云 api",
+          "腾讯云 api",
+          "管控面",
+          "cam 授权",
+          "cam 权限",
+          "告警策略",
+          "创建告警",
+          "clb 监听器",
+          "api explorer",
+          "tc3-hmac-sha256",
+          "action is invalid or not found"
+        ],
+        "allOf": [
+          [
+            "调用",
+            "腾讯云"
+          ],
+          [
+            "配置",
+            "告警"
+          ]
+        ],
+        "anyOf": [
+          "cloud api",
+          "tencent cloud api",
+          "alarm policy",
+          "cam role",
+          "cos api",
+          "scf api"
+        ],
+        "minScore": 6,
+        "noneOf": [
+          "巡检",
+          "健康检查"
+        ]
+      },
+      "retrieval": {
+        "aliases": [
+          "cloud api",
+          "云 api",
+          "腾讯云控制面",
+          "cam",
+          "api explorer"
+        ],
+        "intents": [
+          "调用腾讯云 API",
+          "配置云监控告警",
+          "排查 CAM 权限错误",
+          "find tencent cloud api action",
+          "configure alarm policy"
+        ],
+        "entities": [
+          "CAM",
+          "CLB",
+          "COS",
+          "SCF",
+          "Monitor",
+          "TC3-HMAC-SHA256",
+          "API Explorer"
+        ],
+        "examples": [
+          "callCloudApi 报错 action is invalid or not found",
+          "调用云 API 提示 UnauthorizedOperation 没权限",
+          "帮我给 PostgreSQL 实例配置存储用量告警策略",
+          "用 SDK 给腾讯云 CLB 添加监听器",
+          "查找云监控创建告警策略的 API 怎么调用"
+        ]
+      }
+    },
     "cloud-functions": {
       "priority": 8,
       "promptSignals": {
@@ -725,6 +799,76 @@
           "tcb 部署函数",
           "tcb 命令行",
           "cli 管理环境"
+        ]
+      }
+    },
+    "cloudbase-declarative-deploy": {
+      "priority": 6,
+      "promptSignals": {
+        "phrases": [
+          "声明式部署",
+          "配置式部署",
+          "cloudbaserc 部署",
+          "deployplan",
+          "declarative deploy",
+          "deploy from cloudbaserc",
+          "部署整个项目",
+          "dry-run 部署计划",
+          "预演部署"
+        ],
+        "allOf": [
+          [
+            "cloudbaserc",
+            "部署"
+          ],
+          [
+            "声明式",
+            "部署"
+          ],
+          [
+            "declarative",
+            "deploy"
+          ]
+        ],
+        "anyOf": [
+          "deployPlan",
+          "deployApply",
+          "deploy",
+          "envOverrides",
+          "desired state"
+        ],
+        "minScore": 6,
+        "noneOf": [
+          "tcb deploy",
+          "单个函数"
+        ]
+      },
+      "retrieval": {
+        "aliases": [
+          "声明式部署",
+          "配置式部署",
+          "cloudbaserc deploy",
+          "declarative deploy"
+        ],
+        "intents": [
+          "从 cloudbaserc 部署整个项目",
+          "预演部署计划",
+          "多环境部署",
+          "声明式部署资源"
+        ],
+        "entities": [
+          "cloudbaserc",
+          "deployPlan",
+          "deployApply",
+          "deploy",
+          "envOverrides",
+          "DeployOrchestrator"
+        ],
+        "examples": [
+          "用 cloudbaserc 声明式部署整个项目",
+          "先预演一下部署计划再执行",
+          "按 production mode 部署到生产环境",
+          "deploy the whole project from cloudbaserc"
         ]
       }
     },

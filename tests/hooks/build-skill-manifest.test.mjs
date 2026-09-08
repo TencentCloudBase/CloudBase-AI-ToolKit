@@ -28,7 +28,7 @@ const ROOT_DIR = join(__dirname, "..", "..");
 const MANIFEST_PATH = join(ROOT_DIR, "plugin", "cloudbase", "generated", "skill-manifest.json");
 const SKILLS_DIR = join(ROOT_DIR, "plugin", "cloudbase", "skills");
 const TEMPLATE_PATH = join(ROOT_DIR, "plugin", "cloudbase", "skill-metadata.template.json");
-const EXPECTED_MANIFEST_SKILL_COUNT = 26;
+const EXPECTED_MANIFEST_SKILL_COUNT = 27;
 
 const tempDirs = [];
 afterEach(() => {
@@ -83,7 +83,7 @@ describe("skill-manifest.json", () => {
     expect(manifest.version).toBe(2);
   });
 
-  it("has 26 non-deprecated skills including minimal-web-baas-demo", () => {
+  it("has 27 non-deprecated skills including minimal-web-baas-demo", () => {
     const manifest = JSON.parse(readFileSync(MANIFEST_PATH, "utf-8"));
     expect(Object.keys(manifest.skills).length).toBe(EXPECTED_MANIFEST_SKILL_COUNT);
     expect(manifest.skills["minimal-web-baas-demo"]).toBeDefined();
