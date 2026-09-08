@@ -323,9 +323,10 @@ export function getAuthConfigValidationError(options: ResolvedAuthOptions): stri
     return "oauthCustom=true 时必须同时提供 oauthEndpoint。";
   }
 
-  if (options.oauthEndpoint && !options.oauthCustom) {
-    return "配置自定义 oauthEndpoint 时必须启用 oauthCustom=true。";
-  }
+  // oauthEndpoint + 显式 oauthCustom=false 放行：resolveAuthOptions 对"只配 endpoint
+  // 未配 custom"已默认 custom=true，走到这里的 endpoint+false 只可能是用户显式指定——
+  // 即标准 {code,result} 包装格式的自定义端点（如国际站 tcb-api.tencentcloud.com），
+  // 拦截会导致标准格式端点在工具层永远不可用。
 
   return null;
 }
@@ -338,6 +339,51 @@ export function buildAuthConfigSummary(options: ResolvedAuthOptions) {
     oauth_custom: options.oauthCustom,
     uses_toolbox_defaults: options.usesToolboxDefaults,
   };
+}
+
+/**
+ * 构造 device flow 的 loginByWebAuth 基础参数（onDeviceCode 由调用方按需注入）。
+ *
+ * 所有 device 登录路径（ensureLogin 与 auth 工具 start_auth 的 device 分支）必须
+ * 共享本函数：TCB_SITE=intl 时的 getOAuthEndpoint 覆写与 getAuthUrl 授权页改写
+ * 只在 ensureLogin 生效，会导致工具层直连路径仍打国内站端点/授权页，国际站账号
+ * 无法完成授权（device-code 注册表国内外隔离，国内授权页对国际站账号无效）。
+ */
+export function buildDeviceLoginOptions(
+  resolvedAuthOptions: ResolvedAuthOptions,
+  siteHints: { region?: string; site?: string } = {},
+): Record<string, unknown> {
+  const resolvedSite = resolveSite(
+    siteHints.region,
+    siteHints.site ?? process.env.TCB_SITE,
+  );
+  const loginOptions: Record<string, unknown> = { flow: "device" };
+
+  if (resolvedAuthOptions.clientId) {
+    loginOptions.client_id = resolvedAuthOptions.clientId;
+  }
+  if (resolvedAuthOptions.oauthEndpoint) {
+    loginOptions.getOAuthEndpoint = () => resolvedAuthOptions.oauthEndpoint!;
+  } else if (resolvedSite === "intl") {
+    // 国际站 OAuth 后端独立部署（2026-09-01 实测 device/code+token 可用，注册表与国内站隔离）；
+    // 不覆写时 toolbox 默认打国内站端点，国际站账号无法完成授权
+    loginOptions.getOAuthEndpoint = () => SITE_REGION_MAP.intl.oauthEndpoint!;
+  }
+  if (resolvedSite === "intl") {
+    // device 模式的 verification_uri 标准模式下由客户端拼接，指向国内站授权页；
+    // 与 web 模式同款 host 改写，把授权页切到国际站
+    loginOptions.getAuthUrl = (url: string) =>
+      url
+        .replace(
+          `${SITE_REGION_MAP.domestic.authHost}/dev`,
+          `${SITE_REGION_MAP.intl.authHost}/dev`,
+        )
+        .replace(SITE_REGION_MAP.domestic.authHost, SITE_REGION_MAP.intl.authHost);
+  }
+  if (resolvedAuthOptions.oauthCustom) {
+    loginOptions.custom = true;
+  }
+  return loginOptions;
 }
 
 export function setPendingAuthProgressState(
@@ -640,30 +686,14 @@ export async function ensureLogin(options?: EnsureLoginOptions) {
             return `${finalUrl}${separator}allowNoEnv=true`;
           };
     } else {
-      if (resolvedAuthOptions.clientId) {
-        loginOptions.client_id = resolvedAuthOptions.clientId;
-      }
-      if (resolvedAuthOptions.oauthEndpoint) {
-        loginOptions.getOAuthEndpoint = () => resolvedAuthOptions.oauthEndpoint!;
-      } else if (resolvedSite === "intl") {
-        // 国际站 OAuth 后端独立部署（2026-09-01 实测 device/code+token 可用，注册表与国内站隔离）；
-        // 不覆写时 toolbox 默认打国内站端点，国际站账号无法完成授权
-        loginOptions.getOAuthEndpoint = () => SITE_REGION_MAP.intl.oauthEndpoint!;
-      }
-      if (resolvedSite === "intl") {
-        // device 模式的 verification_uri 标准模式下由客户端拼接，指向国内站授权页；
-        // 与 web 模式同款 host 改写，把授权页切到国际站
-        loginOptions.getAuthUrl = (url: string) =>
-          url
-            .replace(
-              `${SITE_REGION_MAP.domestic.authHost}/dev`,
-              `${SITE_REGION_MAP.intl.authHost}/dev`,
-            )
-            .replace(SITE_REGION_MAP.domestic.authHost, SITE_REGION_MAP.intl.authHost);
-      }
-      if (resolvedAuthOptions.oauthCustom) {
-        loginOptions.custom = true;
-      }
+      // device 模式：与 auth 工具 start_auth device 分支共享 intl 端点覆写与授权页改写
+      Object.assign(
+        loginOptions,
+        buildDeviceLoginOptions(resolvedAuthOptions, {
+          region: options?.region,
+          site: options?.site,
+        }),
+      );
       if (options?.onDeviceCode) {
         loginOptions.onDeviceCode = (info: DeviceFlowAuthInfo) => {
           setPendingAuthProgressState(info, mode);

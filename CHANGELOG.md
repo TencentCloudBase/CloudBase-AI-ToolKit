@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file. Follow the 
 
 ## Unreleased
 
+### Bug Fixes
+
+* **auth**: international-site (`TCB_SITE=intl`) device-flow login now rewrites the OAuth endpoint and verification page to the intl hosts (`tcb-api.tencentcloud.com` / `tcb.tencentcloud.com`). The auth tool's `start_auth` device branch called `loginByWebAuth` directly and bypassed the intl rewrite in `ensureLogin`, so intl accounts kept getting domestic-site device codes that can never be authorized (the device-code registries are isolated per site). Both paths now share one `buildDeviceLoginOptions` helper.
+* **auth**: allow `oauthCustom: false` together with an explicit `oauthEndpoint` — required for standard `{code,result}`-wrapped endpoints such as the intl OAuth backend; previously the tool rejected this combination outright.
+
 ## [2.33.0](https://github.com/TencentCloudBase/CloudBase-AI-Toolkit/compare/v2.32.5...v2.33.0) (2026-09-04)
 
 ### Features
