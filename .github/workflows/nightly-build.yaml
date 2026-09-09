@@ -8,6 +8,11 @@ on:
     branches: [main]
   # 也支持手动触发
   workflow_dispatch:
+  # Safety net: commits pushed by workflows using GITHUB_TOKEN (e.g. skills
+  # sync) do not trigger push events, so breakage they introduce would stay
+  # invisible on main until the next PR. Run the full suite daily regardless.
+  schedule:
+    - cron: '30 21 * * *'
 
 jobs:
   # 构建和发布到pkg.pr.new

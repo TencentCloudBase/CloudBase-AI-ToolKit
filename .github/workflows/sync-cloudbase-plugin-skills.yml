@@ -31,8 +31,31 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Enable corepack
+        run: corepack enable
+
+      # build-skill-manifest.mjs needs js-yaml from the root lockfile.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Sync CloudBase plugin skills
         run: node scripts/sync-cloudbase-plugin-skills.mjs
+
+      # Derived artifacts must be regenerated in the same commit that changes
+      # plugin skills. GITHUB_TOKEN pushes do not retrigger other workflows, so
+      # a stale generated/skill-manifest.json or .qoder-plugin/plugin.json would
+      # otherwise stay unnoticed on main until a PR or the npm publish workflow
+      # fails there (v2.33.2 incident). Skip when nothing changed to avoid
+      # timestamp-only commits.
+      - name: Regenerate derived artifacts when skills changed
+        run: |
+          if ! git diff --quiet -- plugin/cloudbase/skills; then
+            echo "Skills changed; regenerating derived artifacts"
+            node scripts/build-skill-manifest.mjs
+            node scripts/build-open-plugin-spec.mjs
+          else
+            echo "No skill changes; skipping regeneration"
+          fi
 
       # GITHUB_TOKEN pushes do not retrigger path-filtered workflows (e.g. Push Plugin Repos).
       # After we land skill changes under plugin/cloudbase/, explicitly dispatch that workflow.
@@ -42,7 +65,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add plugin/cloudbase/skills plugin/cloudbase/.sync-metadata.json
+          # Dedicated sync job on a fresh checkout: stage everything the sync +
+          # regeneration steps touched (skills, .sync-metadata.json,
+          # generated/skill-manifest.json, open plugin spec artifacts).
+          git add -A
           if git diff --staged --quiet; then
             echo "No changes, skipping."
             echo "pushed=false" >> "$GITHUB_OUTPUT"
@@ -62,7 +88,9 @@ jobs:
               git fetch origin main
               git reset --hard origin/main
               node scripts/sync-cloudbase-plugin-skills.mjs --force
-              git add plugin/cloudbase/skills plugin/cloudbase/.sync-metadata.json
+              node scripts/build-skill-manifest.mjs
+              node scripts/build-open-plugin-spec.mjs
+              git add -A
               if git diff --staged --quiet; then
                 echo "Remote already has synced skills after reset."
                 pushed=true

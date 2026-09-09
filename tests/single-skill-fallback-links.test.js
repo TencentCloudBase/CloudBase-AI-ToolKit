@@ -32,6 +32,14 @@ const LOCAL_SIBLING_SECTION_TITLE = '## Sibling skills (local only)';
 const FORBIDDEN_FETCH_PHRASE =
   'Do **not** HTTP-fetch remote skill or protocol markdown into the agent context';
 
+// Positive assertions are matched against whitespace-flattened text so that
+// equivalent wording with different line wrapping still passes. Negative
+// assertions (forbidden URLs/phrases) stay on the raw text on purpose: a
+// forbidden URL split across lines would not function as a link anyway.
+function flatten(text) {
+  return text.replace(/\s+/g, ' ');
+}
+
 afterEach(() => {
   fs.rmSync(SKILLS_REPO_OUTPUT_DIR, { recursive: true, force: true });
   while (tempDirs.length > 0) {
@@ -54,8 +62,8 @@ describe('local-only sibling skill links (no remote skill fetch)', () => {
         'utf8',
       );
 
-      expect(raw).toContain(LOCAL_SIBLING_SECTION_TITLE);
-      expect(raw).toContain(FORBIDDEN_FETCH_PHRASE);
+      expect(flatten(raw)).toContain(LOCAL_SIBLING_SECTION_TITLE);
+      expect(flatten(raw)).toContain(FORBIDDEN_FETCH_PHRASE);
       expect(raw).not.toContain(RAW_SKILLS_ROOT_URL);
       expect(raw).not.toContain('standalone fallback:');
       expect(raw).not.toContain('## Standalone Install Note');
@@ -122,8 +130,8 @@ describe('local-only sibling skill links (no remote skill fetch)', () => {
       'utf8',
     );
 
-    expect(outputSkill).toContain(LOCAL_SIBLING_SECTION_TITLE);
-    expect(outputSkill).toContain(FORBIDDEN_FETCH_PHRASE);
+    expect(flatten(outputSkill)).toContain(LOCAL_SIBLING_SECTION_TITLE);
+    expect(flatten(outputSkill)).toContain(FORBIDDEN_FETCH_PHRASE);
     expect(outputSkill).not.toContain(RAW_SKILLS_ROOT_URL);
     expect(outputSkill).toContain('../auth-tool-cloudbase/SKILL.md');
   });
@@ -142,7 +150,7 @@ describe('local-only sibling skill links (no remote skill fetch)', () => {
       'utf8',
     );
 
-    expect(outputSkill).toContain(LOCAL_SIBLING_SECTION_TITLE);
+    expect(flatten(outputSkill)).toContain(LOCAL_SIBLING_SECTION_TITLE);
     expect(outputSkill).not.toContain(RAW_SKILLS_ROOT_URL);
     expect(outputSkill).toContain('../auth-tool-cloudbase/SKILL.md');
   });
@@ -160,7 +168,7 @@ describe('local-only sibling skill links (no remote skill fetch)', () => {
       'utf8',
     );
 
-    expect(compatSkill).toContain(LOCAL_SIBLING_SECTION_TITLE);
+    expect(flatten(compatSkill)).toContain(LOCAL_SIBLING_SECTION_TITLE);
     expect(compatSkill).not.toContain(RAW_SKILLS_ROOT_URL);
     expect(compatSkill).toContain('../auth-tool-cloudbase/SKILL.md');
   });

@@ -28,7 +28,12 @@ const ROOT_DIR = join(__dirname, "..", "..");
 const MANIFEST_PATH = join(ROOT_DIR, "plugin", "cloudbase", "generated", "skill-manifest.json");
 const SKILLS_DIR = join(ROOT_DIR, "plugin", "cloudbase", "skills");
 const TEMPLATE_PATH = join(ROOT_DIR, "plugin", "cloudbase", "skill-metadata.template.json");
-const EXPECTED_MANIFEST_SKILL_COUNT = 28;
+// Derived from the non-deprecated plugin skill dirs instead of a hardcoded
+// number: adding a skill no longer requires bumping a constant, and the count
+// assertions below still verify the generated manifest is fresh (covers every
+// non-deprecated dir). The old hardcoded constant (27, then 28) silently went
+// stale when the skills sync landed a new skill (v2.33.2 incident).
+const EXPECTED_MANIFEST_SKILL_COUNT = listNonDeprecatedSkillDirs().length;
 
 const tempDirs = [];
 afterEach(() => {
@@ -83,7 +88,7 @@ describe("skill-manifest.json", () => {
     expect(manifest.version).toBe(2);
   });
 
-  it("has 28 non-deprecated skills including minimal-web-baas-demo", () => {
+  it("manifest covers every non-deprecated plugin skill (fresh manifest)", () => {
     const manifest = JSON.parse(readFileSync(MANIFEST_PATH, "utf-8"));
     expect(Object.keys(manifest.skills).length).toBe(EXPECTED_MANIFEST_SKILL_COUNT);
     expect(manifest.skills["minimal-web-baas-demo"]).toBeDefined();
@@ -159,7 +164,7 @@ describe("skill-metadata.json", () => {
   it("covers every non-deprecated plugin skill with non-empty promptSignals", () => {
     const metadataSkills = loadSkillMetadata(SKILL_METADATA_PATH);
     const dirs = listNonDeprecatedSkillDirs();
-    expect(dirs.length).toBe(EXPECTED_MANIFEST_SKILL_COUNT);
+    expect(dirs.length).toBeGreaterThan(0);
     for (const dirName of dirs) {
       const entry = metadataSkills[dirName];
       expect(entry, `${dirName} must exist in skill-metadata.json`).toBeDefined();
