@@ -2,7 +2,7 @@
 
 > - 数据源：[API 概览](https://cloud.tencent.com/document/api/876/34809) · [依赖产品接口指引](https://cloud.tencent.com/document/api/876/34808)
 > - 所有接口均为腾讯云 API 3.0 管控面接口，支持各语言官方 SDK 调用；也可通过 CloudBase MCP 的 `callCloudApi` 工具或 [API Explorer](https://console.cloud.tencent.com/api/explorer) 直接调用
-> - 最近同步：2026-09-08
+> - 最近同步：2026-09-09
 
 ## API 概览
 
@@ -35,6 +35,7 @@
 | [AllocateEnv](https://cloud.tencent.com/document/api/876/131594) | 从环境池分配环境 | 3000 |
 | [ReleaseEnv](https://cloud.tencent.com/document/api/876/131592) | 释放从环境池里分配的环境 | 1000 |
 | [AssumeRoleForAllocatedEnv](https://cloud.tencent.com/document/api/876/131593) | 为环境池里的环境申请角色临时凭证 | 1000 |
+| [ModifyEnvExtra](https://cloud.tencent.com/document/api/876/137192) | 修改环境额外配置 | 20 |
 
 ## 用户权限相关接口
 
@@ -75,12 +76,6 @@
 | [DeleteAuthDomain](https://cloud.tencent.com/document/api/876/128960) | 删除合法域名 | 20 |
 | [DescribeCloudBaseRunBuildLog](https://cloud.tencent.com/document/api/876/135707) | 查询构建日志 | 20 |
 
-## 服务操作相关接口
-
-| 接口名称 | 接口功能 | 频率限制（次/秒） |
-| --- | --- | --- |
-| [ModifySafeRule](https://cloud.tencent.com/document/api/876/128959) | 设置数据库安全规则 | \- |
-
 ## 文档型云数据库相关接口
 
 | 接口名称 | 接口功能 | 频率限制（次/秒） |
@@ -94,8 +89,9 @@
 | [ListTables](https://cloud.tencent.com/document/api/876/127965) | 查询文档型数据库所有表 | 20 |
 | [UpdateTable](https://cloud.tencent.com/document/api/876/127964) | 修改文档型数据库表索引信息 | 20 |
 | [RunCommands](https://cloud.tencent.com/document/api/876/129012) | 执行文档型数据库命令 | 1000 |
+| [ModifySafeRule](https://cloud.tencent.com/document/api/876/128959) | 设置数据库安全规则 | \- |
 
-## 云项目相关接口
+## 静态托管相关接口
 
 | 接口名称 | 接口功能 | 频率限制（次/秒） |
 | --- | --- | --- |
@@ -117,12 +113,8 @@
 | [DeleteHTTPServiceRoute](https://cloud.tencent.com/document/api/876/129799) | 删除HTTP访问服务路由 | 20 |
 | [DescribeHTTPServiceRoute](https://cloud.tencent.com/document/api/876/129798) | 查询HTTP访问服务路由信息 | 20 |
 | [ModifyHTTPServiceRoute](https://cloud.tencent.com/document/api/876/129797) | 修改HTTP访问服务路由 | 20 |
-
-## tcb相关接口
-
-| 接口名称 | 接口功能 | 频率限制（次/秒） |
-| --- | --- | --- |
-| [ModifyEnvExtra](https://cloud.tencent.com/document/api/876/137192) | 修改环境额外配置 | 20 |
+| [PurgeHTTPServiceCache](https://cloud.tencent.com/document/api/876/137741) | 清除HTTP服务域名缓存 | 20 |
+| [DescribeHTTPServiceCachePurgeTask](https://cloud.tencent.com/document/api/876/137742) | 查询HTTP访问服务缓存清除任务 | 20 |
 
 ## AI模型相关接口
 
@@ -133,16 +125,6 @@
 | [DescribeAIModels](https://cloud.tencent.com/document/api/876/131318) | 查询AI模型列表 | 20 |
 | [DescribeManagedAIModelList](https://cloud.tencent.com/document/api/876/131317) | 查询托管类型AI模型列表 | 20 |
 | [UpdateAIModel](https://cloud.tencent.com/document/api/876/131316) | 更新AI模型 | 20 |
-
-## 云服务器相关接口
-
-| 接口名称 | 接口功能 | 频率限制（次/秒） |
-| --- | --- | --- |
-| [CreateVmInstance](https://cloud.tencent.com/document/api/876/129796) | 创建服务器实例 | 20 |
-| [DeleteVmInstance](https://cloud.tencent.com/document/api/876/129761) | 销毁服务器实例 | 20 |
-| [DescribeVmInstances](https://cloud.tencent.com/document/api/876/129760) | 查询环境下的服务器实例 | 20 |
-| [DescribeVmSpec](https://cloud.tencent.com/document/api/876/129360) | 获取VM规格 | 20 |
-| [InquireVmPrice](https://cloud.tencent.com/document/api/876/129759) | 查询云服务器价格 | 20 |
 
 ## 搜索日志相关接口
 
