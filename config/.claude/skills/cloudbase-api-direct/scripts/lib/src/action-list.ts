@@ -4,7 +4,7 @@
  *
  * ⚠️ 请勿手动编辑此文件，由 scripts/generate-actionlist.ts 自动生成
  *
- * Action 数量: 126
+ * Action 数量: 123
  */
 
 const TCB_ALLOWED_ACTIONS: string[] = [
@@ -30,7 +30,6 @@ const TCB_ALLOWED_ACTIONS: string[] = [
   'CreateStaticStore',
   'CreateTable',
   'CreateUser',
-  'CreateVmInstance',
   'DeleteAIModel',
   'DeleteApiKey',
   'DeleteAuthDomain',
@@ -42,7 +41,6 @@ const TCB_ALLOWED_ACTIONS: string[] = [
   'DeleteProvider',
   'DeleteTable',
   'DeleteUsers',
-  'DeleteVmInstance',
   'DescribeAIModels',
   'DescribeApiKeyList',
   'DescribeAuthDomains',
@@ -74,6 +72,7 @@ const TCB_ALLOWED_ACTIONS: string[] = [
   'DescribeEnvPlans',
   'DescribeEnvs',
   'DescribeGatewayVersions',
+  'DescribeHTTPServiceCachePurgeTask',
   'DescribeHTTPServiceRoute',
   'DescribeHostingDomainTask',
   'DescribeLoginConfig',
@@ -91,14 +90,11 @@ const TCB_ALLOWED_ACTIONS: string[] = [
   'DescribeTables',
   'DescribeUserList',
   'DescribeVersionDetail',
-  'DescribeVmInstances',
-  'DescribeVmSpec',
   'DestroyEnv',
   'DestroyMySQL',
   'DestroyStaticStore',
   'ExecutePGSql',
   'GetProviders',
-  'InquireVmPrice',
   'ListPGUserMigrations',
   'ListTables',
   'ModifyClient',
@@ -117,6 +113,7 @@ const TCB_ALLOWED_ACTIONS: string[] = [
   'ModifyUser',
   'OperateServerManage',
   'PreviewPGUserMigrations',
+  'PurgeHTTPServiceCache',
   'PushPGUserMigrations',
   'ReleaseEnv',
   'ReleaseGray',

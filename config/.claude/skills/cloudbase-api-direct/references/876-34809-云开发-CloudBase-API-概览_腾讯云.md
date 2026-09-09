@@ -2,7 +2,7 @@
 
 ## API 概览
 
-最近更新时间：2026-09-03 01:54:25
+最近更新时间：2026-09-09 02:54:08
 
 -   微信扫一扫 
 -   QQ
@@ -21,13 +21,10 @@ _我的收藏_
 -   [云托管相关接口](#.E4.BA.91.E6.89.98.E7.AE.A1.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "云托管相关接口")
 -   [计费相关接口](#.E8.AE.A1.E8.B4.B9.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "计费相关接口")
 -   [其他接口](#.E5.85.B6.E4.BB.96.E6.8E.A5.E5.8F.A3 "其他接口")
--   [服务操作相关接口](#.E6.9C.8D.E5.8A.A1.E6.93.8D.E4.BD.9C.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "服务操作相关接口")
 -   [文档型云数据库相关接口](#.E6.96.87.E6.A1.A3.E5.9E.8B.E4.BA.91.E6.95.B0.E6.8D.AE.E5.BA.93.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "文档型云数据库相关接口")
--   [云项目相关接口](#.E4.BA.91.E9.A1.B9.E7.9B.AE.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "云项目相关接口")
+-   [静态托管相关接口](#.E9.9D.99.E6.80.81.E6.89.98.E7.AE.A1.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "静态托管相关接口")
 -   [云开发接入相关接口](#.E4.BA.91.E5.BC.80.E5.8F.91.E6.8E.A5.E5.85.A5.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "云开发接入相关接口")
--   [tcb相关接口](#tcb.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "tcb相关接口")
 -   [AI模型相关接口](#AI.E6.A8.A1.E5.9E.8B.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "AI模型相关接口")
--   [云服务器相关接口](#.E4.BA.91.E6.9C.8D.E5.8A.A1.E5.99.A8.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "云服务器相关接口")
 -   [搜索日志相关接口](#.E6.90.9C.E7.B4.A2.E6.97.A5.E5.BF.97.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "搜索日志相关接口")
 -   [SQL型云数据库相关接口](#SQL.E5.9E.8B.E4.BA.91.E6.95.B0.E6.8D.AE.E5.BA.93.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "SQL型云数据库相关接口")
 -   [登录配置相关接口](#.E7.99.BB.E5.BD.95.E9.85.8D.E7.BD.AE.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "登录配置相关接口")
@@ -61,6 +58,7 @@ _我的收藏_
 | [AllocateEnv](/document/api/876/131594) | 从环境池分配环境 | 3000 |
 | [ReleaseEnv](/document/api/876/131592) | 释放从环境池里分配的环境 | 1000 |
 | [AssumeRoleForAllocatedEnv](/document/api/876/131593) | 为环境池里的环境申请角色临时凭证 | 1000 |
+| [ModifyEnvExtra](/document/api/876/137192) | 修改环境额外配置 | 20 |
 
 ## 用户权限相关接口
 
@@ -101,12 +99,6 @@ _我的收藏_
 | [DeleteAuthDomain](/document/api/876/128960) | 删除合法域名 | 20 |
 | [DescribeCloudBaseRunBuildLog](/document/api/876/135707) | 查询构建日志 | 20 |
 
-## 服务操作相关接口
-
-| 接口名称 | 接口功能 | 频率限制（次/秒） |
-| --- | --- | --- |
-| [ModifySafeRule](/document/api/876/128959) | 设置数据库安全规则 | \- |
-
 ## 文档型云数据库相关接口
 
 | 接口名称 | 接口功能 | 频率限制（次/秒） |
@@ -120,8 +112,9 @@ _我的收藏_
 | [ListTables](/document/api/876/127965) | 查询文档型数据库所有表 | 20 |
 | [UpdateTable](/document/api/876/127964) | 修改文档型数据库表索引信息 | 20 |
 | [RunCommands](/document/api/876/129012) | 执行文档型数据库命令 | 1000 |
+| [ModifySafeRule](/document/api/876/128959) | 设置数据库安全规则 | \- |
 
-## 云项目相关接口
+## 静态托管相关接口
 
 | 接口名称 | 接口功能 | 频率限制（次/秒） |
 | --- | --- | --- |
@@ -143,12 +136,8 @@ _我的收藏_
 | [DeleteHTTPServiceRoute](/document/api/876/129799) | 删除HTTP访问服务路由 | 20 |
 | [DescribeHTTPServiceRoute](/document/api/876/129798) | 查询HTTP访问服务路由信息 | 20 |
 | [ModifyHTTPServiceRoute](/document/api/876/129797) | 修改HTTP访问服务路由 | 20 |
-
-## tcb相关接口
-
-| 接口名称 | 接口功能 | 频率限制（次/秒） |
-| --- | --- | --- |
-| [ModifyEnvExtra](/document/api/876/137192) | 修改环境额外配置 | 20 |
+| [PurgeHTTPServiceCache](/document/api/876/137741) | 清除HTTP服务域名缓存 | 20 |
+| [DescribeHTTPServiceCachePurgeTask](/document/api/876/137742) | 查询HTTP访问服务缓存清除任务 | 20 |
 
 ## AI模型相关接口
 
@@ -159,16 +148,6 @@ _我的收藏_
 | [DescribeAIModels](/document/api/876/131318) | 查询AI模型列表 | 20 |
 | [DescribeManagedAIModelList](/document/api/876/131317) | 查询托管类型AI模型列表 | 20 |
 | [UpdateAIModel](/document/api/876/131316) | 更新AI模型 | 20 |
-
-## 云服务器相关接口
-
-| 接口名称 | 接口功能 | 频率限制（次/秒） |
-| --- | --- | --- |
-| [CreateVmInstance](/document/api/876/129796) | 创建服务器实例 | 20 |
-| [DeleteVmInstance](/document/api/876/129761) | 销毁服务器实例 | 20 |
-| [DescribeVmInstances](/document/api/876/129760) | 查询环境下的服务器实例 | 20 |
-| [DescribeVmSpec](/document/api/876/129360) | 获取VM规格 | 20 |
-| [InquireVmPrice](/document/api/876/129759) | 查询云服务器价格 | 20 |
 
 ## 搜索日志相关接口
 

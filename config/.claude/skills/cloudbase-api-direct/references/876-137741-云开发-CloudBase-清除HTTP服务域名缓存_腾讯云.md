@@ -1,8 +1,8 @@
 [API 中心](/document/api)
 
-## 创建服务器实例
+## 清除HTTP服务域名缓存
 
-最近更新时间：2026-07-28 03:22:42
+最近更新时间：2026-09-09 02:54:01
 
 -   微信扫一扫 
 -   QQ
@@ -18,14 +18,13 @@ _我的收藏_
 
 接口请求域名： tcb.tencentcloudapi.com 。
 
-创建虚拟服务器  
-创建流程为先调用 [DescribeVmSpec](https://cloud.tencent.com/document/product/876/129360) 获取可购买的规格，同时调用 [DescribeBlueprints](https://cloud.tencent.com/document/product/1207/47689) 拉取镜像列表，选中一个规格和一个镜像后，调用 [InquireVmPrice](https://cloud.tencent.com/document/product/876/129759) 询价，如果价格可接受，调用此接口创建实例
+本接口PurgeHTTPServiceCache为异步操作，清除指定环境下 HTTPService 域名的缓存，操作不可逆，仅影响指定 Domain 的缓存命中，不影响源站数据。用于清除HTTP访问服务域名缓存。支持刷新CDN和EO两种类型。清除缓存后会生成任务id，通过DescribeHTTPServiceCachePurgeTask传入任务id可查询任务进度和详细信息。
 
 默认接口请求频率限制：20次/秒。
 
 推荐使用 API Explorer
 
-[点击调试](https://console.cloud.tencent.com/api/explorer?Product=tcb&Version=2018-06-08&Action=CreateVmInstance)
+[点击调试](https://console.cloud.tencent.com/api/explorer?Product=tcb&Version=2018-06-08&Action=PurgeHTTPServiceCache)
 
 API Explorer 提供了在线调用、签名验证、SDK 代码生成和快速检索接口等能力。您可查看每次调用的请求内容和返回结果以及自动生成 SDK 调用示例。
 
@@ -35,34 +34,83 @@ API Explorer 提供了在线调用、签名验证、SDK 代码生成和快速检
 
 | 参数名称 | 必选 | 类型 | 描述 |
 | --- | --- | --- | --- |
-| Action | 是 | String | [公共参数](/document/api/876/34812) ，本接口取值：CreateVmInstance。 |
+| Action | 是 | String | [公共参数](/document/api/876/34812) ，本接口取值：PurgeHTTPServiceCache。 |
 | Version | 是 | String | [公共参数](/document/api/876/34812) ，本接口取值：2018-06-08。 |
 | Region | 否 | String | [公共参数](/document/api/876/34812) ，本接口不需要传递此参数。 |
-| EnvId | 是 | String | 环境ID  
-示例值：free2-2gi6dzbde85f86a0 |
-| Type | 是 | String | 服务器类型：  
-LightHouse = 轻量云服务器  
-CVM = 云服务器  
-示例值：LightHouse |
-| LightHouseBundleId | 否 | String | 轻量云服务器套餐ID。 当Type=LightHouse时必传  
-示例值：bundle\_rs\_mc\_med1\_02 |
-| LightHouseBlueprintId | 否 | String | 轻量云服务器镜像ID。当Type=LightHouse时必传  
-示例值：lhbp-3qjk6slu |
-| InstanceName | 否 | String | 服务器别名  
-示例值：my new lighthouse instance |
-| LoginConfiguration | 否 | [VMLoginConfiguration](/document/api/876/34822#VMLoginConfiguration) | 登录方式 |
+| EnvId | 是 | String | 
+环境ID
+
+  
+示例值： ****\*\***** -1gz1k5qkc06a0da4 |
+| Domain | 是 | String | 
+
+HTTPService域名
+
+  
+示例值： **********\***********.cn |
+| Targets.N | 是 | Array of String | 
+
+Targets
+
+参数格式：Targets 刷新目标列表，语义随 PurgeType 变化
+
+入参限制：单次请求最多传 20 个 Target，单条 URL/prefix/host 最长 2048
+
+  
+示例值：\["https:// **********\***********.cn/cloudbaseenv.json"\] |
+| CacheType | 否 | String | 
+
+需要刷新的缓存类型：CDN 或 EO
+
+枚举值：
+
+-   EO： EO缓存
+-   CDN： CDN缓存
+
+默认值：EO
+
+  
+示例值：EO |
+| PurgeType | 否 | String | 
+
+PurgeType 刷新方式（purge 粒度），TCBCDN仅支持purge\_url
+
+枚举值：
+
+-   PURGE\_URL： URL 列表（需含协议，如 https://a.com/b.jpg）
+-   PURGE\_PREFIX： URL 前缀列表（需含协议，如 https://a.com/dir/），仅EO支持
+-   PURGE\_HOST： Hostname 列表（可为 host 或 http(s)://host），仅EO支持
+
+默认值：PURGE\_URL
+
+  
+示例值：PURGE\_URL |
 
 ## 3\. 输出参数
 
 | 参数名称 | 类型 | 描述 |
 | --- | --- | --- |
+| CacheType | String | 
+需要刷新的缓存类型：TCBCDN 或 EO
+
+枚举值：
+
+-   EO： EO缓存
+-   CDN： CDN缓存
+
+  
+示例值：EO |
+| TaskId | String | 
+
+刷新任务ID
+
+  
+示例值：3uk1onlg81ab |
 | RequestId | String | 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。 |
 
 ## 4\. 示例
 
-### 示例1 创建LightHouse实例
-
-创建LightHouse实例
+### 示例1 清除EO缓存
 
 #### 输入示例
 
@@ -70,15 +118,17 @@ CVM = 云服务器
 POST / HTTP/1.1
 Host: tcb.tencentcloudapi.com
 Content-Type: application/json
-X-TC-Action: CreateVmInstance
+X-TC-Action: PurgeHTTPServiceCache
 <公共请求参数>
 
 {
-    "EnvId": "free2-2gi6dzbde85f86a0",
-    "Type": "LightHouse",
-    "LightHouseBundleId": "bundle_rs_mc_med1_02",
-    "LightHouseBlueprintId": "lhbp-3qjk6slu",
-    "InstanceName": "my new lighthouse instance"
+    "EnvId": "**********-1gz1k5qkc06a0da4",
+    "Domain": "*********************.cn",
+    "Targets": [
+        "https://*********************.cn/cloudbaseenv.json"
+    ],
+    "PurgeType": "PURGE_URL",
+    "CacheType": "EO"
 }
 ```
 
@@ -87,7 +137,9 @@ X-TC-Action: CreateVmInstance
 ```json
 {
     "Response": {
-        "RequestId": "f12f533b-bc0a-403a-97a5-0a5cb9299d25"
+        "CacheType": "EO",
+        "TaskId": "3uk1onlg81ab",
+        "RequestId": "f6f50b8b-6ada-42cb-9ae4-fa35d37c5cf0"
     }
 }
 ```
@@ -125,11 +177,7 @@ X-TC-Action: CreateVmInstance
 
 | 错误码 | 描述 |
 | --- | --- |
-| FailedOperation | 操作失败。 |
 | InvalidParameter | 参数格式或类型错误，如 Uin、EnvId、Domain 缺失或非法。 |
-| LimitExceeded | 超过配额限制。 |
+| InvalidParameter.EnvId | 环境ID非法。 |
 | ResourceNotFound | 资源不存在。 |
-| ResourceUnavailable | 资源不可用。 |
-| ResourcesSoldOut | 资源售罄。 |
-| UnauthorizedOperation | 未授权操作。 |
-| UnsupportedOperation | 操作不支持。 |
+| ResourceNotFound.HTTPServiceDomain | HTTP访问服务域名不存在 |

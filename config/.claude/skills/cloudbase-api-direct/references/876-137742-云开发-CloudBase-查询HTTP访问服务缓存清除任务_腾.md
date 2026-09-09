@@ -1,8 +1,8 @@
 [API 中心](/document/api)
 
-## 查询云服务器价格
+## 查询HTTP访问服务缓存清除任务
 
-最近更新时间：2026-07-28 03:22:41
+最近更新时间：2026-09-09 02:54:02
 
 -   微信扫一扫 
 -   QQ
@@ -18,13 +18,13 @@ _我的收藏_
 
 接口请求域名： tcb.tencentcloudapi.com 。
 
-查询服务器价格
+本接口DescribeHTTPServiceCachePurgeTask为只读查询，不修改任何缓存或环境资源，仅返回指定环境下域名缓存刷新任务的状态与时间等信息。通过PurgeHTTPServiceCache清除域名缓存后，可通过此接口传入任务id可查询清除任务状态、时间、缓存类型等信息。也可通过此接口查询历史任务记录。
 
 默认接口请求频率限制：20次/秒。
 
 推荐使用 API Explorer
 
-[点击调试](https://console.cloud.tencent.com/api/explorer?Product=tcb&Version=2018-06-08&Action=InquireVmPrice)
+[点击调试](https://console.cloud.tencent.com/api/explorer?Product=tcb&Version=2018-06-08&Action=DescribeHTTPServiceCachePurgeTask)
 
 API Explorer 提供了在线调用、签名验证、SDK 代码生成和快速检索接口等能力。您可查看每次调用的请求内容和返回结果以及自动生成 SDK 调用示例。
 
@@ -34,42 +34,99 @@ API Explorer 提供了在线调用、签名验证、SDK 代码生成和快速检
 
 | 参数名称 | 必选 | 类型 | 描述 |
 | --- | --- | --- | --- |
-| Action | 是 | String | [公共参数](/document/api/876/34812) ，本接口取值：InquireVmPrice。 |
+| Action | 是 | String | [公共参数](/document/api/876/34812) ，本接口取值：DescribeHTTPServiceCachePurgeTask。 |
 | Version | 是 | String | [公共参数](/document/api/876/34812) ，本接口取值：2018-06-08。 |
 | Region | 否 | String | [公共参数](/document/api/876/34812) ，本接口不需要传递此参数。 |
-| Type | 是 | String | 服务器类型：  
-LightHouse = 轻量云服务器  
-CVM = 云服务器  
-示例值：LightHouse |
-| LightHouseBundleId | 否 | String | 轻量云服务器套餐ID。  
-当Type=LightHouse时必传  
-示例值：bundle\_rs\_mc\_med1\_02 |
-| LightHouseBlueprintId | 否 | String | 轻量云服务器镜像ID。当Type=LightHouse时必传  
-示例值：lhbp-3qjk6slu |
+| EnvId | 是 | String | 
+环境ID
+
+  
+示例值： ****\*\***** -1gz1k5qkc06a0da4 |
+| Domain | 是 | String | 
+
+HTTPService域名
+
+  
+示例值： **********\***********.cn |
+| CacheType | 否 | String | 
+
+缓存类型
+
+枚举值：
+
+-   EO： EO缓存
+-   CDN： CDN缓存
+
+默认值：EO
+
+  
+示例值：EO |
+| TaskId | 否 | String | 
+
+任务id，PurgeHTTPServiceCache返回的TaskId，可选
+
+  
+示例值：3uie7chtuyrn |
+| PurgeType | 否 | String | 
+
+按刷新类型过滤
+
+枚举值：
+
+-   PURGE\_URL： URL 刷新
+-   PURGE\_PREFIX： 目录刷新
+-   PURGE\_HOST： Hostname 刷新
+
+  
+示例值：PURGE\_URL |
+| StartTime | 否 | [Timestamp ISO8601](/document/api/876/78570) | 
+
+查询开始时间，TaskId为空时，默认开始时间是7天前
+
+参数格式：格式 YYYY-MM-DDTHH:mm:ss±HH:mmZ，时区为 UTC+0
+
+  
+示例值：2026-09-02T09:10:51Z |
+| EndTime | 否 | [Timestamp ISO8601](/document/api/876/78570) | 
+
+查询结束时间，TaskId为空时，默认结束时间是当前
+
+参数格式：格式 YYYY-MM-DDTHH:mm:ss±HH:mmZ，时区为 UTC+0
+
+  
+示例值：2026-09-02T09:19:51Z |
+| Offset | 否 | Integer | 
+
+分页偏移量。默认 0
+
+  
+示例值：0 |
+| Limit | 否 | Integer | 
+
+分页限制。默认20，最大值1000
+
+  
+示例值：20 |
 
 ## 3\. 输出参数
 
 | 参数名称 | 类型 | 描述 |
 | --- | --- | --- |
-| Currency | String | 价格货币单位。取值范围CNY:人民币。USD:美元。  
-示例值：CNY |
-| OriginalPrice | Float | 原价（主机原始每月价格）  
-示例值：40 |
-| Discount | Float | 折扣率  
-示例值：100 |
-| DiscountPrice | Float | 折扣后每月价格  
-示例值：40 |
-| OriginalCredits | Float | 折扣前每天资源点  
-示例值：1333.3334 |
-| DiscountCredits | Float | 折扣后每天资源点  
-示例值：1333.3334 |
+| Tasks | Array of [HTTPServiceCachePurgeTask](/document/api/876/34822#HTTPServiceCachePurgeTask) | 
+任务列表
+
+ |
+| TotalCount | Integer | 
+
+域名总数，分页查询使用总数判断是否已经拉取到所有数据
+
+  
+示例值：2 |
 | RequestId | String | 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。 |
 
 ## 4\. 示例
 
-### 示例1 查询价格
-
-查询LightHouse实例价格
+### 示例1 按时间范围查询任务列表
 
 #### 输入示例
 
@@ -77,13 +134,14 @@ CVM = 云服务器
 POST / HTTP/1.1
 Host: tcb.tencentcloudapi.com
 Content-Type: application/json
-X-TC-Action: InquireVmPrice
+X-TC-Action: DescribeHTTPServiceCachePurgeTask
 <公共请求参数>
 
 {
-    "Type": "LightHouse",
-    "LightHouseBundleId": "bundle_rs_mc_med1_02",
-    "LightHouseBlueprintId": "lhbp-3qjk6slu"
+    "EnvId": "**********-1gz1k5qkc06a0da4",
+    "Domain": "*********************.cn",
+    "StartTime": "2026-09-02T09:10:51Z",
+    "EndTime": "2026-09-02T09:19:51Z"
 }
 ```
 
@@ -92,13 +150,22 @@ X-TC-Action: InquireVmPrice
 ```json
 {
     "Response": {
-        "Currency": "CNY",
-        "Discount": 100,
-        "DiscountCredits": 1333.3334,
-        "DiscountPrice": 40,
-        "OriginalCredits": 1333.3334,
-        "OriginalPrice": 40,
-        "RequestId": "6e898b9d-19e4-4a46-b26a-86f74a459ca6"
+        "Tasks": [
+            {
+                "CacheType": "EO",
+                "CreateTime": "2026-09-02T09:17:51Z",
+                "Method": "DELETE",
+                "PurgeType": "PURGE_URL",
+                "Status": "SUCCESS",
+                "Targets": [
+                    "https://*********************.cn/cloudbaseenv.json"
+                ],
+                "TaskId": "3uijg0e6qmu2",
+                "UpdateTime": "2026-09-02T09:18:00Z"
+            }
+        ],
+        "TotalCount": 2,
+        "RequestId": "94229944-e6d8-4d82-8ed2-9607e6ba4792"
     }
 }
 ```
@@ -136,4 +203,11 @@ X-TC-Action: InquireVmPrice
 
 | 错误码 | 描述 |
 | --- | --- |
+| FailedOperation.ThirdServiceError | 请求第三方服务，第三方服务返回报错信息 |
+| InternalError | 内部错误。 |
+| InternalError.Database | 数据库错误。 |
+| InternalError.Timeout | 服务超时。 |
 | InvalidParameter | 参数格式或类型错误，如 Uin、EnvId、Domain 缺失或非法。 |
+| InvalidParameter.EnvId | 环境ID非法。 |
+| ResourceNotFound | 资源不存在。 |
+| ResourceNotFound.HTTPServiceDomain | HTTP访问服务域名不存在 |
