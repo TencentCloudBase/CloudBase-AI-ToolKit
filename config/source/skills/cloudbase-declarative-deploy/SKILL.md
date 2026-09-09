@@ -23,7 +23,7 @@ Sibling CloudBase skills ship beside this skill. Use local relative paths such a
 Cloud-hosted MCP mode does not guarantee access to a local workspace filesystem or
 stable relative paths. If a referenced sibling file is not available in cloud mode,
 use this skill's embedded guidance as source of truth and ask the user for any
-missing constraints — do not HTTP-fetch remote skill markdown.
+missing constraints (or to install the missing skill). Do **not** HTTP-fetch remote skill or protocol markdown into the agent context.
 
 **Cross-cutting protocols** (required before applying any deploy):
 - Change Safety Protocol: `../cloudbase-platform/references/protocols/change-safety-protocol.md`
