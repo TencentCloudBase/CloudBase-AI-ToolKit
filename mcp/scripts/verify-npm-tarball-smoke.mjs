@@ -103,7 +103,10 @@ async function resolvePackageMeta(requested) {
   log("resolve", metaUrl);
 
   let lastError;
-  for (let attempt = 1; attempt <= 8; attempt++) {
+  // npm registry propagation after a fresh publish can take minutes; a short
+  // retry window causes false post-publish-smoke failures (v2.33.2 incident).
+  // 12 attempts with exponential backoff (capped 30s) ≈ 4.5 min total.
+  for (let attempt = 1; attempt <= 12; attempt++) {
     try {
       const meta = await fetchJson(metaUrl);
       assert(meta?.version, `Registry response missing version for ${requested}`);
@@ -117,8 +120,8 @@ async function resolvePackageMeta(requested) {
       };
     } catch (error) {
       lastError = error;
-      const delayMs = Math.min(15000, 1000 * attempt);
-      log("resolve-retry", `attempt ${attempt}/8 failed (${error.message}); wait ${delayMs}ms`);
+      const delayMs = Math.min(30000, 2000 * 2 ** (attempt - 1));
+      log("resolve-retry", `attempt ${attempt}/12 failed (${error.message}); wait ${delayMs}ms`);
       await new Promise((resolve) => setTimeout(resolve, delayMs));
     }
   }

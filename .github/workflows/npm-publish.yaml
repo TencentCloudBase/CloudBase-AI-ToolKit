@@ -59,7 +59,13 @@ jobs:
 
       - name: Run tests
         working-directory: ./mcp
-        run: pnpm exec vitest run
+        # Package tests only (mcp/src). The mcp vitest config also picks up
+        # ../tests/**/*.test.js (repo-wide skills lint etc.) via its include
+        # list; scope this step to src/ so documentation-wording drift in
+        # skills cannot block an npm release (v2.33.2 incident). Repo-wide
+        # tests still gate every PR and main push via the build-and-publish
+        # workflow (Test package + Test hooks).
+        run: pnpm exec vitest run src
 
       - name: Smoke CLI cloud-mode
         working-directory: ./mcp
@@ -170,4 +176,15 @@ jobs:
         run: ./mcp-publisher login github-oidc
 
       - name: Publish server.json
-        run: ./mcp-publisher publish mcp/server.json
+        # The MCP Registry validates the npm package exists; right after a fresh
+        # publish it may not be propagated yet (v2.33.2 incident). Retry window
+        # ≈ 5 min.
+        run: |
+          for i in 1 2 3 4 5; do
+            if ./mcp-publisher publish mcp/server.json; then
+              exit 0
+            fi
+            echo "publish attempt $i failed (npm registry propagation may be pending); retrying in 60s"
+            sleep 60
+          done
+          exit 1
