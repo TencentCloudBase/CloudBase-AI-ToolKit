@@ -1,0 +1,48 @@
+name: Bump Expert Versions
+
+# Expert pack submission (开放平台提审) requires a version increment whenever
+# pack content changes. On every push to main, detect changed packs since the
+# last tag and bump their patch version, committing the bump back to main.
+# Bump commits carry [skip ci] so this workflow does not re-trigger itself.
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bump-expert-versions
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.2.2
+        with:
+          fetch-depth: 0 # full history + tags for the since-last-tag diff
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+
+      - name: Bump versions for changed expert packs
+        run: node scripts/bump-expert-versions.mjs
+
+      - name: Commit and push version bumps
+        run: |
+          if [[ -n "$(git status --porcelain plugins/experts)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add plugins/experts
+            git commit -m "chore(experts): auto-bump versions for changed packs [skip ci]"
+            git push
+            echo "Expert versions bumped and pushed."
+          else
+            echo "No expert pack content changed since last tag, nothing to bump."
+          fi
