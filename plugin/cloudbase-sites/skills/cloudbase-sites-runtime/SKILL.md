@@ -286,6 +286,24 @@ Skip any of these when:
    you'd lose version metadata, snapshot, deploy history, and the stable
    siteName.
 
+8. **Icons come from `lucide-react` — preinstalled, never hand-installed.**
+   `cloudbase-sites init` injects `lucide-react` (react) / `lucide-vue-next`
+   (vue) into the scaffold's `package.json` before its single install step.
+   Import icons directly (`import { Heart } from "lucide-react"`). Do NOT run
+   a package-install command just to add icons — sandboxed installs during
+   generation are a known failure point — and do NOT hand-write inline SVG
+   paths when a lucide icon exists.
+
+9. **Fill `VITE_PUBLISHABLE_KEY` automatically — never ask the user.** The
+   template's `src/utils/cloudbase.ts` reads it from `.env.local`; new envs
+   have no publishable key by default. After init: call
+   `queryAppAuth({ action: "getPublishableKey" })`; if empty, call
+   `manageAppAuth({ action: "ensurePublishableKey" })`; then write
+   `VITE_PUBLISHABLE_KEY=<key>` into `.env.local`. This key cannot be
+   skipped — it is the data-plane app credential attached to every browser
+   request, including the login request itself and anonymous reads — but
+   the user should never fill it by hand.
+
 ## Hard rules — always parse CLI stdout as JSON
 
 The first stdout line of every `cloudbase-sites <verb>` invocation is a

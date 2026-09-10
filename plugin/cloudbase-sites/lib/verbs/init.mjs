@@ -16,8 +16,10 @@ import {
   existsSync,
   mkdirSync,
   readdirSync,
+  readFileSync,
   realpathSync,
   rmSync,
+  writeFileSync,
 } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -180,6 +182,22 @@ function downloadFile(url, dest, redirects = 0) {
       out.on("error", (e) => reject(withCode(ERR.DOWNLOAD_FAILED, `write failed: ${e.message}`)));
     }).on("error", (e) => reject(withCode(ERR.DOWNLOAD_FAILED, `request failed: ${e.message}`)));
   });
+}
+
+function injectIconDependency(pkgPath, template) {
+  const dep = ICON_DEPS[template];
+  if (!dep || !existsSync(pkgPath)) return;
+  try {
+    const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+    pkg.dependencies = pkg.dependencies || {};
+    if (pkg.dependencies[dep.name]) return;
+    pkg.dependencies[dep.name] = dep.version;
+    writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
+    process.stderr.write(`[cloudbase-sites] added ${dep.name}@${dep.version} to package.json\n`);
+  } catch (e) {
+    // Non-fatal: the agent can still install the icon lib manually if needed.
+    process.stderr.write(`[cloudbase-sites] warning: could not add ${dep.name}: ${e.message}\n`);
+  }
 }
 
 function runInstall(cwd) {
