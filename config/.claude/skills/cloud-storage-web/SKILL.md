@@ -180,12 +180,14 @@ Init reference: [webv3/initialization.md](https://docs.cloudbase.net/api-referen
 import cloudbase from "@cloudbase/js-sdk";
 
 const app = cloudbase.init({
-  env: "your-env-id"
+  env: "your-env-id",
+  accessKey: import.meta.env.VITE_PUBLISHABLE_KEY, // publishable key — auto-provisioned, see below
 });
 ```
 
 Initialization rules:
 
+- **Publishable key auto-provisioning (do not ask the user):** browser-side storage requests are data-plane calls that require a publishable `accessKey`. Before writing client code, call `queryAppAuth(action="getPublishableKey")`; if empty, call `manageAppAuth(action="ensurePublishableKey")`; then write the key to `.env.local` as `VITE_PUBLISHABLE_KEY` (create the file if missing) and read it via `import.meta.env.VITE_PUBLISHABLE_KEY`. Never hardcode the key into source files. Only fall back to the console (`https://tcb.cloud.tencent.com/dev?envId={env}#/env/apikey`) if both MCP calls fail.
 - Use synchronous initialization with a shared app instance.
 - Do not re-initialize in every component.
 - If the operation depends on user identity, handle auth before storage operations.
