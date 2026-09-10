@@ -55,6 +55,53 @@ try {
   // Read package.json
   const packageJson = readPackageJson();
 
+  // Sync server.json versions from package.json (single source of truth).
+  // Must run BEFORE the no-dependencies early exit below: the published npm
+  // tarball ships server.json (see package.json "files"), and CI only syncs
+  // versions in its own workspace for the MCP Registry submission — it never
+  // writes back to the repo. Without this sync, the tarball carries whatever
+  // stale version was last committed (e.g. 2.33.0 tarball shipping in 2.33.2).
+  const serverJsonPath = path.join(__dirname, '../server.json');
+  if (fs.existsSync(serverJsonPath)) {
+    const serverJson = JSON.parse(fs.readFileSync(serverJsonPath, 'utf8'));
+    let serverJsonChanged = false;
+    if (serverJson.version !== packageJson.version) {
+      serverJson.version = packageJson.version;
+      serverJsonChanged = true;
+    }
+    const npmPkg = (serverJson.packages || []).find((p) => p.registryType === 'npm');
+    if (npmPkg && npmPkg.version !== packageJson.version) {
+      npmPkg.version = packageJson.version;
+      serverJsonChanged = true;
+    }
+    if (serverJsonChanged) {
+      const content = JSON.stringify(serverJson, null, 2) + '\n';
+      JSON.parse(content); // guard against generating invalid JSON
+      fs.writeFileSync(serverJsonPath, content, 'utf8');
+      console.log(`✓ server.json version synced to ${packageJson.version}`);
+    } else {
+      console.log(`✓ server.json version already matches ${packageJson.version}`);
+    }
+  }
+
+  // Integrity check: DXT manifest.json must only reference files that exist
+  // in dist/ (e.g. catches stale "./dist/cli.js" after a rename to cli.cjs).
+  const dxtManifestPath = path.join(__dirname, '../manifest.json');
+  if (fs.existsSync(dxtManifestPath)) {
+    const dxt = JSON.parse(fs.readFileSync(dxtManifestPath, 'utf8'));
+    const refs = [dxt.server && dxt.server.entry_point]
+      .concat((dxt.server && dxt.server.mcp_config && dxt.server.mcp_config.args) || [])
+      .filter((ref) => typeof ref === 'string' && ref.startsWith('./'));
+    for (const ref of refs) {
+      if (!fs.existsSync(path.join(__dirname, '..', ref))) {
+        throw new Error(`DXT manifest.json references missing file: ${ref}`);
+      }
+    }
+    if (refs.length > 0) {
+      console.log(`✓ DXT manifest.json entry points verified (${refs.length} refs)`);
+    }
+  }
+
   // Check if dependencies exist
   if (!packageJson.dependencies || Object.keys(packageJson.dependencies).length === 0) {
     console.log('⚠️  No dependencies to clear, skipping backup');

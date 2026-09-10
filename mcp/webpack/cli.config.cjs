@@ -7,7 +7,7 @@ const createMinimalExternals = require('./minimal-externals.cjs');
 
 /**
  * CLI 配置
- * 生成 ESM 和 CJS 两种格式的 CLI 文件
+ * 生成 CJS 格式的 CLI 文件（ESM 版已移除，bin 入口固定为 cli.cjs）
  */
 function createCLIConfigs() {
   const baseConfig = createBaseConfig();

@@ -361,6 +361,25 @@ async function main() {
     assert(pkgJson.version === meta.version, `package.json version ${pkgJson.version} != ${meta.version}`);
     log("package.json", `version=${pkgJson.version}`);
 
+    // server.json ships inside the tarball (see package.json "files"); its
+    // version must match the published version, otherwise the MCP Registry
+    // and other consumers reading the tarball see a stale version.
+    const serverJsonPath = path.join(pkgRoot, "server.json");
+    assert(existsSync(serverJsonPath), `Published tarball missing server.json at ${serverJsonPath}`);
+    const serverJson = JSON.parse(readFileSync(serverJsonPath, "utf8"));
+    assert(
+      serverJson.version === meta.version,
+      `server.json version ${serverJson.version} != published version ${meta.version}`,
+    );
+    const npmServerPkg = (serverJson.packages || []).find((p) => p.registryType === "npm");
+    if (npmServerPkg) {
+      assert(
+        npmServerPkg.version === meta.version,
+        `server.json npm package version ${npmServerPkg.version} != published version ${meta.version}`,
+      );
+    }
+    log("server.json", `version=${serverJson.version}`);
+
     assertOpaStrings(pkgRoot);
     const { toolNames } = await assertToolRegistration(pkgRoot);
     await assertCliCloudMode(pkgRoot);

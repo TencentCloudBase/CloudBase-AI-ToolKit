@@ -38,11 +38,11 @@
   ],
   "server": {
     "type": "node",
-    "entry_point": "./dist/cli.js",
+    "entry_point": "./dist/cli.cjs",
     "node_version": ">=18.0.0",
     "mcp_config": {
       "command": "node",
-      "args": ["./dist/cli.js"],
+      "args": ["./dist/cli.cjs"],
       "transport": "stdio"
     }
   },
