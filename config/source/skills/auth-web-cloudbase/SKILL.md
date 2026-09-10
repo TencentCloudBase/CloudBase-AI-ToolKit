@@ -46,11 +46,11 @@ If a referenced sibling skill file is missing from this environment, ask the use
 - Starting implementation before calling `queryAppAuth(action="getLoginConfig")` and enabling `usernamePassword` when it is still off.
 - **Writing `auth.signInWithPassword(...)` or `auth.signUp(...)` code without first confirming the provider is enabled via MCP.** Before writing any sign-in or sign-up code in the browser, call `queryAppAuth(action="listProviders")` to verify the target provider (e.g. `email`, `phone`, `usernamePassword`) has `On: "TRUE"`. For email-based sign-up (`auth.signUp({ email, password })`), additionally confirm SMTP is configured — otherwise the provider may throw `"provider email not found"` or similar errors. For username/password login, use `auth.signInWithPassword({ username, password })`; registration is best done through the management API (`manageAppAuth(action="createUser")`) or by confirming email provider readiness first.
 - **Treating `auth.getUser()` or deprecated `auth.getLoginState()` as proof of real login.** When the SDK is initialized with `accessKey`, the deprecated `getLoginState()` may still return an object with a valid `uid` even without any login — causing route guards that check `!!loginState` or `!!uid` to incorrectly pass. That misleading `uid` is **not** a gateway-authenticated session. Use `auth.getSession()` instead: it returns `data.session === undefined` when no real login has occurred. Only `!!data.session` from `getSession()` is a reliable authentication check.
-- **Assuming publishable `accessKey` alone is enough for NoSQL CRUD.** With `@cloudbase/js-sdk` **3.x**, call **`await auth.signInAnonymously()`** (or an equivalent authenticated session such as password/OTP/OAuth) **before** any NoSQL `app.database()` `get` / `add` / `update` / `watch`. Skipping this yields **gateway 401**. `checkLogin()` / `getSession()` alone do **not** create a usable write session.
+- **Assuming publishable `accessKey` alone is enough for NoSQL CRUD.** NoSQL `app.database()` `get` / `add` / `update` / `watch` requires a gateway-authenticated **session**: use a real login (password / OTP / OAuth). Anonymous login is a demo-only escape hatch for explicitly-public, non-user data — it is disabled by default, denied AI model permissions, and must never stand in for real auth in user-scoped apps. Skipping any login yields **gateway 401**. `checkLogin()` / `getSession()` alone do **not** create a usable write session.
 - **Copying old CloudBase auth snippets from training data.** Do not use `auth.getLoginState()`, `auth.hasLoginState()`, `auth.getCurrentUser()`, or `auth.toDefaultLoginPage()` as the default Web flow. Use the Web SDK v3 auth methods in this file and provider readiness from `auth-tool-cloudbase`.
 - **Calling a standalone `auth.verifyOtp({ token })` for OTP login.** CloudBase Web SDK v3 returns `verifyOtp` as a callback on the `signInWithOtp` / `signUp` result: send the code first, keep the returned `data`, then call `data.verifyOtp({ token })`. A standalone `auth.verifyOtp({ token })` without `messageId` fails with `"messageId is required"` — seeing that error means the callback form was skipped. See `references/extended-guide.md` for the full send → save callback → verify flow.
   
-  Note: anonymous login is **disabled by default** for new environments and inactive existing environments — enable it via `auth-tool-cloudbase` before calling `signInAnonymously()`. Always use `auth.getSession()` for auth guards.
+  Note: anonymous login is **disabled by default** for new environments and inactive existing environments. Do not enable it to work around permission errors — enable via `auth-tool-cloudbase` only when the app explicitly serves public non-user data (e.g. NoSQL read-only demos). Always use `auth.getSession()` for auth guards.
 
 ## Overview
 
@@ -96,7 +96,7 @@ Use npm installation for modern Web projects. In React, Vue, Vite, and other bun
 - If the task gives accounts like `admin`, `editor`, or another plain string without `@`, treat it as a username-style identifier rather than an email address
 - `data.verifyOtp({ token })` — the `verifyOtp` callback on the `signInWithOtp` / `signUp` result `data` — expects the SMS or email code in `token`; do not invent a standalone `auth.verifyOtp({ token })` call, which additionally requires `messageId`
 - `accessKey` is the publishable key from `queryAppAuth` / `manageAppAuth` via `auth-tool-cloudbase`, not a secret key
-- **`accessKey` alone does not create a gateway-authenticated anonymous session.** Publishable `accessKey` initializes the SDK; it does **not** replace an explicit login for NoSQL CRUD. With `@cloudbase/js-sdk` **3.x**, call `await auth.signInAnonymously()` (or an equivalent authenticated session) **before** `app.database()` `get` / `add` / `update` / `watch` — otherwise the gateway returns **401**. Separately: the deprecated `auth.getLoginState()` may still return a misleading `uid` without login; use `auth.getSession()` for route guards (`data.session === undefined` when not logged in). `checkLogin()` / `getSession()` alone do **not** create a usable write session.
+- **`accessKey` alone does not create a gateway-authenticated session.** Publishable `accessKey` initializes the SDK; it does **not** replace a login for NoSQL CRUD. Any `app.database()` `get` / `add` / `update` / `watch` needs a session — prefer a real login (password / OTP / OAuth); `signInAnonymously()` only for explicitly-public demo data (disabled by default, denied AI model permissions). Otherwise the gateway returns **401**. Separately: the deprecated `auth.getLoginState()` may still return a misleading `uid` without login; use `auth.getSession()` for route guards (`data.session === undefined` when not logged in). `checkLogin()` / `getSession()` alone do **not** create a usable write session.
 - Never set `accessKey` to `envId`, a username, or any placeholder string. If you do not have a real Publishable Key yet, do not fabricate one.
 - If the task mentions provider setup, stop and read `auth-tool-cloudbase` before writing frontend code
 
@@ -110,15 +110,17 @@ const app = cloudbase.init({
   env: 'your-full-env-id', // Canonical full CloudBase environment ID resolved from envQuery or the console, not an alias or shorthand
   region: 'ap-shanghai',  // CloudBase environment Region, default 'ap-shanghai'
   accessKey: 'publishable key', // required, get from auth-tool-cloudbase
-  // ⚠️ accessKey alone ≠ anonymous login. For NoSQL CRUD call await auth.signInAnonymously()
-  // (or real login) first — otherwise gateway 401. Use auth.getSession() for route guards;
-  // deprecated getLoginState() may return a misleading uid without a real session.
+  // ⚠️ accessKey alone ≠ a login session. NoSQL CRUD needs a session —
+  // real login preferred; signInAnonymously() only for public demo data.
+  // Use auth.getSession() for route guards; deprecated getLoginState()
+  // may return a misleading uid without a real session.
   auth: { detectSessionInUrl: true }, // required
 })
 
 const auth = app.auth
 
-// Before NoSQL app.database() CRUD (js-sdk 3.x + publishable key):
+// NoSQL app.database() CRUD requires a session (js-sdk 3.x + publishable key).
+// Real login (see cookbook). Anonymous, only for public non-user demos:
 // const { error } = await auth.signInAnonymously()
 // if (error) throw error
 ```
@@ -139,7 +141,7 @@ const { data, error } = await auth.signInWithPassword({ username, password })
 if (error) { /* show error.message */ } else { /* data.user */ }
 ```
 
-**Anonymous sign-in** (required before NoSQL `app.database()` CRUD; PG anon reads work with accessKey alone):
+**Anonymous sign-in — demo-only, not a default.** NoSQL `app.database()` CRUD needs some session (PG anon reads work with accessKey alone). Prefer a real login; reach for anonymous ONLY when the app explicitly serves public non-user data and the user accepts the trade-off — it is disabled by default, denied AI model permissions, and its `uid` must never own user-scoped rows:
 
 ```js
 const { error } = await auth.signInAnonymously()
