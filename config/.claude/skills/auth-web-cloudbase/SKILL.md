@@ -81,6 +81,7 @@ Use npm installation for modern Web projects. In React, Vue, Vite, and other bun
 
 - Automatically use `auth-tool-cloudbase` to check app-side auth readiness via `queryAppAuth` / `manageAppAuth`, then get the `publishable key` and configure login methods.
 - **Publishable key readiness (do not skip):** call `queryAppAuth(action="getPublishableKey")`. If it is empty, call `manageAppAuth(action="ensurePublishableKey")` first — new environments may not have one provisioned, and skipping this step leaves the frontend without a data-plane credential, surfacing later as gateway auth failures instead of an obvious missing-key error.
+- **Persist the key, don't hoard it in conversation:** after retrieval, write the publishable key to `.env.local` as `VITE_PUBLISHABLE_KEY` (create the file if missing) and read it in client code via `import.meta.env.VITE_PUBLISHABLE_KEY`. Never hardcode the key into source files, and never ask the user to fetch it from the console — fall back to the console link below only if both MCP calls fail.
 - If `auth-tool-cloudbase` failed, let user go to `https://tcb.cloud.tencent.com/dev?envId={env}#/env/apikey` to get `publishable key` and `https://tcb.cloud.tencent.com/dev?envId={env}#/identity/login-manage` to set up login methods
 
 ### Parameter map
