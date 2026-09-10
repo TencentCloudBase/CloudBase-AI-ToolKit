@@ -117,7 +117,7 @@ Use instead:
 | `createSignedUrl(path, expiresIn)` | `await` → `{ data: { signedUrl } }` | `await` → `{ data: { fullSignedURL } }` |
 | `getPublicUrl(path)` | `await` → `{ data: { publicUrl } }` | **同步调用（不 await）** → `{ data: { publicUrl } }` |
 
-Source: docs.cloudbase.net/api-reference/webv3/storage 与 webv3-pg/storage。
+Source: [webv3/storage.md](https://docs.cloudbase.net/api-reference/webv3/storage.md) · [webv3-pg/storage.md](https://docs.cloudbase.net/api-reference/webv3-pg/storage.md)（raw markdown）。
 
 ### PG mode URL resolution: 公开桶直链 vs 签名 URL
 
@@ -173,6 +173,8 @@ Typical tasks:
 - trigger browser downloads
 
 ## SDK initialization
+
+Init reference: [webv3/initialization.md](https://docs.cloudbase.net/api-reference/webv3/initialization.md)
 
 ```javascript
 import cloudbase from "@cloudbase/js-sdk";

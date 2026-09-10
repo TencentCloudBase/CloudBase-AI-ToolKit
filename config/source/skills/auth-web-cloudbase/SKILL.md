@@ -102,6 +102,8 @@ Use npm installation for modern Web projects. In React, Vue, Vite, and other bun
 
 ## Quick Start
 
+SDK init reference: [docs.cloudbase.net/api-reference/webv3/initialization.md](https://docs.cloudbase.net/api-reference/webv3/initialization.md)（URL 加 `.md` 可取 raw markdown 原文）
+
 ```js
 // npm install @cloudbase/js-sdk
 import cloudbase from '@cloudbase/js-sdk'
@@ -129,7 +131,7 @@ If the current task has not retrieved a real Publishable Key, omit `accessKey` i
 
 ## Auth code cookbook (official v3 API — copy these, do not re-derive from .d.ts)
 
-Every method returns the unified shape `{ data, error }` — branch on `error` first and surface `error.message`. The auth API is identical in traditional and PG environments (source: docs.cloudbase.net/api-reference/webv3/authentication).
+Every method returns the unified shape `{ data, error }` — branch on `error` first and surface `error.message`. The auth API is identical in traditional and PG environments. Source: [official auth docs](https://docs.cloudbase.net/api-reference/webv3/authentication.md)（raw markdown, cross-check snippets there when in doubt）.
 
 **Default auth UI contract:** when the user asks for 登录/注册/账号体系/user system without restricting the method, the login page must make ALL of these reachable (tabs or separate forms): password sign-in, OTP sign-in, verified sign-up (code + password), and forgot-password (whenever password sign-in exists). Never ship OTP-only or password-only UI unless explicitly asked. Never reveal whether an identifier is already registered in user-facing copy — route existing users to login with neutral wording.
 
