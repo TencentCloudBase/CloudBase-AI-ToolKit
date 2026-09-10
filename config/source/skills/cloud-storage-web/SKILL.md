@@ -109,6 +109,16 @@ Use instead:
 - ✅ `app.storage.from('covers').upload('file', file)` — PG 模式上传
 - ✅ `app.storage.from('covers').createSignedUrl('file', 3600)` — 获取签名 URL（返回 `fullSignedURL` 字段）
 
+**Return shapes differ between modes (v3 SDK) — copy the right column:**
+
+| call | 传统模式 (`from()` 无参, `cloud://` fileID) | PG 模式 (`from('bucket')`, bucket 内对象名) |
+|---|---|---|
+| `upload(path, file)` | `{ data: { id, path, fullPath } }`；`upsert` 默认 **true** | `{ data: { id, ... } }`；`upsert` 默认 **false** |
+| `createSignedUrl(path, expiresIn)` | `await` → `{ data: { signedUrl } }` | `await` → `{ data: { fullSignedURL } }` |
+| `getPublicUrl(path)` | `await` → `{ data: { publicUrl } }` | **同步调用（不 await）** → `{ data: { publicUrl } }` |
+
+Source: docs.cloudbase.net/api-reference/webv3/storage 与 webv3-pg/storage。
+
 ### PG mode URL resolution: 公开桶直链 vs 签名 URL
 
 | Bucket 类型 | URL 策略 | 代码 |

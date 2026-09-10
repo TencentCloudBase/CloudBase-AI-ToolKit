@@ -178,7 +178,11 @@ Use static imports and one shared `app.rdb()` client:
 
 ```ts
 import cloudbase from "@cloudbase/js-sdk";
-const app = cloudbase.init({ env: import.meta.env.VITE_CLOUDBASE_ENV_ID });
+const app = cloudbase.init({
+  env: import.meta.env.VITE_CLOUDBASE_ENV_ID,
+  accessKey: import.meta.env.VITE_PUBLISHABLE_KEY, // publishable key, see auth-web-cloudbase prerequisites
+  auth: { detectSessionInUrl: true },
+});
 export const auth = app.auth;
 export const db = app.rdb();
 ```
@@ -208,7 +212,41 @@ await db.from("articles").delete().eq("id", id);
 const { data } = await db.rpc("function_name", { id });
 ```
 
-Common query helpers: `.eq()`, `.neq()`, `.gt()`, `.gte()`, `.lt()`, `.lte()`, `.like()`, `.ilike()`, `.in()`, `.is()`, `.order()`, `.limit()`, `.range()`, `.single()`.
+Common query helpers: `.eq()`, `.neq()`, `.gt()`, `.gte()`, `.lt()`, `.lte()`, `.like()`, `.ilike()`, `.in()`, `.is()`, `.contains()`, `.textSearch()`, `.or()`, `.not()`, `.match()`, `.order()`, `.limit()`, `.range()`, `.single()`.
+
+**Full cookbook (official webv3-pg API — copy these, do not re-derive from .d.ts).** Source: docs.cloudbase.net/api-reference/webv3-pg/postgresql/{fetch,insert,update,delete,upsert,filters,modifiers,rpc}:
+
+```ts
+// COUNT only — no rows returned, count comes back on the result object
+const { count, error } = await db.from("articles").select("*", { count: "exact", head: true });
+
+// Pagination — .range(from, to) is INCLUSIVE on both ends; page 2 of 20 = .range(20, 39)
+const { data, error } = await db.from("articles").select("*")
+  .order("created_at", { ascending: false }).range(0, 19);
+
+// INSERT and return the inserted row — ⚠️ .select() only returns rows when the
+// table has a single auto-increment primary key; otherwise data is empty/null
+const { data, error } = await db.from("articles").insert({ title, status: "draft" }).select();
+
+// INSERT many rows at once (array form)
+await db.from("articles").insert([{ title: "a" }, { title: "b" }]);
+
+// UPSERT — include the primary key in values; onConflict names the unique-index column(s)
+await db.from("articles").upsert({ id: 1, title: "new" }, { onConflict: "id" });
+
+// Join query — PostgREST embedded resources via FK relationship
+const { data, error } = await db.from("articles").select(`
+  title,
+  categories ( name ),
+  created_by:users!articles_created_by_fkey ( name ) // multiple FKs to the same table need the constraint name
+`);
+
+// RPC — SETOF-returning functions chain .select()/.order()/.limit()/.single()/filters like a query
+const { data, error } = await db.rpc("search_articles", { keyword })
+  .select("title, published_at").order("published_at", { ascending: false }).limit(5);
+const { data: one } = await db.rpc("search_articles", { keyword }).limit(1).single();
+const { count } = await db.rpc("search_articles", { keyword }, { count: "exact", head: true });
+```
 
 ### ⚠️ Critical: PG API is NOT the same as CloudBase NoSQL or other ORMs
 

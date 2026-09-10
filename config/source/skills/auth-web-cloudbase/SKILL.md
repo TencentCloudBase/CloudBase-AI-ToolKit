@@ -125,6 +125,54 @@ const auth = app.auth
 
 If the current task has not retrieved a real Publishable Key, omit `accessKey` instead of inventing one. A wrong `accessKey` can break auth-state checks and protected-route behavior.
 
+## Auth code cookbook (official v3 API — copy these, do not re-derive from .d.ts)
+
+Every method returns the unified shape `{ data, error }` — branch on `error` first and surface `error.message`. The auth API is identical in traditional and PG environments (source: docs.cloudbase.net/api-reference/webv3/authentication).
+
+**Password sign-in** (username-style or email identifiers both go here):
+
+```js
+const { data, error } = await auth.signInWithPassword({ username, password })
+// email accounts: auth.signInWithPassword({ email, password })
+if (error) { /* show error.message */ } else { /* data.user */ }
+```
+
+**Anonymous sign-in** (required before NoSQL `app.database()` CRUD; PG anon reads work with accessKey alone):
+
+```js
+const { error } = await auth.signInAnonymously()
+```
+
+**Register (email/phone OTP flow)** — `signUp` sends the verification code, `data.verifyOtp` completes it:
+
+```js
+const { data, error } = await auth.signUp({ email, password }) // or { phone, password }
+if (error) throw error
+const { data: login, error: verifyErr } = await data.verifyOtp({ token: code }) // code from email/SMS
+```
+
+**Session check / route guard** — always `getSession()`, never the deprecated `getLoginState()`:
+
+```js
+const { data } = await auth.getSession()
+const session = data?.session // undefined === not logged in
+```
+
+**Auth state listener** (wire this once at app bootstrap):
+
+```js
+auth.onAuthStateChange((event, session) => {
+  // event: INITIAL_SESSION | SIGNED_IN | SIGNED_OUT | PASSWORD_RECOVERY
+  //        | TOKEN_REFRESHED | USER_UPDATED | BIND_IDENTITY
+})
+```
+
+**Sign out:**
+
+```js
+const { error } = await auth.signOut()
+```
+
 ---
 
 ## Extended guide
