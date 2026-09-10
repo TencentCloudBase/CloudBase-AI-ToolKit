@@ -16,8 +16,10 @@ import {
   existsSync,
   mkdirSync,
   readdirSync,
+  readFileSync,
   realpathSync,
   rmSync,
+  writeFileSync,
 } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -40,6 +42,13 @@ const ERR = {
 const TEMPLATE_URLS = {
   react: "https://static.cloudbase.net/cloudbase-examples/web-cloudbase-react-template.zip",
   vue: "https://static.cloudbase.net/cloudbase-examples/web-cloudbase-vue-template.zip",
+};
+
+// Icon library preinstalled per template, so generation-time never needs a
+// second package install (sandboxed installs are a known failure point).
+const ICON_DEPS = {
+  react: { name: "lucide-react", version: "^1.43.0" },
+  vue: { name: "lucide-vue-next", version: "^1.0.0" },
 };
 
 export const initHelp = `cloudbase-sites init — bootstrap CloudBase + React/Vue + Vite project in cwd
@@ -93,6 +102,9 @@ export async function runInit(args) {
     throw withCode(ERR.EXTRACT_FAILED, `unzip exited with code ${unzipR.status}. Is 'unzip' installed?`);
   }
   try { rmSync(zipPath); } catch {}
+
+  // 4.5. Inject icon dependency so the single install step below covers it.
+  injectIconDependency(join(CWD, "package.json"), template);
 
   // 5. Install.
   if (!args.skipInstall) {
@@ -180,6 +192,22 @@ function downloadFile(url, dest, redirects = 0) {
       out.on("error", (e) => reject(withCode(ERR.DOWNLOAD_FAILED, `write failed: ${e.message}`)));
     }).on("error", (e) => reject(withCode(ERR.DOWNLOAD_FAILED, `request failed: ${e.message}`)));
   });
+}
+
+function injectIconDependency(pkgPath, template) {
+  const dep = ICON_DEPS[template];
+  if (!dep || !existsSync(pkgPath)) return;
+  try {
+    const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+    pkg.dependencies = pkg.dependencies || {};
+    if (pkg.dependencies[dep.name]) return;
+    pkg.dependencies[dep.name] = dep.version;
+    writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
+    process.stderr.write(`[cloudbase-sites] added ${dep.name}@${dep.version} to package.json\n`);
+  } catch (e) {
+    // Non-fatal: the agent can still install the icon lib manually if needed.
+    process.stderr.write(`[cloudbase-sites] warning: could not add ${dep.name}: ${e.message}\n`);
+  }
 }
 
 function runInstall(cwd) {

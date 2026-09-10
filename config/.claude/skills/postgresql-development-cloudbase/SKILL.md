@@ -31,7 +31,7 @@ If a referenced sibling skill file is missing from this environment, ask the use
 - PG mode overview -> `references/pg-mode-overview.md`
 - Auth / GRANT / RLS details -> `references/auth-and-rls.md`
 - End-to-end PG app closure -> `references/app-workflow.md`
-- PG storage details -> `references/storage-pg.md`
+- PG storage details — **MUST read before writing any bucket / upload / URL code** -> `references/storage-pg.md`
 - HTTP API fallback -> `references/http-api.md`
 - Troubleshooting -> `references/troubleshooting.md`
 
@@ -149,6 +149,20 @@ CloudBase PG (`app.rdb()`, `app.storage.from('bucket')`) uses **different API me
 - Backend permission must exist in the database or server/RPC layer. Hiding buttons in the UI is not enough.
 - Do not leave a browser-facing table with RLS enabled and zero policies. PostgreSQL denies user reads/writes by default in that state, so `app.rdb().from("articles").insert(...)` can fail while the UI only shows a generic save failure. If you enable RLS, create and verify SELECT/INSERT/UPDATE/DELETE policies before testing the app.
 - Use CloudBase PG's official SQL auth helpers in policies: `auth.uid()` (JWT `sub`, returns **`text`** not `uuid`), `auth.role()` (`anon` / `authenticated` / `service_role`), `auth.jwt()` (full claims), and `auth.email()` when relevant. Prefer owner columns such as `owner_id varchar(64) DEFAULT auth.uid()` so the database, not the browser, assigns ownership. If an owner column is already `uuid`, compare with `auth.uid()::uuid` (only when `sub` is a valid UUID).
+- Standard owner-table template — copy this shape for any user-owned business table:
+
+  ```sql
+  CREATE TABLE articles (
+    id          BIGINT      GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    owner_id    TEXT        NOT NULL DEFAULT auth.uid(),
+    title       TEXT        NOT NULL,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+  );
+  ```
+
+  - `owner_id` is **`TEXT`**, not `uuid` — `auth.uid()` returns text (e.g. `EchhGXFadSANiCSaVim2wQ`); declaring it `uuid` fails at table-create time with a type mismatch.
+  - `owner_id` carries `DEFAULT auth.uid()` — ownership is decided server-side. App code must not send it; the INSERT policy rejects any forged owner value.
+- **Seeding demo data:** RLS denies anonymous browser writes. Insert demo/seed rows through the management plane — `managePgDatabase(action="execute", confirm=true)` with an **explicit** `owner_id` value (e.g. `'system-demo'`); do not rely on `DEFAULT auth.uid()` for seed rows, and never ship seed INSERTs in frontend code.
 - If you need detailed GRANT/RLS rules, read `references/rls-patterns.md` before writing policies.
 - For admin/editor flows, make `admin` able to operate all rows and `editor` only rows where owner UID matches the current user.
 
@@ -160,11 +174,15 @@ CloudBase PG (`app.rdb()`, `app.storage.from('bucket')`) uses **different API me
 - ❌ `db.from("public.public.articles")` — WRONG, double schema prefix, will fail with `PGRST205`
 - `objectName="public.articles"` in `queryPgDatabase()` is the MCP tool format — do NOT copy this into `db.from()`.
 
-Use static imports and one shared `app.rdb()` client:
+Use static imports and one shared `app.rdb()` client (SDK init reference: [webv3-pg/initialization.md](https://docs.cloudbase.net/api-reference/webv3-pg/initialization.md)):
 
 ```ts
 import cloudbase from "@cloudbase/js-sdk";
-const app = cloudbase.init({ env: import.meta.env.VITE_CLOUDBASE_ENV_ID });
+const app = cloudbase.init({
+  env: import.meta.env.VITE_CLOUDBASE_ENV_ID,
+  accessKey: import.meta.env.VITE_PUBLISHABLE_KEY, // publishable key, see auth-web-cloudbase prerequisites
+  auth: { detectSessionInUrl: true },
+});
 export const auth = app.auth;
 export const db = app.rdb();
 ```
@@ -194,7 +212,41 @@ await db.from("articles").delete().eq("id", id);
 const { data } = await db.rpc("function_name", { id });
 ```
 
-Common query helpers: `.eq()`, `.neq()`, `.gt()`, `.gte()`, `.lt()`, `.lte()`, `.like()`, `.ilike()`, `.in()`, `.is()`, `.order()`, `.limit()`, `.range()`, `.single()`.
+Common query helpers: `.eq()`, `.neq()`, `.gt()`, `.gte()`, `.lt()`, `.lte()`, `.like()`, `.ilike()`, `.in()`, `.is()`, `.contains()`, `.textSearch()`, `.or()`, `.not()`, `.match()`, `.order()`, `.limit()`, `.range()`, `.single()`.
+
+**Full cookbook (official webv3-pg API — copy these, do not re-derive from .d.ts).** Source: [webv3-pg/postgresql/fetch.md](https://docs.cloudbase.net/api-reference/webv3-pg/postgresql/fetch.md) — fetch / insert / update / delete / upsert / filters / modifiers / rpc share the same path prefix, one page per verb（URL 加 `.md` 可取 raw markdown 原文）:
+
+```ts
+// COUNT only — no rows returned, count comes back on the result object
+const { count, error } = await db.from("articles").select("*", { count: "exact", head: true });
+
+// Pagination — .range(from, to) is INCLUSIVE on both ends; page 2 of 20 = .range(20, 39)
+const { data, error } = await db.from("articles").select("*")
+  .order("created_at", { ascending: false }).range(0, 19);
+
+// INSERT and return the inserted row — ⚠️ .select() only returns rows when the
+// table has a single auto-increment primary key; otherwise data is empty/null
+const { data, error } = await db.from("articles").insert({ title, status: "draft" }).select();
+
+// INSERT many rows at once (array form)
+await db.from("articles").insert([{ title: "a" }, { title: "b" }]);
+
+// UPSERT — include the primary key in values; onConflict names the unique-index column(s)
+await db.from("articles").upsert({ id: 1, title: "new" }, { onConflict: "id" });
+
+// Join query — PostgREST embedded resources via FK relationship
+const { data, error } = await db.from("articles").select(`
+  title,
+  categories ( name ),
+  created_by:users!articles_created_by_fkey ( name ) // multiple FKs to the same table need the constraint name
+`);
+
+// RPC — SETOF-returning functions chain .select()/.order()/.limit()/.single()/filters like a query
+const { data, error } = await db.rpc("search_articles", { keyword })
+  .select("title, published_at").order("published_at", { ascending: false }).limit(5);
+const { data: one } = await db.rpc("search_articles", { keyword }).limit(1).single();
+const { count } = await db.rpc("search_articles", { keyword }, { count: "exact", head: true });
+```
 
 ### ⚠️ Critical: PG API is NOT the same as CloudBase NoSQL or other ORMs
 
@@ -223,7 +275,7 @@ CloudBase PG storage uses the `pgstore` backend and follows the same model as Su
 1. Confirm a usable pgstore bucket exists for your target prefix (e.g. `covers`). The legacy NoSQL bucket exposed by `DescribeEnvs.Storages[]` (e.g. `6d63-…-1409864723`) is for the old NoSQL backend and does NOT serve pgstore uploads.
 2. If no usable bucket exists, create one through the PG storage management surface (PG storage HTTP API / CLI / console / SQL on `storage.buckets` when appropriate). Do not assume traditional-mode storage tools or adding `covers/` as a JS path prefix will create a PG bucket.
 3. The bucket name belongs in `from('<bucket>')`; the key passed to `upload(key, file)` is inside that bucket and must **not** repeat the bucket prefix. Correct: `app.storage.from('covers').upload('a.png', file)`. Wrong: `app.storage.from('covers').upload('covers/a.png', file)`.
-4. **After creating the bucket, configure RLS on `storage.objects`** via `managePgDatabase(action="execute", confirm=true)`. The default RLS is deny all; without permissive policies the browser receives `STORAGE_PERMISSION_DENIED`. See `cloud-storage-web/SKILL.md` "Post-bucket: storage RLS" section for the exact SQL policies.
+4. **After creating the bucket, configure RLS on `storage.objects`** via `managePgDatabase(action="execute", confirm=true)`. The default RLS is deny all; without permissive policies the browser receives `STORAGE_PERMISSION_DENIED`. See `references/storage-pg.md` for the full bucket + RLS templates (per-user isolation and public-read buckets), and `cloud-storage-web/SKILL.md` "Post-bucket: storage RLS" section for the exact SQL policies.
 
 Failure-mode cheat sheet (read DevTools network tab on the FAILED `POST .../v1/storages/get-objects-upload-info`):
 

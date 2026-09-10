@@ -67,6 +67,7 @@ storage, ai), fetch the corresponding CloudBase domain skill via
 - `web-development`         Web project conventions
 - `auth-tool-cloudbase`               provider config (management-side)
 - `auth-web-cloudbase`                Web SDK auth client code
+- `postgresql-development-cloudbase`  PG mode schema/RLS/`app.rdb()` (PG envs)
 - `cloudbase-document-database-web-sdk`          document database Web SDK
 - `cloud-storage-web`       cloud storage Web SDK
 - `relational-database-web-cloudbase` MySQL Web SDK
@@ -257,10 +258,20 @@ Skip any of these when:
 4. **Never spawn `npm run dev` / `vite` / `vite build` yourself.** Lifecycle
    is owned by hooks + the `cloudbase-sites` CLI.
 
-5. **BaaS-first data persistence.** Schema via
-   `writeNoSqlDatabaseStructure(action="createCollection")`; reads/writes
-   via `@cloudbase/js-sdk` from React/Vue code. Reach for cloud functions
-   only when (a) the logic cannot be expressed as security rules AND
+5. **BaaS-first data persistence — detect the env type first.** Before any
+   data-layer work, call `envQuery({ action: "info" })` and branch on the
+   detected database backend:
+
+   | env type | schema / RLS | browser SDK | domain skill |
+   |---|---|---|---|
+   | PostgreSQL (`RuntimeBackends.postgresql === true`) | `managePgDatabase` (versioned `applyMigration`) | `app.rdb()` / `app.storage.from()` | `postgresql-development-cloudbase` |
+   | NoSQL (document) | `writeNoSqlDatabaseStructure(action="createCollection")` | `app.database()` collections | `cloudbase-document-database-web-sdk` |
+
+   Do NOT load `cloudbase-document-database-web-sdk` (or NoSQL APIs) for a PG
+   environment, and do NOT guess from the skill catalog — the catalog contains
+   both, only `envQuery` tells them apart. Reads/writes go through
+   `@cloudbase/js-sdk` from React/Vue code either way. Reach for cloud
+   functions only when (a) the logic cannot be expressed as security rules AND
    (b) it needs server-side secrets or a third-party API AND (c) it's a
    scheduled / background job. A Todo / Notes / Chat / Kanban app does NOT
    need cloud functions.
@@ -274,6 +285,24 @@ Skip any of these when:
    `cloudbase-sites deploy` with your own `pnpm build` + `manageApps` call —
    you'd lose version metadata, snapshot, deploy history, and the stable
    siteName.
+
+8. **Icons come from `lucide-react` — preinstalled, never hand-installed.**
+   `cloudbase-sites init` injects `lucide-react` (react) / `lucide-vue-next`
+   (vue) into the scaffold's `package.json` before its single install step.
+   Import icons directly (`import { Heart } from "lucide-react"`). Do NOT run
+   a package-install command just to add icons — sandboxed installs during
+   generation are a known failure point — and do NOT hand-write inline SVG
+   paths when a lucide icon exists.
+
+9. **Fill `VITE_PUBLISHABLE_KEY` automatically — never ask the user.** The
+   template's `src/utils/cloudbase.ts` reads it from `.env.local`; new envs
+   have no publishable key by default. After init: call
+   `queryAppAuth({ action: "getPublishableKey" })`; if empty, call
+   `manageAppAuth({ action: "ensurePublishableKey" })`; then write
+   `VITE_PUBLISHABLE_KEY=<key>` into `.env.local`. This key cannot be
+   skipped — it is the data-plane app credential attached to every browser
+   request, including the login request itself and anonymous reads — but
+   the user should never fill it by hand.
 
 ## Hard rules — always parse CLI stdout as JSON
 

@@ -96,16 +96,27 @@ you must not bypass them.
    `cloudbase-sites deploy`. Bypassing them loses host=0.0.0.0, port allocation,
    daemonization, version metadata, and deploy history.
 
-5. **Data persistence: BaaS-first via Web SDK + MCP-managed schema.** When
-   the user'\''s feature needs to store / query / update data:
-   - **Schema:** call cloudbase-mcp `writeNoSqlDatabaseStructure(action="createCollection", ...)`
+5. **Data persistence: BaaS-first via Web SDK + MCP-managed schema — detect the env type FIRST.** Before any
+   data-layer work, call cloudbase-mcp `envQuery(action="info")` and branch on
+   the detected database backend:
+   - **PostgreSQL env** (`RuntimeBackends.postgresql === true`): schema via
+     versioned migrations `managePgDatabase(action="applyMigration", ...)`;
+     browser code uses `app.rdb()` — do NOT write `db.collection(...)`.
+     For canonical patterns, fetch the postgresql-development-cloudbase skill via
+     `searchKnowledgeBase(mode=skill, skillName="postgresql-development-cloudbase")`.
+   - **NoSQL env** (document database): schema via cloudbase-mcp
+     `writeNoSqlDatabaseStructure(action="createCollection", ...)`
      to create the collection (and `updateCollection` for indexes). Do NOT
      ask the user to create collections manually in the console. For canonical
      patterns, fetch the no-sql-web-sdk skill via
      `searchKnowledgeBase(mode=skill, skillName="no-sql-web-sdk")`.
-   - **Reads/writes:** use `@cloudbase/js-sdk` directly from the React/Vue
-     code (`db.collection(...).where(...).get()`, `.add()`, `.update()`,
-     `db.collection(...).watch(...)` for realtime). The template already
+   - Do NOT guess from the skill catalog — the catalog contains BOTH paths;
+     only `envQuery` tells a PG env from a NoSQL env. Loading no-sql-web-sdk
+     for a PG environment wastes the whole data-layer plan.
+   - **Reads/writes (both env types):** use `@cloudbase/js-sdk` directly from
+     the React/Vue code — PG: `app.rdb().from(...)`; NoSQL:
+     `db.collection(...).where(...).get()`, `.add()`, `.update()`,
+     `db.collection(...).watch(...)` for realtime. The template already
      ships an initialized SDK at `src/utils/cloudbase.ts` — use it.
    - **Auth:** if the feature needs user accounts, fetch
      `searchKnowledgeBase(mode=skill, skillName="auth-tool")` first to
@@ -177,6 +188,7 @@ Likely-needed in a vibe-coding session:
 - `web-development`         — Web 项目开发与部署规范
 - `auth-tool`               — 认证 provider 启用与配置(管理端)
 - `auth-web`                — Web SDK 认证客户端代码
+- `postgresql-development-cloudbase` — PG 模式 schema/RLS/app.rdb()（PG 环境必读）
 - `no-sql-web-sdk`          — 文档型数据库 Web SDK CRUD
 - `cloud-storage-web`       — 云存储 Web SDK 上传下载
 - `relational-database-web` — MySQL Web SDK

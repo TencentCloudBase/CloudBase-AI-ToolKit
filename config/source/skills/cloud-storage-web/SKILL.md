@@ -109,6 +109,27 @@ Use instead:
 - ✅ `app.storage.from('covers').upload('file', file)` — PG 模式上传
 - ✅ `app.storage.from('covers').createSignedUrl('file', 3600)` — 获取签名 URL（返回 `fullSignedURL` 字段）
 
+**Return shapes differ between modes (v3 SDK) — copy the right column:**
+
+| call | 传统模式 (`from()` 无参, `cloud://` fileID) | PG 模式 (`from('bucket')`, bucket 内对象名) |
+|---|---|---|
+| `upload(path, file)` | `{ data: { id, path, fullPath } }`；`upsert` 默认 **true** | `{ data: { id, ... } }`；`upsert` 默认 **false** |
+| `createSignedUrl(path, expiresIn)` | `await` → `{ data: { signedUrl } }` | `await` → `{ data: { fullSignedURL } }` |
+| `getPublicUrl(path)` | `await` → `{ data: { publicUrl } }` | **同步调用（不 await）** → `{ data: { publicUrl } }` |
+
+Source: [webv3/storage.md](https://docs.cloudbase.net/api-reference/webv3/storage.md) · [webv3-pg/storage.md](https://docs.cloudbase.net/api-reference/webv3-pg/storage.md)（raw markdown）。
+
+### PG mode URL resolution: 公开桶直链 vs 签名 URL
+
+| Bucket 类型 | URL 策略 | 代码 |
+|---|---|---|
+| 公开桶（`storage.buckets.public = true`） | 直链，无需登录态，可直接进 `<img src>` | `app.storage.from('covers').getPublicUrl('a.png')` → `{ data: { publicUrl } }` |
+| 私有桶 | 签名 URL，带过期时间 | `app.storage.from('covers').createSignedUrl('a.png', 3600)` |
+
+- 公开桶直链能否访问取决于 `storage.objects` 的 RLS SELECT 策略是否放行 anon —— 建桶 SQL 与策略模板见 `postgresql-development-cloudbase/references/storage-pg.md` "Public-read bucket template"。
+- 展示层做 `onerror` 兜底（直链被策略拦下时降级到签名 URL），不要硬依赖单一取址流程。
+- 业务表只存 bucket + key（或 SDK 解析出的最终 URL），不要在浏览器手工拼接 URL。
+
 ### Post-bucket: storage RLS (mandatory in PG / pgstore environments)
 
 In **PG / pgstore** environments, storage access control is enforced through **PostgreSQL Row Level Security (RLS) on `storage.buckets` / `storage.objects`** — exactly like Supabase Storage. These tables are already granted to `anon`, `authenticated`, and `service_role`; RLS is the permission gate. Traditional storage permission labels (`READONLY` / `PRIVATE` / `CUSTOM`) and JSON storage safe rules do not apply. The default RLS policy is deny all, so even if the bucket exists, `app.storage.from('covers').upload()` from a browser will fail with `STORAGE_PERMISSION_DENIED` unless you configure policies.
@@ -152,6 +173,8 @@ Typical tasks:
 - trigger browser downloads
 
 ## SDK initialization
+
+Init reference: [webv3/initialization.md](https://docs.cloudbase.net/api-reference/webv3/initialization.md)
 
 ```javascript
 import cloudbase from "@cloudbase/js-sdk";
