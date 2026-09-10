@@ -2,7 +2,7 @@
 
 ## API 概览
 
-最近更新时间：2026-09-09 02:54:08
+最近更新时间：2026-09-10 02:54:06
 
 -   微信扫一扫 
 -   QQ
@@ -16,6 +16,7 @@ _我的收藏_
 
 ## 本页目录：
 
+-   [云开发接入相关接口](#.E4.BA.91.E5.BC.80.E5.8F.91.E6.8E.A5.E5.85.A5.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "云开发接入相关接口")
 -   [环境相关接口](#.E7.8E.AF.E5.A2.83.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "环境相关接口")
 -   [用户权限相关接口](#.E7.94.A8.E6.88.B7.E6.9D.83.E9.99.90.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "用户权限相关接口")
 -   [云托管相关接口](#.E4.BA.91.E6.89.98.E7.AE.A1.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "云托管相关接口")
@@ -23,11 +24,22 @@ _我的收藏_
 -   [其他接口](#.E5.85.B6.E4.BB.96.E6.8E.A5.E5.8F.A3 "其他接口")
 -   [文档型云数据库相关接口](#.E6.96.87.E6.A1.A3.E5.9E.8B.E4.BA.91.E6.95.B0.E6.8D.AE.E5.BA.93.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "文档型云数据库相关接口")
 -   [静态托管相关接口](#.E9.9D.99.E6.80.81.E6.89.98.E7.AE.A1.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "静态托管相关接口")
--   [云开发接入相关接口](#.E4.BA.91.E5.BC.80.E5.8F.91.E6.8E.A5.E5.85.A5.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "云开发接入相关接口")
 -   [AI模型相关接口](#AI.E6.A8.A1.E5.9E.8B.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "AI模型相关接口")
 -   [搜索日志相关接口](#.E6.90.9C.E7.B4.A2.E6.97.A5.E5.BF.97.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "搜索日志相关接口")
 -   [SQL型云数据库相关接口](#SQL.E5.9E.8B.E4.BA.91.E6.95.B0.E6.8D.AE.E5.BA.93.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "SQL型云数据库相关接口")
 -   [登录配置相关接口](#.E7.99.BB.E5.BD.95.E9.85.8D.E7.BD.AE.E7.9B.B8.E5.85.B3.E6.8E.A5.E5.8F.A3 "登录配置相关接口")
+
+## 云开发接入相关接口
+
+| 接口名称 | 接口功能 | 频率限制（次/秒） |
+| --- | --- | --- |
+| [CreateHTTPServiceRoute](/document/api/876/129800) | 创建HTTP访问服务路由 | 20 |
+| [VerifyHTTPServiceRoute](/document/api/876/135630) | 校验HTTP访问服务路由 | 20 |
+| [DeleteHTTPServiceRoute](/document/api/876/129799) | 删除HTTP访问服务路由 | 20 |
+| [DescribeHTTPServiceRoute](/document/api/876/129798) | 查询HTTP访问服务路由信息 | 20 |
+| [ModifyHTTPServiceRoute](/document/api/876/129797) | 修改HTTP访问服务路由 | 20 |
+| [PurgeHTTPServiceCache](/document/api/876/137741) | 清除HTTP服务域名缓存 | 20 |
+| [DescribeHTTPServiceCachePurgeTask](/document/api/876/137742) | 查询HTTP访问服务缓存清除任务 | 20 |
 
 ## 环境相关接口
 
@@ -126,18 +138,6 @@ _我的收藏_
 | [DescribeCloudAppList](/document/api/876/132936) | 查询云应用服务列表 | 20 |
 | [DescribeCloudAppVersion](/document/api/876/135276) | 查询云应用服务版本信息 | 20 |
 | [DescribeCloudAppVersionList](/document/api/876/135275) | 查询云应用服务版本列表 | 20 |
-
-## 云开发接入相关接口
-
-| 接口名称 | 接口功能 | 频率限制（次/秒） |
-| --- | --- | --- |
-| [CreateHTTPServiceRoute](/document/api/876/129800) | 创建HTTP访问服务路由 | 20 |
-| [VerifyHTTPServiceRoute](/document/api/876/135630) | 校验HTTP访问服务路由 | 20 |
-| [DeleteHTTPServiceRoute](/document/api/876/129799) | 删除HTTP访问服务路由 | 20 |
-| [DescribeHTTPServiceRoute](/document/api/876/129798) | 查询HTTP访问服务路由信息 | 20 |
-| [ModifyHTTPServiceRoute](/document/api/876/129797) | 修改HTTP访问服务路由 | 20 |
-| [PurgeHTTPServiceCache](/document/api/876/137741) | 清除HTTP服务域名缓存 | 20 |
-| [DescribeHTTPServiceCachePurgeTask](/document/api/876/137742) | 查询HTTP访问服务缓存清除任务 | 20 |
 
 ## AI模型相关接口
 

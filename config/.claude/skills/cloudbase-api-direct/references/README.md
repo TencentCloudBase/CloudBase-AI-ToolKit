@@ -1,11 +1,18 @@
 # CloudBase API 文档索引
 
-爬取时间: 2026-09-09T07:23:27.325Z
+爬取时间: 2026-09-10T07:19:32.148Z
 
 ## 文档列表
 
 - [云开发 CloudBase 公共参数_腾讯云](./876-34812-云开发-CloudBase-公共参数_腾讯云.md)
 - [云开发 CloudBase API 概览_腾讯云](./876-34809-云开发-CloudBase-API-概览_腾讯云.md)
+- [云开发 CloudBase 创建HTTP访问服务路由_腾讯云](./876-129800-云开发-CloudBase-创建HTTP访问服务路由_腾讯云.md)
+- [云开发 CloudBase 校验HTTP访问服务路由_腾讯云](./876-135630-云开发-CloudBase-校验HTTP访问服务路由_腾讯云.md)
+- [云开发 CloudBase 删除HTTP访问服务路由_腾讯云](./876-129799-云开发-CloudBase-删除HTTP访问服务路由_腾讯云.md)
+- [云开发 CloudBase 查询HTTP访问服务路由信息_腾讯云](./876-129798-云开发-CloudBase-查询HTTP访问服务路由信息_腾讯云.md)
+- [云开发 CloudBase 修改HTTP访问服务路由_腾讯云](./876-129797-云开发-CloudBase-修改HTTP访问服务路由_腾讯云.md)
+- [云开发 CloudBase 清除HTTP服务域名缓存_腾讯云](./876-137741-云开发-CloudBase-清除HTTP服务域名缓存_腾讯云.md)
+- [云开发 CloudBase 查询HTTP访问服务缓存清除任务_腾](./876-137742-云开发-CloudBase-查询HTTP访问服务缓存清除任务_腾.md)
 - [云开发 CloudBase 获取环境列表_腾讯云](./876-34820-云开发-CloudBase-获取环境列表_腾讯云.md)
 - [云开发 CloudBase 销毁环境_腾讯云](./876-42149-云开发-CloudBase-销毁环境_腾讯云.md)
 - [云开发 CloudBase 检查是否开通Tcb服务_腾讯云](./876-42154-云开发-CloudBase-检查是否开通Tcb服务_腾讯云.md)
@@ -69,13 +76,6 @@
 - [云开发 CloudBase 查询云应用服务列表_腾讯云](./876-132936-云开发-CloudBase-查询云应用服务列表_腾讯云.md)
 - [云开发 CloudBase 查询云应用服务版本信息_腾讯云](./876-135276-云开发-CloudBase-查询云应用服务版本信息_腾讯云.md)
 - [云开发 CloudBase 查询云应用服务版本列表_腾讯云](./876-135275-云开发-CloudBase-查询云应用服务版本列表_腾讯云.md)
-- [云开发 CloudBase 创建HTTP访问服务路由_腾讯云](./876-129800-云开发-CloudBase-创建HTTP访问服务路由_腾讯云.md)
-- [云开发 CloudBase 校验HTTP访问服务路由_腾讯云](./876-135630-云开发-CloudBase-校验HTTP访问服务路由_腾讯云.md)
-- [云开发 CloudBase 删除HTTP访问服务路由_腾讯云](./876-129799-云开发-CloudBase-删除HTTP访问服务路由_腾讯云.md)
-- [云开发 CloudBase 查询HTTP访问服务路由信息_腾讯云](./876-129798-云开发-CloudBase-查询HTTP访问服务路由信息_腾讯云.md)
-- [云开发 CloudBase 修改HTTP访问服务路由_腾讯云](./876-129797-云开发-CloudBase-修改HTTP访问服务路由_腾讯云.md)
-- [云开发 CloudBase 清除HTTP服务域名缓存_腾讯云](./876-137741-云开发-CloudBase-清除HTTP服务域名缓存_腾讯云.md)
-- [云开发 CloudBase 查询HTTP访问服务缓存清除任务_腾](./876-137742-云开发-CloudBase-查询HTTP访问服务缓存清除任务_腾.md)
 - [云开发 CloudBase 创建AI模型_腾讯云](./876-131320-云开发-CloudBase-创建AI模型_腾讯云.md)
 - [云开发 CloudBase 删除AI模型_腾讯云](./876-131319-云开发-CloudBase-删除AI模型_腾讯云.md)
 - [云开发 CloudBase 查询AI模型列表_腾讯云](./876-131318-云开发-CloudBase-查询AI模型列表_腾讯云.md)
