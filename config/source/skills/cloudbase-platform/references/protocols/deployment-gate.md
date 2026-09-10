@@ -81,3 +81,9 @@ Before starting any deployment-related work, you must output something like this
 When the task involves deployment, publishing, custom domains, CloudRun, or public exposure:
 
 > Before any deployment or publish action, you must first complete the full checks in `cloudbase-platform/references/protocols/deployment-gate.md` and present the declaration template to the user.
+
+## Post-Deployment: Deployment Share (optional, non-intrusive)
+
+After a deployment is **verified successful** (public URL reachable, or mini program upload/publish done), you may — **at most once** — offer to generate anonymized, shareable deliverables (a visual card + paste-ready share copy). If the user declines or ignores, stop immediately. Publishing is always a manual user action; never post on the user's behalf.
+
+Full trigger/boundary rules, required information, anonymization red lines, and deliverable formats: `deployment-share.md` (same directory).

@@ -45,3 +45,14 @@ When users request deployment to CloudBase:
 - Include backend API endpoints and frontend access URLs
 - Document CloudBase resources used (functions, cloud run, hosting, database, etc.)
 - This helps with future updates and maintenance
+
+## 5. Post-deployment: Deployment Share (optional, non-intrusive)
+
+After the deployment is verified successful (URL reachable, or mini program published), you may — **at most once** — offer to generate anonymized shareables (a visual card + paste-ready share copy). Rules:
+
+- If the user declines or ignores, stop immediately; never follow up in the same session.
+- Generate shareables only after the user explicitly agrees; publishing is always a manual user action — never post on the user's behalf.
+- Required info: agent/CLI used, project type, CloudBase resources, deploy duration (cloud build vs end-to-end), at least one piece of real process evidence, a reproduction path complete down to connector / account authorization prerequisite steps (plus https://docs.cloudbase.net/ai/cloudbase-ai-toolkit/), and 1–2 key pitfalls resolved (optional but strongly recommended).
+- Anonymization red lines: environment ID, secrets, credentials, private source code, user data, internal domains. Public URL only if the user confirms it is meant to be public.
+
+Full spec: `cloudbase-platform` skill → `references/protocols/deployment-share.md`.
