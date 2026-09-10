@@ -67,6 +67,7 @@ storage, ai), fetch the corresponding CloudBase domain skill via
 - `web-development`         Web project conventions
 - `auth-tool-cloudbase`               provider config (management-side)
 - `auth-web-cloudbase`                Web SDK auth client code
+- `postgresql-development-cloudbase`  PG mode schema/RLS/`app.rdb()` (PG envs)
 - `cloudbase-document-database-web-sdk`          document database Web SDK
 - `cloud-storage-web`       cloud storage Web SDK
 - `relational-database-web-cloudbase` MySQL Web SDK
@@ -257,10 +258,20 @@ Skip any of these when:
 4. **Never spawn `npm run dev` / `vite` / `vite build` yourself.** Lifecycle
    is owned by hooks + the `cloudbase-sites` CLI.
 
-5. **BaaS-first data persistence.** Schema via
-   `writeNoSqlDatabaseStructure(action="createCollection")`; reads/writes
-   via `@cloudbase/js-sdk` from React/Vue code. Reach for cloud functions
-   only when (a) the logic cannot be expressed as security rules AND
+5. **BaaS-first data persistence — detect the env type first.** Before any
+   data-layer work, call `envQuery({ action: "info" })` and branch on the
+   detected database backend:
+
+   | env type | schema / RLS | browser SDK | domain skill |
+   |---|---|---|---|
+   | PostgreSQL (`RuntimeBackends.postgresql === true`) | `managePgDatabase` (versioned `applyMigration`) | `app.rdb()` / `app.storage.from()` | `postgresql-development-cloudbase` |
+   | NoSQL (document) | `writeNoSqlDatabaseStructure(action="createCollection")` | `app.database()` collections | `cloudbase-document-database-web-sdk` |
+
+   Do NOT load `cloudbase-document-database-web-sdk` (or NoSQL APIs) for a PG
+   environment, and do NOT guess from the skill catalog — the catalog contains
+   both, only `envQuery` tells them apart. Reads/writes go through
+   `@cloudbase/js-sdk` from React/Vue code either way. Reach for cloud
+   functions only when (a) the logic cannot be expressed as security rules AND
    (b) it needs server-side secrets or a third-party API AND (c) it's a
    scheduled / background job. A Todo / Notes / Chat / Kanban app does NOT
    need cloud functions.

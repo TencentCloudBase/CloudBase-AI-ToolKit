@@ -281,6 +281,41 @@ Key points:
 - Do **not** `DELETE FROM storage.objects` directly — a `protect_delete` trigger blocks it. Use SDK / Storage API.
 - For simpler authenticated-only access (not per-user), replace `(storage.foldername(name))[1] = auth.uid()` with `auth.role() = 'authenticated'`.
 
+### Public-read bucket template (e.g. `models`, `covers` shown to everyone)
+
+Use when any signed-in user writes and everyone (including `anon`) reads — image galleries, model-sharing sites, public attachments. Create the bucket with `public = true` (via the SQL path above or HTTP API), then:
+
+```sql
+-- anon 可读：配合 getPublicUrl 直链在 <img src> 直接展示
+CREATE POLICY objects_public_read ON storage.objects
+  FOR SELECT USING (bucket_id = 'models');
+
+-- 登录用户可上传（不限定子目录）
+CREATE POLICY objects_insert ON storage.objects
+  FOR INSERT TO authenticated
+  WITH CHECK (bucket_id = 'models');
+
+-- 仅上传者本人可删除
+CREATE POLICY objects_owner_delete ON storage.objects
+  FOR DELETE TO authenticated
+  USING (bucket_id = 'models' AND owner_id = auth.uid());
+```
+
+Key points:
+- `public = true` on `storage.buckets` alone does **not** bypass RLS — the anon SELECT policy above is what makes direct public URLs work.
+- `storage.objects.owner_id` records the uploading user; constrain UPDATE/DELETE with `owner_id = auth.uid()`.
+- `auth.uid()` returns **`text`**; `owner_id` is text — compare directly, no cast.
+
+### Frontend URL resolution: public bucket vs private bucket
+
+| Bucket type | URL strategy | Code |
+|---|---|---|
+| Public (`storage.buckets.public = true`) | Direct link, no login state needed, goes straight into `<img src>` | `app.storage.from('models').getPublicUrl('a.png')` → `{ data: { publicUrl } }` |
+| Private | Signed URL with expiry | `app.storage.from('models').createSignedUrl('a.png', 3600)` |
+
+- Store only the bucket + key (or the resolved URL) in the business table; never concatenate URLs by hand in browser code.
+- Add an `onerror` fallback in the display layer (e.g. degrade to a signed URL if the direct link is blocked) instead of hard-depending on one flow. See `cloud-storage-web/SKILL.md`.
+
 ## Typical Pattern: Upload + Register Metadata
 
 这是你在 CRM 等业务中需要完整遵循的「三步走」模式（对应 Supabase 的 storage + 业务表分离模式）：

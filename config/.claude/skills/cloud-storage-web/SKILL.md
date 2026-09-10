@@ -1,7 +1,7 @@
 ---
 name: cloud-storage-web
 description: Complete guide for CloudBase cloud storage using Web SDK (@cloudbase/js-sdk) - upload, download, temporary URLs, file management, and best practices.
-version: 2.33.1
+version: 2.33.2
 alwaysApply: false
 ---
 
@@ -108,6 +108,17 @@ Do NOT use the legacy NoSQL APIs in PG mode:
 Use instead:
 - ✅ `app.storage.from('covers').upload('file', file)` — PG 模式上传
 - ✅ `app.storage.from('covers').createSignedUrl('file', 3600)` — 获取签名 URL（返回 `fullSignedURL` 字段）
+
+### PG mode URL resolution: 公开桶直链 vs 签名 URL
+
+| Bucket 类型 | URL 策略 | 代码 |
+|---|---|---|
+| 公开桶（`storage.buckets.public = true`） | 直链，无需登录态，可直接进 `<img src>` | `app.storage.from('covers').getPublicUrl('a.png')` → `{ data: { publicUrl } }` |
+| 私有桶 | 签名 URL，带过期时间 | `app.storage.from('covers').createSignedUrl('a.png', 3600)` |
+
+- 公开桶直链能否访问取决于 `storage.objects` 的 RLS SELECT 策略是否放行 anon —— 建桶 SQL 与策略模板见 `postgresql-development-cloudbase/references/storage-pg.md` "Public-read bucket template"。
+- 展示层做 `onerror` 兜底（直链被策略拦下时降级到签名 URL），不要硬依赖单一取址流程。
+- 业务表只存 bucket + key（或 SDK 解析出的最终 URL），不要在浏览器手工拼接 URL。
 
 ### Post-bucket: storage RLS (mandatory in PG / pgstore environments)
 
