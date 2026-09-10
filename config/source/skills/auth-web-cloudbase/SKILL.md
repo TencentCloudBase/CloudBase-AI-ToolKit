@@ -129,6 +129,8 @@ If the current task has not retrieved a real Publishable Key, omit `accessKey` i
 
 Every method returns the unified shape `{ data, error }` — branch on `error` first and surface `error.message`. The auth API is identical in traditional and PG environments (source: docs.cloudbase.net/api-reference/webv3/authentication).
 
+**Default auth UI contract:** when the user asks for 登录/注册/账号体系/user system without restricting the method, the login page must make ALL of these reachable (tabs or separate forms): password sign-in, OTP sign-in, verified sign-up (code + password), and forgot-password (whenever password sign-in exists). Never ship OTP-only or password-only UI unless explicitly asked. Never reveal whether an identifier is already registered in user-facing copy — route existing users to login with neutral wording.
+
 **Password sign-in** (username-style or email identifiers both go here):
 
 ```js
@@ -143,13 +145,32 @@ if (error) { /* show error.message */ } else { /* data.user */ }
 const { error } = await auth.signInAnonymously()
 ```
 
-**Register (email/phone OTP flow)** — `signUp` sends the verification code, `data.verifyOtp` completes it:
+**Registration — verification code is MANDATORY.** There is no password-only signup: `signUp` itself sends a code, and `data.verifyOtp` must complete it. Smart flow: existing identifier → plain login; new identifier → register + auto-login. Phone/SMS is 上海地域 only — prefer email:
 
 ```js
 const { data, error } = await auth.signUp({ email, password }) // or { phone, password }
 if (error) throw error
-const { data: login, error: verifyErr } = await data.verifyOtp({ token: code }) // code from email/SMS
+// user types the code from their inbox...
+const { data: login, error: verifyErr } = await data.verifyOtp({ token: code })
+// login.user / login.session — signed in on both paths
 ```
+
+**OTP sign-in (no password)** — same shape as `signUp`, auto-creates the user by default (`shouldCreateUser: false` to refuse unknown users). Requires 邮箱/短信验证码登录 enabled in console → 身份认证/登录方式:
+
+```js
+const { data, error } = await auth.signInWithOtp({ email }) // or { phone }
+const { data: login, error: verifyErr } = await data.verifyOtp({ token: code })
+```
+
+**Forgot password** — email code → set new password → auto sign-in (emits `PASSWORD_RECOVERY`):
+
+```js
+const { data, error } = await auth.resetPasswordForEmail(email)
+if (error) throw error
+const { data: login, error: resetErr } = await data.updateUser({ nonce: code, password: newPassword })
+```
+
+**OTP closure vs standalone `verifyOtp` — do not mix.** The `data.verifyOtp` returned by `signUp` / `signInWithOtp` / `resetPasswordForEmail` has the message ID bound (pass only `{ token }`). The standalone `auth.verifyOtp(...)` requires `messageId` and **only logs in — it never registers**. Always use the returned closure.
 
 **Session check / route guard** — always `getSession()`, never the deprecated `getLoginState()`:
 
