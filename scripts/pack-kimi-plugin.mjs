@@ -66,6 +66,17 @@ function assertReady() {
   if (!fs.existsSync(routingDir)) {
     throw new Error(`Missing routing skill: ${routingDir}`);
   }
+  // Guard: the CloudBase MCP reference must follow @latest. A pinned version
+  // silently strands plugin users on a stale tool set (every pinned manifest
+  // in the wild required an out-of-band PR to unpin — don't create the next one).
+  const manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, "utf8"));
+  const mcpArgsJson = JSON.stringify(manifest.mcpServers || {});
+  if (/@cloudbase\/cloudbase-mcp@\d/.test(mcpArgsJson)) {
+    throw new Error(
+      "kimi.plugin.json pins a version of @cloudbase/cloudbase-mcp; " +
+        "use '@latest' so plugin users always get the current tool set",
+    );
+  }
 }
 
 function copyDir(src, dest) {

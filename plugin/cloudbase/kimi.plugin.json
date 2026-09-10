@@ -36,7 +36,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "@cloudbase/cloudbase-mcp@2.33.0"
+        "@cloudbase/cloudbase-mcp@latest"
       ],
       "env": {
         "INTEGRATION_IDE": "Kimi"

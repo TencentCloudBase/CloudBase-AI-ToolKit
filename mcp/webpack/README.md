@@ -55,8 +55,7 @@ Node.js 内置模块列表，这些模块保持外部化：
 - CJS 版本：`dist/index.cjs`
 
 #### cli.config.cjs
-CLI 配置，生成 ESM 和 CJS 两种格式：
-- ESM 版本：`dist/cli.js` (带 shebang)
+CLI 配置，仅生成 CJS 格式：
 - CJS 版本：`dist/cli.cjs` (带 shebang)
 
 ### 主配置文件 (index.cjs)
@@ -67,7 +66,6 @@ CLI 配置，生成 ESM 和 CJS 两种格式：
 构建完成后会生成以下文件：
 - `dist/index.js` - ESM 格式的库文件
 - `dist/index.cjs` - CJS 格式的库文件
-- `dist/cli.js` - ESM 格式的 CLI 文件
 - `dist/cli.cjs` - CJS 格式的 CLI 文件
 - `dist/index.d.ts` - TypeScript 类型定义
 - `dist/cli.d.ts` - CLI TypeScript 类型定义
@@ -97,10 +95,6 @@ const { CloudBaseMCP } = require('@cloudbase/cloudbase-mcp');
 
 ### 作为 CLI 使用
 ```bash
-# 使用 ESM 版本
-node dist/cli.js
-
-# 使用 CJS 版本
 node dist/cli.cjs
 ```
 
