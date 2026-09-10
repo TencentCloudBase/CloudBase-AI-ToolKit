@@ -2,9 +2,21 @@
 
 > - 数据源：[API 概览](https://cloud.tencent.com/document/api/876/34809) · [依赖产品接口指引](https://cloud.tencent.com/document/api/876/34808)
 > - 所有接口均为腾讯云 API 3.0 管控面接口，支持各语言官方 SDK 调用；也可通过 CloudBase MCP 的 `callCloudApi` 工具或 [API Explorer](https://console.cloud.tencent.com/api/explorer) 直接调用
-> - 最近同步：2026-09-09
+> - 最近同步：2026-09-10
 
 ## API 概览
+
+## 云开发接入相关接口
+
+| 接口名称 | 接口功能 | 频率限制（次/秒） |
+| --- | --- | --- |
+| [CreateHTTPServiceRoute](https://cloud.tencent.com/document/api/876/129800) | 创建HTTP访问服务路由 | 20 |
+| [VerifyHTTPServiceRoute](https://cloud.tencent.com/document/api/876/135630) | 校验HTTP访问服务路由 | 20 |
+| [DeleteHTTPServiceRoute](https://cloud.tencent.com/document/api/876/129799) | 删除HTTP访问服务路由 | 20 |
+| [DescribeHTTPServiceRoute](https://cloud.tencent.com/document/api/876/129798) | 查询HTTP访问服务路由信息 | 20 |
+| [ModifyHTTPServiceRoute](https://cloud.tencent.com/document/api/876/129797) | 修改HTTP访问服务路由 | 20 |
+| [PurgeHTTPServiceCache](https://cloud.tencent.com/document/api/876/137741) | 清除HTTP服务域名缓存 | 20 |
+| [DescribeHTTPServiceCachePurgeTask](https://cloud.tencent.com/document/api/876/137742) | 查询HTTP访问服务缓存清除任务 | 20 |
 
 ## 环境相关接口
 
@@ -103,18 +115,6 @@
 | [DescribeCloudAppList](https://cloud.tencent.com/document/api/876/132936) | 查询云应用服务列表 | 20 |
 | [DescribeCloudAppVersion](https://cloud.tencent.com/document/api/876/135276) | 查询云应用服务版本信息 | 20 |
 | [DescribeCloudAppVersionList](https://cloud.tencent.com/document/api/876/135275) | 查询云应用服务版本列表 | 20 |
-
-## 云开发接入相关接口
-
-| 接口名称 | 接口功能 | 频率限制（次/秒） |
-| --- | --- | --- |
-| [CreateHTTPServiceRoute](https://cloud.tencent.com/document/api/876/129800) | 创建HTTP访问服务路由 | 20 |
-| [VerifyHTTPServiceRoute](https://cloud.tencent.com/document/api/876/135630) | 校验HTTP访问服务路由 | 20 |
-| [DeleteHTTPServiceRoute](https://cloud.tencent.com/document/api/876/129799) | 删除HTTP访问服务路由 | 20 |
-| [DescribeHTTPServiceRoute](https://cloud.tencent.com/document/api/876/129798) | 查询HTTP访问服务路由信息 | 20 |
-| [ModifyHTTPServiceRoute](https://cloud.tencent.com/document/api/876/129797) | 修改HTTP访问服务路由 | 20 |
-| [PurgeHTTPServiceCache](https://cloud.tencent.com/document/api/876/137741) | 清除HTTP服务域名缓存 | 20 |
-| [DescribeHTTPServiceCachePurgeTask](https://cloud.tencent.com/document/api/876/137742) | 查询HTTP访问服务缓存清除任务 | 20 |
 
 ## AI模型相关接口
 
