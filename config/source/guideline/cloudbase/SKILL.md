@@ -18,6 +18,7 @@ version: 2.33.2
    │     configure MCP for next session and use `tcb` CLI now (see tooling-fallback.md)
    └── 2b. Frontend implementation → Write code, install deps, start server, test
 3. Close-out  →  Run cloudbase-code-review, fix errors, declare done
+                   (after a verified deploy: optionally offer Deployment Share once — see references/deployment-workflow.md §5)
 ```
 
 **Key constraints:** Stage 2a must precede frontend code. Stage 3 is mandatory.
@@ -108,7 +109,7 @@ Prefer CloudBase MCP for management/deploy when tools are loaded in the current 
 Load only when needed (do not expand this entry):
 
 - `references/tooling-fallback.md` — MCP vs `tcb` CLI decision tree for first session / missing tools
-- `references/deployment-workflow.md` — deploy backend/frontend, `manageApps` vs hosting, URL/docs updates
+- `references/deployment-workflow.md` — deploy backend/frontend, `manageApps` vs hosting, URL/docs updates, optional post-deployment Deployment Share offer (§5)
 - `references/console-links.md` — console hash paths after creating resources
 - `references/scenarios.md` — user-need → CloudBase capability mapping
 - `references/mcp-setup.md` — Plugin install (global default + targets), IDE MCP / mcporter config and auth examples
