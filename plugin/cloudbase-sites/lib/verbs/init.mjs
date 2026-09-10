@@ -44,6 +44,13 @@ const TEMPLATE_URLS = {
   vue: "https://static.cloudbase.net/cloudbase-examples/web-cloudbase-vue-template.zip",
 };
 
+// Icon library preinstalled per template, so generation-time never needs a
+// second package install (sandboxed installs are a known failure point).
+const ICON_DEPS = {
+  react: { name: "lucide-react", version: "^1.43.0" },
+  vue: { name: "lucide-vue-next", version: "^1.0.0" },
+};
+
 export const initHelp = `cloudbase-sites init — bootstrap CloudBase + React/Vue + Vite project in cwd
 
 Options:
@@ -95,6 +102,9 @@ export async function runInit(args) {
     throw withCode(ERR.EXTRACT_FAILED, `unzip exited with code ${unzipR.status}. Is 'unzip' installed?`);
   }
   try { rmSync(zipPath); } catch {}
+
+  // 4.5. Inject icon dependency so the single install step below covers it.
+  injectIconDependency(join(CWD, "package.json"), template);
 
   // 5. Install.
   if (!args.skipInstall) {
