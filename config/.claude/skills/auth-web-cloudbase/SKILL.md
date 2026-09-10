@@ -194,6 +194,22 @@ auth.onAuthStateChange((event, session) => {
 const { error } = await auth.signOut()
 ```
 
+**Mandatory auth gate before user-scoped data.** Before reading/writing user-owned PG rows or Storage objects, check the session and show login when absent — never "fix" data errors by silently calling `signInAnonymously`:
+
+```js
+const { data } = await auth.getSession()
+if (!data?.session) { navigate('/login'); return }
+```
+
+**Completion Bar** — before calling the auth task done, the generated source must have ALL of:
+
+- [ ] `signInWithPassword` (when password login is part of the UI)
+- [ ] a verification-code path: `signUp` + `data.verifyOtp` and/or `signInWithOtp`
+- [ ] auth gate before user-scoped DB/Storage calls (rule above)
+- [ ] `onAuthStateChange` wired at bootstrap (route guard reacts to `SIGNED_OUT`)
+- [ ] errors surfaced from `error.message`, no invented error text
+- [ ] NO `signInAnonymously` as a fallback for permission errors, no mock/localStorage sessions
+
 ---
 
 ## Extended guide
